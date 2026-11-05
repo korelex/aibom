@@ -1,4 +1,0 @@
-Engine frozen for round 3 at 2026-11-02 03:50 UTC.
-version 0.4.0, source fingerprint e82294b8db637ffecce8 (18 files: every aibom_engine/*.py and knowledge/model_names.json)
-Frozen AFTER the fixes were made using only the old repos, and AFTER the answer keys for the five fresh repos were written (see KEYS_WRITTEN_BEFORE_ENGINE.txt).
-The engine had not been run on the five fresh repos at this point. Any change to the engine after this line makes round 3 results non-independent.
