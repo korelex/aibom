@@ -1,0 +1,28 @@
+{
+ "cyclonedx_1_6_valid": true,
+ "engine_version": "0.2.0",
+ "file_categories": {
+  "code": 203,
+  "config": 15,
+  "data": 2,
+  "docs": 5,
+  "lock": 1,
+  "manifest": 5,
+  "other": 24,
+  "test": 1
+ },
+ "files": 256,
+ "finders": [
+  "dictionary",
+  "context"
+ ],
+ "items_by_tier": {
+  "declared": 16
+ },
+ "items_in_aibom": 16,
+ "raw_findings": 55,
+ "rejected_reasons": {},
+ "scanned_folder": "/tmp/fresh/open-canvas",
+ "seconds": 1.49,
+ "validation_error": null
+}

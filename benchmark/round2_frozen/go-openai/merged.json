@@ -1,0 +1,5157 @@
+[
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 39,
+    "file": "completion.go",
+    "line": 114,
+    "snippet": "// Deprecated: Model is shutdown. Use babbage-002 instead.",
+    "use": "comment",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 39,
+    "file": "completion.go",
+    "line": 117,
+    "snippet": "// Deprecated: Model is shutdown. Use babbage-002 instead.",
+    "use": "comment",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 19,
+    "file": "completion.go",
+    "line": 119,
+    "snippet": "GPT3Babbage002 = \"babbage-002\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0001",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "text model",
+  "name": "babbage-002",
+  "places": {
+   "live": 1,
+   "other": 2
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 34,
+    "file": "speech.go",
+    "line": 13,
+    "snippet": "TTSModelCanary    SpeechModel = \"canary-tts\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0002",
+  "kind": "model",
+  "maker": "",
+  "mode": "text-to-speech model",
+  "name": "canary-tts",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 39,
+    "file": "image.go",
+    "line": 39,
+    "snippet": "CreateImageModelChatGPTImageLatest = \"chatgpt-image-latest\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0003",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "image model",
+  "name": "chatgpt-image-latest",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 41,
+    "file": "embeddings.go",
+    "line": 33,
+    "snippet": "AdaCodeSearchCode     EmbeddingModel = \"code-search-ada-code-001\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0004",
+  "kind": "model",
+  "maker": "",
+  "mode": "",
+  "name": "code-search-ada-code-001",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 41,
+    "file": "embeddings.go",
+    "line": 34,
+    "snippet": "AdaCodeSearchText     EmbeddingModel = \"code-search-ada-text-001\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0005",
+  "kind": "model",
+  "maker": "",
+  "mode": "",
+  "name": "code-search-ada-text-001",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 41,
+    "file": "embeddings.go",
+    "line": 35,
+    "snippet": "BabbageCodeSearchCode EmbeddingModel = \"code-search-babbage-code-001\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0006",
+  "kind": "model",
+  "maker": "",
+  "mode": "",
+  "name": "code-search-babbage-code-001",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 41,
+    "file": "embeddings.go",
+    "line": 36,
+    "snippet": "BabbageCodeSearchText EmbeddingModel = \"code-search-babbage-text-001\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0007",
+  "kind": "model",
+  "maker": "",
+  "mode": "",
+  "name": "code-search-babbage-text-001",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 40,
+    "file": "chat.go",
+    "line": 356,
+    "snippet": "ToolTypeComputerUsePreview ToolType = \"computer_use_preview\"",
+    "use": "live",
+    "via": "computer_use_preview"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0008",
+  "kind": "model",
+  "maker": "",
+  "mode": "chat model",
+  "name": "computer-use-preview",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "inferred"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 4,
+    "file": "image.go",
+    "line": 27,
+    "snippet": "// dall-e-2 and dall-e-3 only.",
+    "use": "comment",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 39,
+    "file": "image.go",
+    "line": 33,
+    "snippet": "CreateImageModelDallE2             = \"dall-e-2\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0009",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "image model",
+  "name": "dall-e-2",
+  "places": {
+   "live": 1,
+   "other": 1
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 4,
+    "file": "image.go",
+    "line": 17,
+    "snippet": "// dall-e-3 supported only.",
+    "use": "comment",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 17,
+    "file": "image.go",
+    "line": 27,
+    "snippet": "// dall-e-2 and dall-e-3 only.",
+    "use": "comment",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 39,
+    "file": "image.go",
+    "line": 34,
+    "snippet": "CreateImageModelDallE3             = \"dall-e-3\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 4,
+    "file": "image.go",
+    "line": 53,
+    "snippet": "// dall-e-3 only.",
+    "use": "comment",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0010",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "image model",
+  "name": "dall-e-3",
+  "places": {
+   "live": 1,
+   "other": 3
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 39,
+    "file": "completion.go",
+    "line": 107,
+    "snippet": "// Deprecated: Model is shutdown. Use davinci-002 instead.",
+    "use": "comment",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 19,
+    "file": "completion.go",
+    "line": 109,
+    "snippet": "GPT3Davinci002 = \"davinci-002\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 21,
+    "file": "fine_tuning_job_test.go",
+    "line": 26,
+    "snippet": "Model:          \"davinci-002\",",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context",
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0011",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "text model",
+  "name": "davinci-002",
+  "places": {
+   "live": 2,
+   "other": 1
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 67,
+    "file": "chat.go",
+    "line": 107,
+    "snippet": "// This property is used for the \"reasoning\" feature supported by deepseek-reasoner",
+    "use": "comment",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 67,
+    "file": "chat_stream.go",
+    "line": 15,
+    "snippet": "// This property is used for the \"reasoning\" feature supported by deepseek-reasoner",
+    "use": "comment",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 24,
+    "file": "chat_test.go",
+    "line": 540,
+    "snippet": "Model:               \"deepseek-reasoner\",",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context",
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0012",
+  "kind": "model",
+  "maker": "DeepSeek",
+  "mode": "chat model",
+  "name": "deepseek-reasoner",
+  "places": {
+   "live": 1,
+   "other": 2
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 12,
+    "file": "api_internal_test.go",
+    "line": 126,
+    "snippet": "\"openai/deployments/chatgpt-demo\" +",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 12,
+    "file": "api_internal_test.go",
+    "line": 136,
+    "snippet": "\"openai/deployments/chatgpt-demo\" +",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0013",
+  "kind": "model",
+  "maker": "",
+  "mode": "",
+  "name": "deployments/chatgpt-demo",
+  "places": {
+   "live": 2,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 21,
+    "file": "fine_tuning_job_test.go",
+    "line": 29,
+    "snippet": "FineTunedModel: \"ft:davinci-002:my-org:custom_suffix:7q8mpxmy\",",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0014",
+  "kind": "model",
+  "maker": "",
+  "mode": "",
+  "name": "ft:davinci-002:my-org:custom_suffix:7q8mpxmy",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 60,
+    "file": "batch_test.go",
+    "line": 154,
+    "snippet": "}, []byte(\"{\\\"custom_id\\\":\\\"req-1\\\",\\\"body\\\":{\\\"model\\\":\\\"gpt-3.5-turbo\\\",\\\"messages\\\":[{\\\"role\\\":\\\"user\\\",\\\"content\\\":\\\"Hello!\\\"}],\\\"max_to",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 60,
+    "file": "batch_test.go",
+    "line": 195,
+    "snippet": "}, []byte(\"{\\\"custom_id\\\":\\\"req-1\\\",\\\"body\\\":{\\\"model\\\":\\\"gpt-3.5-turbo\\\",\\\"stream\\\":false,\\\"user\\\":\\\"Hello\\\"},\\\"method\\\":\\\"POST\\\",\\\"url\\\":\\",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 92,
+    "file": "batch_test.go",
+    "line": 236,
+    "snippet": "}, []byte(\"{\\\"custom_id\\\":\\\"req-1\\\",\\\"body\\\":{\\\"input\\\":[\\\"Hello\\\",\\\"World\\\"],\\\"model\\\":\\\"gpt-3.5-turbo\\\"},\\\"method\\\":\\\"POST\\\",\\\"url\\\":\\\"/v1",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 73,
+    "file": "chat_stream_test.go",
+    "line": 49,
+    "snippet": "data := `{\"id\":\"1\",\"object\":\"completion\",\"created\":1598069254,\"model\":\"gpt-3.5-turbo\",\"system_fingerprint\": \"fp_d9767fc5b9\",\"choices\":[{\"ind",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 72,
+    "file": "chat_stream_test.go",
+    "line": 54,
+    "snippet": "data = `{\"id\":\"2\",\"object\":\"completion\",\"created\":1598069255,\"model\":\"gpt-3.5-turbo\",\"system_fingerprint\": \"fp_d9767fc5b9\",\"choices\":[{\"inde",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 73,
+    "file": "chat_stream_test.go",
+    "line": 666,
+    "snippet": "data := `{\"id\":\"1\",\"object\":\"completion\",\"created\":1598069254,\"model\":\"gpt-3.5-turbo\",\"system_fingerprint\": \"fp_d9767fc5b9\",\"choices\":[{\"ind",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 72,
+    "file": "chat_stream_test.go",
+    "line": 670,
+    "snippet": "data = `{\"id\":\"2\",\"object\":\"completion\",\"created\":1598069255,\"model\":\"gpt-3.5-turbo\",\"system_fingerprint\": \"fp_d9767fc5b9\",\"choices\":[{\"inde",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 72,
+    "file": "chat_stream_test.go",
+    "line": 674,
+    "snippet": "data = `{\"id\":\"3\",\"object\":\"completion\",\"created\":1598069256,\"model\":\"gpt-3.5-turbo\",\"system_fingerprint\": \"fp_d9767fc5b9\",\"choices\":[],\"usa",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 91,
+    "snippet": "GPT3Dot5Turbo           = \"gpt-3.5-turbo\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 12,
+    "file": "config_test.go",
+    "line": 16,
+    "snippet": "Model:  \"gpt-3.5-turbo\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 12,
+    "file": "config_test.go",
+    "line": 40,
+    "snippet": "Model:  \"gpt-3.5-turbo\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 6,
+    "file": "config_test.go",
+    "line": 44,
+    "snippet": "\"gpt-3.5-turbo\": \"my-gpt35\",",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context",
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0015",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-3.5-turbo",
+  "places": {
+   "live": 12,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 85,
+    "snippet": "GPT3Dot5Turbo0125       = \"gpt-3.5-turbo-0125\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0016",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-3.5-turbo-0125",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 12,
+    "file": "config_test.go",
+    "line": 20,
+    "snippet": "Model:  \"gpt-3.5-turbo-0301\",",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0017",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "",
+  "name": "gpt-3.5-turbo-0301",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 87,
+    "snippet": "GPT3Dot5Turbo0613       = \"gpt-3.5-turbo-0613\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0018",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-3.5-turbo-0613",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 86,
+    "snippet": "GPT3Dot5Turbo1106       = \"gpt-3.5-turbo-1106\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0019",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-3.5-turbo-1106",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 89,
+    "snippet": "GPT3Dot5Turbo16K        = \"gpt-3.5-turbo-16k\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0020",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-3.5-turbo-16k",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 92,
+    "snippet": "GPT3Dot5TurboInstruct   = \"gpt-3.5-turbo-instruct\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 39,
+    "file": "completion.go",
+    "line": 93,
+    "snippet": "// Deprecated: Model is shutdown. Use gpt-3.5-turbo-instruct instead.",
+    "use": "comment",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 39,
+    "file": "completion.go",
+    "line": 95,
+    "snippet": "// Deprecated: Model is shutdown. Use gpt-3.5-turbo-instruct instead.",
+    "use": "comment",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 39,
+    "file": "completion.go",
+    "line": 97,
+    "snippet": "// Deprecated: Model is shutdown. Use gpt-3.5-turbo-instruct instead.",
+    "use": "comment",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 39,
+    "file": "completion.go",
+    "line": 99,
+    "snippet": "// Deprecated: Model is shutdown. Use gpt-3.5-turbo-instruct instead.",
+    "use": "comment",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 39,
+    "file": "completion.go",
+    "line": 101,
+    "snippet": "// Deprecated: Model is shutdown. Use gpt-3.5-turbo-instruct instead.",
+    "use": "comment",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 39,
+    "file": "completion.go",
+    "line": 103,
+    "snippet": "// Deprecated: Model is shutdown. Use gpt-3.5-turbo-instruct instead.",
+    "use": "comment",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 39,
+    "file": "completion.go",
+    "line": 105,
+    "snippet": "// Deprecated: Model is shutdown. Use gpt-3.5-turbo-instruct instead.",
+    "use": "comment",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 39,
+    "file": "completion.go",
+    "line": 110,
+    "snippet": "// Deprecated: Model is shutdown. Use gpt-3.5-turbo-instruct instead.",
+    "use": "comment",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0021",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "text model",
+  "name": "gpt-3.5-turbo-instruct",
+  "places": {
+   "live": 1,
+   "other": 8
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 12,
+    "file": "config_test.go",
+    "line": 17,
+    "snippet": "Expect: \"gpt-35-turbo\",",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0022",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-35-turbo",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 10,
+    "file": "chat_test.go",
+    "line": 458,
+    "snippet": "Model: \"gpt-4\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 29,
+    "file": "chat_test.go",
+    "line": 463,
+    "snippet": "const expected = `{\"model\":\"gpt-4\",\"messages\":null,\"stream\":false}`",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 49,
+    "snippet": "GPT4                    = \"gpt-4\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context",
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0023",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4",
+  "places": {
+   "live": 3,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 45,
+    "snippet": "GPT4Turbo0125           = \"gpt-4-0125-preview\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0024",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4-0125-preview",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 34,
+    "snippet": "GPT40613                = \"gpt-4-0613\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 174,
+    "snippet": "GPT40613:                true,",
+    "use": "live",
+    "via": "GPT40613"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0025",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4-0613",
+  "places": {
+   "live": 2,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 46,
+    "snippet": "GPT4Turbo1106           = \"gpt-4-1106-preview\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0026",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4-1106-preview",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 33,
+    "snippet": "GPT432K                 = \"gpt-4-32k\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 175,
+    "snippet": "GPT432K:                 true,",
+    "use": "live",
+    "via": "GPT432K"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0027",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4-32k",
+  "places": {
+   "live": 2,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 31,
+    "snippet": "GPT432K0613             = \"gpt-4-32k-0613\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 177,
+    "snippet": "GPT432K0613:             true,",
+    "use": "live",
+    "via": "GPT432K0613"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0028",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4-32k-0613",
+  "places": {
+   "live": 2,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 43,
+    "snippet": "GPT4Turbo               = \"gpt-4-turbo\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 171,
+    "snippet": "GPT4Turbo:               true,",
+    "use": "live",
+    "via": "GPT4Turbo"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0029",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4-turbo",
+  "places": {
+   "live": 2,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 44,
+    "snippet": "GPT4Turbo20240409       = \"gpt-4-turbo-2024-04-09\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 172,
+    "snippet": "GPT4Turbo20240409:       true,",
+    "use": "live",
+    "via": "GPT4Turbo20240409"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0030",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4-turbo-2024-04-09",
+  "places": {
+   "live": 2,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 50,
+    "snippet": "GPT4Dot1                = \"gpt-4.1\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 12,
+    "file": "config_test.go",
+    "line": 24,
+    "snippet": "Model:  \"gpt-4.1\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 12,
+    "file": "config_test.go",
+    "line": 25,
+    "snippet": "Expect: \"gpt-4.1\",",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context",
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0031",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4.1",
+  "places": {
+   "live": 3,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 51,
+    "snippet": "GPT4Dot120250414        = \"gpt-4.1-2025-04-14\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0032",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4.1-2025-04-14",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 52,
+    "snippet": "GPT4Dot1Mini            = \"gpt-4.1-mini\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0033",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4.1-mini",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 53,
+    "snippet": "GPT4Dot1Mini20250414    = \"gpt-4.1-mini-2025-04-14\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0034",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4.1-mini-2025-04-14",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 54,
+    "snippet": "GPT4Dot1Nano            = \"gpt-4.1-nano\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0035",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4.1-nano",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 55,
+    "snippet": "GPT4Dot1Nano20250414    = \"gpt-4.1-nano-2025-04-14\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0036",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4.1-nano-2025-04-14",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 56,
+    "snippet": "GPT4Dot5Preview         = \"gpt-4.5-preview\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0037",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4.5-preview",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 36,
+    "snippet": "GPT4o                   = \"gpt-4o\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 16,
+    "file": "response_stream_test.go",
+    "line": 34,
+    "snippet": "\"\\\"model\\\":\\\"gpt-4o\\\",\\\"output\\\":[]}}\\n\\n\" +",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 16,
+    "file": "response_stream_test.go",
+    "line": 41,
+    "snippet": "\"\\\"model\\\":\\\"gpt-4o\\\",\\\"output\\\":[],\\\"output_text\\\":\\\"Hello\\\"}}\\n\\n\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 12,
+    "file": "response_test.go",
+    "line": 61,
+    "snippet": "\"model\":\"gpt-4o\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 75,
+    "file": "response_test.go",
+    "line": 229,
+    "snippet": "_, err := w.Write([]byte(`{\"id\":\"resp_123\",\"object\":\"response\",\"model\":\"gpt-4o\",\"output\":[]}`))",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context",
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0038",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4o",
+  "places": {
+   "live": 5,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 37,
+    "snippet": "GPT4o20240513           = \"gpt-4o-2024-05-13\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 161,
+    "snippet": "GPT4o20240513:           true,",
+    "use": "live",
+    "via": "GPT4o20240513"
+   },
+   {
+    "category": "code",
+    "col": 9,
+    "file": "completion_test.go",
+    "line": 280,
+    "snippet": "openai.GPT4o20240513,",
+    "use": "live",
+    "via": "GPT4o20240513"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0039",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4o-2024-05-13",
+  "places": {
+   "live": 3,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 38,
+    "snippet": "GPT4o20240806           = \"gpt-4o-2024-08-06\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 162,
+    "snippet": "GPT4o20240806:           true,",
+    "use": "live",
+    "via": "GPT4o20240806"
+   },
+   {
+    "category": "code",
+    "col": 9,
+    "file": "completion_test.go",
+    "line": 281,
+    "snippet": "openai.GPT4o20240806,",
+    "use": "live",
+    "via": "GPT4o20240806"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0040",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4o-2024-08-06",
+  "places": {
+   "live": 3,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 39,
+    "snippet": "GPT4o20241120           = \"gpt-4o-2024-11-20\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 163,
+    "snippet": "GPT4o20241120:           true,",
+    "use": "live",
+    "via": "GPT4o20241120"
+   },
+   {
+    "category": "code",
+    "col": 9,
+    "file": "completion_test.go",
+    "line": 282,
+    "snippet": "openai.GPT4o20241120,",
+    "use": "live",
+    "via": "GPT4o20241120"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0041",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4o-2024-11-20",
+  "places": {
+   "live": 3,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 17,
+    "file": "api_integration_test.go",
+    "line": 348,
+    "snippet": "Model: openai.GPT4oMini,",
+    "use": "live",
+    "via": "GPT4oMini"
+   },
+   {
+    "category": "code",
+    "col": 17,
+    "file": "api_integration_test.go",
+    "line": 394,
+    "snippet": "Model: openai.GPT4oMini,",
+    "use": "live",
+    "via": "GPT4oMini"
+   },
+   {
+    "category": "code",
+    "col": 84,
+    "file": "client_test.go",
+    "line": 562,
+    "snippet": "args{baseURL: \"https://test.openai.azure.com/\", suffix: assistantsSuffix, model: GPT4oMini},",
+    "use": "live",
+    "via": "GPT4oMini"
+   },
+   {
+    "category": "code",
+    "col": 89,
+    "file": "client_test.go",
+    "line": 567,
+    "snippet": "args{baseURL: \"https://test.openai.azure.com/\", suffix: chatCompletionsSuffix, model: GPT4oMini},",
+    "use": "live",
+    "via": "GPT4oMini"
+   },
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 41,
+    "snippet": "GPT4oMini               = \"gpt-4o-mini\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 165,
+    "snippet": "GPT4oMini:               true,",
+    "use": "live",
+    "via": "GPT4oMini"
+   },
+   {
+    "category": "code",
+    "col": 9,
+    "file": "completion_test.go",
+    "line": 284,
+    "snippet": "openai.GPT4oMini,",
+    "use": "live",
+    "via": "GPT4oMini"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0042",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4o-mini",
+  "places": {
+   "live": 7,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 119,
+    "file": "chat_stream_test.go",
+    "line": 349,
+    "snippet": "dataBytes = append(dataBytes, []byte(`data: {\"id\":\"1\",\"object\":\"chat.completion.chunk\",\"created\":1729585728,\"model\":\"gpt-4o-mini-2024-07-18\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 119,
+    "file": "chat_stream_test.go",
+    "line": 353,
+    "snippet": "dataBytes = append(dataBytes, []byte(`data: {\"id\":\"2\",\"object\":\"chat.completion.chunk\",\"created\":1729585728,\"model\":\"gpt-4o-mini-2024-07-18\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 119,
+    "file": "chat_stream_test.go",
+    "line": 357,
+    "snippet": "dataBytes = append(dataBytes, []byte(`data: {\"id\":\"3\",\"object\":\"chat.completion.chunk\",\"created\":1729585728,\"model\":\"gpt-4o-mini-2024-07-18\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 119,
+    "file": "chat_stream_test.go",
+    "line": 361,
+    "snippet": "dataBytes = append(dataBytes, []byte(`data: {\"id\":\"4\",\"object\":\"chat.completion.chunk\",\"created\":1729585728,\"model\":\"gpt-4o-mini-2024-07-18\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 20,
+    "file": "chat_stream_test.go",
+    "line": 372,
+    "snippet": "Model:     openai.GPT4oMini20240718,",
+    "use": "live",
+    "via": "GPT4oMini20240718"
+   },
+   {
+    "category": "code",
+    "col": 29,
+    "file": "chat_stream_test.go",
+    "line": 389,
+    "snippet": "Model:             openai.GPT4oMini20240718,",
+    "use": "live",
+    "via": "GPT4oMini20240718"
+   },
+   {
+    "category": "code",
+    "col": 29,
+    "file": "chat_stream_test.go",
+    "line": 402,
+    "snippet": "Model:             openai.GPT4oMini20240718,",
+    "use": "live",
+    "via": "GPT4oMini20240718"
+   },
+   {
+    "category": "code",
+    "col": 29,
+    "file": "chat_stream_test.go",
+    "line": 417,
+    "snippet": "Model:             openai.GPT4oMini20240718,",
+    "use": "live",
+    "via": "GPT4oMini20240718"
+   },
+   {
+    "category": "code",
+    "col": 29,
+    "file": "chat_stream_test.go",
+    "line": 432,
+    "snippet": "Model:             openai.GPT4oMini20240718,",
+    "use": "live",
+    "via": "GPT4oMini20240718"
+   },
+   {
+    "category": "code",
+    "col": 119,
+    "file": "chat_stream_test.go",
+    "line": 470,
+    "snippet": "dataBytes = append(dataBytes, []byte(`data: {\"id\":\"1\",\"object\":\"chat.completion.chunk\",\"created\":1729585728,\"model\":\"gpt-4o-mini-2024-07-18\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 119,
+    "file": "chat_stream_test.go",
+    "line": 474,
+    "snippet": "dataBytes = append(dataBytes, []byte(`data: {\"id\":\"2\",\"object\":\"chat.completion.chunk\",\"created\":1729585728,\"model\":\"gpt-4o-mini-2024-07-18\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 119,
+    "file": "chat_stream_test.go",
+    "line": 478,
+    "snippet": "dataBytes = append(dataBytes, []byte(`data: {\"id\":\"3\",\"object\":\"chat.completion.chunk\",\"created\":1729585728,\"model\":\"gpt-4o-mini-2024-07-18\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 119,
+    "file": "chat_stream_test.go",
+    "line": 482,
+    "snippet": "dataBytes = append(dataBytes, []byte(`data: {\"id\":\"4\",\"object\":\"chat.completion.chunk\",\"created\":1729585728,\"model\":\"gpt-4o-mini-2024-07-18\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 29,
+    "file": "chat_stream_test.go",
+    "line": 510,
+    "snippet": "Model:             openai.GPT4oMini20240718,",
+    "use": "live",
+    "via": "GPT4oMini20240718"
+   },
+   {
+    "category": "code",
+    "col": 29,
+    "file": "chat_stream_test.go",
+    "line": 526,
+    "snippet": "Model:             openai.GPT4oMini20240718,",
+    "use": "live",
+    "via": "GPT4oMini20240718"
+   },
+   {
+    "category": "code",
+    "col": 29,
+    "file": "chat_stream_test.go",
+    "line": 551,
+    "snippet": "Model:             openai.GPT4oMini20240718,",
+    "use": "live",
+    "via": "GPT4oMini20240718"
+   },
+   {
+    "category": "code",
+    "col": 29,
+    "file": "chat_stream_test.go",
+    "line": 576,
+    "snippet": "Model:             openai.GPT4oMini20240718,",
+    "use": "live",
+    "via": "GPT4oMini20240718"
+   },
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 42,
+    "snippet": "GPT4oMini20240718       = \"gpt-4o-mini-2024-07-18\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 166,
+    "snippet": "GPT4oMini20240718:       true,",
+    "use": "live",
+    "via": "GPT4oMini20240718"
+   },
+   {
+    "category": "code",
+    "col": 9,
+    "file": "completion_test.go",
+    "line": 285,
+    "snippet": "openai.GPT4oMini20240718,",
+    "use": "live",
+    "via": "GPT4oMini20240718"
+   }
+  ],
+  "found_by": [
+   "context",
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0043",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4o-mini-2024-07-18",
+  "places": {
+   "live": 20,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 27,
+    "file": "audio.go",
+    "line": 19,
+    "snippet": "GPT4oMiniTranscribe    = \"gpt-4o-mini-transcribe\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0044",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "speech-to-text model",
+  "name": "gpt-4o-mini-transcribe",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 34,
+    "file": "speech.go",
+    "line": 14,
+    "snippet": "TTSModelGPT4oMini SpeechModel = \"gpt-4o-mini-tts\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context",
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0045",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "text-to-speech model",
+  "name": "gpt-4o-mini-tts",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 27,
+    "file": "audio.go",
+    "line": 18,
+    "snippet": "GPT4oTranscribe        = \"gpt-4o-transcribe\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0046",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "speech-to-text model",
+  "name": "gpt-4o-transcribe",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 27,
+    "file": "audio.go",
+    "line": 20,
+    "snippet": "GPT4oTranscribeDiarize = \"gpt-4o-transcribe-diarize\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 12,
+    "file": "audio.go",
+    "line": 69,
+    "snippet": "// such as gpt-4o-transcribe-diarize require it on longer audio, otherwise the API rejects",
+    "use": "comment",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 44,
+    "file": "audio_test.go",
+    "line": 89,
+    "snippet": "req := AudioRequest{FilePath: path, Model: GPT4oTranscribeDiarize, ChunkingStrategy: strategy}",
+    "use": "live",
+    "via": "GPT4oTranscribeDiarize"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0047",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "speech-to-text model",
+  "name": "gpt-4o-transcribe-diarize",
+  "places": {
+   "live": 2,
+   "other": 1
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 52,
+    "file": "chat.go",
+    "line": 327,
+    "snippet": "// Note: This field is only confirmed to work with gpt-5, gpt-5-mini and gpt-5-nano.",
+    "use": "comment",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 58,
+    "snippet": "GPT5                    = \"gpt-5\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 49,
+    "file": "reasoning_validator.go",
+    "line": 70,
+    "snippet": "gpt5Series := strings.HasPrefix(request.Model, \"gpt-5\")",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0048",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5",
+  "places": {
+   "live": 2,
+   "other": 1
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 32,
+    "file": "chat_test.go",
+    "line": 389,
+    "snippet": "Model:               openai.GPT5ChatLatest,",
+    "use": "live",
+    "via": "GPT5ChatLatest"
+   },
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 62,
+    "snippet": "GPT5ChatLatest          = \"gpt-5-chat-latest\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 189,
+    "snippet": "GPT5ChatLatest:          true,",
+    "use": "live",
+    "via": "GPT5ChatLatest"
+   },
+   {
+    "category": "code",
+    "col": 9,
+    "file": "completion_test.go",
+    "line": 315,
+    "snippet": "openai.GPT5ChatLatest,",
+    "use": "live",
+    "via": "GPT5ChatLatest"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0049",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5-chat-latest",
+  "places": {
+   "live": 4,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 63,
+    "snippet": "GPT5Codex               = \"gpt-5-codex\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 190,
+    "snippet": "GPT5Codex:               true,",
+    "use": "live",
+    "via": "GPT5Codex"
+   },
+   {
+    "category": "code",
+    "col": 9,
+    "file": "completion_test.go",
+    "line": 316,
+    "snippet": "openai.GPT5Codex,",
+    "use": "live",
+    "via": "GPT5Codex"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0050",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5-codex",
+  "places": {
+   "live": 3,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 59,
+    "file": "chat.go",
+    "line": 327,
+    "snippet": "// Note: This field is only confirmed to work with gpt-5, gpt-5-mini and gpt-5-nano.",
+    "use": "comment",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 32,
+    "file": "chat_test.go",
+    "line": 354,
+    "snippet": "Model:               openai.GPT5Mini,",
+    "use": "live",
+    "via": "GPT5Mini"
+   },
+   {
+    "category": "code",
+    "col": 32,
+    "file": "chat_test.go",
+    "line": 425,
+    "snippet": "Model:               openai.GPT5Mini,",
+    "use": "live",
+    "via": "GPT5Mini"
+   },
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 59,
+    "snippet": "GPT5Mini                = \"gpt-5-mini\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 186,
+    "snippet": "GPT5Mini:                true,",
+    "use": "live",
+    "via": "GPT5Mini"
+   },
+   {
+    "category": "code",
+    "col": 9,
+    "file": "completion_test.go",
+    "line": 312,
+    "snippet": "openai.GPT5Mini,",
+    "use": "live",
+    "via": "GPT5Mini"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0051",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5-mini",
+  "places": {
+   "live": 5,
+   "other": 1
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 20,
+    "file": "api_integration_test.go",
+    "line": 179,
+    "snippet": "Model:     openai.GPT5Nano,",
+    "use": "live",
+    "via": "GPT5Nano"
+   },
+   {
+    "category": "code",
+    "col": 29,
+    "file": "api_integration_test.go",
+    "line": 200,
+    "snippet": "Model:              openai.GPT5Nano,",
+    "use": "live",
+    "via": "GPT5Nano"
+   },
+   {
+    "category": "code",
+    "col": 20,
+    "file": "api_integration_test.go",
+    "line": 240,
+    "snippet": "Model:     openai.GPT5Nano,",
+    "use": "live",
+    "via": "GPT5Nano"
+   },
+   {
+    "category": "code",
+    "col": 74,
+    "file": "chat.go",
+    "line": 327,
+    "snippet": "// Note: This field is only confirmed to work with gpt-5, gpt-5-mini and gpt-5-nano.",
+    "use": "comment",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 32,
+    "file": "chat_test.go",
+    "line": 371,
+    "snippet": "Model:               openai.GPT5Nano,",
+    "use": "live",
+    "via": "GPT5Nano"
+   },
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 60,
+    "snippet": "GPT5Nano                = \"gpt-5-nano\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 187,
+    "snippet": "GPT5Nano:                true,",
+    "use": "live",
+    "via": "GPT5Nano"
+   },
+   {
+    "category": "code",
+    "col": 9,
+    "file": "completion_test.go",
+    "line": 313,
+    "snippet": "openai.GPT5Nano,",
+    "use": "live",
+    "via": "GPT5Nano"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0052",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5-nano",
+  "places": {
+   "live": 7,
+   "other": 1
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 61,
+    "snippet": "GPT5Pro                 = \"gpt-5-pro\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 188,
+    "snippet": "GPT5Pro:                 true,",
+    "use": "live",
+    "via": "GPT5Pro"
+   },
+   {
+    "category": "code",
+    "col": 9,
+    "file": "completion_test.go",
+    "line": 314,
+    "snippet": "openai.GPT5Pro,",
+    "use": "live",
+    "via": "GPT5Pro"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0053",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5-pro",
+  "places": {
+   "live": 3,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 64,
+    "snippet": "GPT5Dot1                = \"gpt-5.1\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0054",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.1",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 65,
+    "snippet": "GPT5Dot1ChatLatest      = \"gpt-5.1-chat-latest\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0055",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.1-chat-latest",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 66,
+    "snippet": "GPT5Dot1Codex           = \"gpt-5.1-codex\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0056",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.1-codex",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 68,
+    "snippet": "GPT5Dot1CodexMax        = \"gpt-5.1-codex-max\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0057",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.1-codex-max",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 67,
+    "snippet": "GPT5Dot1CodexMini       = \"gpt-5.1-codex-mini\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0058",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.1-codex-mini",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 69,
+    "snippet": "GPT5Dot2                = \"gpt-5.2\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0059",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.2",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 70,
+    "snippet": "GPT5Dot2ChatLatest      = \"gpt-5.2-chat-latest\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0060",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.2-chat-latest",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 72,
+    "snippet": "GPT5Dot2Codex           = \"gpt-5.2-codex\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0061",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.2-codex",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 71,
+    "snippet": "GPT5Dot2Pro             = \"gpt-5.2-pro\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0062",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.2-pro",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 73,
+    "snippet": "GPT5Dot3ChatLatest      = \"gpt-5.3-chat-latest\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0063",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.3-chat-latest",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 74,
+    "snippet": "GPT5Dot3Codex           = \"gpt-5.3-codex\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0064",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.3-codex",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 75,
+    "snippet": "GPT5Dot4                = \"gpt-5.4\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0065",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.4",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 76,
+    "snippet": "GPT5Dot4Mini            = \"gpt-5.4-mini\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0066",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.4-mini",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 77,
+    "snippet": "GPT5Dot4Nano            = \"gpt-5.4-nano\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0067",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.4-nano",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 78,
+    "snippet": "GPT5Dot4Pro             = \"gpt-5.4-pro\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0068",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.4-pro",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 79,
+    "snippet": "GPT5Dot5                = \"gpt-5.5\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0069",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.5",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 80,
+    "snippet": "GPT5Dot5Pro             = \"gpt-5.5-pro\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0070",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.5-pro",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 81,
+    "snippet": "GPT5Dot6                = \"gpt-5.6\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0071",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.6",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 84,
+    "snippet": "GPT5Dot6Luna            = \"gpt-5.6-luna\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0072",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.6-luna",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 82,
+    "snippet": "GPT5Dot6Sol             = \"gpt-5.6-sol\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "docs",
+    "col": 46,
+    "file": "examples/responses/README.md",
+    "line": 11,
+    "snippet": "Set `OPENAI_MODEL` to use a model other than `gpt-5.6-sol`.",
+    "use": "docs",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0073",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.6-sol",
+  "places": {
+   "live": 1,
+   "other": 1
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 83,
+    "snippet": "GPT5Dot6Terra           = \"gpt-5.6-terra\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0074",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.6-terra",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "docs",
+    "col": 17,
+    "file": "README.md",
+    "line": 132,
+    "snippet": "| `GPT6Astra` | `gpt-6-astra` | Most demanding reasoning and coding |",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 13,
+    "snippet": "GPT6Astra               = \"gpt-6-astra\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 134,
+    "snippet": "GPT6Astra:               true,",
+    "use": "live",
+    "via": "GPT6Astra"
+   },
+   {
+    "category": "code",
+    "col": 39,
+    "file": "modern_models_test.go",
+    "line": 16,
+    "snippet": "{openai.GPT6Dot1Sol, false}, {openai.GPT6Astra, false},",
+    "use": "live",
+    "via": "GPT6Astra"
+   },
+   {
+    "category": "code",
+    "col": 29,
+    "file": "modern_models_test.go",
+    "line": 77,
+    "snippet": "openai.GPT6Dot1Sol, openai.GPT6Astra, openai.GPT6Sol, openai.GPT6Luna,",
+    "use": "live",
+    "via": "GPT6Astra"
+   },
+   {
+    "category": "code",
+    "col": 6,
+    "file": "reasoning_validator.go",
+    "line": 62,
+    "snippet": "case GPT6Astra, GPT6Dot1Sol:",
+    "use": "live",
+    "via": "GPT6Astra"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0075",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-6-astra",
+  "places": {
+   "live": 5,
+   "other": 1
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "docs",
+    "col": 16,
+    "file": "README.md",
+    "line": 134,
+    "snippet": "| `GPT6Luna` | `gpt-6-luna` | Focused, high-volume work |",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 30,
+    "file": "api_integration_test.go",
+    "line": 126,
+    "snippet": "Model:               openai.GPT6Luna,",
+    "use": "live",
+    "via": "GPT6Luna"
+   },
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 15,
+    "snippet": "GPT6Luna                = \"gpt-6-luna\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 136,
+    "snippet": "GPT6Luna:                true,",
+    "use": "live",
+    "via": "GPT6Luna"
+   },
+   {
+    "category": "code",
+    "col": 34,
+    "file": "modern_models_test.go",
+    "line": 17,
+    "snippet": "{openai.GPT6Sol, true}, {openai.GPT6Luna, true},",
+    "use": "live",
+    "via": "GPT6Luna"
+   },
+   {
+    "category": "code",
+    "col": 63,
+    "file": "modern_models_test.go",
+    "line": 77,
+    "snippet": "openai.GPT6Dot1Sol, openai.GPT6Astra, openai.GPT6Sol, openai.GPT6Luna,",
+    "use": "live",
+    "via": "GPT6Luna"
+   },
+   {
+    "category": "code",
+    "col": 15,
+    "file": "reasoning_validator.go",
+    "line": 64,
+    "snippet": "case GPT6Sol, GPT6Luna:",
+    "use": "live",
+    "via": "GPT6Luna"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0076",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-6-luna",
+  "places": {
+   "live": 6,
+   "other": 1
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "docs",
+    "col": 15,
+    "file": "README.md",
+    "line": 133,
+    "snippet": "| `GPT6Sol` | `gpt-6-sol` | Previous Sol model |",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 14,
+    "snippet": "GPT6Sol                 = \"gpt-6-sol\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 135,
+    "snippet": "GPT6Sol:                 true,",
+    "use": "live",
+    "via": "GPT6Sol"
+   },
+   {
+    "category": "code",
+    "col": 10,
+    "file": "modern_models_test.go",
+    "line": 17,
+    "snippet": "{openai.GPT6Sol, true}, {openai.GPT6Luna, true},",
+    "use": "live",
+    "via": "GPT6Sol"
+   },
+   {
+    "category": "code",
+    "col": 47,
+    "file": "modern_models_test.go",
+    "line": 77,
+    "snippet": "openai.GPT6Dot1Sol, openai.GPT6Astra, openai.GPT6Sol, openai.GPT6Luna,",
+    "use": "live",
+    "via": "GPT6Sol"
+   },
+   {
+    "category": "code",
+    "col": 6,
+    "file": "reasoning_validator.go",
+    "line": 64,
+    "snippet": "case GPT6Sol, GPT6Luna:",
+    "use": "live",
+    "via": "GPT6Sol"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0077",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-6-sol",
+  "places": {
+   "live": 5,
+   "other": 1
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "docs",
+    "col": 19,
+    "file": "README.md",
+    "line": 131,
+    "snippet": "| `GPT6Dot1Sol` | `gpt-6.1-sol` | Complex coding and professional work |",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 12,
+    "snippet": "GPT6Dot1Sol             = \"gpt-6.1-sol\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0078",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-6.1-sol",
+  "places": {
+   "live": 1,
+   "other": 1
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 39,
+    "file": "image.go",
+    "line": 35,
+    "snippet": "CreateImageModelGptImage1          = \"gpt-image-1\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0079",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "image model",
+  "name": "gpt-image-1",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 39,
+    "file": "image.go",
+    "line": 36,
+    "snippet": "CreateImageModelGptImage1Mini      = \"gpt-image-1-mini\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0080",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "image model",
+  "name": "gpt-image-1-mini",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 39,
+    "file": "image.go",
+    "line": 37,
+    "snippet": "CreateImageModelGptImage1Dot5      = \"gpt-image-1.5\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0081",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "image model",
+  "name": "gpt-image-1.5",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 39,
+    "file": "image.go",
+    "line": 38,
+    "snippet": "CreateImageModelGptImage2          = \"gpt-image-2\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0082",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "image model",
+  "name": "gpt-image-2",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 27,
+    "file": "audio.go",
+    "line": 21,
+    "snippet": "GPTTranscribe          = \"gpt-transcribe\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0083",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "speech-to-text model",
+  "name": "gpt-transcribe",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 12,
+    "file": "chat_test.go",
+    "line": 1193,
+    "snippet": "\"model\": \"llama3-1b\",",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0084",
+  "kind": "model",
+  "maker": "Meta",
+  "mode": "",
+  "name": "llama3-1b",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 21,
+    "snippet": "O120241217              = \"o1-2024-12-17\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0085",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "o1-2024-12-17",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 22,
+    "file": "chat_test.go",
+    "line": 74,
+    "snippet": "Model:     openai.O1Mini,",
+    "use": "live",
+    "via": "O1Mini"
+   },
+   {
+    "category": "code",
+    "col": 32,
+    "file": "chat_test.go",
+    "line": 114,
+    "snippet": "Model:               openai.O1Mini,",
+    "use": "live",
+    "via": "O1Mini"
+   },
+   {
+    "category": "code",
+    "col": 32,
+    "file": "chat_test.go",
+    "line": 131,
+    "snippet": "Model:               openai.O1Mini,",
+    "use": "live",
+    "via": "O1Mini"
+   },
+   {
+    "category": "code",
+    "col": 32,
+    "file": "chat_test.go",
+    "line": 149,
+    "snippet": "Model:               openai.O1Mini,",
+    "use": "live",
+    "via": "O1Mini"
+   },
+   {
+    "category": "code",
+    "col": 32,
+    "file": "chat_test.go",
+    "line": 168,
+    "snippet": "Model:               openai.O1Mini,",
+    "use": "live",
+    "via": "O1Mini"
+   },
+   {
+    "category": "code",
+    "col": 32,
+    "file": "chat_test.go",
+    "line": 185,
+    "snippet": "Model:               openai.O1Mini,",
+    "use": "live",
+    "via": "O1Mini"
+   },
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 16,
+    "snippet": "O1Mini                  = \"o1-mini\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 137,
+    "snippet": "O1Mini:                  true,",
+    "use": "live",
+    "via": "O1Mini"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0086",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "o1-mini",
+  "places": {
+   "live": 8,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 17,
+    "snippet": "O1Mini20240912          = \"o1-mini-2024-09-12\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 138,
+    "snippet": "O1Mini20240912:          true,",
+    "use": "live",
+    "via": "O1Mini20240912"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0087",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "o1-mini-2024-09-12",
+  "places": {
+   "live": 2,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 22,
+    "file": "chat_test.go",
+    "line": 66,
+    "snippet": "Model:     openai.O1Preview,",
+    "use": "live",
+    "via": "O1Preview"
+   },
+   {
+    "category": "code",
+    "col": 32,
+    "file": "chat_test.go",
+    "line": 106,
+    "snippet": "Model:               openai.O1Preview,",
+    "use": "live",
+    "via": "O1Preview"
+   },
+   {
+    "category": "code",
+    "col": 30,
+    "file": "chat_test.go",
+    "line": 506,
+    "snippet": "Model:               openai.O1Preview,",
+    "use": "live",
+    "via": "O1Preview"
+   },
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 18,
+    "snippet": "O1Preview               = \"o1-preview\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 139,
+    "snippet": "O1Preview:               true,",
+    "use": "live",
+    "via": "O1Preview"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0088",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "o1-preview",
+  "places": {
+   "live": 5,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 23,
+    "snippet": "O320250416              = \"o3-2025-04-16\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 149,
+    "snippet": "O320250416:              true,",
+    "use": "live",
+    "via": "O320250416"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0089",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "o3-2025-04-16",
+  "places": {
+   "live": 2,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 27,
+    "snippet": "O3DeepResearch          = \"o3-deep-research\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 144,
+    "snippet": "O3DeepResearch:          true,",
+    "use": "live",
+    "via": "O3DeepResearch"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0090",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "o3-deep-research",
+  "places": {
+   "live": 2,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 213,
+    "file": "chat_stream_test.go",
+    "line": 816,
+    "snippet": "dataBytes = append(dataBytes, []byte(`data: {\"id\":\"4\",\"object\":\"chat.completion.chunk\",\"created\":1729585728,\"model\":\"o3-mini-2025-01-31\",\"sy",
+    "use": "live",
+    "via": "O3Mini"
+   },
+   {
+    "category": "code",
+    "col": 17,
+    "file": "chat_stream_test.go",
+    "line": 899,
+    "snippet": "Content: \" O3Mini\",",
+    "use": "live",
+    "via": "O3Mini"
+   },
+   {
+    "category": "code",
+    "col": 20,
+    "file": "chat_stream_test.go",
+    "line": 942,
+    "snippet": "Model:     openai.O3Mini,",
+    "use": "live",
+    "via": "O3Mini"
+   },
+   {
+    "category": "code",
+    "col": 32,
+    "file": "chat_test.go",
+    "line": 226,
+    "snippet": "Model:               openai.O3Mini,",
+    "use": "live",
+    "via": "O3Mini"
+   },
+   {
+    "category": "code",
+    "col": 32,
+    "file": "chat_test.go",
+    "line": 234,
+    "snippet": "Model:               openai.O3Mini,",
+    "use": "live",
+    "via": "O3Mini"
+   },
+   {
+    "category": "code",
+    "col": 32,
+    "file": "chat_test.go",
+    "line": 251,
+    "snippet": "Model:               openai.O3Mini,",
+    "use": "live",
+    "via": "O3Mini"
+   },
+   {
+    "category": "code",
+    "col": 32,
+    "file": "chat_test.go",
+    "line": 269,
+    "snippet": "Model:               openai.O3Mini,",
+    "use": "live",
+    "via": "O3Mini"
+   },
+   {
+    "category": "code",
+    "col": 32,
+    "file": "chat_test.go",
+    "line": 288,
+    "snippet": "Model:               openai.O3Mini,",
+    "use": "live",
+    "via": "O3Mini"
+   },
+   {
+    "category": "code",
+    "col": 32,
+    "file": "chat_test.go",
+    "line": 305,
+    "snippet": "Model:               openai.O3Mini,",
+    "use": "live",
+    "via": "O3Mini"
+   },
+   {
+    "category": "code",
+    "col": 30,
+    "file": "chat_test.go",
+    "line": 523,
+    "snippet": "Model:               openai.O3Mini,",
+    "use": "live",
+    "via": "O3Mini"
+   },
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 24,
+    "snippet": "O3Mini                  = \"o3-mini\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 141,
+    "snippet": "O3Mini:                  true,",
+    "use": "live",
+    "via": "O3Mini"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0091",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "o3-mini",
+  "places": {
+   "live": 12,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 119,
+    "file": "chat_stream_test.go",
+    "line": 804,
+    "snippet": "dataBytes = append(dataBytes, []byte(`data: {\"id\":\"1\",\"object\":\"chat.completion.chunk\",\"created\":1729585728,\"model\":\"o3-mini-2025-01-31\",\"sy",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 119,
+    "file": "chat_stream_test.go",
+    "line": 808,
+    "snippet": "dataBytes = append(dataBytes, []byte(`data: {\"id\":\"2\",\"object\":\"chat.completion.chunk\",\"created\":1729585728,\"model\":\"o3-mini-2025-01-31\",\"sy",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 119,
+    "file": "chat_stream_test.go",
+    "line": 812,
+    "snippet": "dataBytes = append(dataBytes, []byte(`data: {\"id\":\"3\",\"object\":\"chat.completion.chunk\",\"created\":1729585728,\"model\":\"o3-mini-2025-01-31\",\"sy",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 119,
+    "file": "chat_stream_test.go",
+    "line": 816,
+    "snippet": "dataBytes = append(dataBytes, []byte(`data: {\"id\":\"4\",\"object\":\"chat.completion.chunk\",\"created\":1729585728,\"model\":\"o3-mini-2025-01-31\",\"sy",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 119,
+    "file": "chat_stream_test.go",
+    "line": 820,
+    "snippet": "dataBytes = append(dataBytes, []byte(`data: {\"id\":\"5\",\"object\":\"chat.completion.chunk\",\"created\":1729585728,\"model\":\"o3-mini-2025-01-31\",\"sy",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 30,
+    "file": "chat_stream_test.go",
+    "line": 831,
+    "snippet": "Model:               openai.O3Mini20250131,",
+    "use": "live",
+    "via": "O3Mini20250131"
+   },
+   {
+    "category": "code",
+    "col": 29,
+    "file": "chat_stream_test.go",
+    "line": 848,
+    "snippet": "Model:             openai.O3Mini20250131,",
+    "use": "live",
+    "via": "O3Mini20250131"
+   },
+   {
+    "category": "code",
+    "col": 29,
+    "file": "chat_stream_test.go",
+    "line": 863,
+    "snippet": "Model:             openai.O3Mini20250131,",
+    "use": "live",
+    "via": "O3Mini20250131"
+   },
+   {
+    "category": "code",
+    "col": 29,
+    "file": "chat_stream_test.go",
+    "line": 878,
+    "snippet": "Model:             openai.O3Mini20250131,",
+    "use": "live",
+    "via": "O3Mini20250131"
+   },
+   {
+    "category": "code",
+    "col": 29,
+    "file": "chat_stream_test.go",
+    "line": 893,
+    "snippet": "Model:             openai.O3Mini20250131,",
+    "use": "live",
+    "via": "O3Mini20250131"
+   },
+   {
+    "category": "code",
+    "col": 29,
+    "file": "chat_stream_test.go",
+    "line": 908,
+    "snippet": "Model:             openai.O3Mini20250131,",
+    "use": "live",
+    "via": "O3Mini20250131"
+   },
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 25,
+    "snippet": "O3Mini20250131          = \"o3-mini-2025-01-31\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 142,
+    "snippet": "O3Mini20250131:          true,",
+    "use": "live",
+    "via": "O3Mini20250131"
+   }
+  ],
+  "found_by": [
+   "context",
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0092",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "o3-mini-2025-01-31",
+  "places": {
+   "live": 13,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 26,
+    "snippet": "O3Pro                   = \"o3-pro\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0093",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "o3-pro",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 20,
+    "file": "chat_stream_test.go",
+    "line": 992,
+    "snippet": "Model:     openai.O4Mini,",
+    "use": "live",
+    "via": "O4Mini"
+   },
+   {
+    "category": "code",
+    "col": 62,
+    "file": "chat_stream_test.go",
+    "line": 1008,
+    "snippet": "t.Errorf(\"Expected ErrReasoningModelMaxTokensDeprecated for O4Mini, got: %v\", err)",
+    "use": "live",
+    "via": "O4Mini"
+   },
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 28,
+    "snippet": "O4Mini                  = \"o4-mini\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 145,
+    "snippet": "O4Mini:                  true,",
+    "use": "live",
+    "via": "O4Mini"
+   },
+   {
+    "category": "code",
+    "col": 71,
+    "file": "completion_test.go",
+    "line": 54,
+    "snippet": "// TestCompletionsWrongModelO4Mini Tests the completions endpoint with O4Mini model which is not supported.",
+    "use": "comment",
+    "via": "O4Mini"
+   },
+   {
+    "category": "code",
+    "col": 21,
+    "file": "completion_test.go",
+    "line": 64,
+    "snippet": "Model:     openai.O4Mini,",
+    "use": "live",
+    "via": "O4Mini"
+   },
+   {
+    "category": "code",
+    "col": 77,
+    "file": "completion_test.go",
+    "line": 68,
+    "snippet": "t.Fatalf(\"CreateCompletion should return ErrCompletionUnsupportedModel for O4Mini, but returned: %v\", err)",
+    "use": "live",
+    "via": "O4Mini"
+   },
+   {
+    "category": "code",
+    "col": 41,
+    "file": "models_test.go",
+    "line": 59,
+    "snippet": "// TestGetModelO4Mini Tests the retrieve O4Mini model endpoint of the API using the mocked server.",
+    "use": "comment",
+    "via": "O4Mini"
+   },
+   {
+    "category": "code",
+    "col": 50,
+    "file": "models_test.go",
+    "line": 64,
+    "snippet": "_, err := client.GetModel(context.Background(), \"o4-mini\")",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 44,
+    "file": "models_test.go",
+    "line": 65,
+    "snippet": "checks.NoError(t, err, \"GetModel error for O4Mini\")",
+    "use": "live",
+    "via": "O4Mini"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0094",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "o4-mini",
+  "places": {
+   "live": 8,
+   "other": 2
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 29,
+    "snippet": "O4Mini20250416          = \"o4-mini-2025-04-16\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 146,
+    "snippet": "O4Mini20250416:          true,",
+    "use": "live",
+    "via": "O4Mini20250416"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0095",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "o4-mini-2025-04-16",
+  "places": {
+   "live": 2,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 28,
+    "file": "completion.go",
+    "line": 30,
+    "snippet": "O4MiniDeepResearch      = \"o4-mini-deep-research\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 2,
+    "file": "completion.go",
+    "line": 147,
+    "snippet": "O4MiniDeepResearch:      true,",
+    "use": "live",
+    "via": "O4MiniDeepResearch"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0096",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "o4-mini-deep-research",
+  "places": {
+   "live": 2,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 27,
+    "file": "moderation.go",
+    "line": 18,
+    "snippet": "ModerationOmni20240926 = \"omni-moderation-2024-09-26\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0097",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "moderation model",
+  "name": "omni-moderation-2024-09-26",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 27,
+    "file": "moderation.go",
+    "line": 17,
+    "snippet": "ModerationOmniLatest   = \"omni-moderation-latest\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0098",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "moderation model",
+  "name": "omni-moderation-latest",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 73,
+    "file": "stream_test.go",
+    "line": 44,
+    "snippet": "data := `{\"id\":\"1\",\"object\":\"completion\",\"created\":1598069254,\"model\":\"text-davinci-002\",\"choices\":[{\"text\":\"response1\",\"finish_reason\":\"max",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 72,
+    "file": "stream_test.go",
+    "line": 49,
+    "snippet": "data = `{\"id\":\"2\",\"object\":\"completion\",\"created\":1598069255,\"model\":\"text-davinci-002\",\"choices\":[{\"text\":\"response2\",\"finish_reason\":\"max_",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 14,
+    "file": "stream_test.go",
+    "line": 61,
+    "snippet": "Model:     \"text-davinci-002\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 13,
+    "file": "stream_test.go",
+    "line": 73,
+    "snippet": "Model:   \"text-davinci-002\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 13,
+    "file": "stream_test.go",
+    "line": 80,
+    "snippet": "Model:   \"text-davinci-002\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 73,
+    "file": "stream_test.go",
+    "line": 192,
+    "snippet": "data := `{\"id\":\"1\",\"object\":\"completion\",\"created\":1598069254,\"model\":\"text-davinci-002\",\"choices\":[{\"text\":\"response1\",\"finish_reason\":\"max",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 72,
+    "file": "stream_test.go",
+    "line": 202,
+    "snippet": "data = `{\"id\":\"2\",\"object\":\"completion\",\"created\":1598069255,\"model\":\"text-davinci-002\",\"choices\":[{\"text\":\"response2\",\"finish_reason\":\"max_",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 14,
+    "file": "stream_test.go",
+    "line": 214,
+    "snippet": "Model:     \"text-davinci-002\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 73,
+    "file": "stream_test.go",
+    "line": 238,
+    "snippet": "data := `{\"id\":\"1\",\"object\":\"completion\",\"created\":1598069254,\"model\":\"text-davinci-002\",\"choices\":[{\"text\":\"response1\",\"finish_reason\":\"max",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 14,
+    "file": "stream_test.go",
+    "line": 249,
+    "snippet": "Model:     \"text-davinci-002\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 73,
+    "file": "stream_test.go",
+    "line": 273,
+    "snippet": "data := `{\"id\":\"1\",\"object\":\"completion\",\"created\":1598069254,\"model\":\"text-davinci-002\",\"choices\":[{\"text\":\"response1\",\"finish_reason\":\"max",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 14,
+    "file": "stream_test.go",
+    "line": 290,
+    "snippet": "Model:     \"text-davinci-002\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 14,
+    "file": "stream_test.go",
+    "line": 317,
+    "snippet": "Model:     \"text-davinci-002\",",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0099",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "",
+  "name": "text-davinci-002",
+  "places": {
+   "live": 13,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 35,
+    "file": "embeddings.go",
+    "line": 40,
+    "snippet": "LargeEmbedding3 EmbeddingModel = \"text-embedding-3-large\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context",
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0100",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "embedding model",
+  "name": "text-embedding-3-large",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 35,
+    "file": "embeddings.go",
+    "line": 39,
+    "snippet": "SmallEmbedding3 EmbeddingModel = \"text-embedding-3-small\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context",
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0101",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "embedding model",
+  "name": "text-embedding-3-small",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 237,
+    "file": "batch_test.go",
+    "line": 236,
+    "snippet": "}, []byte(\"{\\\"custom_id\\\":\\\"req-1\\\",\\\"body\\\":{\\\"input\\\":[\\\"Hello\\\",\\\"World\\\"],\\\"model\\\":\\\"gpt-3.5-turbo\\\"},\\\"method\\\":\\\"POST\\\",\\\"url\\\":\\\"/v1",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 12,
+    "file": "config_test.go",
+    "line": 28,
+    "snippet": "Model:  \"text-embedding-ada-002\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 12,
+    "file": "config_test.go",
+    "line": 29,
+    "snippet": "Expect: \"text-embedding-ada-002\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 54,
+    "file": "embeddings.go",
+    "line": 20,
+    "snippet": "// Deprecated: The following block is shut down. Use text-embedding-ada-002 instead.",
+    "use": "comment",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 35,
+    "file": "embeddings.go",
+    "line": 38,
+    "snippet": "AdaEmbeddingV2  EmbeddingModel = \"text-embedding-ada-002\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context",
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0102",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "embedding model",
+  "name": "text-embedding-ada-002",
+  "places": {
+   "live": 4,
+   "other": 1
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 41,
+    "file": "embeddings.go",
+    "line": 25,
+    "snippet": "AdaSearchDocument     EmbeddingModel = \"text-search-ada-doc-001\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0103",
+  "kind": "model",
+  "maker": "",
+  "mode": "",
+  "name": "text-search-ada-doc-001",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 41,
+    "file": "embeddings.go",
+    "line": 26,
+    "snippet": "AdaSearchQuery        EmbeddingModel = \"text-search-ada-query-001\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0104",
+  "kind": "model",
+  "maker": "",
+  "mode": "",
+  "name": "text-search-ada-query-001",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 41,
+    "file": "embeddings.go",
+    "line": 27,
+    "snippet": "BabbageSearchDocument EmbeddingModel = \"text-search-babbage-doc-001\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0105",
+  "kind": "model",
+  "maker": "",
+  "mode": "",
+  "name": "text-search-babbage-doc-001",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 41,
+    "file": "embeddings.go",
+    "line": 28,
+    "snippet": "BabbageSearchQuery    EmbeddingModel = \"text-search-babbage-query-001\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0106",
+  "kind": "model",
+  "maker": "",
+  "mode": "",
+  "name": "text-search-babbage-query-001",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 41,
+    "file": "embeddings.go",
+    "line": 29,
+    "snippet": "CurieSearchDocument   EmbeddingModel = \"text-search-curie-doc-001\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0107",
+  "kind": "model",
+  "maker": "",
+  "mode": "",
+  "name": "text-search-curie-doc-001",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 41,
+    "file": "embeddings.go",
+    "line": 30,
+    "snippet": "CurieSearchQuery      EmbeddingModel = \"text-search-curie-query-001\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0108",
+  "kind": "model",
+  "maker": "",
+  "mode": "",
+  "name": "text-search-curie-query-001",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 41,
+    "file": "embeddings.go",
+    "line": 31,
+    "snippet": "DavinciSearchDocument EmbeddingModel = \"text-search-davinci-doc-001\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0109",
+  "kind": "model",
+  "maker": "",
+  "mode": "",
+  "name": "text-search-davinci-doc-001",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 41,
+    "file": "embeddings.go",
+    "line": 32,
+    "snippet": "DavinciSearchQuery    EmbeddingModel = \"text-search-davinci-query-001\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0110",
+  "kind": "model",
+  "maker": "",
+  "mode": "",
+  "name": "text-search-davinci-query-001",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 41,
+    "file": "embeddings.go",
+    "line": 21,
+    "snippet": "AdaSimilarity         EmbeddingModel = \"text-similarity-ada-001\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0111",
+  "kind": "model",
+  "maker": "",
+  "mode": "",
+  "name": "text-similarity-ada-001",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 41,
+    "file": "embeddings.go",
+    "line": 22,
+    "snippet": "BabbageSimilarity     EmbeddingModel = \"text-similarity-babbage-001\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0112",
+  "kind": "model",
+  "maker": "",
+  "mode": "",
+  "name": "text-similarity-babbage-001",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 41,
+    "file": "embeddings.go",
+    "line": 23,
+    "snippet": "CurieSimilarity       EmbeddingModel = \"text-similarity-curie-001\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0113",
+  "kind": "model",
+  "maker": "",
+  "mode": "",
+  "name": "text-similarity-curie-001",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 41,
+    "file": "embeddings.go",
+    "line": 24,
+    "snippet": "DavinciSimilarity     EmbeddingModel = \"text-similarity-davinci-001\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0114",
+  "kind": "model",
+  "maker": "",
+  "mode": "",
+  "name": "text-similarity-davinci-001",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 34,
+    "file": "speech.go",
+    "line": 11,
+    "snippet": "TTSModel1         SpeechModel = \"tts-1\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 102,
+    "file": "speech.go",
+    "line": 47,
+    "snippet": "Instructions   string               `json:\"instructions,omitempty\"`    // Optional, Doesnt work with tts-1 or tts-1-hd.",
+    "use": "comment",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context",
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0115",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "text-to-speech model",
+  "name": "tts-1",
+  "places": {
+   "live": 1,
+   "other": 1
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 34,
+    "file": "speech.go",
+    "line": 12,
+    "snippet": "TTSModel1HD       SpeechModel = \"tts-1-hd\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 111,
+    "file": "speech.go",
+    "line": 47,
+    "snippet": "Instructions   string               `json:\"instructions,omitempty\"`    // Optional, Doesnt work with tts-1 or tts-1-hd.",
+    "use": "comment",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context",
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0116",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "text-to-speech model",
+  "name": "tts-1-hd",
+  "places": {
+   "live": 1,
+   "other": 1
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 27,
+    "file": "audio.go",
+    "line": 17,
+    "snippet": "Whisper1               = \"whisper-1\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 92,
+    "file": "audio_test.go",
+    "line": 236,
+    "snippet": "req := AudioRequest{FilePath: \"fake.mp3\", Reader: bytes.NewBuffer([]byte(\"dummy\")), Model: Whisper1}",
+    "use": "live",
+    "via": "Whisper1"
+   },
+   {
+    "category": "code",
+    "col": 44,
+    "file": "audio_test.go",
+    "line": 258,
+    "snippet": "req := AudioRequest{FilePath: path, Model: Whisper1}",
+    "use": "live",
+    "via": "Whisper1"
+   },
+   {
+    "category": "code",
+    "col": 44,
+    "file": "audio_test.go",
+    "line": 281,
+    "snippet": "req := AudioRequest{FilePath: path, Model: Whisper1}",
+    "use": "live",
+    "via": "Whisper1"
+   },
+   {
+    "category": "code",
+    "col": 44,
+    "file": "audio_test.go",
+    "line": 303,
+    "snippet": "req := AudioRequest{FilePath: path, Model: Whisper1, Format: AudioResponseFormatText}",
+    "use": "live",
+    "via": "Whisper1"
+   },
+   {
+    "category": "code",
+    "col": 20,
+    "file": "example_test.go",
+    "line": 136,
+    "snippet": "Model:    openai.Whisper1,",
+    "use": "live",
+    "via": "Whisper1"
+   },
+   {
+    "category": "code",
+    "col": 20,
+    "file": "example_test.go",
+    "line": 153,
+    "snippet": "Model:    openai.Whisper1,",
+    "use": "live",
+    "via": "Whisper1"
+   },
+   {
+    "category": "code",
+    "col": 20,
+    "file": "example_test.go",
+    "line": 179,
+    "snippet": "Model:    openai.Whisper1,",
+    "use": "live",
+    "via": "Whisper1"
+   },
+   {
+    "category": "code",
+    "col": 20,
+    "file": "examples/voice-to-text/main.go",
+    "line": 27,
+    "snippet": "Model:    openai.Whisper1,",
+    "use": "live",
+    "via": "Whisper1"
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0117",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "speech-to-text model",
+  "name": "whisper-1",
+  "places": {
+   "live": 9,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 15,
+    "file": "audio_api_test.go",
+    "line": 50,
+    "snippet": "Model:    \"whisper-3\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 15,
+    "file": "audio_api_test.go",
+    "line": 60,
+    "snippet": "Model:    \"whisper-3\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 18,
+    "file": "audio_api_test.go",
+    "line": 97,
+    "snippet": "Model:       \"whisper-3\",",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0118",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "speech-to-text model",
+  "name": "whisper-3",
+  "places": {
+   "live": 3,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ }
+]

@@ -1,0 +1,964 @@
+{
+ "repo": "OpenAI",
+ "commit": "8baf4aaf00d87c6bb58e73b85107b7864cea11d4",
+ "status": "ROUND 3 KEY, MODELS ONLY. Written from the code BEFORE the engine was changed or run on this repo; every item re-checked by a second, different search. Not yet reviewed by a person.",
+ "scope": "models",
+ "roles": "default = default setting | used = called in live code | option = selectable or listed",
+ "items": [
+  {
+   "kind": "model",
+   "name": "chatgpt-4o-latest",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "computer-use-preview-2025-03-11",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "dall-e-2",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "dall-e-3",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-3.5-turbo",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-3.5-turbo-0125",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-3.5-turbo-0301",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-3.5-turbo-0613",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-3.5-turbo-1106",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-3.5-turbo-16k",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-3.5-turbo-16k-0613",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-0125-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-0314",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-0613",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-1106-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-32k",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-32k-0314",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-32k-0613",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-turbo",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-turbo-2024-04-09",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-turbo-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-vision-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4.1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4.1-2025-04-14",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4.1-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4.1-mini-2025-04-14",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4.1-nano",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4.1-nano-2025-04-14",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4.5-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-2024-05-13",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-2024-08-06",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-2024-11-20",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-audio-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-audio-preview-2024-10-01",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-audio-preview-2024-12-17",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-audio-preview-2025-06-03",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-mini-2024-07-18",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-mini-audio-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-mini-audio-preview-2024-12-17",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-mini-realtime-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-mini-search-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-mini-search-preview-2025-03-11",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-mini-transcribe",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-mini-tts",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-realtime-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-search-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-search-preview-2025-03-11",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-transcribe",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5-2025-08-07",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5-chat",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5-chat-latest",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5-codex",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5-mini-2025-08-07",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5-nano",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5-nano-2025-08-07",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5-pro-2025-10-06",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.1-2025-11-13",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.1-chat-latest",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.1-codex",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.1-codex-max",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.1-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.2",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.2-2025-12-11",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.2-chat-latest",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.2-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.2-pro-2025-12-11",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.3-chat-latest",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.4",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.4-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.4-mini-2026-03-17",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.4-nano",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.4-nano-2026-03-17",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.5-2026-04-23",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.5-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.5-pro-2026-04-23",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.6-cyber",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.6-luna",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.6-sol",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.6-terra",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-6-astra",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-6-luna",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-6-sol",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-audio-1.5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-image-1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-image-1-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-image-1.5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-image-2",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-image-2-2026-04-21",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-image-2.5-flare",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-image-2.5-flare-2026-09-08",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-image-2.5-sunburst",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-image-2.5-sunburst-2026-09-08",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "o1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "o1-2024-12-17",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "o1-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "o1-mini-2024-09-12",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "o1-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "o1-preview-2024-09-12",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "o1-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "o1-pro-2025-03-19",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "o3",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "o3-2025-04-16",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "o3-deep-research",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "o3-deep-research-2025-06-26",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "o3-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "o3-mini-2025-01-31",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "o3-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "o3-pro-2025-06-10",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "o4-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "o4-mini-2025-04-16",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "o4-mini-deep-research",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "o4-mini-deep-research-2025-06-26",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "text-embedding-3-large",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "text-embedding-3-small",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "text-embedding-ada-002",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "text-moderation-007",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "text-moderation-latest",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "text-moderation-stable",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "text-search-ada-doc-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "text-search-babbage-doc-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "text-search-babbage-query-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "tts-1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "tts-1-hd",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  },
+  {
+   "kind": "model",
+   "name": "whisper-1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "Sources/OpenAI/.../Models.swift or the generated Components.swift"
+  }
+ ],
+ "not_real": [],
+ "extra_real": [
+  {
+   "name": "computer-use-preview",
+   "why": "real constant or enum case that my key missed"
+  },
+  {
+   "name": "gpt-35-turbo-16k-0613",
+   "why": "real constant or enum case that my key missed"
+  },
+  {
+   "name": "gpt-audio",
+   "why": "real constant or enum case that my key missed"
+  },
+  {
+   "name": "gpt-audio-mini",
+   "why": "real constant or enum case that my key missed"
+  },
+  {
+   "name": "gpt-daybreak-blue-latest",
+   "why": "real constant or enum case that my key missed"
+  },
+  {
+   "name": "gpt-daybreak-red-latest",
+   "why": "real constant or enum case that my key missed"
+  }
+ ],
+ "junk": [],
+ "labelled_after_the_run": [
+  "names the engine reported that the key did not cover, labelled from the lines after the frozen run"
+ ]
+}

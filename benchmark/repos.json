@@ -1,0 +1,109 @@
+{
+ "repos": [
+  {
+   "name": "chat-langchain",
+   "url": "https://github.com/langchain-ai/chat-langchain.git",
+   "commit": "b8acf5c32019590caaa98d3a0b30b3791ac1d58b",
+   "role": "main (tune on this)",
+   "files": 148
+  },
+  {
+   "name": "chatbot-ui",
+   "url": "https://github.com/mckaywrigley/chatbot-ui.git",
+   "commit": "81328b61d2a4ab597a7a057be70e785cf756d9f8",
+   "role": "blind test (do not tune on this)",
+   "files": 320
+  },
+  {
+   "name": "ai-chatbot",
+   "url": "https://github.com/vercel/ai-chatbot.git",
+   "commit": "c2f8235e1f",
+   "role": "held-out check (models only; first seen after the finders were built)",
+   "files": 181
+  },
+  {
+   "name": "open_deep_research",
+   "url": "https://github.com/langchain-ai/open_deep_research.git",
+   "commit": "1b7d2e80db9f",
+   "role": "unseen round 1 (demo app)"
+  },
+  {
+   "name": "langchain4j-examples",
+   "url": "https://github.com/langchain4j/langchain4j-examples.git",
+   "commit": "33545d12c0ab",
+   "role": "unseen round 1 (Java)"
+  },
+  {
+   "name": "bedrock-claude-chat",
+   "url": "https://github.com/aws-samples/bedrock-claude-chat.git",
+   "commit": "14e17cc3bdc6",
+   "role": "unseen round 1"
+  },
+  {
+   "name": "azure-search-openai-demo",
+   "url": "https://github.com/Azure-Samples/azure-search-openai-demo.git",
+   "commit": "558ffd397eddc",
+   "role": "unseen round 1"
+  },
+  {
+   "name": "go-openai",
+   "url": "https://github.com/sashabaranov/go-openai.git",
+   "commit": "dd54fd29688a",
+   "role": "fresh round 2 (Go library)"
+  },
+  {
+   "name": "azure-search-openai-demo-csharp",
+   "url": "https://github.com/Azure-Samples/azure-search-openai-demo-csharp.git",
+   "commit": "3aaa94555e52",
+   "role": "fresh round 2 (C# and Bicep)"
+  },
+  {
+   "name": "ollama-js",
+   "url": "https://github.com/ollama/ollama-js.git",
+   "commit": "c276d078eee3",
+   "role": "fresh round 2 (TypeScript, Ollama names)"
+  },
+  {
+   "name": "open-canvas",
+   "url": "https://github.com/langchain-ai/open-canvas.git",
+   "commit": "0310cecd51f3",
+   "role": "fresh round 2 (TypeScript app)"
+  },
+  {
+   "name": "private-gpt",
+   "url": "https://github.com/zylon-ai/private-gpt.git",
+   "commit": "42ce052278ef",
+   "role": "fresh round 2 (no models named in code: false-alarm test)"
+  },
+  {
+   "name": "fragments",
+   "url": "https://github.com/e2b-dev/fragments.git",
+   "commit": "3b11c7fcd4dcc37b2f1effde35960cf6ec4bd3c7",
+   "role": "fresh round 3 (key written before the engine ran)"
+  },
+  {
+   "name": "llm",
+   "url": "https://github.com/simonw/llm.git",
+   "commit": "aebaca27f9acb6cc56ba4b33ab81e08d6dcb3bc3",
+   "role": "fresh round 3 (key written before the engine ran)"
+  },
+  {
+   "name": "OpenAI",
+   "url": "https://github.com/MacPaw/OpenAI.git",
+   "commit": "8baf4aaf00d87c6bb58e73b85107b7864cea11d4",
+   "role": "fresh round 3 (key written before the engine ran)"
+  },
+  {
+   "name": "anthropic-quickstarts",
+   "url": "https://github.com/anthropics/anthropic-quickstarts.git",
+   "commit": "1a18c340ca42b9137d991637afe867bdcf70a9ce",
+   "role": "fresh round 3 (key written before the engine ran)"
+  },
+  {
+   "name": "browser-use",
+   "url": "https://github.com/browser-use/browser-use.git",
+   "commit": "b49a68e4060acb226da8f784194fef301c53a6d7",
+   "role": "fresh round 3 (key written before the engine ran)"
+  }
+ ]
+}

@@ -1,0 +1,102 @@
+{
+ "repo": "ollama-js",
+ "commit": "c276d078eee3",
+ "status": "FRESH-REPO KEY (round 2), MODELS ONLY, written from the code BEFORE the engine was run; the engine was frozen during this round",
+ "scope": "models",
+ "items": [
+  {
+   "kind": "model",
+   "name": "gemma3",
+   "aliases": [],
+   "role": "used",
+   "evidence": "examples/logprobs-chat.ts:18"
+  },
+  {
+   "kind": "model",
+   "name": "llava",
+   "aliases": [],
+   "role": "used",
+   "evidence": "examples/multimodal.ts:6"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-oss",
+   "aliases": [],
+   "role": "used",
+   "evidence": "examples/gpt-oss-browser-tools.ts:105"
+  },
+  {
+   "kind": "model",
+   "name": "qwen3",
+   "aliases": [],
+   "role": "used",
+   "evidence": "examples/websearch-tools.ts:77"
+  },
+  {
+   "kind": "model",
+   "name": "llama3.1:8b",
+   "aliases": [],
+   "role": "used",
+   "evidence": "examples/structured-outputs.ts:71"
+  },
+  {
+   "kind": "model",
+   "name": "llama3.2-vision",
+   "aliases": [],
+   "role": "used",
+   "evidence": "examples/structured-outputs-image.ts:83"
+  },
+  {
+   "kind": "model",
+   "name": "llama3.2",
+   "aliases": [],
+   "role": "used",
+   "evidence": "examples/abort-single-request.ts:17"
+  },
+  {
+   "kind": "model",
+   "name": "llama3.1",
+   "aliases": [],
+   "role": "used",
+   "evidence": "examples/pull.ts:4"
+  },
+  {
+   "kind": "model",
+   "name": "mistral",
+   "aliases": [],
+   "role": "used",
+   "evidence": "examples/flight-tracker.ts:90"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-oss:20b",
+   "aliases": [],
+   "role": "used",
+   "evidence": "examples/thinking-levels.ts:16"
+  },
+  {
+   "kind": "model",
+   "name": "deepseek-r1",
+   "aliases": [],
+   "role": "used",
+   "evidence": "examples/thinking-streaming.ts:5"
+  },
+  {
+   "kind": "model",
+   "name": "deepseek-coder-v2",
+   "aliases": [],
+   "role": "used",
+   "evidence": "examples/fill.ts:5"
+  },
+  {
+   "kind": "model",
+   "name": "x/z-image-turbo",
+   "aliases": [],
+   "role": "used",
+   "evidence": "examples/image-generation.ts:11"
+  }
+ ],
+ "not_real": [],
+ "extra_real": [],
+ "junk": []
+}

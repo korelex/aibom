@@ -1,0 +1,1841 @@
+{
+ "aibom_analysis": {
+  "metadata": {
+   "report_schema_version": "2"
+  },
+  "sources": {
+   "anthropics/anthropic-quickstarts": {
+    "source_name": "anthropics/anthropic-quickstarts",
+    "source_path": "/tmp/fresh/anthropic-quickstarts",
+    "components": {
+     "secret": [
+      {
+       "name": "env_secret_ARCHIL_API_KEY",
+       "component_type": "secret",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/archil/.env.example",
+       "line_number": 17,
+       "framework": "",
+       "detection_source": "config_file",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": "API key variable `ARCHIL_API_KEY` present (value redacted)",
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "env_var": "ARCHIL_API_KEY",
+        "redacted": true,
+        "config_kind": ".env",
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/archil/.env.example"
+        ]
+       },
+       "instance_id": "env_secret_ARCHIL_API_KEY_/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/archil/.env.example_17",
+       "confidence": 1.0
+      },
+      {
+       "name": "env_secret_NATIONAL_PARK_SERVICE_API_KEY",
+       "component_type": "secret",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/managed-agents/roadtrip-planner/.env.example",
+       "line_number": 10,
+       "framework": "",
+       "detection_source": "config_file",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": "API key variable `NATIONAL_PARK_SERVICE_API_KEY` present (value redacted)",
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "env_var": "NATIONAL_PARK_SERVICE_API_KEY",
+        "redacted": true,
+        "config_kind": ".env",
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/roadtrip-planner/.env.example"
+        ]
+       },
+       "instance_id": "env_secret_NATIONAL_PARK_SERVICE_API_KEY_/tmp/fresh/anthropic-quickstarts/managed-agents/roadtrip-planner/.env.example_10",
+       "confidence": 1.0
+      },
+      {
+       "name": "env_secret_WINDY_API_KEY",
+       "component_type": "secret",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/managed-agents/roadtrip-planner/.env.example",
+       "line_number": 14,
+       "framework": "",
+       "detection_source": "config_file",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": "API key variable `WINDY_API_KEY` present (value redacted)",
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "env_var": "WINDY_API_KEY",
+        "redacted": true,
+        "config_kind": ".env",
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/roadtrip-planner/.env.example"
+        ]
+       },
+       "instance_id": "env_secret_WINDY_API_KEY_/tmp/fresh/anthropic-quickstarts/managed-agents/roadtrip-planner/.env.example_14",
+       "confidence": 1.0
+      },
+      {
+       "name": "env_secret_ANTHROPIC_API_KEY",
+       "component_type": "secret",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/computer-use-best-practices/.env.example",
+       "line_number": 1,
+       "framework": "",
+       "detection_source": "config_file",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": "API key variable `ANTHROPIC_API_KEY` present (value redacted)",
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "env_var": "ANTHROPIC_API_KEY",
+        "redacted": true,
+        "config_kind": ".env",
+        "evidence": [
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/browser-use-demo/.env.example",
+          "line": 2,
+          "service": "/tmp/fresh/anthropic-quickstarts",
+          "test_only": false
+         }
+        ],
+        "evidence_count": 2,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/browser-use-demo/.env.example",
+         "/tmp/fresh/anthropic-quickstarts/computer-use-best-practices/.env.example"
+        ],
+        "consolidated_count": 2
+       },
+       "instance_id": "env_secret_ANTHROPIC_API_KEY_/tmp/fresh/anthropic-quickstarts/computer-use-best-practices/.env.example_1",
+       "confidence": 1.0
+      },
+      {
+       "name": "env:ANTHROPIC_API_KEY",
+       "component_type": "secret",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/customer-support-agent/app/api/chat/route.ts",
+       "line_number": 8,
+       "framework": "",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.3,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "env var ANTHROPIC_API_KEY used as api_key_envname; value unknown until cross-ref resolution",
+       "model_name": "${ANTHROPIC_API_KEY}",
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "env": "ANTHROPIC_API_KEY",
+        "env_context": "api_key_envname",
+        "resolved_from": "docker-compose",
+        "resolved_source_file": "/tmp/fresh/anthropic-quickstarts/browser-use-demo/docker-compose.yml",
+        "resolved_env_var": "ANTHROPIC_API_KEY",
+        "resolved_value": "${ANTHROPIC_API_KEY}",
+        "evidence": [
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/agents/test_message_params.py",
+          "line": 252,
+          "service": "/tmp/fresh/anthropic-quickstarts",
+          "test_only": true
+         },
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/computer-use-demo/computer_use_demo/streamlit.py",
+          "line": 188,
+          "service": "/tmp/fresh/anthropic-quickstarts/computer-use-demo",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/browser-use-demo/validate_env.py",
+          "line": 22,
+          "service": "/tmp/fresh/anthropic-quickstarts",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/browser-use-demo/browser_use_demo/streamlit.py",
+          "line": 74,
+          "service": "/tmp/fresh/anthropic-quickstarts",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/browser-use-demo/browser_use_demo/tools/browser.py",
+          "line": 918,
+          "service": "/tmp/fresh/anthropic-quickstarts",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/autonomous-coding/client.py",
+          "line": 57,
+          "service": "/tmp/fresh/anthropic-quickstarts",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/autonomous-coding/autonomous_agent_demo.py",
+          "line": 80,
+          "service": "/tmp/fresh/anthropic-quickstarts",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/managed-agents/chat-sdk/src/app.ts",
+          "line": 90,
+          "service": "/tmp/fresh/anthropic-quickstarts/managed-agents/chat-sdk",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/financial-data-analyst/app/api/finance/route.ts",
+          "line": 8,
+          "service": "/tmp/fresh/anthropic-quickstarts/financial-data-analyst",
+          "test_only": false
+         }
+        ],
+        "evidence_count": 10,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/agents/test_message_params.py",
+         "/tmp/fresh/anthropic-quickstarts/computer-use-demo/computer_use_demo/streamlit.py",
+         "/tmp/fresh/anthropic-quickstarts/browser-use-demo/validate_env.py",
+         "/tmp/fresh/anthropic-quickstarts/browser-use-demo/browser_use_demo/streamlit.py",
+         "/tmp/fresh/anthropic-quickstarts/browser-use-demo/browser_use_demo/tools/browser.py",
+         "/tmp/fresh/anthropic-quickstarts/autonomous-coding/client.py",
+         "/tmp/fresh/anthropic-quickstarts/autonomous-coding/autonomous_agent_demo.py",
+         "/tmp/fresh/anthropic-quickstarts/customer-support-agent/app/api/chat/route.ts",
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/chat-sdk/src/app.ts",
+         "/tmp/fresh/anthropic-quickstarts/financial-data-analyst/app/api/finance/route.ts"
+        ],
+        "consolidated_count": 10
+       },
+       "instance_id": "env:ANTHROPIC_API_KEY_/tmp/fresh/anthropic-quickstarts/customer-support-agent/app/api/chat/route.ts_8",
+       "confidence": 0.3
+      },
+      {
+       "name": "env:ANTHROPIC_WORK_SECRET",
+       "component_type": "secret",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/docker-memory/worker.py",
+       "line_number": 51,
+       "framework": "",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.3,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "env var ANTHROPIC_WORK_SECRET used as api_key_envname; not found in any config source \u2014 may require additional repos or runtime configuration",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "env": "ANTHROPIC_WORK_SECRET",
+        "env_context": "api_key_envname",
+        "unresolved_env_var": "ANTHROPIC_WORK_SECRET",
+        "evidence": [
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/daytona/sandbox_runner.py",
+          "line": 69,
+          "service": "/tmp/fresh/anthropic-quickstarts",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/modal/sandbox_runner.py",
+          "line": 69,
+          "service": "/tmp/fresh/anthropic-quickstarts",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/vercel/runner/runner.mjs",
+          "line": 56,
+          "service": "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/vercel",
+          "test_only": false
+         }
+        ],
+        "evidence_count": 4,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/docker-memory/worker.py",
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/daytona/sandbox_runner.py",
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/modal/sandbox_runner.py",
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/vercel/runner/runner.mjs"
+        ],
+        "consolidated_count": 4
+       },
+       "instance_id": "env:ANTHROPIC_WORK_SECRET_/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/docker-memory/worker.py_51",
+       "confidence": 0.3
+      },
+      {
+       "name": "env:ANTHROPIC_ENVIRONMENT_KEY",
+       "component_type": "secret",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/vercel/runner/runner.mjs",
+       "line_number": 61,
+       "framework": "",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.3,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "env var ANTHROPIC_ENVIRONMENT_KEY used as api_key_envname; not found in any config source \u2014 may require additional repos or runtime configuration",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "env": "ANTHROPIC_ENVIRONMENT_KEY",
+        "env_context": "api_key_envname",
+        "unresolved_env_var": "ANTHROPIC_ENVIRONMENT_KEY",
+        "evidence": [
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/daytona/sandbox_runner.py",
+          "line": 75,
+          "service": "/tmp/fresh/anthropic-quickstarts",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/daytona/daytona_webhook.py",
+          "line": 76,
+          "service": "/tmp/fresh/anthropic-quickstarts",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/modal/sandbox_runner.py",
+          "line": 75,
+          "service": "/tmp/fresh/anthropic-quickstarts",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/modal/modal_sandbox_webhook.py",
+          "line": 108,
+          "service": "/tmp/fresh/anthropic-quickstarts",
+          "test_only": false
+         }
+        ],
+        "evidence_count": 5,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/daytona/sandbox_runner.py",
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/daytona/daytona_webhook.py",
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/modal/sandbox_runner.py",
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/modal/modal_sandbox_webhook.py",
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/vercel/runner/runner.mjs"
+        ],
+        "consolidated_count": 5
+       },
+       "instance_id": "env:ANTHROPIC_ENVIRONMENT_KEY_/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/vercel/runner/runner.mjs_61",
+       "confidence": 0.3
+      },
+      {
+       "name": "env:ANTHROPIC_WEBHOOK_SECRET",
+       "component_type": "secret",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/daytona/daytona_webhook.py",
+       "line_number": 77,
+       "framework": "",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.3,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "env var ANTHROPIC_WEBHOOK_SECRET used as api_key_envname; not found in any config source \u2014 may require additional repos or runtime configuration",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "env": "ANTHROPIC_WEBHOOK_SECRET",
+        "env_context": "api_key_envname",
+        "unresolved_env_var": "ANTHROPIC_WEBHOOK_SECRET",
+        "evidence": [
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/modal/modal_sandbox_webhook.py",
+          "line": 109,
+          "service": "/tmp/fresh/anthropic-quickstarts",
+          "test_only": false
+         }
+        ],
+        "evidence_count": 2,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/daytona/daytona_webhook.py",
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/modal/modal_sandbox_webhook.py"
+        ],
+        "consolidated_count": 2
+       },
+       "instance_id": "env:ANTHROPIC_WEBHOOK_SECRET_/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/daytona/daytona_webhook.py_77",
+       "confidence": 0.3
+      },
+      {
+       "name": "env:ANTHROPIC_AUTH_TOKEN",
+       "component_type": "secret",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/managed-agents/chat-sdk/src/app.ts",
+       "line_number": 90,
+       "framework": "",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.3,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "env var ANTHROPIC_AUTH_TOKEN used as api_key_envname; not found in any config source \u2014 may require additional repos or runtime configuration",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "env": "ANTHROPIC_AUTH_TOKEN",
+        "env_context": "api_key_envname",
+        "unresolved_env_var": "ANTHROPIC_AUTH_TOKEN",
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/chat-sdk/src/app.ts"
+        ]
+       },
+       "instance_id": "env:ANTHROPIC_AUTH_TOKEN_/tmp/fresh/anthropic-quickstarts/managed-agents/chat-sdk/src/app.ts_90",
+       "confidence": 0.3
+      }
+     ],
+     "model": [
+      {
+       "name": "env_provider_anthropic",
+       "component_type": "model",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/vercel/.env.example",
+       "line_number": 5,
+       "framework": "anthropic",
+       "detection_source": "config_file",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": "Provider env prefix `ANTHROPIC`",
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "env_var": "ANTHROPIC_WEBHOOK_SECRET",
+        "provider": "anthropic",
+        "redacted": true,
+        "config_kind": ".env",
+        "evidence": [
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/vercel/.env.example",
+          "line": 8,
+          "service": "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/vercel",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/vercel/.env.example",
+          "line": 12,
+          "service": "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/vercel",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/managed-agents/linear/.env.example",
+          "line": 9,
+          "service": "/tmp/fresh/anthropic-quickstarts/managed-agents/linear",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/managed-agents/slack/.env.example",
+          "line": 9,
+          "service": "/tmp/fresh/anthropic-quickstarts/managed-agents/slack",
+          "test_only": false
+         }
+        ],
+        "evidence_count": 5,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/vercel/.env.example",
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/linear/.env.example",
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/slack/.env.example"
+        ],
+        "consolidated_count": 5
+       },
+       "instance_id": "env_provider_anthropic_/tmp/fresh/anthropic-quickstarts/managed-agents/self-hosted-sandboxes/vercel/.env.example_5",
+       "confidence": 1.0
+      },
+      {
+       "name": "env:MODEL",
+       "component_type": "model",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/computer-toolset/typescript/run.ts",
+       "line_number": 54,
+       "framework": "",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.3,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "env var MODEL used as model_kwarg; not found in any config source \u2014 may require additional repos or runtime configuration",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "env": "MODEL",
+        "env_context": "model_kwarg",
+        "unresolved_env_var": "MODEL",
+        "evidence": [
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/browser-toolset/python/run.py",
+          "line": 83,
+          "service": "/tmp/fresh/anthropic-quickstarts",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/computer-toolset/python/run.py",
+          "line": 58,
+          "service": "/tmp/fresh/anthropic-quickstarts",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/browser-toolset/typescript/run.ts",
+          "line": 66,
+          "service": "/tmp/fresh/anthropic-quickstarts/browser-toolset/typescript",
+          "test_only": false
+         }
+        ],
+        "evidence_count": 4,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/browser-toolset/python/run.py",
+         "/tmp/fresh/anthropic-quickstarts/computer-toolset/python/run.py",
+         "/tmp/fresh/anthropic-quickstarts/browser-toolset/typescript/run.ts",
+         "/tmp/fresh/anthropic-quickstarts/computer-toolset/typescript/run.ts"
+        ],
+        "consolidated_count": 4
+       },
+       "instance_id": "env:MODEL_/tmp/fresh/anthropic-quickstarts/computer-toolset/typescript/run.ts_54",
+       "confidence": 0.3
+      },
+      {
+       "name": "env:COOKBOOK_MODEL",
+       "component_type": "model",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/managed-agents/knowledge-wiki/distill_documents_into_knowledge_wiki.ipynb",
+       "line_number": 43,
+       "framework": "",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.3,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "env var COOKBOOK_MODEL used as model_assignment; not found in any config source \u2014 may require additional repos or runtime configuration",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "env": "COOKBOOK_MODEL",
+        "env_context": "model_assignment",
+        "unresolved_env_var": "COOKBOOK_MODEL",
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/knowledge-wiki/distill_documents_into_knowledge_wiki.ipynb"
+        ]
+       },
+       "instance_id": "env:COOKBOOK_MODEL_/tmp/fresh/anthropic-quickstarts/managed-agents/knowledge-wiki/distill_documents_into_knowledge_wiki.ipynb_43",
+       "confidence": 0.3
+      },
+      {
+       "name": "env:COOKBOOK_BUILD_MODEL",
+       "component_type": "model",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/managed-agents/knowledge-wiki/distill_documents_into_knowledge_wiki.ipynb",
+       "line_number": 44,
+       "framework": "",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.3,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "env var COOKBOOK_BUILD_MODEL used as model_assignment; not found in any config source \u2014 may require additional repos or runtime configuration",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "env": "COOKBOOK_BUILD_MODEL",
+        "env_context": "model_assignment",
+        "unresolved_env_var": "COOKBOOK_BUILD_MODEL",
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/knowledge-wiki/distill_documents_into_knowledge_wiki.ipynb"
+        ]
+       },
+       "instance_id": "env:COOKBOOK_BUILD_MODEL_/tmp/fresh/anthropic-quickstarts/managed-agents/knowledge-wiki/distill_documents_into_knowledge_wiki.ipynb_44",
+       "confidence": 0.3
+      },
+      {
+       "name": "claude-opus-5",
+       "component_type": "model",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/managed-agents/sentry-autofix/agents/issue-fixer/agent.yaml",
+       "line_number": 8,
+       "framework": "anthropic",
+       "detection_source": "config_file",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": false,
+       "agentic_hint": "",
+       "model_name": "claude-opus-5",
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "model_card_url": "https://docs.anthropic.com/en/docs/about-claude/models",
+        "provider": "anthropic",
+        "family": "claude-opus",
+        "deprecated": false,
+        "detection_method": "config_file",
+        "registry_source": "model_catalog",
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/sentry-autofix/agents/issue-fixer/agent.yaml"
+        ]
+       },
+       "instance_id": "claude-opus-5_/tmp/fresh/anthropic-quickstarts/managed-agents/sentry-autofix/agents/issue-fixer/agent.yaml_8",
+       "confidence": 1.0
+      },
+      {
+       "name": "claude-sonnet-5-5",
+       "component_type": "model",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/computer-toolset/python/run.py",
+       "line_number": 58,
+       "framework": "anthropic",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": false,
+       "agentic_hint": "",
+       "model_name": "claude-sonnet-5-5",
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "model_card_url": "https://docs.anthropic.com/en/docs/about-claude/models",
+        "provider": "anthropic",
+        "family": "claude-sonnet-5",
+        "deprecated": false,
+        "detection_method": "string_literal",
+        "registry_source": "model_catalog",
+        "evidence": [
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/browser-toolset/python/run.py",
+          "line": 83,
+          "service": "/tmp/fresh/anthropic-quickstarts",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/browser-use-demo/browser_use_demo/tools/browser.py",
+          "line": 949,
+          "service": "/tmp/fresh/anthropic-quickstarts",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/agents/agent_demo.ipynb",
+          "line": 59,
+          "service": "/tmp/fresh/anthropic-quickstarts",
+          "test_only": false
+         }
+        ],
+        "evidence_count": 4,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/browser-toolset/python/run.py",
+         "/tmp/fresh/anthropic-quickstarts/browser-use-demo/browser_use_demo/tools/browser.py",
+         "/tmp/fresh/anthropic-quickstarts/computer-toolset/python/run.py",
+         "/tmp/fresh/anthropic-quickstarts/agents/agent_demo.ipynb"
+        ],
+        "consolidated_count": 4
+       },
+       "instance_id": "claude-sonnet-5-5_/tmp/fresh/anthropic-quickstarts/computer-toolset/python/run.py_58",
+       "confidence": 1.0
+      },
+      {
+       "name": "claude-sonnet-4-5-20250929",
+       "component_type": "model",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/autonomous-coding/autonomous_agent_demo.py",
+       "line_number": 24,
+       "framework": "anthropic",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": false,
+       "agentic_hint": "",
+       "model_name": "claude-sonnet-4-5-20250929",
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "model_card_url": "https://docs.anthropic.com/en/docs/about-claude/models",
+        "provider": "anthropic",
+        "family": "claude-sonnet-4",
+        "deprecated": true,
+        "detection_method": "string_literal",
+        "registry_source": "model_catalog",
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/autonomous-coding/autonomous_agent_demo.py"
+        ]
+       },
+       "instance_id": "claude-sonnet-4-5-20250929_/tmp/fresh/anthropic-quickstarts/autonomous-coding/autonomous_agent_demo.py_24",
+       "confidence": 1.0
+      },
+      {
+       "name": "claude-sonnet-5",
+       "component_type": "model",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/managed-agents/knowledge-wiki/distill_documents_into_knowledge_wiki.ipynb",
+       "line_number": 43,
+       "framework": "anthropic",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": false,
+       "agentic_hint": "",
+       "model_name": "claude-sonnet-5",
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "model_card_url": "https://docs.anthropic.com/en/docs/about-claude/models",
+        "provider": "anthropic",
+        "family": "claude-sonnet",
+        "deprecated": false,
+        "detection_method": "string_literal",
+        "registry_source": "model_catalog",
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/knowledge-wiki/distill_documents_into_knowledge_wiki.ipynb"
+        ]
+       },
+       "instance_id": "claude-sonnet-5_/tmp/fresh/anthropic-quickstarts/managed-agents/knowledge-wiki/distill_documents_into_knowledge_wiki.ipynb_43",
+       "confidence": 1.0
+      }
+     ],
+     "dataset": [
+      {
+       "name": "sales.csv",
+       "component_type": "dataset",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/managed-agents/assistant-ui/sample_data/sales.csv",
+       "line_number": 0,
+       "framework": "",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.9,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "format": "csv",
+        "size_bytes": 16541,
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/assistant-ui/sample_data/sales.csv"
+        ]
+       },
+       "instance_id": "sales.csv_/tmp/fresh/anthropic-quickstarts/managed-agents/assistant-ui/sample_data/sales.csv_0",
+       "confidence": 0.9
+      },
+      {
+       "name": "data_provider_extract.csv",
+       "component_type": "dataset",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/managed-agents/knowledge-wiki/example_data/data_provider_extract.csv",
+       "line_number": 0,
+       "framework": "",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.9,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "format": "csv",
+        "size_bytes": 787,
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/knowledge-wiki/example_data/data_provider_extract.csv"
+        ]
+       },
+       "instance_id": "data_provider_extract.csv_/tmp/fresh/anthropic-quickstarts/managed-agents/knowledge-wiki/example_data/data_provider_extract.csv_0",
+       "confidence": 0.9
+      }
+     ],
+     "dependency": [
+      {
+       "name": "@anthropic-ai/sdk",
+       "component_type": "dependency",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/browser-toolset/typescript/package.json",
+       "line_number": 15,
+       "framework": "",
+       "detection_source": "dependency_manifest",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": "1.0.0",
+       "decision_annotation": null,
+       "metadata": {
+        "ecosystem": "npm",
+        "version_spec": "1.0.0",
+        "manifest": "package.json",
+        "known_ai_package": true,
+        "evidence": [
+         {
+          "file": "browser-toolset/typescript/run.ts",
+          "line": 23,
+          "service": "browser-toolset/typescript",
+          "test_only": false
+         },
+         {
+          "file": "customer-support-agent/app/api/chat/route.ts",
+          "line": 1,
+          "service": "customer-support-agent/app/api/chat",
+          "test_only": false
+         },
+         {
+          "file": "managed-agents/assistant-ui/lib/anthropic.ts",
+          "line": 3,
+          "service": "managed-agents/assistant-ui/lib",
+          "test_only": false
+         },
+         {
+          "file": "managed-agents/assistant-ui/lib/managed-agents/session-files.ts",
+          "line": 1,
+          "service": "managed-agents/assistant-ui/lib/managed-agents",
+          "test_only": false
+         },
+         {
+          "file": "managed-agents/chat-sdk/src/managed-agents.ts",
+          "line": 6,
+          "service": "managed-agents/chat-sdk/src",
+          "test_only": false
+         },
+         {
+          "file": "managed-agents/chat-sdk/setup/update-agent.ts",
+          "line": 6,
+          "service": "managed-agents/chat-sdk/setup",
+          "test_only": false
+         },
+         {
+          "file": "managed-agents/chat-sdk/setup/create-agent.ts",
+          "line": 5,
+          "service": "managed-agents/chat-sdk/setup",
+          "test_only": false
+         },
+         {
+          "file": "managed-agents/mcp-server-typescript/src/scope.ts",
+          "line": 6,
+          "service": "managed-agents/mcp-server-typescript/src",
+          "test_only": false
+         },
+         {
+          "file": "managed-agents/mcp-server-typescript/src/managed-agents.ts",
+          "line": 1,
+          "service": "managed-agents/mcp-server-typescript/src",
+          "test_only": false
+         },
+         {
+          "file": "managed-agents/mcp-server-typescript/src/tools.ts",
+          "line": 2,
+          "service": "managed-agents/mcp-server-typescript/src",
+          "test_only": false
+         },
+         {
+          "file": "managed-agents/self-hosted-sandboxes/cloudflare-containers/src/index.ts",
+          "line": 8,
+          "service": "managed-agents/self-hosted-sandboxes/cloudflare-containers/src",
+          "test_only": false
+         },
+         {
+          "file": "managed-agents/self-hosted-sandboxes/cloudflare-containers/src/container.ts",
+          "line": 13,
+          "service": "managed-agents/self-hosted-sandboxes/cloudflare-containers/src",
+          "test_only": false
+         },
+         {
+          "file": "managed-agents/self-hosted-sandboxes/vercel/api/webhook.ts",
+          "line": 27,
+          "service": "managed-agents/self-hosted-sandboxes/vercel/api",
+          "test_only": false
+         },
+         {
+          "file": "managed-agents/self-hosted-sandboxes/cloudflare-worker/src/index.ts",
+          "line": 9,
+          "service": "managed-agents/self-hosted-sandboxes/cloudflare-worker/src",
+          "test_only": false
+         },
+         {
+          "file": "managed-agents/self-hosted-sandboxes/cloudflare-worker/src/runner.ts",
+          "line": 20,
+          "service": "managed-agents/self-hosted-sandboxes/cloudflare-worker/src",
+          "test_only": false
+         },
+         {
+          "file": "managed-agents/sentry-autofix/src/fixer.ts",
+          "line": 8,
+          "service": "managed-agents/sentry-autofix/src",
+          "test_only": false
+         },
+         {
+          "file": "managed-agents/linear/src/agent.ts",
+          "line": 1,
+          "service": "managed-agents/linear/src",
+          "test_only": false
+         },
+         {
+          "file": "managed-agents/linear/src/managed-agents-webhook.ts",
+          "line": 1,
+          "service": "managed-agents/linear/src",
+          "test_only": false
+         },
+         {
+          "file": "managed-agents/slack/src/agent.ts",
+          "line": 1,
+          "service": "managed-agents/slack/src",
+          "test_only": false
+         },
+         {
+          "file": "managed-agents/slack/src/managed-agents-webhook.ts",
+          "line": 1,
+          "service": "managed-agents/slack/src",
+          "test_only": false
+         },
+         {
+          "file": "managed-agents/roadtrip-planner/src/lib/client.ts",
+          "line": 1,
+          "service": "managed-agents/roadtrip-planner/src/lib",
+          "test_only": false
+         },
+         {
+          "file": "computer-toolset/typescript/run.ts",
+          "line": 26,
+          "service": "computer-toolset/typescript",
+          "test_only": false
+         },
+         {
+          "file": "financial-data-analyst/app/api/finance/route.ts",
+          "line": 3,
+          "service": "financial-data-analyst/app/api/finance",
+          "test_only": false
+         },
+         {
+          "file": "managed-agents/self-hosted-sandboxes/vercel/runner/runner.mjs",
+          "line": 35,
+          "service": "managed-agents/self-hosted-sandboxes/vercel/runner",
+          "test_only": false
+         }
+        ],
+        "evidence_count": 25,
+        "evidence_files": [
+         "browser-toolset/typescript/run.ts",
+         "customer-support-agent/app/api/chat/route.ts",
+         "managed-agents/assistant-ui/lib/anthropic.ts",
+         "managed-agents/assistant-ui/lib/managed-agents/session-files.ts",
+         "managed-agents/chat-sdk/src/managed-agents.ts",
+         "managed-agents/chat-sdk/setup/update-agent.ts",
+         "managed-agents/chat-sdk/setup/create-agent.ts",
+         "managed-agents/mcp-server-typescript/src/scope.ts",
+         "managed-agents/mcp-server-typescript/src/managed-agents.ts",
+         "managed-agents/mcp-server-typescript/src/tools.ts",
+         "managed-agents/self-hosted-sandboxes/cloudflare-containers/src/index.ts",
+         "managed-agents/self-hosted-sandboxes/cloudflare-containers/src/container.ts",
+         "managed-agents/self-hosted-sandboxes/vercel/api/webhook.ts",
+         "managed-agents/self-hosted-sandboxes/cloudflare-worker/src/index.ts",
+         "managed-agents/self-hosted-sandboxes/cloudflare-worker/src/runner.ts",
+         "managed-agents/sentry-autofix/src/fixer.ts",
+         "managed-agents/linear/src/agent.ts",
+         "managed-agents/linear/src/managed-agents-webhook.ts",
+         "managed-agents/slack/src/agent.ts",
+         "managed-agents/slack/src/managed-agents-webhook.ts",
+         "managed-agents/roadtrip-planner/src/lib/client.ts",
+         "computer-toolset/typescript/run.ts",
+         "financial-data-analyst/app/api/finance/route.ts",
+         "managed-agents/self-hosted-sandboxes/vercel/runner/runner.mjs",
+         "/tmp/fresh/anthropic-quickstarts/browser-toolset/typescript/package.json"
+        ],
+        "consolidated_count": 25
+       },
+       "instance_id": "@anthropic-ai/sdk_/tmp/fresh/anthropic-quickstarts/browser-toolset/typescript/package.json_15",
+       "confidence": 1.0
+      },
+      {
+       "name": "anthropic",
+       "component_type": "dependency",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/browser-toolset/python/requirements.txt",
+       "line_number": 2,
+       "framework": "",
+       "detection_source": "dependency_manifest",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": "2.0.0",
+       "decision_annotation": null,
+       "metadata": {
+        "ecosystem": "pypi",
+        "version_spec": "2.0.0",
+        "manifest": "requirements.txt",
+        "known_ai_package": true,
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/browser-toolset/python/requirements.txt"
+        ]
+       },
+       "instance_id": "anthropic_/tmp/fresh/anthropic-quickstarts/browser-toolset/python/requirements.txt_2",
+       "confidence": 1.0
+      },
+      {
+       "name": "ai",
+       "component_type": "dependency",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/managed-agents/chat-sdk/package.json",
+       "line_number": 21,
+       "framework": "",
+       "detection_source": "dependency_manifest",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": "6.0.240",
+       "decision_annotation": null,
+       "metadata": {
+        "ecosystem": "npm",
+        "version_spec": "6.0.240",
+        "manifest": "package.json",
+        "known_ai_package": true,
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/chat-sdk/package.json"
+        ]
+       },
+       "instance_id": "ai_/tmp/fresh/anthropic-quickstarts/managed-agents/chat-sdk/package.json_21",
+       "confidence": 1.0
+      },
+      {
+       "name": "@ai-sdk/openai",
+       "component_type": "dependency",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/managed-agents/copilot-kit-ag-ui/package-lock.json",
+       "line_number": 304,
+       "framework": "",
+       "detection_source": "dependency_manifest",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": "3.0.90",
+       "decision_annotation": null,
+       "metadata": {
+        "ecosystem": "npm",
+        "version_spec": "3.0.90",
+        "manifest": "package-lock.json",
+        "known_ai_package": true,
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/copilot-kit-ag-ui/package-lock.json"
+        ]
+       },
+       "instance_id": "@ai-sdk/openai_/tmp/fresh/anthropic-quickstarts/managed-agents/copilot-kit-ag-ui/package-lock.json_304",
+       "confidence": 1.0
+      },
+      {
+       "name": "@langchain/core",
+       "component_type": "dependency",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/managed-agents/copilot-kit-ag-ui/package-lock.json",
+       "line_number": 32,
+       "framework": "",
+       "detection_source": "dependency_manifest",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": "1.2.4",
+       "decision_annotation": null,
+       "metadata": {
+        "ecosystem": "npm",
+        "version_spec": "1.2.4",
+        "manifest": "package-lock.json",
+        "known_ai_package": true,
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/copilot-kit-ag-ui/package-lock.json"
+        ]
+       },
+       "instance_id": "@langchain/core_/tmp/fresh/anthropic-quickstarts/managed-agents/copilot-kit-ag-ui/package-lock.json_32",
+       "confidence": 1.0
+      },
+      {
+       "name": "@modelcontextprotocol/sdk",
+       "component_type": "dependency",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/managed-agents/copilot-kit-ag-ui/package-lock.json",
+       "line_number": 87,
+       "framework": "",
+       "detection_source": "dependency_manifest",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": "1.30.0",
+       "decision_annotation": null,
+       "metadata": {
+        "ecosystem": "npm",
+        "version_spec": "1.30.0",
+        "manifest": "package-lock.json",
+        "known_ai_package": true,
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/copilot-kit-ag-ui/package-lock.json"
+        ]
+       },
+       "instance_id": "@modelcontextprotocol/sdk_/tmp/fresh/anthropic-quickstarts/managed-agents/copilot-kit-ag-ui/package-lock.json_87",
+       "confidence": 1.0
+      },
+      {
+       "name": "langsmith",
+       "component_type": "dependency",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/managed-agents/copilot-kit-ag-ui/package-lock.json",
+       "line_number": 2385,
+       "framework": "",
+       "detection_source": "dependency_manifest",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": "0.8.9",
+       "decision_annotation": null,
+       "metadata": {
+        "ecosystem": "npm",
+        "version_spec": "0.8.9",
+        "manifest": "package-lock.json",
+        "known_ai_package": true,
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/copilot-kit-ag-ui/package-lock.json"
+        ]
+       },
+       "instance_id": "langsmith_/tmp/fresh/anthropic-quickstarts/managed-agents/copilot-kit-ag-ui/package-lock.json_2385",
+       "confidence": 1.0
+      },
+      {
+       "name": "openai",
+       "component_type": "dependency",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/managed-agents/copilot-kit-ag-ui/package-lock.json",
+       "line_number": 304,
+       "framework": "",
+       "detection_source": "dependency_manifest",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": "7.3.0",
+       "decision_annotation": null,
+       "metadata": {
+        "ecosystem": "npm",
+        "version_spec": "7.3.0",
+        "manifest": "package-lock.json",
+        "known_ai_package": true,
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/copilot-kit-ag-ui/package-lock.json"
+        ]
+       },
+       "instance_id": "openai_/tmp/fresh/anthropic-quickstarts/managed-agents/copilot-kit-ag-ui/package-lock.json_304",
+       "confidence": 1.0
+      }
+     ],
+     "mcp_server": [
+      {
+       "name": "calculator_mcp_mcp_server",
+       "component_type": "mcp_server",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/agents/tools/calculator_mcp.py",
+       "line_number": 7,
+       "framework": "mcp",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "patterns": [
+         "from_mcp_server_import"
+        ],
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/agents/tools/calculator_mcp.py"
+        ]
+       },
+       "instance_id": "calculator_mcp_mcp_server_/tmp/fresh/anthropic-quickstarts/agents/tools/calculator_mcp.py_7",
+       "confidence": 1.0
+      },
+      {
+       "name": "connections_mcp_server",
+       "component_type": "mcp_server",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/agents/utils/connections.py",
+       "line_number": 7,
+       "framework": "mcp",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "patterns": [
+         "from_mcp_import"
+        ],
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/agents/utils/connections.py"
+        ]
+       },
+       "instance_id": "connections_mcp_server_/tmp/fresh/anthropic-quickstarts/agents/utils/connections.py_7",
+       "confidence": 1.0
+      }
+     ],
+     "tool": [
+      {
+       "name": "calculator_mcp_mcp_tooling",
+       "component_type": "tool",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/agents/tools/calculator_mcp.py",
+       "line_number": 12,
+       "framework": "mcp",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "mcp_decorators": true,
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/agents/tools/calculator_mcp.py"
+        ]
+       },
+       "instance_id": "calculator_mcp_mcp_tooling_/tmp/fresh/anthropic-quickstarts/agents/tools/calculator_mcp.py_12",
+       "confidence": 1.0
+      }
+     ],
+     "mcp_client": [
+      {
+       "name": "connections_mcp_client",
+       "component_type": "mcp_client",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/agents/utils/connections.py",
+       "line_number": 31,
+       "framework": "mcp",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "patterns": [
+         "ClientSession",
+         "stdio_client",
+         "mcp_connection_params",
+         "sse_client"
+        ],
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/agents/utils/connections.py"
+        ]
+       },
+       "instance_id": "connections_mcp_client_/tmp/fresh/anthropic-quickstarts/agents/utils/connections.py_31",
+       "confidence": 1.0
+      }
+     ],
+     "skill": [
+      {
+       "name": "Verifying changes to this demo",
+       "component_type": "skill",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/computer-use-demo/.claude/skills/verify/SKILL.md",
+       "line_number": 0,
+       "framework": "",
+       "detection_source": "config_file",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": "The surface is the Streamlit app inside the container. Build the image from this directory, run it, and drive the UI with Playwright. `pytest`, `ruff`, and `pyright` are CI's job, not evidence.",
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": "claude",
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "trigger_patterns": [],
+        "file_count": 1,
+        "files": [
+         "SKILL.md"
+        ],
+        "evidence": [
+         {
+          "file": "/tmp/fresh/anthropic-quickstarts/managed-agents/copilot-kit-ag-ui/.claude/skills/verify/SKILL.md",
+          "line": 0,
+          "service": "/tmp/fresh/anthropic-quickstarts/managed-agents/copilot-kit-ag-ui",
+          "test_only": false
+         }
+        ],
+        "evidence_count": 2,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/computer-use-demo/.claude/skills/verify/SKILL.md",
+         "/tmp/fresh/anthropic-quickstarts/managed-agents/copilot-kit-ag-ui/.claude/skills/verify/SKILL.md"
+        ],
+        "consolidated_count": 2
+       },
+       "instance_id": "Verifying changes to this demo_/tmp/fresh/anthropic-quickstarts/computer-use-demo/.claude/skills/verify/SKILL.md_0",
+       "confidence": 1.0
+      },
+      {
+       "name": "First run",
+       "component_type": "skill",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/computer-use-best-practices/.claude/skills/first-run/SKILL.md",
+       "line_number": 0,
+       "framework": "",
+       "detection_source": "config_file",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": "Walk the user through running this demo for the first time. Be conversational and pause for confirmation between phases; the goal is that they understand what each step does, not just that the comm...",
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": "claude",
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "trigger_patterns": [],
+        "file_count": 1,
+        "files": [
+         "SKILL.md"
+        ],
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/computer-use-best-practices/.claude/skills/first-run/SKILL.md"
+        ]
+       },
+       "instance_id": "First run_/tmp/fresh/anthropic-quickstarts/computer-use-best-practices/.claude/skills/first-run/SKILL.md_0",
+       "confidence": 1.0
+      }
+     ],
+     "agent": [
+      {
+       "name": "Agent",
+       "component_type": "agent",
+       "file_path": "/tmp/fresh/anthropic-quickstarts/agents/agent.py",
+       "line_number": 29,
+       "framework": "unknown",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.5,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "Structural ReAct-style loop detected (lines 100-151). LLM must verify iterative tool dispatch and LLM-driven control flow.",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "discovery": "structural_react_loop",
+        "structural_signature_id": "structural.react_loop",
+        "react_loop_start_line": 100,
+        "react_loop_end_line": 151,
+        "react_loop_rationale": "while loop in method '_agent_loop' (lines 100\u2013151) has 13 calls / 10 distinct callees with a conditional branch and an LLM-like call name.",
+        "class_start_line": 29,
+        "class_end_line": 169,
+        "qualified_name": "Agent",
+        "agent_evidence": {
+         "pattern": "react_loop",
+         "definition_file": "/tmp/fresh/anthropic-quickstarts/agents/agent.py",
+         "definition_start_line": 29,
+         "definition_end_line": 169,
+         "evidence_snippet": "        while True:\n            self.history.truncate()\n            params = self._prepare_message_params()\n\n            # Merge headers properly - default beta header can be overridden by message_params\n            default_headers = {\"anthropic-beta\": \"code-execution-2025-05-22\"}\n            if \"extra_headers\" in params:\n                # Pop extra_headers from params and merge with defaults\n                custom_headers = params.pop(\"extra_headers\")\n                merged_headers = {**default_headers, **custom_headers}\n            else:\n                merged_headers = default_headers\n\n            response = self.client.messages.create(\n                **params,\n                extra_headers=merged_headers\n            )\n            tool_calls = [\n                block for block in response.content if block.type == \"tool_use\"\n            ]\n\n            if self.verbose:\n                for block in response.content:\n                    if block.type == \"text\":\n                        print(f\"\\n[{self.name}] Output: {block.text}\")\n                    elif block.type == \"tool_use\":\n                        params_str = \", \".join(\n                            [f\"{k}={v}\" for k, v in block.input.items()]\n                        )\n                        print(\n                            f\"\\n[{self.name}] Tool call: \"\n                            f\"{block.name}({params_str})\"\n                        )\n\n            await self.history.add_message(\n                \"assistant\", response.content, response.usage\n            )\n\n            if tool_calls:\n                tool_results = await execute_tools(\n                    tool_calls,\n                    tool_dict,\n                )\n                if self.verbose:\n                    for block in tool_results:\n                        print(\n                            f\"\\n[{self.name}] Tool result: \"\n                            f\"{block.get('content')}\"\n                        )\n                await self.history.add_message(\"user\", tool_results)\n            else:\n                return response",
+         "justification": "Structural scanner detected an iterative control-flow loop in class 'Agent' between lines 100-151, with multiple distinct callees, a conditional branch, and at least one LLM-like invocation hint. Rationale: while loop in method '_agent_loop' (lines 100\u2013151) has 13 calls / 10 distinct callees with a conditional branch and an LLM-like call name."
+        },
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/anthropic-quickstarts/agents/agent.py"
+        ]
+       },
+       "instance_id": "Agent_/tmp/fresh/anthropic-quickstarts/agents/agent.py_29",
+       "confidence": 0.5
+      }
+     ]
+    },
+    "relationships": [],
+    "summary": {
+     "status": "completed",
+     "source_kind": "git",
+     "assets_discovered": 34,
+     "last_generated_at": null
+    },
+    "metadata": {
+     "source_kind": "git",
+     "source_ref_canonical": "github.com/anthropics/anthropic-quickstarts",
+     "source_ref_version": "1a18c340ca42b9137d991637afe867bdcf70a9ce"
+    }
+   }
+  },
+  "summary": {
+   "total_sources": 1,
+   "total_components": 34,
+   "pending_agent_review": 30,
+   "test_only_components": 0,
+   "component_types": {
+    "secret": 9,
+    "model": 8,
+    "dataset": 2,
+    "dependency": 8,
+    "mcp_server": 2,
+    "tool": 1,
+    "mcp_client": 1,
+    "skill": 2,
+    "agent": 1
+   },
+   "total_relationships": 0,
+   "risk_score": 0,
+   "risk_severity": "info"
+  },
+  "risk": {
+   "score": 0,
+   "severity": "info",
+   "flags": []
+  },
+  "errors": []
+ },
+ "nollm_run": {
+  "note": "deterministic stage only, no LLM review (components marked needs_agentic were not reviewed)",
+  "scan_seconds": 55.0,
+  "target": "/tmp/fresh/anthropic-quickstarts"
+ }
+}

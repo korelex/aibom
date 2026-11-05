@@ -1,0 +1,86 @@
+{
+ "repo": "open_deep_research",
+ "commit": "1b7d2e80db9f",
+ "status": "UNSEEN-REPO KEY, MODELS ONLY, written from the code BEFORE the engine was run (two independent passes)",
+ "items": [
+  {
+   "kind": "model",
+   "name": "gpt-4.1-mini",
+   "aliases": [
+    "openai:gpt-4.1-mini"
+   ],
+   "role": "default",
+   "evidence": "src/open_deep_research/configuration.py:122"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4.1",
+   "aliases": [
+    "openai:gpt-4.1"
+   ],
+   "role": "default",
+   "evidence": "src/open_deep_research/configuration.py:154,174,194; src/legacy/configuration.py:40"
+  },
+  {
+   "kind": "model",
+   "name": "claude-3-7-sonnet-latest",
+   "aliases": [],
+   "role": "default",
+   "evidence": "src/legacy/configuration.py:48"
+  },
+  {
+   "kind": "model",
+   "name": "claude-sonnet-4-20250514",
+   "aliases": [
+    "anthropic:claude-sonnet-4-20250514"
+   ],
+   "role": "default",
+   "evidence": "src/legacy/configuration.py:82-83"
+  }
+ ],
+ "not_real": [],
+ "extra_real": [
+  {
+   "name": "claude-3-5-sonnet-latest",
+   "why": "legacy notebook config value"
+  },
+  {
+   "name": "deepseek-r1-distill-llama-70b",
+   "why": "legacy notebook config value"
+  },
+  {
+   "name": "gpt-4o",
+   "why": "ChatOpenAI(model=...) in legacy notebook"
+  },
+  {
+   "name": "llama-3.3-70b-versatile",
+   "why": "legacy notebook config value"
+  },
+  {
+   "name": "sonar-pro",
+   "why": "legacy utils.py:315 request body"
+  },
+  {
+   "name": "text-embedding-3-small",
+   "why": "init_embeddings(...) in legacy utils.py:1428"
+  }
+ ],
+ "junk": [
+  "claude-opus-4-1-20250805",
+  "BaseChatModel",
+  "The",
+  "str",
+  "Optional",
+  "model_str",
+  "claude-opus-4-20250514"
+ ],
+ "reference_ranges": [
+  {
+   "file": "src/open_deep_research/utils.py",
+   "from": 788,
+   "to": 828,
+   "why": "token-limit table keyed by model id: real references, not used as a choice"
+  }
+ ],
+ "scope": "models"
+}

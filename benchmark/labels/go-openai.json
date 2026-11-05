@@ -1,0 +1,970 @@
+{
+ "repo": "go-openai",
+ "commit": "dd54fd29688a",
+ "status": "FRESH-REPO KEY (round 2), MODELS ONLY, written from the code BEFORE the engine was run; the engine was frozen during this round",
+ "scope": "models",
+ "items": [
+  {
+   "kind": "model",
+   "name": "whisper-1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "audio.go:17"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-transcribe",
+   "aliases": [],
+   "role": "option",
+   "evidence": "audio.go:18"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-mini-transcribe",
+   "aliases": [],
+   "role": "option",
+   "evidence": "audio.go:19"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-transcribe-diarize",
+   "aliases": [],
+   "role": "option",
+   "evidence": "audio.go:20"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-transcribe",
+   "aliases": [],
+   "role": "option",
+   "evidence": "audio.go:21"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-6.1-sol",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:12"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-6-astra",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:13"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-6-sol",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:14"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-6-luna",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:15"
+  },
+  {
+   "kind": "model",
+   "name": "o1-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:16"
+  },
+  {
+   "kind": "model",
+   "name": "o1-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:18"
+  },
+  {
+   "kind": "model",
+   "name": "o1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:20"
+  },
+  {
+   "kind": "model",
+   "name": "o3",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:22"
+  },
+  {
+   "kind": "model",
+   "name": "o3-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:24"
+  },
+  {
+   "kind": "model",
+   "name": "o3-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:26"
+  },
+  {
+   "kind": "model",
+   "name": "o4-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:28"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-32k-0613",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:31"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-32k-0314",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:32"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-32k",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:33"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-0613",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:34"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-0314",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:35"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:36"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-2024-05-13",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:37"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-2024-08-06",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:38"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-2024-11-20",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:39"
+  },
+  {
+   "kind": "model",
+   "name": "chatgpt-4o-latest",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:40"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:41"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-mini-2024-07-18",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:42"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-turbo",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:43"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-turbo-2024-04-09",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:44"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-0125-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:45"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-1106-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:46"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-turbo-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:47"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-vision-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:48"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:49"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4.1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:50"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4.1-2025-04-14",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:51"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4.1-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:52"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4.1-mini-2025-04-14",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:53"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4.1-nano",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:54"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4.1-nano-2025-04-14",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:55"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4.5-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:56"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4.5-preview-2025-02-27",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:57"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:58"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:59"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5-nano",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:60"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:61"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5-chat-latest",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:62"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5-codex",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:63"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:64"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.1-chat-latest",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:65"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.1-codex",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:66"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.1-codex-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:67"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.1-codex-max",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:68"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.2",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:69"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.2-chat-latest",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:70"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.2-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:71"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.2-codex",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:72"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.3-chat-latest",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:73"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.3-codex",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:74"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.4",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:75"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.4-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:76"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.4-nano",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:77"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.4-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:78"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:79"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.5-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:80"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.6",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:81"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.6-sol",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:82"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.6-terra",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:83"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.6-luna",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:84"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-3.5-turbo-0125",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:85"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-3.5-turbo-1106",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:86"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-3.5-turbo-0613",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:87"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-3.5-turbo-0301",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:88"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-3.5-turbo-16k",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:89"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-3.5-turbo-16k-0613",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:90"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-3.5-turbo",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:91"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-3.5-turbo-instruct",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:92"
+  },
+  {
+   "kind": "model",
+   "name": "text-davinci-003",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:94"
+  },
+  {
+   "kind": "model",
+   "name": "text-davinci-002",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:96"
+  },
+  {
+   "kind": "model",
+   "name": "text-curie-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:98"
+  },
+  {
+   "kind": "model",
+   "name": "text-babbage-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:100"
+  },
+  {
+   "kind": "model",
+   "name": "text-ada-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:102"
+  },
+  {
+   "kind": "model",
+   "name": "text-davinci-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:104"
+  },
+  {
+   "kind": "model",
+   "name": "davinci-instruct-beta",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:106"
+  },
+  {
+   "kind": "model",
+   "name": "davinci",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:108"
+  },
+  {
+   "kind": "model",
+   "name": "davinci-002",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:109"
+  },
+  {
+   "kind": "model",
+   "name": "curie-instruct-beta",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:111"
+  },
+  {
+   "kind": "model",
+   "name": "curie",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:112"
+  },
+  {
+   "kind": "model",
+   "name": "curie-002",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:113"
+  },
+  {
+   "kind": "model",
+   "name": "ada",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:115"
+  },
+  {
+   "kind": "model",
+   "name": "ada-002",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:116"
+  },
+  {
+   "kind": "model",
+   "name": "babbage",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:118"
+  },
+  {
+   "kind": "model",
+   "name": "babbage-002",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:119"
+  },
+  {
+   "kind": "model",
+   "name": "code-davinci-002",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:126"
+  },
+  {
+   "kind": "model",
+   "name": "code-cushman-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:127"
+  },
+  {
+   "kind": "model",
+   "name": "code-davinci-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "completion.go:128"
+  },
+  {
+   "kind": "model",
+   "name": "text-similarity-ada-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "embeddings.go:21"
+  },
+  {
+   "kind": "model",
+   "name": "text-similarity-babbage-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "embeddings.go:22"
+  },
+  {
+   "kind": "model",
+   "name": "text-similarity-curie-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "embeddings.go:23"
+  },
+  {
+   "kind": "model",
+   "name": "text-similarity-davinci-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "embeddings.go:24"
+  },
+  {
+   "kind": "model",
+   "name": "text-search-ada-doc-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "embeddings.go:25"
+  },
+  {
+   "kind": "model",
+   "name": "text-search-ada-query-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "embeddings.go:26"
+  },
+  {
+   "kind": "model",
+   "name": "text-search-babbage-doc-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "embeddings.go:27"
+  },
+  {
+   "kind": "model",
+   "name": "text-search-babbage-query-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "embeddings.go:28"
+  },
+  {
+   "kind": "model",
+   "name": "text-search-curie-doc-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "embeddings.go:29"
+  },
+  {
+   "kind": "model",
+   "name": "text-search-curie-query-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "embeddings.go:30"
+  },
+  {
+   "kind": "model",
+   "name": "text-search-davinci-doc-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "embeddings.go:31"
+  },
+  {
+   "kind": "model",
+   "name": "text-search-davinci-query-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "embeddings.go:32"
+  },
+  {
+   "kind": "model",
+   "name": "code-search-ada-code-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "embeddings.go:33"
+  },
+  {
+   "kind": "model",
+   "name": "code-search-ada-text-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "embeddings.go:34"
+  },
+  {
+   "kind": "model",
+   "name": "code-search-babbage-code-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "embeddings.go:35"
+  },
+  {
+   "kind": "model",
+   "name": "code-search-babbage-text-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "embeddings.go:36"
+  },
+  {
+   "kind": "model",
+   "name": "text-embedding-ada-002",
+   "aliases": [],
+   "role": "option",
+   "evidence": "embeddings.go:38"
+  },
+  {
+   "kind": "model",
+   "name": "text-embedding-3-small",
+   "aliases": [],
+   "role": "option",
+   "evidence": "embeddings.go:39"
+  },
+  {
+   "kind": "model",
+   "name": "text-embedding-3-large",
+   "aliases": [],
+   "role": "option",
+   "evidence": "embeddings.go:40"
+  },
+  {
+   "kind": "model",
+   "name": "dall-e-2",
+   "aliases": [],
+   "role": "option",
+   "evidence": "image.go:33"
+  },
+  {
+   "kind": "model",
+   "name": "dall-e-3",
+   "aliases": [],
+   "role": "option",
+   "evidence": "image.go:34"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-image-1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "image.go:35"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-image-1-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "image.go:36"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-image-1.5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "image.go:37"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-image-2",
+   "aliases": [],
+   "role": "option",
+   "evidence": "image.go:38"
+  },
+  {
+   "kind": "model",
+   "name": "chatgpt-image-latest",
+   "aliases": [],
+   "role": "option",
+   "evidence": "image.go:39"
+  },
+  {
+   "kind": "model",
+   "name": "omni-moderation-latest",
+   "aliases": [],
+   "role": "option",
+   "evidence": "moderation.go:17"
+  },
+  {
+   "kind": "model",
+   "name": "omni-moderation-2024-09-26",
+   "aliases": [],
+   "role": "option",
+   "evidence": "moderation.go:18"
+  },
+  {
+   "kind": "model",
+   "name": "text-moderation-stable",
+   "aliases": [],
+   "role": "option",
+   "evidence": "moderation.go:19"
+  },
+  {
+   "kind": "model",
+   "name": "text-moderation-latest",
+   "aliases": [],
+   "role": "option",
+   "evidence": "moderation.go:20"
+  },
+  {
+   "kind": "model",
+   "name": "text-moderation-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "moderation.go:22"
+  },
+  {
+   "kind": "model",
+   "name": "tts-1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "speech.go:11"
+  },
+  {
+   "kind": "model",
+   "name": "tts-1-hd",
+   "aliases": [],
+   "role": "option",
+   "evidence": "speech.go:12"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-mini-tts",
+   "aliases": [],
+   "role": "option",
+   "evidence": "speech.go:14"
+  }
+ ],
+ "not_real": [],
+ "extra_real": [
+  {
+   "name": "o4",
+   "why": "family prefix check in reasoning_validator.go"
+  },
+  {
+   "name": "canary-tts",
+   "why": "model constant in completion.go or speech.go that my first key missed"
+  },
+  {
+   "name": "o1-2024-12-17",
+   "why": "model constant in completion.go or speech.go that my first key missed"
+  },
+  {
+   "name": "o1-mini-2024-09-12",
+   "why": "model constant in completion.go or speech.go that my first key missed"
+  },
+  {
+   "name": "o3-2025-04-16",
+   "why": "model constant in completion.go or speech.go that my first key missed"
+  },
+  {
+   "name": "o3-deep-research",
+   "why": "model constant in completion.go or speech.go that my first key missed"
+  },
+  {
+   "name": "o4-mini-2025-04-16",
+   "why": "model constant in completion.go or speech.go that my first key missed"
+  },
+  {
+   "name": "o4-mini-deep-research",
+   "why": "model constant in completion.go or speech.go that my first key missed"
+  }
+ ],
+ "junk": [
+  "computer-use-preview",
+  "deepseek-reasoner",
+  "deployments/chatgpt-demo",
+  "ft:davinci-002:my-org:custom_suffix:7q8",
+  "gpt-35-turbo",
+  "llama3-1b",
+  "o3-mini-2025-01-31",
+  "whisper-3"
+ ]
+}

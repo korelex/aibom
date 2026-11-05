@@ -1,0 +1,520 @@
+{
+ "repo": "chatbot-ui",
+ "commit": "81328b61d2a4ab597a7a057be70e785cf756d9f8",
+ "status": "DRAFT by Claude from reading the code; needs human review (BLIND TEST repo: do not tune finders on it)",
+ "roles": "used = called in live code | option = selectable in the UI or config",
+ "items": [
+  {
+   "kind": "model",
+   "name": "claude-2.1",
+   "aliases": [
+    "Claude 2"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/anthropic-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "claude-instant-1.2",
+   "aliases": [
+    "Claude Instant"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/anthropic-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "claude-3-haiku-20240307",
+   "aliases": [
+    "Claude 3 Haiku"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/anthropic-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "claude-3-sonnet-20240229",
+   "aliases": [
+    "Claude 3 Sonnet"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/anthropic-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "claude-3-opus-20240229",
+   "aliases": [
+    "Claude 3 Opus"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/anthropic-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "claude-3-5-sonnet-20240620",
+   "aliases": [
+    "Claude 3.5 Sonnet"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/anthropic-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-1.5-flash",
+   "aliases": [
+    "Gemini 1.5 Flash"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/google-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-1.5-pro-latest",
+   "aliases": [
+    "Gemini 1.5 Pro"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/google-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-pro",
+   "aliases": [
+    "Gemini Pro"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/google-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-pro-vision",
+   "aliases": [
+    "Gemini Pro Vision"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/google-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "llama3-8b-8192",
+   "aliases": [
+    "LLaMA3-8b-chat"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/groq-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "llama3-70b-8192",
+   "aliases": [
+    "LLaMA3-70b-chat"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/groq-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "mixtral-8x7b-32768",
+   "aliases": [
+    "Mixtral-8x7b-Instruct-v0.1"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/groq-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "gemma-7b-it",
+   "aliases": [
+    "Gemma-7b-It"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/groq-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "mistral-tiny",
+   "aliases": [
+    "Mistral Tiny"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/mistral-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "mistral-small-latest",
+   "aliases": [
+    "Mistral Small"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/mistral-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "mistral-medium-latest",
+   "aliases": [
+    "Mistral Medium"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/mistral-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "mistral-large-latest",
+   "aliases": [
+    "Mistral Large"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/mistral-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o",
+   "aliases": [
+    "GPT-4o"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/openai-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-turbo-preview",
+   "aliases": [
+    "GPT-4 Turbo"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/openai-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-vision-preview",
+   "aliases": [
+    "GPT-4 Vision"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/openai-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4",
+   "aliases": [
+    "GPT-4"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/openai-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-3.5-turbo",
+   "aliases": [
+    "GPT-3.5 Turbo"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/openai-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "mixtral-8x7b-instruct",
+   "aliases": [
+    "Mixtral 8x7B Instruct"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/perplexity-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "mistral-7b-instruct",
+   "aliases": [
+    "Mistral 7B Instruct"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/perplexity-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "codellama-70b-instruct",
+   "aliases": [
+    "CodeLlama 70B Instruct"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/perplexity-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "sonar-small-chat",
+   "aliases": [
+    "Sonar Small Chat"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/perplexity-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "sonar-small-online",
+   "aliases": [
+    "Sonar Small Online"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/perplexity-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "sonar-medium-chat",
+   "aliases": [
+    "Sonar Medium Chat"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/perplexity-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "sonar-medium-online",
+   "aliases": [
+    "Sonar Medium Online"
+   ],
+   "role": "option",
+   "evidence": "lib/models/llm/perplexity-llm-list.ts"
+  },
+  {
+   "kind": "model",
+   "name": "text-embedding-3-small",
+   "aliases": [],
+   "role": "used",
+   "evidence": "app/api/retrieval/process/route.ts:119; retrieve/route.ts:53"
+  },
+  {
+   "kind": "model",
+   "name": "all-MiniLM-L6-v2",
+   "aliases": [
+    "Xenova/all-MiniLM-L6-v2"
+   ],
+   "role": "used",
+   "evidence": "lib/generate-local-embedding.ts:6"
+  },
+  {
+   "kind": "provider",
+   "name": "openai",
+   "aliases": [
+    "OpenAI Endpoint"
+   ],
+   "role": "used",
+   "evidence": ".env.local.example; lib/models"
+  },
+  {
+   "kind": "provider",
+   "name": "anthropic",
+   "aliases": [
+    "@anthropic-ai/sdk",
+    "Anthropic Endpoint"
+   ],
+   "role": "used",
+   "evidence": ".env.local.example; lib/models"
+  },
+  {
+   "kind": "provider",
+   "name": "google",
+   "aliases": [
+    "@google/generative-ai",
+    "Google AI",
+    "Google Endpoint",
+    "gemini",
+    "google-generativeai"
+   ],
+   "role": "used",
+   "evidence": ".env.local.example; lib/models"
+  },
+  {
+   "kind": "provider",
+   "name": "mistral",
+   "aliases": [
+    "Mistral Endpoint"
+   ],
+   "role": "used",
+   "evidence": ".env.local.example; lib/models"
+  },
+  {
+   "kind": "provider",
+   "name": "groq",
+   "aliases": [
+    "Groq Endpoint"
+   ],
+   "role": "used",
+   "evidence": ".env.local.example; lib/models"
+  },
+  {
+   "kind": "provider",
+   "name": "perplexity",
+   "aliases": [],
+   "role": "used",
+   "evidence": ".env.local.example; lib/models"
+  },
+  {
+   "kind": "provider",
+   "name": "openrouter",
+   "aliases": [],
+   "role": "option",
+   "evidence": ".env.local.example; lib/models"
+  },
+  {
+   "kind": "provider",
+   "name": "azure-openai",
+   "aliases": [
+    "Azure OpenAI Endpoint",
+    "azure",
+    "env_api_config_AZURE_OPENAI_ENDPOINT",
+    "env_provider_azure"
+   ],
+   "role": "option",
+   "evidence": ".env.local.example; lib/models"
+  },
+  {
+   "kind": "provider",
+   "name": "ollama",
+   "aliases": [
+    "Ollama Endpoint"
+   ],
+   "role": "option",
+   "evidence": ".env.local.example; lib/models"
+  },
+  {
+   "kind": "framework",
+   "name": "openai",
+   "aliases": [
+    "OpenAI Endpoint"
+   ],
+   "role": "used",
+   "evidence": "package.json"
+  },
+  {
+   "kind": "framework",
+   "name": "@anthropic-ai/sdk",
+   "aliases": [
+    "anthropic-ai"
+   ],
+   "role": "used",
+   "evidence": "package.json"
+  },
+  {
+   "kind": "framework",
+   "name": "@google/generative-ai",
+   "aliases": [
+    "google-generativeai"
+   ],
+   "role": "used",
+   "evidence": "package.json"
+  },
+  {
+   "kind": "framework",
+   "name": "ai",
+   "aliases": [
+    "vercel-ai"
+   ],
+   "role": "used",
+   "evidence": "package.json"
+  },
+  {
+   "kind": "framework",
+   "name": "langchain",
+   "aliases": [],
+   "role": "used",
+   "evidence": "package.json"
+  },
+  {
+   "kind": "framework",
+   "name": "@xenova/transformers",
+   "aliases": [
+    "HuggingFace Transformers",
+    "transformers",
+    "xenova-transformers"
+   ],
+   "role": "used",
+   "evidence": "package.json"
+  },
+  {
+   "kind": "vector_db",
+   "name": "pgvector",
+   "aliases": [
+    "supabase",
+    "postgres-vector"
+   ],
+   "role": "used",
+   "evidence": "supabase/migrations/20240108234545_add_file_items.sql"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-1106-preview",
+   "aliases": [],
+   "role": "used",
+   "evidence": "app/api/command/route.ts:24 (hard-coded in the command route; missed in the first draft key)"
+  }
+ ],
+ "not_real": [],
+ "extra_real": [
+  {
+   "name": "@langchain/community",
+   "why": "real transitive framework from the lockfile"
+  },
+  {
+   "name": "@langchain/core",
+   "why": "real transitive framework from the lockfile"
+  },
+  {
+   "name": "langsmith",
+   "why": "real transitive framework from the lockfile"
+  },
+  {
+   "name": "codellama-34b-instruct",
+   "why": "model id used as a key in the per-model limits table (lib/chat-setting-limits.ts)"
+  },
+  {
+   "name": "llama-2-70b-chat",
+   "why": "model id used as a key in the per-model limits table (lib/chat-setting-limits.ts)"
+  },
+  {
+   "name": "pplx-70b-chat",
+   "why": "model id used as a key in the per-model limits table (lib/chat-setting-limits.ts)"
+  },
+  {
+   "name": "pplx-70b-online",
+   "why": "model id used as a key in the per-model limits table (lib/chat-setting-limits.ts)"
+  },
+  {
+   "name": "pplx-7b-chat",
+   "why": "model id used as a key in the per-model limits table (lib/chat-setting-limits.ts)"
+  },
+  {
+   "name": "pplx-7b-online",
+   "why": "model id used as a key in the per-model limits table (lib/chat-setting-limits.ts)"
+  },
+  {
+   "name": "gpt-3.5-turbo-1106",
+   "why": "hard-coded model option (create-assistant.tsx:94)"
+  }
+ ],
+ "junk": [
+  "any",
+  "assistant.model",
+  "assistantChatSettings.model",
+  "chat.model",
+  "chatSettings.model",
+  "createdModel.id",
+  "defaultChatSettings.model",
+  "item.model",
+  "model.id",
+  "modelData.modelId",
+  "modelId",
+  "payload.chatSettings.model",
+  "preset.model",
+  "presetChatSettings.model",
+  "selectedAssistant.model",
+  "selectedPreset.model",
+  "selectedWorkspace",
+  "selectedWorkspace.default_model",
+  "string",
+  "Tables",
+  "TablesInsert",
+  "TablesUpdate",
+  "LLM",
+  "LLMID",
+  "DEPLOYMENT_ID"
+ ]
+}

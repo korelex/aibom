@@ -1,0 +1,60 @@
+{
+ "repo": "ai-chatbot",
+ "commit": "c2f8235e1f",
+ "status": "DRAFT, MODELS ONLY (held-out check). Written by Claude from lib/ai/models.ts and lib/ai/providers.ts",
+ "roles": "option = selectable in the model picker",
+ "items": [
+  {
+   "kind": "model",
+   "name": "kimi-k2.5",
+   "aliases": [
+    "moonshotai/kimi-k2.5"
+   ],
+   "role": "option",
+   "evidence": "lib/ai/models.ts"
+  },
+  {
+   "kind": "model",
+   "name": "deepseek-v3.2",
+   "aliases": [
+    "deepseek/deepseek-v3.2"
+   ],
+   "role": "option",
+   "evidence": "lib/ai/models.ts"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-oss-20b",
+   "aliases": [
+    "openai/gpt-oss-20b"
+   ],
+   "role": "option",
+   "evidence": "lib/ai/models.ts"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-oss-120b",
+   "aliases": [
+    "openai/gpt-oss-120b"
+   ],
+   "role": "option",
+   "evidence": "lib/ai/models.ts"
+  },
+  {
+   "kind": "model",
+   "name": "grok-4.1-fast-non-reasoning",
+   "aliases": [
+    "xai/grok-4.1-fast-non-reasoning"
+   ],
+   "role": "option",
+   "evidence": "lib/ai/models.ts"
+  }
+ ],
+ "not_real": [],
+ "extra_real": [],
+ "junk": [
+  "mock-model",
+  "mock-title-model"
+ ],
+ "scope": "models"
+}

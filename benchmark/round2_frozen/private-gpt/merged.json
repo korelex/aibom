@@ -1,0 +1,1242 @@
+[
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "test",
+    "col": 15,
+    "file": "tests/server/chat/anthropic/test_anthropic_client.py",
+    "line": 1523,
+    "snippet": "model=\"claude-opus-4-6\",  # default",
+    "use": "test",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0001",
+  "kind": "model",
+  "maker": "Anthropic",
+  "mode": "chat model",
+  "name": "claude-opus-4-6",
+  "places": {
+   "live": 0,
+   "other": 1
+  },
+  "reason": "test",
+  "tier": "rejected"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "docs",
+    "col": 27,
+    "file": "fern/docs/pages/providers/opper.mdx",
+    "line": 37,
+    "snippet": "PGPT_LLM_DEFAULT=claude-sonnet-4-6 \\",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "docs",
+    "col": 30,
+    "file": "fern/docs/pages/providers/opper.mdx",
+    "line": 47,
+    "snippet": "-e PGPT_LLM_DEFAULT=claude-sonnet-4-6 \\",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "docs",
+    "col": 27,
+    "file": "fern/docs/pages/providers/opper.mdx",
+    "line": 56,
+    "snippet": "PGPT_LLM_DEFAULT=claude-sonnet-4-6 \\",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "docs",
+    "col": 26,
+    "file": "fern/docs/pages/providers/opper.mdx",
+    "line": 73,
+    "snippet": "- Bare model ids such as `claude-sonnet-4-6` or `gpt-5.5` route each request across the providers that serve that model. An id with a provid",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "test",
+    "col": 26,
+    "file": "tests/models/anthropic/registry.py",
+    "line": 280,
+    "snippet": "\"model\": \"claude-sonnet-4-6\",",
+    "use": "test",
+    "via": ""
+   },
+   {
+    "category": "test",
+    "col": 22,
+    "file": "tests/models/anthropic/registry.py",
+    "line": 364,
+    "snippet": "\"model\": \"claude-sonnet-4-6\",",
+    "use": "test",
+    "via": ""
+   },
+   {
+    "category": "test",
+    "col": 30,
+    "file": "tests/models/anthropic/test_openapi_schema.py",
+    "line": 369,
+    "snippet": "\"model\": \"claude-sonnet-4-6\",",
+    "use": "test",
+    "via": ""
+   },
+   {
+    "category": "test",
+    "col": 30,
+    "file": "tests/models/anthropic/test_openapi_schema.py",
+    "line": 407,
+    "snippet": "\"model\": \"claude-sonnet-4-6\",",
+    "use": "test",
+    "via": ""
+   },
+   {
+    "category": "test",
+    "col": 30,
+    "file": "tests/models/anthropic/test_openapi_schema.py",
+    "line": 424,
+    "snippet": "\"model\": \"claude-sonnet-4-6\",",
+    "use": "test",
+    "via": ""
+   },
+   {
+    "category": "test",
+    "col": 35,
+    "file": "tests/models/anthropic/test_openapi_schema.py",
+    "line": 433,
+    "snippet": "\"id\": \"claude-sonnet-4-6\",",
+    "use": "test",
+    "via": ""
+   },
+   {
+    "category": "test",
+    "col": 33,
+    "file": "tests/models/anthropic/test_openapi_schema.py",
+    "line": 442,
+    "snippet": "\"first_id\": \"claude-sonnet-4-6\",",
+    "use": "test",
+    "via": ""
+   },
+   {
+    "category": "test",
+    "col": 32,
+    "file": "tests/models/anthropic/test_openapi_schema.py",
+    "line": 443,
+    "snippet": "\"last_id\": \"claude-sonnet-4-6\",",
+    "use": "test",
+    "via": ""
+   },
+   {
+    "category": "test",
+    "col": 27,
+    "file": "tests/models/anthropic/test_openapi_schema.py",
+    "line": 451,
+    "snippet": "\"id\": \"claude-sonnet-4-6\",",
+    "use": "test",
+    "via": ""
+   },
+   {
+    "category": "test",
+    "col": 30,
+    "file": "tests/models/anthropic/test_openapi_schema.py",
+    "line": 464,
+    "snippet": "\"model\": \"claude-sonnet-4-6\",",
+    "use": "test",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0002",
+  "kind": "model",
+  "maker": "Anthropic",
+  "mode": "chat model",
+  "name": "claude-sonnet-4-6",
+  "places": {
+   "live": 0,
+   "other": 14
+  },
+  "reason": "docs",
+  "tier": "rejected"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "docs",
+    "col": 117,
+    "file": "fern/docs/pages/providers/orcarouter.mdx",
+    "line": 28,
+    "snippet": "3. Note the model IDs you want to use \u2014 OrcaRouter model IDs are namespaced, e.g. `openai/gpt-5.5` or `anthropic/claude-sonnet-5`.",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "docs",
+    "col": 20,
+    "file": "fern/docs/pages/providers/orcarouter.mdx",
+    "line": 82,
+    "snippet": "- name: anthropic/claude-sonnet-5",
+    "use": "docs",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0003",
+  "kind": "model",
+  "maker": "Anthropic",
+  "mode": "chat model",
+  "name": "claude-sonnet-5",
+  "places": {
+   "live": 0,
+   "other": 2
+  },
+  "reason": "docs",
+  "tier": "rejected"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "docs",
+    "col": 17,
+    "file": "fern/docs/pages/providers/orcarouter.mdx",
+    "line": 91,
+    "snippet": "- name: google/gemini-2.5-pro",
+    "use": "docs",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0004",
+  "kind": "model",
+  "maker": "Google",
+  "mode": "chat model",
+  "name": "gemini-2.5-pro",
+  "places": {
+   "live": 0,
+   "other": 1
+  },
+  "reason": "docs",
+  "tier": "rejected"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 55,
+    "file": "private_gpt/components/engines/chat/utils/tool_utils.py",
+    "line": 256,
+    "snippet": "Models sometimes put the whole call into the name (GLM-5.3:",
+    "use": "text",
+    "via": ""
+   },
+   {
+    "category": "test",
+    "col": 4,
+    "file": "tests/engines/test_chat_agent_engine.py",
+    "line": 315,
+    "snippet": "GLM-5.3 emitted ``Agent(description=..., prompt=...) ...`` (>200 chars) as",
+    "use": "test",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0005",
+  "kind": "model",
+  "maker": "Zhipu AI",
+  "mode": "chat model",
+  "name": "GLM-5.3",
+  "places": {
+   "live": 0,
+   "other": 2
+  },
+  "reason": "text",
+  "tier": "rejected"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 61,
+    "file": "private_gpt/components/llm/tokenizers/estimator.py",
+    "line": 18,
+    "snippet": "best represents the target tokenizer, e.g. ``gpt-4o``, ``gpt-4``,",
+    "use": "text",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0006",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4",
+  "places": {
+   "live": 0,
+   "other": 1
+  },
+  "reason": "text",
+  "tier": "rejected"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "docs",
+    "col": 17,
+    "file": "fern/docs/pages/providers/daoxe.mdx",
+    "line": 70,
+    "snippet": "default_model: gpt-4o",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "docs",
+    "col": 10,
+    "file": "fern/docs/pages/providers/daoxe.mdx",
+    "line": 73,
+    "snippet": "- name: gpt-4o",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 49,
+    "file": "private_gpt/components/llm/tokenizers/estimator.py",
+    "line": 18,
+    "snippet": "best represents the target tokenizer, e.g. ``gpt-4o``, ``gpt-4``,",
+    "use": "text",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0007",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4o",
+  "places": {
+   "live": 0,
+   "other": 3
+  },
+  "reason": "text",
+  "tier": "rejected"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 46,
+    "file": "private_gpt/components/llm/discovery.py",
+    "line": 126,
+    "snippet": "Models in RESPONSES_API_ONLY_MODELS (e.g. gpt-5.2-pro) must use the",
+    "use": "text",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0008",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.2-pro",
+  "places": {
+   "live": 0,
+   "other": 1
+  },
+  "reason": "text",
+  "tier": "rejected"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "docs",
+    "col": 27,
+    "file": "fern/docs/pages/providers/cheaperinference.mdx",
+    "line": 46,
+    "snippet": "PGPT_LLM_DEFAULT=gpt-5.4 \\",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "docs",
+    "col": 30,
+    "file": "fern/docs/pages/providers/cheaperinference.mdx",
+    "line": 56,
+    "snippet": "-e PGPT_LLM_DEFAULT=gpt-5.4 \\",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "docs",
+    "col": 27,
+    "file": "fern/docs/pages/providers/cheaperinference.mdx",
+    "line": 65,
+    "snippet": "PGPT_LLM_DEFAULT=gpt-5.4 \\",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "docs",
+    "col": 99,
+    "file": "fern/docs/pages/providers/cheaperinference.mdx",
+    "line": 78,
+    "snippet": "- `/v1/models` also lists image and video models. Set `PGPT_LLM_DEFAULT` to a chat model, such as `gpt-5.4`.",
+    "use": "docs",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0009",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.4",
+  "places": {
+   "live": 0,
+   "other": 4
+  },
+  "reason": "docs",
+  "tier": "rejected"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "docs",
+    "col": 49,
+    "file": "fern/docs/pages/providers/opper.mdx",
+    "line": 73,
+    "snippet": "- Bare model ids such as `claude-sonnet-4-6` or `gpt-5.5` route each request across the providers that serve that model. An id with a provid",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "docs",
+    "col": 94,
+    "file": "fern/docs/pages/providers/orcarouter.mdx",
+    "line": 28,
+    "snippet": "3. Note the model IDs you want to use \u2014 OrcaRouter model IDs are namespaced, e.g. `openai/gpt-5.5` or `anthropic/claude-sonnet-5`.",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "docs",
+    "col": 24,
+    "file": "fern/docs/pages/providers/orcarouter.mdx",
+    "line": 70,
+    "snippet": "default_model: openai/gpt-5.5",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "docs",
+    "col": 17,
+    "file": "fern/docs/pages/providers/orcarouter.mdx",
+    "line": 73,
+    "snippet": "- name: openai/gpt-5.5",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "docs",
+    "col": 177,
+    "file": "fern/docs/pages/providers/orcarouter.mdx",
+    "line": 129,
+    "snippet": "- The routing model `orcarouter/auto` picks an upstream per request based on task type and difficulty. For deterministic structured output, ",
+    "use": "docs",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0010",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-5.5",
+  "places": {
+   "live": 0,
+   "other": 5
+  },
+  "reason": "docs",
+  "tier": "rejected"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "docs",
+    "col": 10,
+    "file": "fern/docs/pages/providers/daoxe.mdx",
+    "line": 91,
+    "snippet": "- name: grok-3",
+    "use": "docs",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0011",
+  "kind": "model",
+  "maker": "xAI",
+  "mode": "chat model",
+  "name": "grok-3",
+  "places": {
+   "live": 0,
+   "other": 1
+  },
+  "reason": "docs",
+  "tier": "rejected"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "docs",
+    "col": 7,
+    "file": "CHANGELOG.md",
+    "line": 83,
+    "snippet": "* make llama3.1 as default ([#2022](https://github.com/zylon-ai/private-gpt/issues/2022)) ([9027d69](https://github.com/zylon-ai/private-gpt",
+    "use": "docs",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0012",
+  "kind": "model",
+  "maker": "Meta",
+  "mode": "chat model",
+  "name": "llama3.1",
+  "places": {
+   "live": 0,
+   "other": 1
+  },
+  "reason": "docs",
+  "tier": "rejected"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "test",
+    "col": 23,
+    "file": "tests/components/llm/tokenizers/models/test_cache_evolution.py",
+    "line": 23,
+    "snippet": "\"mistralai/mistral-7b\",",
+    "use": "test",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0013",
+  "kind": "model",
+  "maker": "Mistral AI",
+  "mode": "chat model",
+  "name": "mistral-7b",
+  "places": {
+   "live": 0,
+   "other": 1
+  },
+  "reason": "test",
+  "tier": "rejected"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "test",
+    "col": 47,
+    "file": "tests/components/llm/tokenizers/models/conftest.py",
+    "line": 36,
+    "snippet": "model_id: Model ID like \"mistralai/mistral-7b-v0.1\"",
+    "use": "test",
+    "via": ""
+   },
+   {
+    "category": "test",
+    "col": 23,
+    "file": "tests/components/llm/tokenizers/models/test_broken_states.py",
+    "line": 41,
+    "snippet": "\"mistralai/mistral-7b-v0.1\",",
+    "use": "test",
+    "via": ""
+   },
+   {
+    "category": "test",
+    "col": 23,
+    "file": "tests/components/llm/tokenizers/models/test_broken_states.py",
+    "line": 64,
+    "snippet": "\"mistralai/mistral-7b-v0.1\",",
+    "use": "test",
+    "via": ""
+   },
+   {
+    "category": "test",
+    "col": 23,
+    "file": "tests/components/llm/tokenizers/models/test_broken_states.py",
+    "line": 108,
+    "snippet": "\"mistralai/mistral-7b-v0.1\",  # lowercase",
+    "use": "test",
+    "via": ""
+   },
+   {
+    "category": "test",
+    "col": 23,
+    "file": "tests/components/llm/tokenizers/models/test_broken_states.py",
+    "line": 119,
+    "snippet": "\"mistralai/mistral-7b-v0.1\",  # lowercase in cache",
+    "use": "test",
+    "via": ""
+   },
+   {
+    "category": "test",
+    "col": 23,
+    "file": "tests/components/llm/tokenizers/models/test_broken_states.py",
+    "line": 131,
+    "snippet": "\"mistralai/mistral-7b-v0.1\",",
+    "use": "test",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0014",
+  "kind": "model",
+  "maker": "Mistral AI",
+  "mode": "chat model",
+  "name": "mistral-7b-v0.1",
+  "places": {
+   "live": 0,
+   "other": 6
+  },
+  "reason": "test",
+  "tier": "rejected"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "config",
+    "col": 32,
+    "file": "fern/openapi/openapi.json",
+    "line": 52,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 32,
+    "file": "fern/openapi/openapi.json",
+    "line": 81,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 32,
+    "file": "fern/openapi/openapi.json",
+    "line": 126,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 32,
+    "file": "fern/openapi/openapi.json",
+    "line": 1065,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 32,
+    "file": "fern/openapi/openapi.json",
+    "line": 1090,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 32,
+    "file": "fern/openapi/openapi.json",
+    "line": 1147,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 28,
+    "file": "fern/openapi/openapi.json",
+    "line": 1343,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 26,
+    "file": "fern/openapi/openapi.json",
+    "line": 1391,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 34,
+    "file": "fern/openapi/openapi.json",
+    "line": 1582,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 28,
+    "file": "fern/openapi/openapi.json",
+    "line": 1679,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 32,
+    "file": "fern/openapi/openapi.json",
+    "line": 2442,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 32,
+    "file": "fern/openapi/openapi.json",
+    "line": 2483,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 32,
+    "file": "fern/openapi/openapi.json",
+    "line": 2505,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 26,
+    "file": "fern/openapi/openapi.json",
+    "line": 2650,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 22,
+    "file": "fern/openapi/openapi.json",
+    "line": 8076,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 22,
+    "file": "fern/openapi/openapi.json",
+    "line": 8100,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 22,
+    "file": "fern/openapi/openapi.json",
+    "line": 8806,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 26,
+    "file": "fern/openapi/openapi.json",
+    "line": 11740,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 24,
+    "file": "fern/openapi/openapi.json",
+    "line": 11768,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 26,
+    "file": "fern/openapi/openapi.json",
+    "line": 11821,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 24,
+    "file": "fern/openapi/openapi.json",
+    "line": 11849,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 41,
+    "file": "private_gpt/celery/model.py",
+    "line": 48,
+    "snippet": "{\"object\": \"list\", \"model\": \"private-gpt\", \"data\": []},",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 34,
+    "file": "private_gpt/celery/model.py",
+    "line": 61,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 52,
+    "file": "private_gpt/celery/tasks/ingestion/extraction_tasks.py",
+    "line": 98,
+    "snippet": "return IngestResponse(object=\"list\", model=\"private-gpt\", data=[])",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 52,
+    "file": "private_gpt/celery/tasks/ingestion/extraction_tasks.py",
+    "line": 221,
+    "snippet": "return IngestResponse(object=\"list\", model=\"private-gpt\", data=[])",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 52,
+    "file": "private_gpt/celery/tasks/ingestion/extraction_tasks.py",
+    "line": 241,
+    "snippet": "return IngestResponse(object=\"list\", model=\"private-gpt\", data=[])",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 15,
+    "file": "private_gpt/celery/tasks/ingestion/extraction_tasks.py",
+    "line": 291,
+    "snippet": "model=\"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 19,
+    "file": "private_gpt/components/ingestion/ingestion_scheduler.py",
+    "line": 234,
+    "snippet": "model=\"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 19,
+    "file": "private_gpt/components/ingestion/ingestion_scheduler.py",
+    "line": 392,
+    "snippet": "model=\"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 42,
+    "file": "private_gpt/server/chat/chat_router.py",
+    "line": 55,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 42,
+    "file": "private_gpt/server/chat/chat_router.py",
+    "line": 82,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 42,
+    "file": "private_gpt/server/chat/chat_router.py",
+    "line": 124,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 149,
+    "file": "private_gpt/server/chat/chat_router.py",
+    "line": 137,
+    "snippet": "'data: {\"type\":\"message_start\",\"message\":{\"id\":\"msg_12345\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[],\"model\":\"private-gpt\",\"usage\":{}",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 155,
+    "file": "private_gpt/server/chat_async/chat_async_router.py",
+    "line": 304,
+    "snippet": "'data: {\"type\":\"message_start\",\"message\":{\"id\":\"msg_async_12345\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[],\"model\":\"private-gpt\",\"usa",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 155,
+    "file": "private_gpt/server/chat_async/chat_async_router.py",
+    "line": 321,
+    "snippet": "'data: {\"type\":\"message_start\",\"message\":{\"id\":\"msg_async_67890\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[],\"model\":\"private-gpt\",\"usa",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 30,
+    "file": "private_gpt/server/embeddings/embeddings_router.py",
+    "line": 71,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 30,
+    "file": "private_gpt/server/embeddings/embeddings_router.py",
+    "line": 82,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 42,
+    "file": "private_gpt/server/embeddings/embeddings_router.py",
+    "line": 115,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 42,
+    "file": "private_gpt/server/embeddings/embeddings_router.py",
+    "line": 140,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 42,
+    "file": "private_gpt/server/embeddings/embeddings_router.py",
+    "line": 197,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 52,
+    "file": "private_gpt/server/embeddings/embeddings_router.py",
+    "line": 338,
+    "snippet": "return EmbeddingsResponse(object=\"list\", model=\"private-gpt\", data=embeddings)",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 30,
+    "file": "private_gpt/server/ingest/ingest_router.py",
+    "line": 298,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 34,
+    "file": "private_gpt/server/ingest/ingest_router.py",
+    "line": 393,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 34,
+    "file": "private_gpt/server/ingest/ingest_router.py",
+    "line": 444,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 15,
+    "file": "private_gpt/server/ingest/ingest_router.py",
+    "line": 712,
+    "snippet": "model=\"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 50,
+    "file": "private_gpt/server/ingest/ingest_router.py",
+    "line": 738,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 34,
+    "file": "private_gpt/server/ingest/ingest_router.py",
+    "line": 820,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 48,
+    "file": "private_gpt/server/ingest/ingest_router.py",
+    "line": 876,
+    "snippet": "return IngestResponse(object=\"list\", model=\"private-gpt\", data=ingested_documents)",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 42,
+    "file": "private_gpt/server/primitives/primitives_router.py",
+    "line": 71,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 42,
+    "file": "private_gpt/server/primitives/primitives_router.py",
+    "line": 114,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 42,
+    "file": "private_gpt/server/primitives/primitives_router.py",
+    "line": 138,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 34,
+    "file": "private_gpt/server/primitives/primitives_router.py",
+    "line": 280,
+    "snippet": "\"model\": \"private-gpt\",",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0015",
+  "kind": "model",
+  "maker": "",
+  "mode": "",
+  "name": "private-gpt",
+  "places": {
+   "live": 52,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "docs",
+    "col": 30,
+    "file": "fern/docs/pages/providers/lmstudio.mdx",
+    "line": 33,
+    "snippet": "- LLM: search `unsloth Qwen3.5-35B-A3B` and pick a Q4 quantization (~18 GB)",
+    "use": "docs",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0016",
+  "kind": "model",
+  "maker": "Alibaba",
+  "mode": "chat model",
+  "name": "Qwen3.5-35B-A3B",
+  "places": {
+   "live": 0,
+   "other": 1
+  },
+  "reason": "docs",
+  "tier": "rejected"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "docs",
+    "col": 33,
+    "file": "fern/docs/pages/providers/opper.mdx",
+    "line": 38,
+    "snippet": "PGPT_EMBEDDING_DEFAULT=text-embedding-3-small \\",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "docs",
+    "col": 36,
+    "file": "fern/docs/pages/providers/opper.mdx",
+    "line": 48,
+    "snippet": "-e PGPT_EMBEDDING_DEFAULT=text-embedding-3-small \\",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "docs",
+    "col": 33,
+    "file": "fern/docs/pages/providers/opper.mdx",
+    "line": 57,
+    "snippet": "PGPT_EMBEDDING_DEFAULT=text-embedding-3-small \\",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "docs",
+    "col": 70,
+    "file": "fern/docs/pages/providers/orcarouter.mdx",
+    "line": 127,
+    "snippet": "- **Embeddings are available** through `/v1/embeddings`, e.g. `openai/text-embedding-3-small`.",
+    "use": "docs",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0017",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "embedding model",
+  "name": "text-embedding-3-small",
+  "places": {
+   "live": 0,
+   "other": 4
+  },
+  "reason": "docs",
+  "tier": "rejected"
+ }
+]

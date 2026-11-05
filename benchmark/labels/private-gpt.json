@@ -1,0 +1,16 @@
+{
+ "repo": "private-gpt",
+ "commit": "42ce052278ef",
+ "status": "FRESH-REPO KEY (round 2), MODELS ONLY, written from the code BEFORE the engine was run; the engine was frozen during this round",
+ "scope": "models",
+ "items": [],
+ "not_real": [],
+ "extra_real": [],
+ "junk": [
+  "gpt-4o",
+  "gpt-4",
+  "gpt-5.2-pro",
+  "claude-code",
+  "private-gpt"
+ ]
+}

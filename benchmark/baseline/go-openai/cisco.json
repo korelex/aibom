@@ -1,0 +1,462 @@
+{
+ "aibom_analysis": {
+  "metadata": {
+   "report_schema_version": "2"
+  },
+  "sources": {
+   "sashabaranov/go-openai": {
+    "source_name": "sashabaranov/go-openai",
+    "source_path": "/tmp/fresh/go-openai",
+    "components": {
+     "secret": [
+      {
+       "name": "env:OPENAI_API_KEY",
+       "component_type": "secret",
+       "file_path": "/tmp/fresh/go-openai/examples/images/main.go",
+       "line_number": 12,
+       "framework": "",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.3,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "env var OPENAI_API_KEY used as api_key_envname; not found in any config source \u2014 may require additional repos or runtime configuration",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "env": "OPENAI_API_KEY",
+        "env_context": "api_key_envname",
+        "unresolved_env_var": "OPENAI_API_KEY",
+        "evidence": [
+         {
+          "file": "/tmp/fresh/go-openai/example_test.go",
+          "line": 18,
+          "service": "/tmp/fresh/go-openai",
+          "test_only": true
+         },
+         {
+          "file": "/tmp/fresh/go-openai/examples/voice-to-text/main.go",
+          "line": 23,
+          "service": "/tmp/fresh/go-openai",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/fresh/go-openai/examples/completion/main.go",
+          "line": 12,
+          "service": "/tmp/fresh/go-openai",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/fresh/go-openai/examples/chatbot/main.go",
+          "line": 13,
+          "service": "/tmp/fresh/go-openai",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/fresh/go-openai/examples/completion-with-tool/main.go",
+          "line": 14,
+          "service": "/tmp/fresh/go-openai",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/fresh/go-openai/examples/responses/main.go",
+          "line": 13,
+          "service": "/tmp/fresh/go-openai",
+          "test_only": false
+         }
+        ],
+        "evidence_count": 7,
+        "evidence_files": [
+         "/tmp/fresh/go-openai/example_test.go",
+         "/tmp/fresh/go-openai/examples/voice-to-text/main.go",
+         "/tmp/fresh/go-openai/examples/images/main.go",
+         "/tmp/fresh/go-openai/examples/completion/main.go",
+         "/tmp/fresh/go-openai/examples/chatbot/main.go",
+         "/tmp/fresh/go-openai/examples/completion-with-tool/main.go",
+         "/tmp/fresh/go-openai/examples/responses/main.go"
+        ],
+        "consolidated_count": 7
+       },
+       "instance_id": "env:OPENAI_API_KEY_/tmp/fresh/go-openai/examples/images/main.go_12",
+       "confidence": 0.3
+      }
+     ],
+     "model": [
+      {
+       "name": "env:OPENAI_MODEL",
+       "component_type": "model",
+       "file_path": "/tmp/fresh/go-openai/examples/responses/main.go",
+       "line_number": 18,
+       "framework": "",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.3,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "env var OPENAI_MODEL used as model_kwarg; not found in any config source \u2014 may require additional repos or runtime configuration",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "env": "OPENAI_MODEL",
+        "env_context": "model_kwarg",
+        "unresolved_env_var": "OPENAI_MODEL",
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/fresh/go-openai/examples/responses/main.go"
+        ]
+       },
+       "instance_id": "env:OPENAI_MODEL_/tmp/fresh/go-openai/examples/responses/main.go_18",
+       "confidence": 0.3
+      }
+     ],
+     "dependency": [
+      {
+       "name": "github.com/sashabaranov/go-openai",
+       "component_type": "dependency",
+       "file_path": "examples/images/main.go",
+       "line_number": 8,
+       "framework": "go",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.85,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "ecosystem": "go",
+        "package": "github.com/sashabaranov/go-openai",
+        "scanner": "multi_language_scanner",
+        "evidence": [
+         {
+          "file": "chat_test.go",
+          "line": 16,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "moderation_test.go",
+          "line": 14,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "config_test.go",
+          "line": 6,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "engines_test.go",
+          "line": 10,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "edits_test.go",
+          "line": 12,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "api_integration_test.go",
+          "line": 15,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "error_test.go",
+          "line": 9,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "completion_test.go",
+          "line": 15,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "fine_tunes_test.go",
+          "line": 10,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "files_api_test.go",
+          "line": 15,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "modern_models_test.go",
+          "line": 8,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "speech_test.go",
+          "line": 14,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "stream_test.go",
+          "line": 13,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "assistant_test.go",
+          "line": 6,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "image_api_test.go",
+          "line": 15,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "openai_test.go",
+          "line": 4,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "response_stream_test.go",
+          "line": 11,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "response_test.go",
+          "line": 11,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "vector_store_test.go",
+          "line": 6,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "batch_test.go",
+          "line": 11,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "thread_test.go",
+          "line": 10,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "audio_api_test.go",
+          "line": 15,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "chat_stream_test.go",
+          "line": 13,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "messages_test.go",
+          "line": 10,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "models_test.go",
+          "line": 12,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "example_test.go",
+          "line": 14,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "fine_tuning_job_test.go",
+          "line": 10,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "run_test.go",
+          "line": 6,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "embeddings_test.go",
+          "line": 14,
+          "service": ".",
+          "test_only": true
+         },
+         {
+          "file": "examples/voice-to-text/main.go",
+          "line": 9,
+          "service": "examples/voice-to-text",
+          "test_only": false
+         },
+         {
+          "file": "examples/completion/main.go",
+          "line": 8,
+          "service": "examples/completion",
+          "test_only": false
+         },
+         {
+          "file": "examples/chatbot/main.go",
+          "line": 9,
+          "service": "examples/chatbot",
+          "test_only": false
+         },
+         {
+          "file": "examples/completion-with-tool/main.go",
+          "line": 8,
+          "service": "examples/completion-with-tool",
+          "test_only": false
+         },
+         {
+          "file": "examples/responses/main.go",
+          "line": 9,
+          "service": "examples/responses",
+          "test_only": false
+         }
+        ],
+        "evidence_count": 35,
+        "evidence_files": [
+         "chat_test.go",
+         "moderation_test.go",
+         "config_test.go",
+         "engines_test.go",
+         "edits_test.go",
+         "api_integration_test.go",
+         "error_test.go",
+         "completion_test.go",
+         "fine_tunes_test.go",
+         "files_api_test.go",
+         "modern_models_test.go",
+         "speech_test.go",
+         "stream_test.go",
+         "assistant_test.go",
+         "image_api_test.go",
+         "openai_test.go",
+         "response_stream_test.go",
+         "response_test.go",
+         "vector_store_test.go",
+         "batch_test.go",
+         "thread_test.go",
+         "audio_api_test.go",
+         "chat_stream_test.go",
+         "messages_test.go",
+         "models_test.go",
+         "example_test.go",
+         "fine_tuning_job_test.go",
+         "run_test.go",
+         "embeddings_test.go",
+         "examples/voice-to-text/main.go",
+         "examples/images/main.go",
+         "examples/completion/main.go",
+         "examples/chatbot/main.go",
+         "examples/completion-with-tool/main.go",
+         "examples/responses/main.go"
+        ],
+        "consolidated_count": 35,
+        "known_ai_package": true
+       },
+       "instance_id": "github.com/sashabaranov/go-openai_examples/images/main.go_8",
+       "confidence": 0.85
+      }
+     ]
+    },
+    "relationships": [],
+    "summary": {
+     "status": "completed",
+     "source_kind": "git",
+     "assets_discovered": 3,
+     "last_generated_at": null
+    },
+    "metadata": {
+     "source_kind": "git",
+     "source_ref_canonical": "github.com/sashabaranov/go-openai",
+     "source_ref_version": "dd54fd29688ae9934688a2928be0abbd8647a812"
+    }
+   }
+  },
+  "summary": {
+   "total_sources": 1,
+   "total_components": 3,
+   "pending_agent_review": 3,
+   "test_only_components": 0,
+   "component_types": {
+    "secret": 1,
+    "model": 1,
+    "dependency": 1
+   },
+   "total_relationships": 0,
+   "risk_score": 0,
+   "risk_severity": "info"
+  },
+  "risk": {
+   "score": 0,
+   "severity": "info",
+   "flags": []
+  },
+  "errors": []
+ },
+ "nollm_run": {
+  "note": "deterministic stage only, no LLM review (components marked needs_agentic were not reviewed)",
+  "scan_seconds": 2.9,
+  "target": "/tmp/fresh/go-openai"
+ }
+}

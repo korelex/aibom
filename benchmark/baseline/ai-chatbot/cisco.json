@@ -1,0 +1,5759 @@
+{
+ "aibom_analysis": {
+  "metadata": {
+   "report_schema_version": "2"
+  },
+  "sources": {
+   "vercel/ai-chatbot": {
+    "source_name": "vercel/ai-chatbot",
+    "source_path": "/tmp/mid/ai-chatbot",
+    "components": {
+     "secret": [
+      {
+       "name": "env_secret_AI_GATEWAY_API_KEY",
+       "component_type": "secret",
+       "file_path": "/tmp/mid/ai-chatbot/.env.example",
+       "line_number": 6,
+       "framework": "",
+       "detection_source": "config_file",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": "API key variable `AI_GATEWAY_API_KEY` present (value redacted)",
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "env_var": "AI_GATEWAY_API_KEY",
+        "redacted": true,
+        "config_kind": ".env",
+        "evidence_count": 1,
+        "evidence_files": [
+         "/tmp/mid/ai-chatbot/.env.example"
+        ]
+       },
+       "instance_id": "env_secret_AI_GATEWAY_API_KEY_/tmp/mid/ai-chatbot/.env.example_6",
+       "confidence": 1.0
+      },
+      {
+       "name": "base64_high_entropy_string",
+       "component_type": "secret",
+       "file_path": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+       "line_number": 271,
+       "framework": "",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.72,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": "Potential base64_high_entropy_string detected",
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "secret_type": "base64_high_entropy_string",
+        "detection_method": "detect_secrets",
+        "evidence": [
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 277,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 283,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 287,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 293,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 297,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 303,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 307,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 310,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 324,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 328,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 332,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 336,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 341,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 347,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 353,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 360,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 367,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 374,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 381,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 387,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 393,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 396,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 399,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 402,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 405,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 408,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 411,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 415,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 419,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 422,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 425,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 428,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 431,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 434,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 437,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 440,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 443,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 446,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 449,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 452,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 456,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 460,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 466,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 472,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 478,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 484,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 490,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 496,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 502,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 508,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 514,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 520,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 526,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 532,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 538,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 544,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 550,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 556,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 562,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 568,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 574,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 580,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 586,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 592,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 598,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 604,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 610,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 616,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 622,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 628,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 634,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 640,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 646,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 652,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 658,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 664,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 670,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 676,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 682,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 688,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 694,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 700,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 706,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 712,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 718,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 724,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 730,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 736,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 742,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 748,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 754,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 760,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 766,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 772,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 778,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 784,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 790,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 796,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 802,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 808,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 814,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 820,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 826,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 832,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 838,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 844,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 850,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 856,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 862,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 868,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 874,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 880,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 886,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 892,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 898,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 904,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 910,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 914,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 918,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 922,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 926,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 930,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 934,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 938,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 941,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 944,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 950,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 953,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 957,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 961,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 965,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 969,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 973,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 976,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 979,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 983,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 989,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 995,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1000,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1005,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1011,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1017,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1023,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1029,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1035,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1041,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1047,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1053,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1060,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1067,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1074,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1081,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1088,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1095,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1102,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1109,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1114,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1120,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1126,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1132,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1136,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1139,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1143,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1147,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1150,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1153,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1156,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1159,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1162,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1165,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1168,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1171,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1174,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1177,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1183,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1189,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1196,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1203,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1210,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1217,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1223,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1229,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1233,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1237,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1241,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1247,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1253,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1259,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1265,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1271,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1277,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1281,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1284,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1289,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1292,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1295,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1298,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1311,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1324,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1337,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1350,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1363,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1376,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1389,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1402,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1415,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1424,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1433,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1446,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1455,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1464,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1477,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1490,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1499,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1512,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1525,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1538,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1547,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1556,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1569,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1582,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1595,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1608,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1617,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1626,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1639,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1652,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1665,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1678,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1691,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1704,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1717,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1730,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1743,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1756,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1769,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1782,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1795,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1808,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1821,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1834,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1847,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1860,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1873,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1886,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1899,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1908,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1917,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1930,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1943,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1956,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1969,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1982,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 1995,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2008,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2017,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2026,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2035,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2044,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2053,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2062,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2071,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2080,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2089,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2098,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2107,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2116,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2125,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2134,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2147,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2150,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2156,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2168,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2174,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2180,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2186,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2189,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2192,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2195,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2198,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2201,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2204,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2207,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2210,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2215,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2220,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2225,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2230,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2233,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2236,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2242,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2248,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2254,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2260,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2266,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2273,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2280,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2287,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2294,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2306,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2312,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2318,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2322,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2325,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2330,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2333,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2336,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2339,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2342,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2345,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2348,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2351,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2354,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2357,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2360,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2363,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2366,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2369,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2372,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2375,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2378,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2381,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2384,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2387,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2390,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2393,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2396,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2399,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2402,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2405,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2408,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2411,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2414,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2417,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2420,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2423,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2426,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2429,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2432,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2435,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2438,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2441,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2444,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2447,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2450,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2453,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2456,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2459,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2462,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2465,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2468,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2471,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2474,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2477,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2480,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2483,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2488,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2491,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2494,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2497,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2500,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2503,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2509,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2513,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2519,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2523,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2529,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2536,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2540,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2544,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2573,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2577,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2580,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2584,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2596,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2600,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2604,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2616,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2621,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2624,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2629,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2634,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2639,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2644,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2650,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2653,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2657,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2661,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2665,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2668,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2672,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2675,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2678,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2681,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2685,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2690,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2694,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2705,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2709,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2712,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2716,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2720,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2723,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2726,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2729,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2732,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2735,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2738,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2743,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2746,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2749,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2752,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2755,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2758,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2762,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2766,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2769,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2773,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2777,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2783,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2786,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2789,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2792,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2796,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2800,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2804,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2808,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2811,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2815,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2818,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2821,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2824,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2828,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2833,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2836,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2841,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2846,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2850,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2853,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2857,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2861,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2865,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2869,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2873,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2877,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2881,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2885,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2889,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2894,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2898,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2902,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2906,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2910,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2914,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2918,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2922,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2925,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2929,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2933,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2937,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2941,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2944,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2948,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2952,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2956,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2959,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2963,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2967,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2971,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2975,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2981,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2985,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2989,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2992,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2995,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 2998,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3007,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3010,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3013,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3017,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3020,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3024,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3028,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3031,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3034,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3037,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3040,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3044,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3048,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3140,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3143,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3147,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3151,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3155,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3159,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3164,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3169,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3174,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3178,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3182,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3186,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3190,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3194,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3204,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3208,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3212,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3216,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3220,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3223,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3227,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3230,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3234,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3238,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3241,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3244,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3247,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3250,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3253,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3256,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3259,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3268,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3272,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3276,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3280,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3283,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3297,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3302,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3307,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3310,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3314,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3318,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3322,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3326,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3329,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3333,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3337,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3340,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3343,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3347,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3350,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3353,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3356,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3359,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3362,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3365,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3368,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3371,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3374,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3377,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3380,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3383,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3386,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3389,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3392,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3395,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3399,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3404,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3408,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3412,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3415,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3419,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3422,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3425,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3429,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3432,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3435,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3439,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3443,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3446,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3450,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3454,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3458,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3461,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3465,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3469,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3472,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3476,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3479,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3482,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3485,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3488,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3491,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3494,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3498,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3502,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3505,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3508,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3512,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3516,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3519,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3522,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3526,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3532,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3538,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3544,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3550,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3556,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3563,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3570,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3577,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3584,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3590,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3596,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3600,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3603,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3608,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3612,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3616,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3619,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3622,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3626,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3629,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3633,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3638,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3641,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3645,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3648,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3653,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3658,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3661,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3664,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3667,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3670,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3673,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3676,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3679,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3682,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3685,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3688,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3691,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3694,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3697,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3700,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3709,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3718,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3721,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3724,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3727,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3730,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3733,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3736,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3746,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3755,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3765,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3768,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3771,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3774,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3777,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3780,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3783,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3786,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3789,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3792,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3795,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3798,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3801,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3804,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3807,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3810,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3813,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3816,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3819,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3822,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3825,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3828,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3831,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3834,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3837,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3840,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3843,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3846,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3849,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3853,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3857,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3861,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3865,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3868,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3871,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3874,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3877,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3891,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3894,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3899,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3904,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3909,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3912,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3928,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3934,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3955,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3959,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3963,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3968,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3971,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3974,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3978,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3982,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3985,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3988,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3992,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3995,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 3999,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4003,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4007,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4010,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4013,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4016,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4019,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4022,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4026,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4030,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4033,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4037,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4040,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4044,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4048,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4051,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4055,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4058,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4062,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4066,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4069,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4074,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4079,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4082,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4085,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4089,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4093,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4097,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4101,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4105,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4109,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4113,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4117,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4120,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4124,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4129,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4132,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4136,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4139,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4142,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4145,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4148,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4151,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4154,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4157,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4160,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4163,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4166,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4169,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4172,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4175,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4178,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4181,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4184,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4187,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4190,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4194,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4198,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4211,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4217,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4222,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4232,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4242,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4252,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4262,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4266,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4270,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4273,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4276,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4279,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4282,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4285,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4288,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4291,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4301,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4311,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4314,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4317,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4320,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4323,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4326,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4329,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4333,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4336,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4341,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4345,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4348,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4352,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4355,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4358,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4361,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4364,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4367,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4370,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4373,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4378,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4381,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4385,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4389,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4393,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4396,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4399,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4402,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4406,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4409,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4413,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4417,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4423,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4427,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4430,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4434,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4437,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4443,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4447,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4451,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4455,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4458,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4462,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4466,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4469,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4472,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4475,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4488,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4491,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4495,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4500,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4503,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4508,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4511,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4515,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4519,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4523,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4527,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4530,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4533,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4539,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4543,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4546,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4551,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4555,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4560,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4563,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4566,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4578,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4581,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4584,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4588,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4591,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4594,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4597,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4600,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4603,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4606,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4609,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4612,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4615,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4625,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4635,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4640,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4645,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4651,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4654,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4658,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4661,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4664,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4667,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4671,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4674,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4677,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4680,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4684,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4687,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4690,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4693,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4698,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4702,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4706,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4718,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4722,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4726,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4731,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4735,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4738,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         },
+         {
+          "file": "/tmp/mid/ai-chatbot/pnpm-lock.yaml",
+          "line": 4741,
+          "service": "/tmp/mid/ai-chatbot",
+          "test_only": false
+         }
+        ],
+        "evidence_count": 885,
+        "evidence_files": [
+         "/tmp/mid/ai-chatbot/pnpm-lock.yaml"
+        ],
+        "consolidated_count": 885
+       },
+       "instance_id": "base64_high_entropy_string_/tmp/mid/ai-chatbot/pnpm-lock.yaml_271",
+       "confidence": 0.72
+      }
+     ],
+     "dependency": [
+      {
+       "name": "ai",
+       "component_type": "dependency",
+       "file_path": "/tmp/mid/ai-chatbot/package.json",
+       "line_number": 40,
+       "framework": "",
+       "detection_source": "dependency_manifest",
+       "heuristic_confidence": 1.0,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": null,
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": "7.0.15",
+       "decision_annotation": null,
+       "metadata": {
+        "ecosystem": "npm",
+        "version_spec": "7.0.15",
+        "manifest": "package.json",
+        "known_ai_package": true,
+        "evidence": [
+         {
+          "file": "instrumentation.ts",
+          "line": 3,
+          "service": ".",
+          "test_only": false
+         },
+         {
+          "file": "app/(chat)/actions.ts",
+          "line": 3,
+          "service": "app/(chat)",
+          "test_only": false
+         },
+         {
+          "file": "app/(chat)/api/chat/route.ts",
+          "line": 2,
+          "service": "app/(chat)/api/chat",
+          "test_only": false
+         },
+         {
+          "file": "app/(chat)/api/chat/route.ts",
+          "line": 10,
+          "service": "app/(chat)/api/chat",
+          "test_only": false
+         },
+         {
+          "file": "tests/helpers.ts",
+          "line": 1,
+          "service": "tests",
+          "test_only": true
+         },
+         {
+          "file": "lib/utils.ts",
+          "line": 1,
+          "service": "lib",
+          "test_only": false
+         },
+         {
+          "file": "lib/utils.ts",
+          "line": 4,
+          "service": "lib",
+          "test_only": false
+         },
+         {
+          "file": "lib/types.ts",
+          "line": 1,
+          "service": "lib",
+          "test_only": false
+         },
+         {
+          "file": "lib/ai/models.mock.ts",
+          "line": 1,
+          "service": "lib/ai",
+          "test_only": false
+         },
+         {
+          "file": "lib/ai/models.test.ts",
+          "line": 2,
+          "service": "lib/ai",
+          "test_only": false
+         },
+         {
+          "file": "lib/ai/models.test.ts",
+          "line": 3,
+          "service": "lib/ai",
+          "test_only": false
+         },
+         {
+          "file": "lib/ai/providers.ts",
+          "line": 1,
+          "service": "lib/ai",
+          "test_only": false
+         },
+         {
+          "file": "lib/ai/tools/create-document.ts",
+          "line": 1,
+          "service": "lib/ai/tools",
+          "test_only": false
+         },
+         {
+          "file": "lib/ai/tools/update-document.ts",
+          "line": 1,
+          "service": "lib/ai/tools",
+          "test_only": false
+         },
+         {
+          "file": "lib/ai/tools/get-weather.ts",
+          "line": 1,
+          "service": "lib/ai/tools",
+          "test_only": false
+         },
+         {
+          "file": "lib/ai/tools/request-suggestions.ts",
+          "line": 1,
+          "service": "lib/ai/tools",
+          "test_only": false
+         },
+         {
+          "file": "lib/ai/tools/edit-document.ts",
+          "line": 1,
+          "service": "lib/ai/tools",
+          "test_only": false
+         },
+         {
+          "file": "lib/db/utils.ts",
+          "line": 1,
+          "service": "lib/db",
+          "test_only": false
+         },
+         {
+          "file": "lib/artifacts/server.ts",
+          "line": 1,
+          "service": "lib/artifacts",
+          "test_only": false
+         },
+         {
+          "file": "artifacts/sheet/server.ts",
+          "line": 1,
+          "service": "artifacts/sheet",
+          "test_only": false
+         },
+         {
+          "file": "artifacts/text/server.ts",
+          "line": 1,
+          "service": "artifacts/text",
+          "test_only": false
+         },
+         {
+          "file": "artifacts/code/server.ts",
+          "line": 1,
+          "service": "artifacts/code",
+          "test_only": false
+         },
+         {
+          "file": "components/chat/multimodal-input.tsx",
+          "line": 4,
+          "service": "components/chat",
+          "test_only": false
+         },
+         {
+          "file": "components/chat/data-stream-provider.tsx",
+          "line": 3,
+          "service": "components/chat",
+          "test_only": false
+         },
+         {
+          "file": "components/chat/create-artifact.tsx",
+          "line": 2,
+          "service": "components/chat",
+          "test_only": false
+         },
+         {
+          "file": "components/ai-elements/message.tsx",
+          "line": 3,
+          "service": "components/ai-elements",
+          "test_only": false
+         },
+         {
+          "file": "components/ai-elements/prompt-input.tsx",
+          "line": 3,
+          "service": "components/ai-elements",
+          "test_only": false
+         },
+         {
+          "file": "components/ai-elements/tool.tsx",
+          "line": 3,
+          "service": "components/ai-elements",
+          "test_only": false
+         },
+         {
+          "file": "hooks/use-active-chat.tsx",
+          "line": 5,
+          "service": "hooks",
+          "test_only": false
+         }
+        ],
+        "evidence_count": 30,
+        "evidence_files": [
+         "instrumentation.ts",
+         "app/(chat)/actions.ts",
+         "app/(chat)/api/chat/route.ts",
+         "tests/helpers.ts",
+         "lib/utils.ts",
+         "lib/types.ts",
+         "lib/ai/models.mock.ts",
+         "lib/ai/models.test.ts",
+         "lib/ai/providers.ts",
+         "lib/ai/tools/create-document.ts",
+         "lib/ai/tools/update-document.ts",
+         "lib/ai/tools/get-weather.ts",
+         "lib/ai/tools/request-suggestions.ts",
+         "lib/ai/tools/edit-document.ts",
+         "lib/db/utils.ts",
+         "lib/artifacts/server.ts",
+         "artifacts/sheet/server.ts",
+         "artifacts/text/server.ts",
+         "artifacts/code/server.ts",
+         "components/chat/multimodal-input.tsx",
+         "components/chat/data-stream-provider.tsx",
+         "components/chat/create-artifact.tsx",
+         "components/ai-elements/message.tsx",
+         "components/ai-elements/prompt-input.tsx",
+         "components/ai-elements/tool.tsx",
+         "hooks/use-active-chat.tsx",
+         "/tmp/mid/ai-chatbot/package.json"
+        ],
+        "consolidated_count": 30
+       },
+       "instance_id": "ai_/tmp/mid/ai-chatbot/package.json_40",
+       "confidence": 1.0
+      }
+     ],
+     "model": [
+      {
+       "name": "string",
+       "component_type": "model",
+       "file_path": "app/(chat)/actions.ts",
+       "line_number": 18,
+       "framework": "npm",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.75,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": "string",
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "scanner": "multi_language_scanner",
+        "evidence_count": 1,
+        "evidence_files": [
+         "app/(chat)/actions.ts"
+        ]
+       },
+       "instance_id": "string_app/(chat)/actions.ts_18",
+       "confidence": 0.75
+      },
+      {
+       "name": "))\n        ?.split(",
+       "component_type": "model",
+       "file_path": "hooks/use-active-chat.tsx",
+       "line_number": 214,
+       "framework": "npm",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.75,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": "))\n        ?.split(",
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "scanner": "multi_language_scanner",
+        "evidence_count": 1,
+        "evidence_files": [
+         "hooks/use-active-chat.tsx"
+        ]
+       },
+       "instance_id": "))\n        ?.split(_hooks/use-active-chat.tsx_214",
+       "confidence": 0.75
+      }
+     ]
+    },
+    "relationships": [],
+    "summary": {
+     "status": "completed",
+     "source_kind": "git",
+     "assets_discovered": 5,
+     "last_generated_at": null
+    },
+    "metadata": {
+     "source_kind": "git",
+     "source_ref_canonical": "github.com/vercel/ai-chatbot",
+     "source_ref_version": "c2f8235e1f3ea903ad8b7f61447c4f74164b5c58"
+    }
+   }
+  },
+  "summary": {
+   "total_sources": 1,
+   "total_components": 5,
+   "pending_agent_review": 5,
+   "test_only_components": 0,
+   "component_types": {
+    "secret": 2,
+    "dependency": 1,
+    "model": 2
+   },
+   "total_relationships": 0,
+   "risk_score": 0,
+   "risk_severity": "info"
+  },
+  "risk": {
+   "score": 0,
+   "severity": "info",
+   "flags": []
+  },
+  "errors": []
+ },
+ "nollm_run": {
+  "note": "deterministic stage only, no LLM review (components marked needs_agentic were not reviewed)",
+  "scan_seconds": 18.5,
+  "target": "/tmp/mid/ai-chatbot"
+ }
+}

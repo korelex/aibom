@@ -1,0 +1,460 @@
+{
+ "aibom_analysis": {
+  "metadata": {
+   "report_schema_version": "2"
+  },
+  "sources": {
+   "ollama/ollama-js": {
+    "source_name": "ollama/ollama-js",
+    "source_path": "/tmp/fresh/ollama-js",
+    "components": {
+     "model": [
+      {
+       "name": "gemma3",
+       "component_type": "model",
+       "file_path": "examples/logprobs/logprobs-chat.ts",
+       "line_number": 18,
+       "framework": "npm",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.75,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": "gemma3",
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "scanner": "multi_language_scanner",
+        "evidence_count": 1,
+        "evidence_files": [
+         "examples/logprobs/logprobs-chat.ts"
+        ]
+       },
+       "instance_id": "gemma3_examples/logprobs/logprobs-chat.ts_18",
+       "confidence": 0.75
+      },
+      {
+       "name": "llava",
+       "component_type": "model",
+       "file_path": "examples/multimodal/multimodal.ts",
+       "line_number": 6,
+       "framework": "npm",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.75,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": "llava",
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "scanner": "multi_language_scanner",
+        "evidence_count": 1,
+        "evidence_files": [
+         "examples/multimodal/multimodal.ts"
+        ]
+       },
+       "instance_id": "llava_examples/multimodal/multimodal.ts_6",
+       "confidence": 0.75
+      },
+      {
+       "name": "gpt-oss",
+       "component_type": "model",
+       "file_path": "examples/websearch/gpt-oss-browser-tools.ts",
+       "line_number": 105,
+       "framework": "npm",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.75,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": "gpt-oss",
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "scanner": "multi_language_scanner",
+        "evidence_count": 1,
+        "evidence_files": [
+         "examples/websearch/gpt-oss-browser-tools.ts"
+        ]
+       },
+       "instance_id": "gpt-oss_examples/websearch/gpt-oss-browser-tools.ts_105",
+       "confidence": 0.75
+      },
+      {
+       "name": "qwen3",
+       "component_type": "model",
+       "file_path": "examples/websearch/websearch-tools.ts",
+       "line_number": 77,
+       "framework": "npm",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.75,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": "qwen3",
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "scanner": "multi_language_scanner",
+        "evidence_count": 1,
+        "evidence_files": [
+         "examples/websearch/websearch-tools.ts"
+        ]
+       },
+       "instance_id": "qwen3_examples/websearch/websearch-tools.ts_77",
+       "confidence": 0.75
+      },
+      {
+       "name": "llama3.2",
+       "component_type": "model",
+       "file_path": "examples/abort/abort-all-requests.ts",
+       "line_number": 12,
+       "framework": "npm",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.75,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": "llama3.2",
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "scanner": "multi_language_scanner",
+        "evidence": [
+         {
+          "file": "examples/abort/abort-single-request.ts",
+          "line": 17,
+          "service": "examples/abort",
+          "test_only": false
+         },
+         {
+          "file": "examples/abort/abort-single-request.ts",
+          "line": 30,
+          "service": "examples/abort",
+          "test_only": false
+         },
+         {
+          "file": "examples/abort/abort-all-requests.ts",
+          "line": 25,
+          "service": "examples/abort",
+          "test_only": false
+         },
+         {
+          "file": "examples/abort/abort-all-requests.ts",
+          "line": 38,
+          "service": "examples/abort",
+          "test_only": false
+         }
+        ],
+        "evidence_count": 5,
+        "evidence_files": [
+         "examples/abort/abort-single-request.ts",
+         "examples/abort/abort-all-requests.ts"
+        ],
+        "consolidated_count": 5
+       },
+       "instance_id": "llama3.2_examples/abort/abort-all-requests.ts_12",
+       "confidence": 0.75
+      },
+      {
+       "name": "llama3.1",
+       "component_type": "model",
+       "file_path": "examples/pull-progress/pull.ts",
+       "line_number": 4,
+       "framework": "npm",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.75,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": "llama3.1",
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "scanner": "multi_language_scanner",
+        "evidence_count": 1,
+        "evidence_files": [
+         "examples/pull-progress/pull.ts"
+        ]
+       },
+       "instance_id": "llama3.1_examples/pull-progress/pull.ts_4",
+       "confidence": 0.75
+      },
+      {
+       "name": "gpt-oss:20b",
+       "component_type": "model",
+       "file_path": "examples/thinking/thinking-levels.ts",
+       "line_number": 16,
+       "framework": "npm",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.75,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": "gpt-oss:20b",
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "scanner": "multi_language_scanner",
+        "evidence_count": 1,
+        "evidence_files": [
+         "examples/thinking/thinking-levels.ts"
+        ]
+       },
+       "instance_id": "gpt-oss:20b_examples/thinking/thinking-levels.ts_16",
+       "confidence": 0.75
+      },
+      {
+       "name": "deepseek-r1",
+       "component_type": "model",
+       "file_path": "examples/thinking/thinking-streaming.ts",
+       "line_number": 5,
+       "framework": "npm",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.75,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": "deepseek-r1",
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "scanner": "multi_language_scanner",
+        "evidence": [
+         {
+          "file": "examples/thinking/thinking-enabled.ts",
+          "line": 5,
+          "service": "examples/thinking",
+          "test_only": false
+         }
+        ],
+        "evidence_count": 2,
+        "evidence_files": [
+         "examples/thinking/thinking-streaming.ts",
+         "examples/thinking/thinking-enabled.ts"
+        ],
+        "consolidated_count": 2
+       },
+       "instance_id": "deepseek-r1_examples/thinking/thinking-streaming.ts_5",
+       "confidence": 0.75
+      },
+      {
+       "name": "deepseek-coder-v2",
+       "component_type": "model",
+       "file_path": "examples/fill-in-middle/fill.ts",
+       "line_number": 5,
+       "framework": "npm",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.75,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": "deepseek-coder-v2",
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "scanner": "multi_language_scanner",
+        "evidence_count": 1,
+        "evidence_files": [
+         "examples/fill-in-middle/fill.ts"
+        ]
+       },
+       "instance_id": "deepseek-coder-v2_examples/fill-in-middle/fill.ts_5",
+       "confidence": 0.75
+      },
+      {
+       "name": "x/z-image-turbo",
+       "component_type": "model",
+       "file_path": "examples/image-generation/image-generation.ts",
+       "line_number": 11,
+       "framework": "npm",
+       "detection_source": "code_analysis",
+       "heuristic_confidence": 0.75,
+       "agentic_confidence": null,
+       "needs_agentic": true,
+       "agentic_hint": "",
+       "model_name": "x/z-image-turbo",
+       "embedding_model": null,
+       "description": null,
+       "text": null,
+       "transport": null,
+       "config_source": null,
+       "storage_uri": null,
+       "dataset_source": null,
+       "skill_format": null,
+       "hyperparameters": {},
+       "training_info": null,
+       "metrics": {},
+       "kb_concept": null,
+       "kb_label": null,
+       "sdk_version": null,
+       "decision_annotation": null,
+       "metadata": {
+        "scanner": "multi_language_scanner",
+        "evidence_count": 1,
+        "evidence_files": [
+         "examples/image-generation/image-generation.ts"
+        ]
+       },
+       "instance_id": "x/z-image-turbo_examples/image-generation/image-generation.ts_11",
+       "confidence": 0.75
+      }
+     ]
+    },
+    "relationships": [],
+    "summary": {
+     "status": "completed",
+     "source_kind": "git",
+     "assets_discovered": 10,
+     "last_generated_at": null
+    },
+    "metadata": {
+     "source_kind": "git",
+     "source_ref_canonical": "github.com/ollama/ollama-js",
+     "source_ref_version": "c276d078eee37a0df003b9ee2120ec70327f32e9"
+    }
+   }
+  },
+  "summary": {
+   "total_sources": 1,
+   "total_components": 10,
+   "pending_agent_review": 10,
+   "test_only_components": 0,
+   "component_types": {
+    "model": 10
+   },
+   "total_relationships": 0,
+   "risk_score": 0,
+   "risk_severity": "info"
+  },
+  "risk": {
+   "score": 0,
+   "severity": "info",
+   "flags": []
+  },
+  "errors": []
+ },
+ "nollm_run": {
+  "note": "deterministic stage only, no LLM review (components marked needs_agentic were not reviewed)",
+  "scan_seconds": 4.7,
+  "target": "/tmp/fresh/ollama-js"
+ }
+}

@@ -1,0 +1,393 @@
+[
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 12,
+    "file": "examples/fill-in-middle/fill.ts",
+    "line": 5,
+    "snippet": "model: 'deepseek-coder-v2',",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0001",
+  "kind": "model",
+  "maker": "DeepSeek",
+  "mode": "",
+  "name": "deepseek-coder-v2",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 12,
+    "file": "examples/thinking/thinking-enabled.ts",
+    "line": 5,
+    "snippet": "model: 'deepseek-r1',",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 12,
+    "file": "examples/thinking/thinking-streaming.ts",
+    "line": 5,
+    "snippet": "model: 'deepseek-r1',",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context",
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0002",
+  "kind": "model",
+  "maker": "DeepSeek",
+  "mode": "chat model",
+  "name": "deepseek-r1",
+  "places": {
+   "live": 2,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 12,
+    "file": "examples/logprobs/logprobs-chat.ts",
+    "line": 18,
+    "snippet": "model: 'gemma3',",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0003",
+  "kind": "model",
+  "maker": "Google",
+  "mode": "",
+  "name": "gemma3",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 14,
+    "file": "examples/websearch/gpt-oss-browser-tools.ts",
+    "line": 105,
+    "snippet": "model: 'gpt-oss',",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0004",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "",
+  "name": "gpt-oss",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "docs",
+    "col": 12,
+    "file": "README.md",
+    "line": 66,
+    "snippet": "ollama pull gpt-oss:120b-cloud",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "docs",
+    "col": 10,
+    "file": "README.md",
+    "line": 76,
+    "snippet": "model: 'gpt-oss:120b-cloud',",
+    "use": "docs",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0005",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-oss:120b-cloud",
+  "places": {
+   "live": 0,
+   "other": 2
+  },
+  "reason": "docs",
+  "tier": "rejected"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 14,
+    "file": "examples/thinking/thinking-levels.ts",
+    "line": 16,
+    "snippet": "model: 'gpt-oss:20b',",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0006",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "",
+  "name": "gpt-oss:20b",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "docs",
+    "col": 10,
+    "file": "README.md",
+    "line": 17,
+    "snippet": "model: 'llama3.1',",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "docs",
+    "col": 10,
+    "file": "README.md",
+    "line": 40,
+    "snippet": "model: 'llama3.1',",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "docs",
+    "col": 10,
+    "file": "README.md",
+    "line": 385,
+    "snippet": "model: 'llama3.1',",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 17,
+    "file": "examples/pull-progress/pull.ts",
+    "line": 4,
+    "snippet": "const model = 'llama3.1'",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 5,
+    "file": "examples/structured_outputs/structured-outputs.ts",
+    "line": 71,
+    "snippet": "run('llama3.1:8b').catch(console.error);",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 5,
+    "file": "examples/tools/calculator.ts",
+    "line": 95,
+    "snippet": "run('llama3.1:8b').catch(error => console.error(\"An error occurred:\", error));",
+    "use": "message",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context",
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0007",
+  "kind": "model",
+  "maker": "Meta",
+  "mode": "chat model",
+  "name": "llama3.1",
+  "places": {
+   "live": 2,
+   "other": 4
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 12,
+    "file": "examples/abort/abort-all-requests.ts",
+    "line": 12,
+    "snippet": "model: 'llama3.2',",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 12,
+    "file": "examples/abort/abort-all-requests.ts",
+    "line": 25,
+    "snippet": "model: 'llama3.2',",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 12,
+    "file": "examples/abort/abort-all-requests.ts",
+    "line": 38,
+    "snippet": "model: 'llama3.2',",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 12,
+    "file": "examples/abort/abort-single-request.ts",
+    "line": 17,
+    "snippet": "model: 'llama3.2',",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "code",
+    "col": 12,
+    "file": "examples/abort/abort-single-request.ts",
+    "line": 30,
+    "snippet": "model: 'llama3.2',",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0008",
+  "kind": "model",
+  "maker": "Meta",
+  "mode": "",
+  "name": "llama3.2",
+  "places": {
+   "live": 5,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 14,
+    "file": "examples/websearch/websearch-tools.ts",
+    "line": 77,
+    "snippet": "model: 'qwen3',",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0009",
+  "kind": "model",
+  "maker": "Alibaba",
+  "mode": "",
+  "name": "qwen3",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 12,
+    "file": "examples/image-generation/image-generation.ts",
+    "line": 11,
+    "snippet": "model: 'x/z-image-turbo',",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context"
+  ],
+  "hint_providers": [],
+  "id": "item-0010",
+  "kind": "model",
+  "maker": "",
+  "mode": "image model",
+  "name": "x/z-image-turbo",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ }
+]

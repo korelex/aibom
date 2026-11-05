@@ -1,0 +1,347 @@
+{
+ "repo": "llm",
+ "commit": "aebaca27f9acb6cc56ba4b33ab81e08d6dcb3bc3",
+ "status": "ROUND 3 KEY, MODELS ONLY. Written from the code BEFORE the engine was changed or run on this repo; every item re-checked by a second, different search. Not yet reviewed by a person.",
+ "scope": "models",
+ "roles": "default = default setting | used = called in live code | option = selectable or listed",
+ "items": [
+  {
+   "kind": "model",
+   "name": "gpt-4o",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4.1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4.1-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4.1-nano",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-3.5-turbo",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-3.5-turbo-16k",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-turbo-2024-04-09",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-turbo",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-turbo-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "o1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "o1-2024-12-17",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "o3-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "o3",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "o4-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5-nano",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5-2025-08-07",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5-mini-2025-08-07",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5-nano-2025-08-07",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.2",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.2-chat-latest",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.4",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.4-2026-03-05",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.4-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.4-mini-2026-03-17",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.4-nano",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.4-nano-2026-03-17",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.5-2026-04-23",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.6-sol",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.6-terra",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.6-luna",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-6-astra",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-6-sol",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-6-luna",
+   "aliases": [],
+   "role": "default",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-6.1-sol",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-3.5-turbo-instruct",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "text-embedding-ada-002",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "text-embedding-3-small",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "text-embedding-3-large",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "text-embedding-3-small-512",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "text-embedding-3-large-256",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  },
+  {
+   "kind": "model",
+   "name": "text-embedding-3-large-1024",
+   "aliases": [],
+   "role": "option",
+   "evidence": "llm/default_plugins/openai_models.py (model registry)"
+  }
+ ],
+ "not_real": [],
+ "extra_real": [],
+ "junk": [
+  "chat-latest",
+  "gpt4"
+ ],
+ "labelled_after_the_run": [
+  "names the engine reported that the key did not cover, labelled from the lines after the frozen run"
+ ]
+}

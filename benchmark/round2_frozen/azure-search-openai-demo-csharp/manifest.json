@@ -1,0 +1,25 @@
+{
+ "cyclonedx_1_6_valid": true,
+ "engine_version": "0.2.0",
+ "file_categories": {
+  "code": 117,
+  "config": 47,
+  "docs": 14,
+  "other": 95,
+  "test": 12
+ },
+ "files": 285,
+ "finders": [
+  "dictionary",
+  "context"
+ ],
+ "items_by_tier": {
+  "declared": 7
+ },
+ "items_in_aibom": 7,
+ "raw_findings": 23,
+ "rejected_reasons": {},
+ "scanned_folder": "/tmp/fresh/azure-search-openai-demo-csharp",
+ "seconds": 1.43,
+ "validation_error": null
+}

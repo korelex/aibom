@@ -1,0 +1,221 @@
+{
+ "repo": "open-canvas",
+ "commit": "0310cecd51f3",
+ "status": "FRESH-REPO KEY (round 2), MODELS ONLY, written from the code BEFORE the engine was run; the engine was frozen during this round",
+ "scope": "models",
+ "items": [
+  {
+   "kind": "model",
+   "name": "gpt-4.1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:28"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4.1-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:48"
+  },
+  {
+   "kind": "model",
+   "name": "o4-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:68"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o",
+   "aliases": [],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:88"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-mini",
+   "aliases": [
+    "azure/gpt-4o-mini"
+   ],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:108"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4.5-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:128"
+  },
+  {
+   "kind": "model",
+   "name": "o3-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:148"
+  },
+  {
+   "kind": "model",
+   "name": "o1-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:168"
+  },
+  {
+   "kind": "model",
+   "name": "o1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:188"
+  },
+  {
+   "kind": "model",
+   "name": "claude-sonnet-4-0",
+   "aliases": [],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:237"
+  },
+  {
+   "kind": "model",
+   "name": "claude-opus-4-0",
+   "aliases": [],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:257"
+  },
+  {
+   "kind": "model",
+   "name": "claude-3-7-sonnet-latest",
+   "aliases": [],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:277"
+  },
+  {
+   "kind": "model",
+   "name": "claude-3-5-sonnet-latest",
+   "aliases": [],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:297"
+  },
+  {
+   "kind": "model",
+   "name": "claude-3-5-haiku-20241022",
+   "aliases": [],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:317"
+  },
+  {
+   "kind": "model",
+   "name": "claude-3-haiku-20240307",
+   "aliases": [],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:337"
+  },
+  {
+   "kind": "model",
+   "name": "accounts/fireworks/models/llama-v3p3-70b-instruct",
+   "aliases": [
+    "llama-v3p3-70b-instruct"
+   ],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:360"
+  },
+  {
+   "kind": "model",
+   "name": "accounts/fireworks/models/llama-v3p1-70b-instruct",
+   "aliases": [
+    "llama-v3p1-70b-instruct"
+   ],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:380"
+  },
+  {
+   "kind": "model",
+   "name": "accounts/fireworks/models/deepseek-v3",
+   "aliases": [
+    "deepseek-v3"
+   ],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:400"
+  },
+  {
+   "kind": "model",
+   "name": "accounts/fireworks/models/deepseek-r1",
+   "aliases": [
+    "deepseek-r1"
+   ],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:420"
+  },
+  {
+   "kind": "model",
+   "name": "deepseek-r1-distill-llama-70b",
+   "aliases": [
+    "groq/deepseek-r1-distill-llama-70b"
+   ],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:443"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-2.5-flash-preview-05-20",
+   "aliases": [],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:466"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-2.5-pro-preview-05-06",
+   "aliases": [],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:486"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-1.5-flash",
+   "aliases": [],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:506"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-2.0-flash",
+   "aliases": [],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:526"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-2.0-flash-thinking-exp-01-21",
+   "aliases": [],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:546"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-2.0-flash-exp",
+   "aliases": [],
+   "role": "option",
+   "evidence": "packages/shared/src/models.ts:590"
+  },
+  {
+   "kind": "model",
+   "name": "claude-3-5-sonnet-20240620",
+   "aliases": [],
+   "role": "option",
+   "evidence": "apps/agents/src/reflection/index.ts:51"
+  }
+ ],
+ "not_real": [],
+ "extra_real": [
+  {
+   "name": "o3",
+   "why": "customModelName.includes(\"o3\") family check, utils.ts:216"
+  },
+  {
+   "name": "distil-whisper-large-v3-en",
+   "why": "model: in src/app/api/whisper/audio/route.ts:62"
+  }
+ ],
+ "junk": []
+}

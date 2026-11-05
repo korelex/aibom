@@ -1,0 +1,333 @@
+[
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "config",
+    "col": 51,
+    "file": "infra/main.bicep",
+    "line": 22,
+    "snippet": "@description('Name of the chat GPT model. Default: gpt-35-turbo')",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 12,
+    "file": "infra/main.bicep",
+    "line": 23,
+    "snippet": "@allowed([ 'gpt-35-turbo', 'gpt-4', 'gpt-4o', 'gpt-4o-mini', 'gpt-35-turbo-16k', 'gpt-4-16k' ])",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 60,
+    "file": "infra/main.bicep",
+    "line": 26,
+    "snippet": "@description('Name of the chat GPT model. Default: 0613 for gpt-35-turbo, or choose 2024-07-18 for gpt-4o-mini')",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0001",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-35-turbo",
+  "places": {
+   "live": 3,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "config",
+    "col": 62,
+    "file": "infra/main.bicep",
+    "line": 23,
+    "snippet": "@allowed([ 'gpt-35-turbo', 'gpt-4', 'gpt-4o', 'gpt-4o-mini', 'gpt-35-turbo-16k', 'gpt-4-16k' ])",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0002",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-35-turbo-16k",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "config",
+    "col": 28,
+    "file": "infra/main.bicep",
+    "line": 23,
+    "snippet": "@allowed([ 'gpt-35-turbo', 'gpt-4', 'gpt-4o', 'gpt-4o-mini', 'gpt-35-turbo-16k', 'gpt-4-16k' ])",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0003",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "docs",
+    "col": 38,
+    "file": "README.md",
+    "line": 339,
+    "snippet": "azd env set OPENAI_CHATGPT_DEPLOYMENT gpt-4o",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 37,
+    "file": "infra/main.bicep",
+    "line": 23,
+    "snippet": "@allowed([ 'gpt-35-turbo', 'gpt-4', 'gpt-4o', 'gpt-4o-mini', 'gpt-35-turbo-16k', 'gpt-4-16k' ])",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0004",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4o",
+  "places": {
+   "live": 1,
+   "other": 1
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "docs",
+    "col": 208,
+    "file": "README.md",
+    "line": 60,
+    "snippet": "This sample demonstrates a few approaches for creating ChatGPT-like experiences over your own data using the Retrieval Augmented Generation ",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "docs",
+    "col": 32,
+    "file": "README.md",
+    "line": 174,
+    "snippet": "> This application uses the `gpt-4o-mini` model. When choosing which region to deploy to, make sure they're available in that region (i.e. E",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "docs",
+    "col": 44,
+    "file": "README.md",
+    "line": 329,
+    "snippet": "azd env set AZURE_OPENAI_CHATGPT_MODEL_NAME gpt-4o-mini",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "docs",
+    "col": 42,
+    "file": "docs/deploy_lowcost.md",
+    "line": 58,
+    "snippet": "azd env set OPENAI_CHATGPT_DEPLOYMENT gpt-4o-mini",
+    "use": "docs",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 47,
+    "file": "infra/main.bicep",
+    "line": 23,
+    "snippet": "@allowed([ 'gpt-35-turbo', 'gpt-4', 'gpt-4o', 'gpt-4o-mini', 'gpt-35-turbo-16k', 'gpt-4-16k' ])",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 44,
+    "file": "infra/main.bicep",
+    "line": 24,
+    "snippet": "param azureOpenAIChatGptModelName string = 'gpt-4o-mini'",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 99,
+    "file": "infra/main.bicep",
+    "line": 26,
+    "snippet": "@description('Name of the chat GPT model. Default: 0613 for gpt-35-turbo, or choose 2024-07-18 for gpt-4o-mini')",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 44,
+    "file": "infra/main.parameters.json",
+    "line": 99,
+    "snippet": "\"value\": \"${OPENAI_CHATGPT_DEPLOYMENT=gpt-4o-mini}\"",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 50,
+    "file": "infra/main.parameters.json",
+    "line": 108,
+    "snippet": "\"value\": \"${AZURE_OPENAI_CHATGPT_MODEL_NAME=gpt-4o-mini}\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context",
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0005",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "chat model",
+  "name": "gpt-4o-mini",
+  "places": {
+   "live": 5,
+   "other": 4
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "code",
+    "col": 32,
+    "file": "app/shared/Shared/Services/AzureSearchEmbedService.cs",
+    "line": 203,
+    "snippet": "WaitUntil.Started, \"prebuilt-layout\", ms);",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0006",
+  "kind": "model",
+  "maker": "",
+  "mode": "",
+  "name": "prebuilt-layout",
+  "places": {
+   "live": 1,
+   "other": 0
+  },
+  "reason": "",
+  "tier": "declared"
+ },
+ {
+  "aliases": [],
+  "evidence": [
+   {
+    "category": "test",
+    "col": 60,
+    "file": "app/tests/MinimalApi.Tests/ReadRetrieveReadChatServiceTest.cs",
+    "line": 99,
+    "snippet": "configuration[\"OpenAiEmbeddingDeployment\"].Returns(\"text-embedding-ada-002\");",
+    "use": "test",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 52,
+    "file": "infra/main.bicep",
+    "line": 66,
+    "snippet": "@description('Name of the embedding model. Default: text-embedding-ada-002')",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 40,
+    "file": "infra/main.bicep",
+    "line": 67,
+    "snippet": "param azureEmbeddingModelName string = 'text-embedding-ada-002'",
+    "use": "live",
+    "via": ""
+   },
+   {
+    "category": "config",
+    "col": 46,
+    "file": "infra/main.parameters.json",
+    "line": 102,
+    "snippet": "\"value\": \"${OPENAI_EMBEDDING_DEPLOYMENT=text-embedding-ada-002}\"",
+    "use": "live",
+    "via": ""
+   }
+  ],
+  "found_by": [
+   "context",
+   "dictionary"
+  ],
+  "hint_providers": [],
+  "id": "item-0007",
+  "kind": "model",
+  "maker": "OpenAI",
+  "mode": "embedding model",
+  "name": "text-embedding-ada-002",
+  "places": {
+   "live": 3,
+   "other": 1
+  },
+  "reason": "",
+  "tier": "declared"
+ }
+]

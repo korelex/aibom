@@ -1,0 +1,67 @@
+{
+ "repo": "azure-search-openai-demo-csharp",
+ "commit": "3aaa94555e52",
+ "status": "FRESH-REPO KEY (round 2), MODELS ONLY, written from the code BEFORE the engine was run; the engine was frozen during this round",
+ "scope": "models",
+ "items": [
+  {
+   "kind": "model",
+   "name": "gpt-4o-mini",
+   "aliases": [],
+   "role": "default",
+   "evidence": "infra/main.bicep:24; infra/main.parameters.json:99,108"
+  },
+  {
+   "kind": "model",
+   "name": "text-embedding-ada-002",
+   "aliases": [],
+   "role": "default",
+   "evidence": "infra/main.bicep:67; infra/main.parameters.json:102"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-35-turbo",
+   "aliases": [],
+   "role": "option",
+   "evidence": "infra/main.bicep:23 (allowed list)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4",
+   "aliases": [],
+   "role": "option",
+   "evidence": "infra/main.bicep:23"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o",
+   "aliases": [],
+   "role": "option",
+   "evidence": "infra/main.bicep:23"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-35-turbo-16k",
+   "aliases": [],
+   "role": "option",
+   "evidence": "infra/main.bicep:23"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4-16k",
+   "aliases": [],
+   "role": "option",
+   "evidence": "infra/main.bicep:23"
+  }
+ ],
+ "not_real": [],
+ "extra_real": [
+  {
+   "name": "prebuilt-layout",
+   "why": "Azure Document Intelligence model id in AzureSearchEmbedService.cs:203"
+  }
+ ],
+ "junk": [
+  "gpt-4v"
+ ]
+}

@@ -1,0 +1,30 @@
+{
+ "cyclonedx_1_6_valid": true,
+ "engine_version": "0.2.0",
+ "file_categories": {
+  "code": 26,
+  "config": 4,
+  "docs": 3,
+  "lock": 1,
+  "manifest": 1,
+  "other": 4,
+  "test": 4
+ },
+ "files": 43,
+ "finders": [
+  "dictionary",
+  "context"
+ ],
+ "items_by_tier": {
+  "declared": 9,
+  "rejected": 1
+ },
+ "items_in_aibom": 9,
+ "raw_findings": 24,
+ "rejected_reasons": {
+  "docs": 1
+ },
+ "scanned_folder": "/tmp/fresh/ollama-js",
+ "seconds": 1.26,
+ "validation_error": null
+}

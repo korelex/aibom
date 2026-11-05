@@ -1,0 +1,63 @@
+{
+ "repo": "azure-search-openai-demo",
+ "commit": "558ffd397eddc",
+ "status": "UNSEEN-REPO KEY, MODELS ONLY, written from the code BEFORE the engine was run (two independent passes)",
+ "items": [
+  {
+   "kind": "model",
+   "name": "text-embedding-3-large",
+   "aliases": [],
+   "role": "default",
+   "evidence": "infra/main.bicep:259; app/functions/text_processor/function_app.py:62"
+  },
+  {
+   "kind": "model",
+   "name": "text-embedding-ada-002",
+   "aliases": [],
+   "role": "default",
+   "evidence": "app/backend/app.py:417; prepdocslib/embeddings.py:36; textsplitter.py:27"
+  },
+  {
+   "kind": "model",
+   "name": "text-embedding-3-small",
+   "aliases": [],
+   "role": "option",
+   "evidence": "app/backend/prepdocslib/embeddings.py:37; approaches/approach.py:876"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.4-mini",
+   "aliases": [],
+   "role": "default",
+   "evidence": "infra/main.bicep:231,245 (a .bicep infrastructure file)"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.4",
+   "aliases": [],
+   "role": "default",
+   "evidence": "infra/main.bicep:273,286 (a .bicep infrastructure file)"
+  }
+ ],
+ "not_real": [],
+ "extra_real": [
+  {
+   "name": "gpt-5",
+   "why": "family prefix check in approach.py:918"
+  },
+  {
+   "name": "prebuilt-layout",
+   "why": "Azure Document Intelligence model id used in pdfparser.py"
+  }
+ ],
+ "junk": [
+  "gpt-5.1",
+  "gpt-5.4-pro",
+  "str",
+  "gpt-4.1",
+  "gpt-4o",
+  "gpt-4o-mini",
+  "gpt-4.1-mini"
+ ],
+ "scope": "models"
+}

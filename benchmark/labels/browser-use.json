@@ -1,0 +1,2546 @@
+{
+ "repo": "browser-use",
+ "commit": "b49a68e4060acb226da8f784194fef301c53a6d7",
+ "status": "ROUND 3 KEY, MODELS ONLY. Written from the code BEFORE the engine was changed or run on this repo; every item re-checked by a second, different search. Not yet reviewed by a person.",
+ "scope": "models",
+ "roles": "default = default setting | used = called in live code | option = selectable or listed",
+ "items": [
+  {
+   "kind": "model",
+   "name": "Gemini-2.0-exp",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "Qwen/Qwen2.5-VL-72B-Instruct",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "accounts/fireworks/models/kimi-k3",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/qwen-3-14b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/qwen-3-235b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/qwen-3-30b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/qwen-3-32b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/qwen3-235b-a22b-thinking",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/qwen3-coder",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/qwen3-coder-30b-a3b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/qwen3-coder-next",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/qwen3-coder-plus",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/qwen3-embedding-0.6b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/qwen3-embedding-4b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/qwen3-embedding-8b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/qwen3-max",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/qwen3-max-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/qwen3-max-thinking",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/qwen3-next-80b-a3b-instruct",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/qwen3-next-80b-a3b-thinking",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/qwen3-vl-instruct",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/qwen3-vl-thinking",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/qwen3.5-flash",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/qwen3.5-plus",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/wan-v2.5-t2v-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/wan-v2.6-i2v",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/wan-v2.6-i2v-flash",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/wan-v2.6-r2v",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/wan-v2.6-r2v-flash",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "alibaba/wan-v2.6-t2v",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "amazon/nova-2-lite",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "amazon/nova-lite",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "amazon/nova-micro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "amazon/nova-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "amazon/titan-embed-text-v2",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "anthropic.claude-3-5-sonnet-20240620-v1:0",
+   "aliases": [],
+   "role": "default",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "anthropic/claude-3-haiku",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "anthropic/claude-3-opus",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "anthropic/claude-3.5-haiku",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "anthropic/claude-3.5-sonnet",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "anthropic/claude-3.5-sonnet-20240620",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "anthropic/claude-3.7-sonnet",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "anthropic/claude-fable-5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "anthropic/claude-haiku-4.5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "anthropic/claude-opus-4",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "anthropic/claude-opus-4.1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "anthropic/claude-opus-4.5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "anthropic/claude-opus-4.6",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "anthropic/claude-sonnet-4",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "anthropic/claude-sonnet-4.5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "anthropic/claude-sonnet-4.6",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "arcee-ai/trinity-large-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "arcee-ai/trinity-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "bfl/flux-kontext-max",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "bfl/flux-kontext-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "bfl/flux-pro-1.0-fill",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "bfl/flux-pro-1.1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "bfl/flux-pro-1.1-ultra",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "bu-2-0",
+   "aliases": [],
+   "role": "default",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "bytedance/seed-1.6",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "bytedance/seed-1.8",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "bytedance/seedance-v1.0-lite-i2v",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "bytedance/seedance-v1.0-lite-t2v",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "bytedance/seedance-v1.0-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "bytedance/seedance-v1.0-pro-fast",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "bytedance/seedance-v1.5-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "claude-3-5-sonnet-20240620",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "claude-3-5-sonnet-20241022",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "claude-3-opus-20240229",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "claude-3-sonnet-20240229",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "claude-opus-4-20250514",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "claude-opus-4-6",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "claude-opus-5-5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "claude-sonnet-4-0",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "claude-sonnet-4-6",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "codestral-latest",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "cohere/command-a",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "cohere/embed-v4.0",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "deepcogito/cogito-v2.1-671b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "deepseek-v4-flash",
+   "aliases": [],
+   "role": "default",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "deepseek/deepseek-r1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "deepseek/deepseek-v3",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "deepseek/deepseek-v3-0324",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "deepseek/deepseek-v3.1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "deepseek/deepseek-v3.1-terminus",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "deepseek/deepseek-v3.2",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "deepseek/deepseek-v3.2-thinking",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-1.5-flash",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-2.0-flash",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-2.0-flash-exp",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-2.0-flash-lite-preview-02-05",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-2.5-flash",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-2.5-flash-image-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-2.5-flash-lite",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-2.5-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-3-flash-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-3-pro-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-3.1-flash-lite",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-3.1-pro-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-flash-latest",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gemini-flash-lite-latest",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gemma-3-12b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gemma-3-27b-it",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gemma-3-4b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gemma-3n-e2b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gemma-3n-e4b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "google/gemini-2.0-flash",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "google/gemini-2.0-flash-lite",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "google/gemini-2.5-flash",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "google/gemini-2.5-flash-image",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "google/gemini-2.5-flash-lite",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "google/gemini-2.5-flash-lite-preview-09-2025",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "google/gemini-2.5-flash-preview-09-2025",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "google/gemini-2.5-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "google/gemini-3-flash",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "google/gemini-3-pro-image",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "google/gemini-3-pro-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "google/gemini-3.1-flash-image-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "google/gemini-3.1-flash-lite-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "google/gemini-3.1-pro-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "google/gemini-embedding-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "google/imagen-4.0-fast-generate-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "google/imagen-4.0-generate-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "google/imagen-4.0-ultra-generate-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "google/text-embedding-005",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "google/text-multilingual-embedding-002",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "google/veo-3.0-fast-generate-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "google/veo-3.0-generate-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "google/veo-3.1-fast-generate-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "google/veo-3.1-generate-001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4.1-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-4o-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5-codex",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5-nano",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.1-codex",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.1-codex-max",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.1-codex-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.3-codex-spark",
+   "aliases": [],
+   "role": "default",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-o4-mini",
+   "aliases": [],
+   "role": "default",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "inception/mercury-2",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "inception/mercury-coder-small",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "kimi-k2-thinking",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "klingai/kling-v2.5-turbo-i2v",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "klingai/kling-v2.5-turbo-t2v",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "klingai/kling-v2.6-i2v",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "klingai/kling-v2.6-motion-control",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "klingai/kling-v2.6-t2v",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "klingai/kling-v3.0-i2v",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "klingai/kling-v3.0-t2v",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "kwaipilot/kat-coder-pro-v1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "llama3.1:8b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "meituan/longcat-flash-chat",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "meituan/longcat-flash-thinking",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "meta-llama/llama-4-maverick-17b-128e-instruct",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "meta-llama/llama-4-scout-17b-16e-instruct",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "meta/llama-3.1-70b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "meta/llama-3.1-8b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "meta/llama-3.2-11b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "meta/llama-3.2-1b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "meta/llama-3.2-3b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "meta/llama-3.2-90b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "meta/llama-3.3-70b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "meta/llama-4-maverick",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "meta/llama-4-scout",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "minimax/minimax-m2",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "minimax/minimax-m2.1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "minimax/minimax-m2.1-lightning",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "minimax/minimax-m2.5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "minimax/minimax-m2.5-highspeed",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "mistral-large-latest",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "mistral-medium-latest",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "mistral-small-2506",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "mistral-small-latest",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "mistral/codestral",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "mistral/codestral-embed",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "mistral/devstral-2",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "mistral/devstral-small",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "mistral/devstral-small-2",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "mistral/magistral-medium",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "mistral/magistral-small",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "mistral/ministral-14b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "mistral/ministral-3b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "mistral/ministral-8b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "mistral/mistral-embed",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "mistral/mistral-large-3",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "mistral/mistral-medium",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "mistral/mistral-nemo",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "mistral/mistral-small",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "mistral/mixtral-8x22b-instruct",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "mistral/pixtral-12b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "mistral/pixtral-large",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "moonshotai/kimi-k2",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "moonshotai/kimi-k2-0905",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "moonshotai/kimi-k2-instruct",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "moonshotai/kimi-k2-thinking",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "moonshotai/kimi-k2-thinking-turbo",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "moonshotai/kimi-k2-turbo",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "moonshotai/kimi-k2.5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "morph/morph-v3-fast",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "morph/morph-v3-large",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "nvidia/nemotron-3-nano-30b-a3b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "nvidia/nemotron-nano-12b-v2-vl",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "nvidia/nemotron-nano-9b-v2",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "o1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "o1-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "o3-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "o3-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "o4-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-3.5-turbo",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-3.5-turbo-instruct",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-4-turbo",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-4.1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-4.1-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-4.1-nano",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-4o",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-4o-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-4o-mini-search-preview",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-5-chat",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-5-codex",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-5-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-5-nano",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-5-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-5.1-codex",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-5.1-codex-max",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-5.1-codex-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-5.1-instant",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-5.1-thinking",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-5.2",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-5.2-chat",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-5.2-codex",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-5.2-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-5.3-chat",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-5.3-codex",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-5.4",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-5.4-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-image-1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-image-1-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-image-1.5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-oss-120b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-oss-20b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/gpt-oss-safeguard-20b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/o1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/o3",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/o3-deep-research",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/o3-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/o3-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/o4-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/text-embedding-3-large",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/text-embedding-3-small",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "openai/text-embedding-ada-002",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "perplexity/sonar",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "perplexity/sonar-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "perplexity/sonar-reasoning",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "perplexity/sonar-reasoning-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "prime-intellect/intellect-3",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "qwen-3-235b-a22b-instruct-2507",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "qwen-3-235b-a22b-thinking-2507",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "qwen-3-coder-480b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "qwen-vl-max",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "qwen/qwen3-32b",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "recraft/recraft-v2",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "recraft/recraft-v3",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "recraft/recraft-v4",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "recraft/recraft-v4-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "stealth/sonoma-dusk-alpha",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "stealth/sonoma-sky-alpha",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "us.anthropic.claude-sonnet-4-6",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "us.meta.llama4-maverick-17b-instruct-v1:0",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "vercel/v0-1.0-md",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "vercel/v0-1.5-md",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "voyage/voyage-3-large",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "voyage/voyage-3.5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "voyage/voyage-3.5-lite",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "voyage/voyage-4",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "voyage/voyage-4-large",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "voyage/voyage-4-lite",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "voyage/voyage-code-2",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "voyage/voyage-code-3",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "voyage/voyage-finance-2",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "voyage/voyage-law-2",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "xai/grok-2-vision",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "xai/grok-3",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "xai/grok-3-fast",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "xai/grok-3-mini",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "xai/grok-3-mini-fast",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "xai/grok-4",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "xai/grok-4-fast-non-reasoning",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "xai/grok-4-fast-reasoning",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "xai/grok-4.1-fast-non-reasoning",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "xai/grok-4.1-fast-reasoning",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "xai/grok-4.20-multi-agent-beta",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "xai/grok-4.20-non-reasoning-beta",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "xai/grok-4.20-reasoning-beta",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "xai/grok-code-fast-1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "xai/grok-imagine-image",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "xai/grok-imagine-image-pro",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "xai/grok-imagine-video",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "xiaomi/mimo-v2-flash",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "zai-glm-4.7",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use provider files, examples, config"
+  },
+  {
+   "kind": "model",
+   "name": "zai/glm-4.5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "zai/glm-4.5-air",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "zai/glm-4.5v",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "zai/glm-4.6",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "zai/glm-4.6v",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "zai/glm-4.6v-flash",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "zai/glm-4.7",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "zai/glm-4.7-flashx",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  },
+  {
+   "kind": "model",
+   "name": "zai/glm-5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "browser_use/llm/vercel/chat.py catalog",
+   "hard": "gateway catalog"
+  }
+ ],
+ "not_real": [],
+ "extra_real": [
+  {
+   "name": "anthropic.claude-fable-5",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "browser-use/bu-30b-a3b-preview",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "bu-2-0-mini-preview",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "cerebras/gemma-4-31b",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "claude-mythos-5",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "computer-use-preview",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "gemini-3-pro",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "gemini-3.1-pro",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "google.gemini-2.5-flash",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "google.gemini-2.5-flash-lite",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "google.gemini-2.5-pro",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "llama3.1",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "llama4-maverick",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "azure/o1-mini",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "openai-gpt-4o",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "openai-gpt-4o-mini",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "openai-o3",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "openai-o3-mini",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "openai.gpt-5",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "openai.gpt-5-mini",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "openai.gpt-5-nano",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "orcarouter/auto",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "Qwen3-235B-A22B-Instruct-2507",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "Qwen3-235B-A22B-Thinking-2507",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  },
+  {
+   "name": "zai.glm-4.7",
+   "why": "real: live example or table value, a partial family check, or a model shortcut whose attribute name spells a model"
+  }
+ ],
+ "junk": [
+  "browser-use/",
+  "gpt-5.5",
+  "llama3_1",
+  "llama3_3"
+ ],
+ "labelled_after_the_run": [
+  "names the engine reported that the key did not cover, labelled from the lines after the frozen run"
+ ]
+}

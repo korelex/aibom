@@ -1,0 +1,201 @@
+{
+ "repo": "chat-langchain",
+ "commit": "b8acf5c32019590caaa98d3a0b30b3791ac1d58b",
+ "status": "DRAFT by Claude from reading the code; needs human review",
+ "roles": "used = called in live code | default = configured default | option = selectable or fallback | dependency = declared but no use found",
+ "items": [
+  {
+   "kind": "model",
+   "name": "gemini-3.5-flash-lite",
+   "aliases": [
+    "google_genai:gemini-3.5-flash-lite"
+   ],
+   "role": "default",
+   "evidence": "src/agent/config.py:58,68; agent.py:61"
+  },
+  {
+   "kind": "model",
+   "name": "gpt-5.4-nano",
+   "aliases": [
+    "openai:gpt-5.4-nano"
+   ],
+   "role": "used",
+   "evidence": "src/agent/config.py:50,69 (guardrails model and fallback)"
+  },
+  {
+   "kind": "model",
+   "name": "claude-haiku-4-5",
+   "aliases": [
+    "claude-haiku-4.5",
+    "claude-haiku-4-5-20251001",
+    "anthropic:claude-haiku-4-5-20251001"
+   ],
+   "role": "option",
+   "evidence": "src/agent/config.py:42,74 (fallback)"
+  },
+  {
+   "kind": "provider",
+   "name": "anthropic",
+   "aliases": [
+    "Anthropic Endpoint",
+    "langchain-anthropic"
+   ],
+   "role": "used",
+   "evidence": "src/agent/config.py:46"
+  },
+  {
+   "kind": "provider",
+   "name": "openai",
+   "aliases": [
+    "OpenAI Endpoint",
+    "langchain-openai"
+   ],
+   "role": "used",
+   "evidence": "src/agent/config.py:53"
+  },
+  {
+   "kind": "provider",
+   "name": "google",
+   "aliases": [
+    "Google Endpoint",
+    "gemini",
+    "google-genai",
+    "google_genai",
+    "langchain-google-genai"
+   ],
+   "role": "used",
+   "evidence": "src/agent/config.py:61; agent.py:61"
+  },
+  {
+   "kind": "provider",
+   "name": "baseten",
+   "aliases": [
+    "langchain-baseten"
+   ],
+   "role": "dependency",
+   "evidence": "pyproject.toml:19 (no model configured)"
+  },
+  {
+   "kind": "framework",
+   "name": "langchain",
+   "aliases": [
+    "langchain-core"
+   ],
+   "role": "used",
+   "evidence": "pyproject.toml:14; src/agent/config.py:8"
+  },
+  {
+   "kind": "framework",
+   "name": "langgraph",
+   "aliases": [
+    "langgraph-prebuilt"
+   ],
+   "role": "used",
+   "evidence": "pyproject.toml:17"
+  },
+  {
+   "kind": "framework",
+   "name": "langsmith",
+   "aliases": [],
+   "role": "used",
+   "evidence": "pyproject.toml:25; .env.example"
+  },
+  {
+   "kind": "framework",
+   "name": "managed-deepagents",
+   "aliases": [
+    "managed_deepagents",
+    "deepagents"
+   ],
+   "role": "used",
+   "evidence": "pyproject.toml:26; agent.py:3"
+  },
+  {
+   "kind": "framework",
+   "name": "langgraph-sdk",
+   "aliases": [
+    "@langchain/langgraph-sdk"
+   ],
+   "role": "used",
+   "evidence": "frontend/package.json:16"
+  },
+  {
+   "kind": "agent",
+   "name": "docs_agent",
+   "aliases": [
+    "docs-agent"
+   ],
+   "role": "used",
+   "evidence": "agent.py:57"
+  },
+  {
+   "kind": "tool",
+   "name": "search_support_articles",
+   "aliases": [],
+   "role": "used",
+   "evidence": "agent.py:26"
+  },
+  {
+   "kind": "tool",
+   "name": "get_support_article_content",
+   "aliases": [],
+   "role": "used",
+   "evidence": "agent.py:27"
+  },
+  {
+   "kind": "tool",
+   "name": "fetch_langchain_pricing",
+   "aliases": [],
+   "role": "used",
+   "evidence": "agent.py:28"
+  },
+  {
+   "kind": "tool",
+   "name": "check_links",
+   "aliases": [],
+   "role": "used",
+   "evidence": "agent.py:29"
+  },
+  {
+   "kind": "mcp",
+   "name": "langchainDocs",
+   "aliases": [
+    "docs.langchain.com/mcp"
+   ],
+   "role": "used",
+   "evidence": "tools/mcp.py (client, https://docs.langchain.com/mcp)"
+  },
+  {
+   "kind": "service",
+   "name": "pylon",
+   "aliases": [],
+   "role": "used",
+   "evidence": "src/tools/pylon_tools.py; .env.example"
+  }
+ ],
+ "not_real": [
+  {
+   "kind": "vector_db",
+   "name": "supabase",
+   "why": "Supabase is used for auth and storage here, not as a vector database"
+  }
+ ],
+ "extra_real": [
+  {
+   "name": "GuardrailsMiddleware",
+   "why": "real guardrails component that calls a classifier model"
+  },
+  {
+   "name": "@langchain/core",
+   "why": "real transitive framework from the lockfile"
+  }
+ ],
+ "junk": [
+  "self.classifier_llms.append",
+  "str",
+  "CrewAI"
+ ],
+ "junk_why": {
+  "CrewAI": "only mentioned inside a prompt text, not used"
+ }
+}

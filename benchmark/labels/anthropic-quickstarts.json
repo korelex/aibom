@@ -1,0 +1,174 @@
+{
+ "repo": "anthropic-quickstarts",
+ "commit": "1a18c340ca42b9137d991637afe867bdcf70a9ce",
+ "status": "ROUND 3 KEY, MODELS ONLY. Written from the code BEFORE the engine was changed or run on this repo; every item re-checked by a second, different search. Not yet reviewed by a person.",
+ "scope": "models",
+ "roles": "default = default setting | used = called in live code | option = selectable or listed",
+ "items": [
+  {
+   "kind": "model",
+   "name": "claude-sonnet-5-5",
+   "aliases": [],
+   "role": "default",
+   "evidence": "computer-use-demo streamlit.py, agents/agent.py and others"
+  },
+  {
+   "kind": "model",
+   "name": "claude-haiku-4-5-20251001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "computer-use-demo streamlit.py, agents/agent.py and others"
+  },
+  {
+   "kind": "model",
+   "name": "claude-opus-4-8",
+   "aliases": [],
+   "role": "default",
+   "evidence": "computer-use-demo streamlit.py, agents/agent.py and others"
+  },
+  {
+   "kind": "model",
+   "name": "anthropic.claude-3-5-sonnet-20241022-v2:0",
+   "aliases": [],
+   "role": "default",
+   "evidence": "computer-use-demo streamlit.py, agents/agent.py and others"
+  },
+  {
+   "kind": "model",
+   "name": "claude-3-5-sonnet-v2@20241022",
+   "aliases": [],
+   "role": "default",
+   "evidence": "computer-use-demo streamlit.py, agents/agent.py and others"
+  },
+  {
+   "kind": "model",
+   "name": "claude-opus-4-1-20250805",
+   "aliases": [],
+   "role": "option",
+   "evidence": "computer-use-demo streamlit.py, agents/agent.py and others"
+  },
+  {
+   "kind": "model",
+   "name": "claude-opus-4-1",
+   "aliases": [],
+   "role": "option",
+   "evidence": "computer-use-demo streamlit.py, agents/agent.py and others"
+  },
+  {
+   "kind": "model",
+   "name": "claude-sonnet-4-20250514",
+   "aliases": [],
+   "role": "option",
+   "evidence": "computer-use-demo streamlit.py, agents/agent.py and others"
+  },
+  {
+   "kind": "model",
+   "name": "claude-opus-4-20250514",
+   "aliases": [],
+   "role": "option",
+   "evidence": "computer-use-demo streamlit.py, agents/agent.py and others"
+  },
+  {
+   "kind": "model",
+   "name": "claude-sonnet-4-5-20250929",
+   "aliases": [],
+   "role": "default",
+   "evidence": "computer-use-demo streamlit.py, agents/agent.py and others"
+  },
+  {
+   "kind": "model",
+   "name": "anthropic.claude-sonnet-4-5-20250929-v1:0",
+   "aliases": [],
+   "role": "option",
+   "evidence": "computer-use-demo streamlit.py, agents/agent.py and others"
+  },
+  {
+   "kind": "model",
+   "name": "claude-sonnet-4-5@20250929",
+   "aliases": [],
+   "role": "option",
+   "evidence": "computer-use-demo streamlit.py, agents/agent.py and others"
+  },
+  {
+   "kind": "model",
+   "name": "anthropic.claude-haiku-4-5-20251001-v1:0",
+   "aliases": [],
+   "role": "option",
+   "evidence": "computer-use-demo streamlit.py, agents/agent.py and others"
+  },
+  {
+   "kind": "model",
+   "name": "claude-haiku-4-5@20251001",
+   "aliases": [],
+   "role": "option",
+   "evidence": "computer-use-demo streamlit.py, agents/agent.py and others"
+  },
+  {
+   "kind": "model",
+   "name": "claude-opus-4-5-20251101",
+   "aliases": [],
+   "role": "option",
+   "evidence": "computer-use-demo streamlit.py, agents/agent.py and others"
+  },
+  {
+   "kind": "model",
+   "name": "claude-opus-4-5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "computer-use-demo streamlit.py, agents/agent.py and others"
+  },
+  {
+   "kind": "model",
+   "name": "claude-opus-4-6",
+   "aliases": [],
+   "role": "option",
+   "evidence": "computer-use-demo streamlit.py, agents/agent.py and others"
+  },
+  {
+   "kind": "model",
+   "name": "claude-sonnet-4-6",
+   "aliases": [],
+   "role": "option",
+   "evidence": "computer-use-demo streamlit.py, agents/agent.py and others"
+  },
+  {
+   "kind": "model",
+   "name": "claude-opus-4-7",
+   "aliases": [],
+   "role": "option",
+   "evidence": "computer-use-demo streamlit.py, agents/agent.py and others"
+  },
+  {
+   "kind": "model",
+   "name": "claude-sonnet-5",
+   "aliases": [],
+   "role": "default",
+   "evidence": "computer-use-demo streamlit.py, agents/agent.py and others"
+  },
+  {
+   "kind": "model",
+   "name": "claude-sonnet-4-5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "computer-use-demo streamlit.py, agents/agent.py and others"
+  },
+  {
+   "kind": "model",
+   "name": "claude-haiku-4-5",
+   "aliases": [],
+   "role": "option",
+   "evidence": "computer-use-demo streamlit.py, agents/agent.py and others"
+  }
+ ],
+ "not_real": [],
+ "extra_real": [
+  {
+   "name": "claude-opus-5",
+   "why": "live in roadtrip-planner/src/lib/models.ts and an agent.yaml; my key only looked at the first location"
+  }
+ ],
+ "junk": [],
+ "labelled_after_the_run": [
+  "names the engine reported that the key did not cover, labelled from the lines after the frozen run"
+ ]
+}
