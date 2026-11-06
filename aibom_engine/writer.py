@@ -26,6 +26,14 @@ def build_bom(items, app_name):
             props.append({"name": NS + "type", "value": it["mode"]})
         if it.get("role"):
             props.append({"name": NS + "role", "value": it["role"]})
+        if it.get("canonical_id"):
+            props.append({"name": NS + "canonical-id", "value": it["canonical_id"]})
+        if "pinned" in it:
+            props.append({"name": NS + "pinned", "value": str(bool(it["pinned"])).lower()})
+        if it.get("status"):
+            props.append({"name": NS + "status", "value": it["status"]})
+        if it.get("license") and it.get("license") != "unknown":
+            props.append({"name": NS + "license", "value": it["license"]})
         if it.get("places"):
             props.append({"name": NS + "live-places", "value": str(it["places"]["live"])})
         for a in it["aliases"]:

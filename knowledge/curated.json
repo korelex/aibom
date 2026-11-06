@@ -1,0 +1,574 @@
+{
+  "version": "1.0.0",
+  "licenses": {
+    "apache-2.0": {
+      "name": "Apache License 2.0",
+      "category": "permissive",
+      "restricted": false,
+      "severity": "info",
+      "reason": "Permissive open-source license with patent grant."
+    },
+    "mit": {
+      "name": "MIT License",
+      "category": "permissive",
+      "restricted": false,
+      "severity": "info",
+      "reason": "Permissive open-source license."
+    },
+    "bsd-3-clause": {
+      "name": "BSD 3-Clause License",
+      "category": "permissive",
+      "restricted": false,
+      "severity": "info",
+      "reason": "Permissive open-source license."
+    },
+    "bsd-2-clause": {
+      "name": "BSD 2-Clause License",
+      "category": "permissive",
+      "restricted": false,
+      "severity": "info",
+      "reason": "Permissive open-source license."
+    },
+    "cc-by-4.0": {
+      "name": "Creative Commons Attribution 4.0",
+      "category": "permissive",
+      "restricted": false,
+      "severity": "info",
+      "reason": "Permissive with attribution."
+    },
+    "cc0-1.0": {
+      "name": "Creative Commons Zero v1.0 Universal",
+      "category": "permissive",
+      "restricted": false,
+      "severity": "info",
+      "reason": "Public domain dedication."
+    },
+    "proprietary": {
+      "name": "Commercial / Proprietary API Terms",
+      "category": "proprietary",
+      "restricted": false,
+      "severity": "info",
+      "reason": "Governed by commercial API provider terms of service."
+    },
+    "cc-by-nc-4.0": {
+      "name": "Creative Commons Attribution-NonCommercial 4.0",
+      "category": "non-commercial",
+      "restricted": true,
+      "severity": "high",
+      "reason": "Non-commercial license; commercial or production use is prohibited without a separate commercial agreement."
+    },
+    "cc-by-nc-sa-4.0": {
+      "name": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0",
+      "category": "non-commercial",
+      "restricted": true,
+      "severity": "high",
+      "reason": "Non-commercial ShareAlike license; commercial use is prohibited."
+    },
+    "cc-by-nc-nd-4.0": {
+      "name": "Creative Commons Attribution-NonCommercial-NoDerivs 4.0",
+      "category": "non-commercial",
+      "restricted": true,
+      "severity": "high",
+      "reason": "Non-commercial NoDerivatives license; commercial use and modifications are prohibited."
+    },
+    "cc-by-nc-3.0": {
+      "name": "Creative Commons Attribution-NonCommercial 3.0",
+      "category": "non-commercial",
+      "restricted": true,
+      "severity": "high",
+      "reason": "Non-commercial license; commercial use is prohibited."
+    },
+    "mistral-research": {
+      "name": "Mistral AI Research License (MRL)",
+      "category": "non-commercial",
+      "restricted": true,
+      "severity": "high",
+      "reason": "Research-only license; commercial deployment requires a commercial license from Mistral AI."
+    },
+    "qwen-research": {
+      "name": "Tongyi Qianwen Research License",
+      "category": "non-commercial",
+      "restricted": true,
+      "severity": "high",
+      "reason": "Research/non-commercial license; commercial deployment requires explicit authorization."
+    },
+    "flux-1-dev-non-commercial": {
+      "name": "FLUX.1 [dev] Non-Commercial License",
+      "category": "non-commercial",
+      "restricted": true,
+      "severity": "high",
+      "reason": "Non-commercial license; commercial outputs or hosted inference require a commercial license."
+    },
+    "stability-ai-non-commercial": {
+      "name": "Stability AI Non-Commercial Research Community License",
+      "category": "non-commercial",
+      "restricted": true,
+      "severity": "high",
+      "reason": "Non-commercial research license; commercial revenue above threshold requires enterprise license."
+    },
+    "llama2": {
+      "name": "Llama 2 Community License Agreement",
+      "category": "conditional-commercial",
+      "restricted": true,
+      "severity": "medium",
+      "reason": "Conditional commercial license: requires attribution, Acceptable Use Policy compliance, and <700M monthly active users."
+    },
+    "llama3": {
+      "name": "Meta Llama 3 Community License",
+      "category": "conditional-commercial",
+      "restricted": true,
+      "severity": "low",
+      "reason": "Conditional commercial license: requires 'Built with Meta Llama 3' attribution, AUP compliance, and <700M MAU."
+    },
+    "llama3.1": {
+      "name": "Llama 3.1 Community License Agreement",
+      "category": "conditional-commercial",
+      "restricted": true,
+      "severity": "low",
+      "reason": "Conditional commercial license: requires 'Built with Llama' attribution, AUP compliance, and <700M MAU."
+    },
+    "llama3.2": {
+      "name": "Llama 3.2 Community License Agreement",
+      "category": "conditional-commercial",
+      "restricted": true,
+      "severity": "low",
+      "reason": "Conditional commercial license: requires attribution, AUP compliance, EU multimodal restrictions, and <700M MAU."
+    },
+    "llama3.3": {
+      "name": "Llama 3.3 Community License Agreement",
+      "category": "conditional-commercial",
+      "restricted": true,
+      "severity": "low",
+      "reason": "Conditional commercial license: requires attribution, AUP compliance, and <700M MAU."
+    },
+    "gemma": {
+      "name": "Gemma Terms of Use",
+      "category": "conditional-commercial",
+      "restricted": true,
+      "severity": "low",
+      "reason": "Conditional commercial terms: subject to Google Gemma Prohibited Use Policy and redistribution notice requirements."
+    },
+    "qwen": {
+      "name": "Tongyi Qianwen License Agreement",
+      "category": "conditional-commercial",
+      "restricted": true,
+      "severity": "low",
+      "reason": "Conditional commercial license: commercial use above 100M monthly active users requires licensing from Alibaba Cloud."
+    },
+    "deepseek": {
+      "name": "DeepSeek License Agreement",
+      "category": "conditional-commercial",
+      "restricted": true,
+      "severity": "low",
+      "reason": "Conditional commercial license: subject to military/harmful use restrictions in Attachment A."
+    },
+    "openrail": {
+      "name": "CreativeML OpenRAIL-M License",
+      "category": "conditional-commercial",
+      "restricted": true,
+      "severity": "low",
+      "reason": "Behavioral use restrictions apply to downstream distributions."
+    },
+    "agpl-3.0": {
+      "name": "GNU Affero General Public License v3.0",
+      "category": "copyleft",
+      "restricted": true,
+      "severity": "medium",
+      "reason": "Strong network copyleft license; network use requires disclosing full source code."
+    }
+  },
+  "packages": [
+    {"ecosystem": "PyPI", "name": "openai", "category": "llm_sdk", "vendor": "OpenAI", "import_names": ["openai"]},
+    {"ecosystem": "PyPI", "name": "anthropic", "category": "llm_sdk", "vendor": "Anthropic", "import_names": ["anthropic"]},
+    {"ecosystem": "PyPI", "name": "google-genai", "category": "llm_sdk", "vendor": "Google", "import_names": ["google.genai"]},
+    {"ecosystem": "PyPI", "name": "google-generativeai", "category": "llm_sdk", "vendor": "Google", "import_names": ["google.generativeai"]},
+    {"ecosystem": "PyPI", "name": "google-cloud-aiplatform", "category": "llm_sdk", "vendor": "Google", "import_names": ["vertexai", "google.cloud.aiplatform"]},
+    {"ecosystem": "PyPI", "name": "cohere", "category": "llm_sdk", "vendor": "Cohere", "import_names": ["cohere"]},
+    {"ecosystem": "PyPI", "name": "mistralai", "category": "llm_sdk", "vendor": "Mistral AI", "import_names": ["mistralai"]},
+    {"ecosystem": "PyPI", "name": "groq", "category": "llm_sdk", "vendor": "Groq", "import_names": ["groq"]},
+    {"ecosystem": "PyPI", "name": "together", "category": "llm_sdk", "vendor": "Together AI", "import_names": ["together"]},
+    {"ecosystem": "PyPI", "name": "fireworks-ai", "category": "llm_sdk", "vendor": "Fireworks AI", "import_names": ["fireworks"]},
+    {"ecosystem": "PyPI", "name": "replicate", "category": "llm_sdk", "vendor": "Replicate", "import_names": ["replicate"]},
+    {"ecosystem": "PyPI", "name": "litellm", "category": "llm_sdk", "vendor": "BerriAI", "import_names": ["litellm"]},
+    {"ecosystem": "PyPI", "name": "ollama", "category": "llm_sdk", "vendor": "Ollama", "import_names": ["ollama"]},
+    {"ecosystem": "PyPI", "name": "ai21", "category": "llm_sdk", "vendor": "AI21 Labs", "import_names": ["ai21"]},
+    {"ecosystem": "PyPI", "name": "xai-sdk", "category": "llm_sdk", "vendor": "xAI", "import_names": ["xai_sdk"]},
+    {"ecosystem": "PyPI", "name": "cerebras-cloud-sdk", "category": "llm_sdk", "vendor": "Cerebras", "import_names": ["cerebras"]},
+    {"ecosystem": "PyPI", "name": "ibm-watsonx-ai", "category": "llm_sdk", "vendor": "IBM", "import_names": ["ibm_watsonx_ai"]},
+    {"ecosystem": "PyPI", "name": "azure-ai-inference", "category": "llm_sdk", "vendor": "Microsoft", "import_names": ["azure.ai.inference"]},
+    {"ecosystem": "PyPI", "name": "azure-ai-projects", "category": "agent_framework", "vendor": "Microsoft", "import_names": ["azure.ai.projects"]},
+    {"ecosystem": "PyPI", "name": "langchain", "category": "agent_framework", "vendor": "LangChain", "import_names": ["langchain"]},
+    {"ecosystem": "PyPI", "name": "langchain-core", "category": "agent_framework", "vendor": "LangChain", "import_names": ["langchain_core"]},
+    {"ecosystem": "PyPI", "name": "langchain-community", "category": "agent_framework", "vendor": "LangChain", "import_names": ["langchain_community"]},
+    {"ecosystem": "PyPI", "name": "langchain-openai", "category": "agent_framework", "vendor": "LangChain", "import_names": ["langchain_openai"]},
+    {"ecosystem": "PyPI", "name": "langchain-anthropic", "category": "agent_framework", "vendor": "LangChain", "import_names": ["langchain_anthropic"]},
+    {"ecosystem": "PyPI", "name": "langchain-google-genai", "category": "agent_framework", "vendor": "LangChain", "import_names": ["langchain_google_genai"]},
+    {"ecosystem": "PyPI", "name": "langchain-aws", "category": "agent_framework", "vendor": "LangChain", "import_names": ["langchain_aws"]},
+    {"ecosystem": "PyPI", "name": "langchain-ollama", "category": "agent_framework", "vendor": "LangChain", "import_names": ["langchain_ollama"]},
+    {"ecosystem": "PyPI", "name": "langgraph", "category": "agent_framework", "vendor": "LangChain", "import_names": ["langgraph"]},
+    {"ecosystem": "PyPI", "name": "langsmith", "category": "agent_framework", "vendor": "LangChain", "import_names": ["langsmith"]},
+    {"ecosystem": "PyPI", "name": "llama-index", "category": "agent_framework", "vendor": "LlamaIndex", "import_names": ["llama_index"]},
+    {"ecosystem": "PyPI", "name": "llama-index-core", "category": "agent_framework", "vendor": "LlamaIndex", "import_names": ["llama_index.core"]},
+    {"ecosystem": "PyPI", "name": "crewai", "category": "agent_framework", "vendor": "CrewAI", "import_names": ["crewai"]},
+    {"ecosystem": "PyPI", "name": "crewai-tools", "category": "agent_framework", "vendor": "CrewAI", "import_names": ["crewai_tools"]},
+    {"ecosystem": "PyPI", "name": "autogen", "category": "agent_framework", "vendor": "Microsoft", "import_names": ["autogen"]},
+    {"ecosystem": "PyPI", "name": "pyautogen", "category": "agent_framework", "vendor": "Microsoft", "import_names": ["autogen"]},
+    {"ecosystem": "PyPI", "name": "autogen-agentchat", "category": "agent_framework", "vendor": "Microsoft", "import_names": ["autogen_agentchat"]},
+    {"ecosystem": "PyPI", "name": "autogen-core", "category": "agent_framework", "vendor": "Microsoft", "import_names": ["autogen_core"]},
+    {"ecosystem": "PyPI", "name": "haystack-ai", "category": "agent_framework", "vendor": "deepset", "import_names": ["haystack"]},
+    {"ecosystem": "PyPI", "name": "farm-haystack", "category": "agent_framework", "vendor": "deepset", "import_names": ["haystack"]},
+    {"ecosystem": "PyPI", "name": "dspy-ai", "category": "agent_framework", "vendor": "Stanford", "import_names": ["dspy"]},
+    {"ecosystem": "PyPI", "name": "dspy", "category": "agent_framework", "vendor": "Stanford", "import_names": ["dspy"]},
+    {"ecosystem": "PyPI", "name": "semantic-kernel", "category": "agent_framework", "vendor": "Microsoft", "import_names": ["semantic_kernel"]},
+    {"ecosystem": "PyPI", "name": "pydantic-ai", "category": "agent_framework", "vendor": "Pydantic", "import_names": ["pydantic_ai"]},
+    {"ecosystem": "PyPI", "name": "smolagents", "category": "agent_framework", "vendor": "Hugging Face", "import_names": ["smolagents"]},
+    {"ecosystem": "PyPI", "name": "agno", "category": "agent_framework", "vendor": "Agno", "import_names": ["agno"]},
+    {"ecosystem": "PyPI", "name": "phidata", "category": "agent_framework", "vendor": "Agno", "import_names": ["phi"]},
+    {"ecosystem": "PyPI", "name": "instructor", "category": "agent_framework", "vendor": "Instructor", "import_names": ["instructor"]},
+    {"ecosystem": "PyPI", "name": "outlines", "category": "agent_framework", "vendor": "Outlines", "import_names": ["outlines"]},
+    {"ecosystem": "PyPI", "name": "guidance", "category": "agent_framework", "vendor": "Guidance", "import_names": ["guidance"]},
+    {"ecosystem": "PyPI", "name": "claude-agent-sdk", "category": "agent_framework", "vendor": "Anthropic", "import_names": ["claude_agent_sdk"]},
+    {"ecosystem": "PyPI", "name": "openai-agents", "category": "agent_framework", "vendor": "OpenAI", "import_names": ["agents"]},
+    {"ecosystem": "PyPI", "name": "strands-agents", "category": "agent_framework", "vendor": "AWS", "import_names": ["strands"]},
+    {"ecosystem": "PyPI", "name": "transformers", "category": "model_runtime", "vendor": "Hugging Face", "import_names": ["transformers"]},
+    {"ecosystem": "PyPI", "name": "huggingface-hub", "category": "model_runtime", "vendor": "Hugging Face", "import_names": ["huggingface_hub"]},
+    {"ecosystem": "PyPI", "name": "torch", "category": "model_runtime", "vendor": "PyTorch", "import_names": ["torch"]},
+    {"ecosystem": "PyPI", "name": "tensorflow", "category": "model_runtime", "vendor": "Google", "import_names": ["tensorflow"]},
+    {"ecosystem": "PyPI", "name": "vllm", "category": "model_runtime", "vendor": "vLLM", "import_names": ["vllm"]},
+    {"ecosystem": "PyPI", "name": "llama-cpp-python", "category": "model_runtime", "vendor": "llama.cpp", "import_names": ["llama_cpp"]},
+    {"ecosystem": "PyPI", "name": "onnxruntime", "category": "model_runtime", "vendor": "Microsoft", "import_names": ["onnxruntime"]},
+    {"ecosystem": "PyPI", "name": "onnx", "category": "model_runtime", "vendor": "ONNX", "import_names": ["onnx"]},
+    {"ecosystem": "PyPI", "name": "safetensors", "category": "model_runtime", "vendor": "Hugging Face", "import_names": ["safetensors"]},
+    {"ecosystem": "PyPI", "name": "sentence-transformers", "category": "model_runtime", "vendor": "Hugging Face", "import_names": ["sentence_transformers"]},
+    {"ecosystem": "PyPI", "name": "diffusers", "category": "model_runtime", "vendor": "Hugging Face", "import_names": ["diffusers"]},
+    {"ecosystem": "PyPI", "name": "peft", "category": "model_runtime", "vendor": "Hugging Face", "import_names": ["peft"]},
+    {"ecosystem": "PyPI", "name": "trl", "category": "model_runtime", "vendor": "Hugging Face", "import_names": ["trl"]},
+    {"ecosystem": "PyPI", "name": "tokenizers", "category": "model_runtime", "vendor": "Hugging Face", "import_names": ["tokenizers"]},
+    {"ecosystem": "PyPI", "name": "tiktoken", "category": "model_runtime", "vendor": "OpenAI", "import_names": ["tiktoken"]},
+    {"ecosystem": "PyPI", "name": "sglang", "category": "model_runtime", "vendor": "SGLang", "import_names": ["sglang"]},
+    {"ecosystem": "PyPI", "name": "mlx-lm", "category": "model_runtime", "vendor": "Apple", "import_names": ["mlx_lm"]},
+    {"ecosystem": "PyPI", "name": "bentoml", "category": "model_runtime", "vendor": "BentoML", "import_names": ["bentoml"]},
+    {"ecosystem": "PyPI", "name": "mlflow", "category": "model_runtime", "vendor": "MLflow", "import_names": ["mlflow"]},
+    {"ecosystem": "PyPI", "name": "gradio", "category": "model_runtime", "vendor": "Hugging Face", "import_names": ["gradio"]},
+    {"ecosystem": "PyPI", "name": "mcp", "category": "mcp", "vendor": "Model Context Protocol", "import_names": ["mcp"]},
+    {"ecosystem": "PyPI", "name": "fastmcp", "category": "mcp", "vendor": "FastMCP", "import_names": ["fastmcp"]},
+    {"ecosystem": "PyPI", "name": "langchain-mcp-adapters", "category": "mcp", "vendor": "LangChain", "import_names": ["langchain_mcp_adapters"]},
+    {"ecosystem": "PyPI", "name": "pinecone-client", "category": "vector_db", "vendor": "Pinecone", "import_names": ["pinecone"]},
+    {"ecosystem": "PyPI", "name": "pinecone", "category": "vector_db", "vendor": "Pinecone", "import_names": ["pinecone"]},
+    {"ecosystem": "PyPI", "name": "weaviate-client", "category": "vector_db", "vendor": "Weaviate", "import_names": ["weaviate"]},
+    {"ecosystem": "PyPI", "name": "qdrant-client", "category": "vector_db", "vendor": "Qdrant", "import_names": ["qdrant_client"]},
+    {"ecosystem": "PyPI", "name": "chromadb", "category": "vector_db", "vendor": "Chroma", "import_names": ["chromadb"]},
+    {"ecosystem": "PyPI", "name": "pymilvus", "category": "vector_db", "vendor": "Milvus", "import_names": ["pymilvus"]},
+    {"ecosystem": "PyPI", "name": "pgvector", "category": "vector_db", "vendor": "pgvector", "import_names": ["pgvector"]},
+    {"ecosystem": "PyPI", "name": "faiss-cpu", "category": "vector_db", "vendor": "Meta", "import_names": ["faiss"]},
+    {"ecosystem": "PyPI", "name": "faiss-gpu", "category": "vector_db", "vendor": "Meta", "import_names": ["faiss"]},
+    {"ecosystem": "PyPI", "name": "lancedb", "category": "vector_db", "vendor": "LanceDB", "import_names": ["lancedb"]},
+    {"ecosystem": "PyPI", "name": "datasets", "category": "dataset_loader", "vendor": "Hugging Face", "import_names": ["datasets"]},
+    {"ecosystem": "PyPI", "name": "nemoguardrails", "category": "guardrail", "vendor": "NVIDIA", "import_names": ["nemoguardrails"]},
+    {"ecosystem": "PyPI", "name": "guardrails-ai", "category": "guardrail", "vendor": "Guardrails AI", "import_names": ["guardrails"]},
+    {"ecosystem": "PyPI", "name": "llm-guard", "category": "guardrail", "vendor": "Protect AI", "import_names": ["llm_guard"]},
+    {"ecosystem": "npm", "name": "openai", "category": "llm_sdk", "vendor": "OpenAI", "import_names": ["openai"]},
+    {"ecosystem": "npm", "name": "@anthropic-ai/sdk", "category": "llm_sdk", "vendor": "Anthropic", "import_names": ["@anthropic-ai/sdk"]},
+    {"ecosystem": "npm", "name": "@anthropic-ai/claude-agent-sdk", "category": "agent_framework", "vendor": "Anthropic", "import_names": ["@anthropic-ai/claude-agent-sdk"]},
+    {"ecosystem": "npm", "name": "@google/genai", "category": "llm_sdk", "vendor": "Google", "import_names": ["@google/genai"]},
+    {"ecosystem": "npm", "name": "@google/generative-ai", "category": "llm_sdk", "vendor": "Google", "import_names": ["@google/generative-ai"]},
+    {"ecosystem": "npm", "name": "@google-cloud/vertexai", "category": "llm_sdk", "vendor": "Google", "import_names": ["@google-cloud/vertexai"]},
+    {"ecosystem": "npm", "name": "@aws-sdk/client-bedrock-runtime", "category": "llm_sdk", "vendor": "AWS", "import_names": ["@aws-sdk/client-bedrock-runtime"]},
+    {"ecosystem": "npm", "name": "@azure/openai", "category": "llm_sdk", "vendor": "Microsoft", "import_names": ["@azure/openai"]},
+    {"ecosystem": "npm", "name": "@mistralai/mistralai", "category": "llm_sdk", "vendor": "Mistral AI", "import_names": ["@mistralai/mistralai"]},
+    {"ecosystem": "npm", "name": "cohere-ai", "category": "llm_sdk", "vendor": "Cohere", "import_names": ["cohere-ai"]},
+    {"ecosystem": "npm", "name": "groq-sdk", "category": "llm_sdk", "vendor": "Groq", "import_names": ["groq-sdk"]},
+    {"ecosystem": "npm", "name": "ollama", "category": "llm_sdk", "vendor": "Ollama", "import_names": ["ollama"]},
+    {"ecosystem": "npm", "name": "replicate", "category": "llm_sdk", "vendor": "Replicate", "import_names": ["replicate"]},
+    {"ecosystem": "npm", "name": "@huggingface/inference", "category": "llm_sdk", "vendor": "Hugging Face", "import_names": ["@huggingface/inference"]},
+    {"ecosystem": "npm", "name": "@huggingface/transformers", "category": "model_runtime", "vendor": "Hugging Face", "import_names": ["@huggingface/transformers"]},
+    {"ecosystem": "npm", "name": "@xenova/transformers", "category": "model_runtime", "vendor": "Hugging Face", "import_names": ["@xenova/transformers"]},
+    {"ecosystem": "npm", "name": "ai", "category": "llm_sdk", "vendor": "Vercel", "import_names": ["ai"]},
+    {"ecosystem": "npm", "name": "@ai-sdk/openai", "category": "llm_sdk", "vendor": "Vercel", "import_names": ["@ai-sdk/openai"]},
+    {"ecosystem": "npm", "name": "@ai-sdk/anthropic", "category": "llm_sdk", "vendor": "Vercel", "import_names": ["@ai-sdk/anthropic"]},
+    {"ecosystem": "npm", "name": "@ai-sdk/google", "category": "llm_sdk", "vendor": "Vercel", "import_names": ["@ai-sdk/google"]},
+    {"ecosystem": "npm", "name": "@ai-sdk/amazon-bedrock", "category": "llm_sdk", "vendor": "Vercel", "import_names": ["@ai-sdk/amazon-bedrock"]},
+    {"ecosystem": "npm", "name": "@ai-sdk/azure", "category": "llm_sdk", "vendor": "Vercel", "import_names": ["@ai-sdk/azure"]},
+    {"ecosystem": "npm", "name": "langchain", "category": "agent_framework", "vendor": "LangChain", "import_names": ["langchain"]},
+    {"ecosystem": "npm", "name": "@langchain/core", "category": "agent_framework", "vendor": "LangChain", "import_names": ["@langchain/core"]},
+    {"ecosystem": "npm", "name": "@langchain/community", "category": "agent_framework", "vendor": "LangChain", "import_names": ["@langchain/community"]},
+    {"ecosystem": "npm", "name": "@langchain/openai", "category": "agent_framework", "vendor": "LangChain", "import_names": ["@langchain/openai"]},
+    {"ecosystem": "npm", "name": "@langchain/anthropic", "category": "agent_framework", "vendor": "LangChain", "import_names": ["@langchain/anthropic"]},
+    {"ecosystem": "npm", "name": "@langchain/langgraph", "category": "agent_framework", "vendor": "LangChain", "import_names": ["@langchain/langgraph"]},
+    {"ecosystem": "npm", "name": "llamaindex", "category": "agent_framework", "vendor": "LlamaIndex", "import_names": ["llamaindex"]},
+    {"ecosystem": "npm", "name": "@mastra/core", "category": "agent_framework", "vendor": "Mastra", "import_names": ["@mastra/core"]},
+    {"ecosystem": "npm", "name": "@openai/agents", "category": "agent_framework", "vendor": "OpenAI", "import_names": ["@openai/agents"]},
+    {"ecosystem": "npm", "name": "@modelcontextprotocol/sdk", "category": "mcp", "vendor": "Model Context Protocol", "import_names": ["@modelcontextprotocol/sdk"]},
+    {"ecosystem": "npm", "name": "@pinecone-database/pinecone", "category": "vector_db", "vendor": "Pinecone", "import_names": ["@pinecone-database/pinecone"]},
+    {"ecosystem": "npm", "name": "weaviate-client", "category": "vector_db", "vendor": "Weaviate", "import_names": ["weaviate-client"]},
+    {"ecosystem": "npm", "name": "weaviate-ts-client", "category": "vector_db", "vendor": "Weaviate", "import_names": ["weaviate-ts-client"]},
+    {"ecosystem": "npm", "name": "@qdrant/js-client-rest", "category": "vector_db", "vendor": "Qdrant", "import_names": ["@qdrant/js-client-rest"]},
+    {"ecosystem": "npm", "name": "chromadb", "category": "vector_db", "vendor": "Chroma", "import_names": ["chromadb"]},
+    {"ecosystem": "npm", "name": "@zilliz/milvus2-sdk-node", "category": "vector_db", "vendor": "Milvus", "import_names": ["@zilliz/milvus2-sdk-node"]},
+    {"ecosystem": "npm", "name": "pgvector", "category": "vector_db", "vendor": "pgvector", "import_names": ["pgvector"]},
+    {"ecosystem": "Go", "name": "github.com/openai/openai-go", "category": "llm_sdk", "vendor": "OpenAI", "import_names": ["github.com/openai/openai-go"]},
+    {"ecosystem": "Go", "name": "github.com/sashabaranov/go-openai", "category": "llm_sdk", "vendor": "OpenAI", "import_names": ["github.com/sashabaranov/go-openai"]},
+    {"ecosystem": "Go", "name": "github.com/anthropics/anthropic-sdk-go", "category": "llm_sdk", "vendor": "Anthropic", "import_names": ["github.com/anthropics/anthropic-sdk-go"]},
+    {"ecosystem": "Go", "name": "google.golang.org/genai", "category": "llm_sdk", "vendor": "Google", "import_names": ["google.golang.org/genai"]},
+    {"ecosystem": "Go", "name": "github.com/tmc/langchaingo", "category": "agent_framework", "vendor": "LangChain", "import_names": ["github.com/tmc/langchaingo"]},
+    {"ecosystem": "Go", "name": "github.com/mark3labs/mcp-go", "category": "mcp", "vendor": "MCP", "import_names": ["github.com/mark3labs/mcp-go"]},
+    {"ecosystem": "Go", "name": "github.com/modelcontextprotocol/go-sdk", "category": "mcp", "vendor": "Model Context Protocol", "import_names": ["github.com/modelcontextprotocol/go-sdk"]}
+  ],
+  "curated_models": {
+    "openai/gpt-3.5-turbo": {
+      "maker": "OpenAI",
+      "mode": "chat",
+      "license": "proprietary",
+      "status": "deprecated",
+      "deprecation_date": "2024-09-13",
+      "replacement": "gpt-4o-mini",
+      "aliases": ["gpt-3.5-turbo", "gpt-3.5-turbo-0125", "gpt-3.5-turbo-1106", "gpt-3.5-turbo-0613", "gpt-3.5-turbo-0301", "gpt-3.5-turbo-16k", "gpt-35-turbo"]
+    },
+    "openai/gpt-4-32k": {
+      "maker": "OpenAI",
+      "mode": "chat",
+      "license": "proprietary",
+      "status": "retired",
+      "deprecation_date": "2025-06-06",
+      "replacement": "gpt-4o",
+      "aliases": ["gpt-4-32k", "gpt-4-32k-0613", "gpt-4-32k-0314"]
+    },
+    "openai/gpt-4-vision-preview": {
+      "maker": "OpenAI",
+      "mode": "chat",
+      "license": "proprietary",
+      "status": "retired",
+      "deprecation_date": "2024-12-06",
+      "replacement": "gpt-4o",
+      "aliases": ["gpt-4-vision-preview", "gpt-4-1106-vision-preview"]
+    },
+    "openai/text-davinci-003": {
+      "maker": "OpenAI",
+      "mode": "completion",
+      "license": "proprietary",
+      "status": "retired",
+      "deprecation_date": "2024-01-04",
+      "replacement": "gpt-4o-mini",
+      "aliases": ["text-davinci-003", "text-davinci-002", "text-curie-001", "text-babbage-001", "text-ada-001", "code-davinci-002"]
+    },
+    "openai/gpt-4o": {
+      "maker": "OpenAI",
+      "mode": "chat",
+      "license": "proprietary",
+      "status": "active",
+      "deprecation_date": null,
+      "replacement": null,
+      "aliases": ["gpt-4o", "chatgpt-4o-latest", "gpt-4o-2024-11-20", "gpt-4o-2024-08-06", "gpt-4o-2024-05-13"]
+    },
+    "openai/gpt-4o-mini": {
+      "maker": "OpenAI",
+      "mode": "chat",
+      "license": "proprietary",
+      "status": "active",
+      "deprecation_date": null,
+      "replacement": null,
+      "aliases": ["gpt-4o-mini", "gpt-4o-mini-2024-07-18"]
+    },
+    "anthropic/claude-2": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "status": "retired",
+      "deprecation_date": "2025-07-21",
+      "replacement": "claude-sonnet-4-5",
+      "aliases": ["claude-2", "claude-2.0", "claude-2.1", "claude-instant-1", "claude-instant-1.2", "anthropic.claude-v2", "anthropic.claude-v2:1"]
+    },
+    "anthropic/claude-3-sonnet": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "status": "retired",
+      "deprecation_date": "2025-07-21",
+      "replacement": "claude-sonnet-4-5",
+      "aliases": ["claude-3-sonnet", "claude-3-sonnet-20240229", "anthropic.claude-3-sonnet-20240229-v1:0"]
+    },
+    "anthropic/claude-3-opus": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "status": "retired",
+      "deprecation_date": "2026-01-05",
+      "replacement": "claude-opus-4-6",
+      "aliases": ["claude-3-opus", "claude-3-opus-latest", "claude-3-opus-20240229", "anthropic.claude-3-opus-20240229-v1:0"]
+    },
+    "anthropic/claude-3-5-sonnet": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "status": "deprecated",
+      "deprecation_date": "2025-10-22",
+      "replacement": "claude-sonnet-4-5",
+      "aliases": [
+        "claude-3-5-sonnet",
+        "claude-3.5-sonnet",
+        "claude-3-5-sonnet-latest",
+        "claude-3.5-sonnet-latest",
+        "claude-3-5-sonnet-20241022",
+        "claude-3-5-sonnet-20240620",
+        "anthropic.claude-3-5-sonnet-20241022-v2:0",
+        "anthropic.claude-3-5-sonnet-20240620-v1:0",
+        "anthropic.claude-3-5-sonnet-v2"
+      ]
+    },
+    "anthropic/claude-sonnet-4-5": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "status": "active",
+      "deprecation_date": null,
+      "replacement": null,
+      "aliases": [
+        "claude-sonnet-4-5",
+        "claude-sonnet-4.5",
+        "claude-sonnet-4-5-latest",
+        "claude-sonnet-4-5-20250929",
+        "anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "anthropic.claude-sonnet-4-5"
+      ]
+    },
+    "anthropic/claude-haiku-4-5": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "status": "active",
+      "deprecation_date": null,
+      "replacement": null,
+      "aliases": [
+        "claude-haiku-4-5",
+        "claude-haiku-4.5",
+        "claude-haiku-4-5-latest",
+        "claude-haiku-4-5-20251001",
+        "anthropic.claude-haiku-4-5-20251001-v1:0",
+        "anthropic.claude-haiku-4-5"
+      ]
+    },
+    "anthropic/claude-opus-4-5": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "status": "active",
+      "deprecation_date": null,
+      "replacement": null,
+      "aliases": [
+        "claude-opus-4-5",
+        "claude-opus-4.5",
+        "claude-opus-4-5-20251101",
+        "anthropic.claude-opus-4-5-20251101-v1:0",
+        "anthropic.claude-opus-4-5"
+      ]
+    },
+    "google/gemini-1.0-pro": {
+      "maker": "Google",
+      "mode": "chat",
+      "license": "proprietary",
+      "status": "retired",
+      "deprecation_date": "2025-04-09",
+      "replacement": "gemini-2.5-flash",
+      "aliases": ["gemini-pro", "gemini-1.0-pro", "gemini-1.0-pro-001", "gemini-1.0-pro-002", "gemini-pro-vision"]
+    },
+    "google/gemini-1.5-pro": {
+      "maker": "Google",
+      "mode": "chat",
+      "license": "proprietary",
+      "status": "deprecated",
+      "deprecation_date": "2025-09-24",
+      "replacement": "gemini-2.5-pro",
+      "aliases": ["gemini-1.5-pro", "gemini-1.5-pro-latest", "gemini-1.5-pro-001", "gemini-1.5-pro-002"]
+    },
+    "google/gemini-1.5-flash": {
+      "maker": "Google",
+      "mode": "chat",
+      "license": "proprietary",
+      "status": "deprecated",
+      "deprecation_date": "2025-09-24",
+      "replacement": "gemini-2.5-flash",
+      "aliases": ["gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-1.5-flash-001", "gemini-1.5-flash-002"]
+    },
+    "meta-llama/llama-3.1-8b-instruct": {
+      "maker": "Meta",
+      "mode": "chat",
+      "license": "llama3.1",
+      "hugging_face_id": "meta-llama/Llama-3.1-8B-Instruct",
+      "status": "active",
+      "aliases": ["meta-llama/Llama-3.1-8B-Instruct", "llama-3.1-8b-instruct", "llama3.1:8b", "meta.llama3-1-8b-instruct-v1:0"]
+    },
+    "meta-llama/llama-3.1-70b-instruct": {
+      "maker": "Meta",
+      "mode": "chat",
+      "license": "llama3.1",
+      "hugging_face_id": "meta-llama/Llama-3.1-70B-Instruct",
+      "status": "active",
+      "aliases": ["meta-llama/Llama-3.1-70B-Instruct", "llama-3.1-70b-instruct", "llama3.1:70b", "meta.llama3-1-70b-instruct-v1:0"]
+    },
+    "meta-llama/llama-3.3-70b-instruct": {
+      "maker": "Meta",
+      "mode": "chat",
+      "license": "llama3.3",
+      "hugging_face_id": "meta-llama/Llama-3.3-70B-Instruct",
+      "status": "active",
+      "aliases": ["meta-llama/Llama-3.3-70B-Instruct", "llama-3.3-70b-instruct", "llama3.3:70b", "meta.llama3-3-70b-instruct-v1:0"]
+    },
+    "mistralai/mistral-large-2407": {
+      "maker": "Mistral AI",
+      "mode": "chat",
+      "license": "mistral-research",
+      "hugging_face_id": "mistralai/Mistral-Large-Instruct-2407",
+      "status": "active",
+      "aliases": ["mistralai/Mistral-Large-Instruct-2407", "mistral-large-2407", "mistral.mistral-large-2407-v1:0"]
+    },
+    "cohere/command-r-v01": {
+      "maker": "Cohere",
+      "mode": "chat",
+      "license": "cc-by-nc-4.0",
+      "hugging_face_id": "CohereForAI/c4ai-command-r-v01",
+      "status": "active",
+      "aliases": ["CohereForAI/c4ai-command-r-v01", "c4ai-command-r-v01", "CohereForAI/c4ai-command-r-plus"]
+    },
+    "black-forest-labs/flux.1-dev": {
+      "maker": "Black Forest Labs",
+      "mode": "image_generation",
+      "license": "flux-1-dev-non-commercial",
+      "hugging_face_id": "black-forest-labs/FLUX.1-dev",
+      "status": "active",
+      "aliases": ["black-forest-labs/FLUX.1-dev", "flux-1-dev", "flux.1-dev"]
+    },
+    "black-forest-labs/flux.1-schnell": {
+      "maker": "Black Forest Labs",
+      "mode": "image_generation",
+      "license": "apache-2.0",
+      "hugging_face_id": "black-forest-labs/FLUX.1-schnell",
+      "status": "active",
+      "aliases": ["black-forest-labs/FLUX.1-schnell", "flux-1-schnell", "flux.1-schnell"]
+    },
+    "google/gemma-2-9b-it": {
+      "maker": "Google",
+      "mode": "chat",
+      "license": "gemma",
+      "hugging_face_id": "google/gemma-2-9b-it",
+      "status": "active",
+      "aliases": ["google/gemma-2-9b-it", "gemma-2-9b-it", "gemma2:9b"]
+    },
+    "deepseek-ai/deepseek-r1": {
+      "maker": "DeepSeek",
+      "mode": "chat",
+      "license": "mit",
+      "hugging_face_id": "deepseek-ai/DeepSeek-R1",
+      "status": "active",
+      "aliases": ["deepseek-ai/DeepSeek-R1", "deepseek-r1", "deepseek-reasoner", "deepseek.r1-v1:0"]
+    },
+    "qwen/qwen-72b": {
+      "maker": "Alibaba",
+      "mode": "chat",
+      "license": "qwen-research",
+      "hugging_face_id": "Qwen/Qwen-72B",
+      "status": "deprecated",
+      "replacement": "Qwen/Qwen2.5-72B-Instruct",
+      "aliases": ["Qwen/Qwen-72B", "Qwen/Qwen-72B-Chat", "qwen-72b", "qwen-72b-chat"]
+    }
+  }
+}

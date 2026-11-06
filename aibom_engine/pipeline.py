@@ -5,6 +5,7 @@ import os
 import time
 
 from . import __version__
+from .db import resolve_model
 from .finders import context, dictionary, shapes
 from .merge import merge
 from .display import build_rows
@@ -23,12 +24,24 @@ def save(path, obj):
         json.dump(obj, f, indent=1, sort_keys=True)
 
 
-def enrich(items, names):
-    """Add who makes the model and what kind of model it is (see vendors.py)."""
+def enrich(items, names, online=False):
+    """Add who makes the model, what kind of model it is, and canonical DB metadata (pinning, lifecycle, license)."""
     for it in items:
         info = names.get(it["name"]) or names.get(it["name"].split("/")[-1]) or {}
-        it["maker"] = maker_of(it["name"])
-        it["mode"] = type_of(it["name"], info.get("mode", ""))
+        resolved = resolve_model(it["name"], online=online) if it.get("kind") == "model" else {}
+        it["maker"] = maker_of(it["name"]) or resolved.get("maker", "")
+        it["mode"] = type_of(it["name"], info.get("mode", "")) or resolved.get("mode", "")
+        if resolved:
+            it["canonical_id"] = resolved["canonical_id"]
+            it["provider"] = (it.get("hint_providers") or [resolved["provider"]])[0] if resolved.get("provider") or it.get("hint_providers") else ""
+            it["version"] = resolved["version"]
+            it["pinned"] = resolved["pinned"]
+            it["status"] = resolved["status"]
+            it["deprecation_date"] = resolved["deprecation_date"]
+            it["replacement"] = resolved["replacement"]
+            it["license"] = resolved["license"]
+            it["license_restricted"] = resolved["license_restricted"]
+            it["license_reason"] = resolved["license_reason"]
     return items
 
 

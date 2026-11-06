@@ -27,6 +27,8 @@ R_ENV = re.compile(r"""(?i)(?:getenv|environ\.get)\s*\(\s*["'][A-Za-z0-9_]*MODEL
 R_ENVLINE = re.compile(r"""^\s*[A-Z0-9_]*MODEL[A-Z0-9_]*\s*=\s*["']?""" + VALUE + r"""["']?\s*$""")
 R_CFG = re.compile(r"""(?i)^\s*(?:-\s*)?([\w.\-]*model[\w.\-]*)\s*[:=]\s*["']?""" + VALUE + r"""["']?\s*(?:#.*)?$""")
 R_BICEP = re.compile(r"""(?i)\bparam\s+\w*model\w*\s+\w+\s*=\s*'""" + VALUE + "'")
+R_BEDROCK_ARN = re.compile(r"""arn:aws[a-z-]*:bedrock:[a-z0-9-]*:\d*:(?:foundation-model|inference-profile)/([A-Za-z0-9._:-]+)""")
+R_VERTEX_PATH = re.compile(r"""projects/[^/"'\s]+/locations/[^/"'\s]+/publishers/([A-Za-z0-9_-]+)/models/([A-Za-z0-9._@-]+)""")
 IMPORT = re.compile(r"""^\s*(import\b|from\s+\S+\s+import\b|export\b.*\bfrom\b)|\brequire\(""")
 CALL_OPEN = re.compile(r"\b(" + SINKS + r"|pipeline)\s*\(\s*$")
 CFG_EXT = (".yaml", ".yml", ".toml", ".properties", ".ini", ".cfg", ".conf", ".env", ".example", ".tfvars", ".bicepparam")
@@ -39,7 +41,9 @@ FILE_END = (".mjs", ".cjs", ".jsx", ".json", ".py", ".ts", ".tsx", ".js", ".png"
 def model_like(v):
     if v.lower() in STOP or len(v) < 4:
         return False
-    if v.lower().endswith(FILE_END) or "://" in v or v.startswith(("/", ".", "@/")):
+    if v.lower().endswith(FILE_END) or "://" in v or v.startswith(("/", ".", "@/", ":", "-")) or v.endswith(("/", ":", "-", ".")):
+        return False
+    if re.fullmatch(r"(?i)(" + PROVIDERS + r")", v.strip()):
         return False
     if not any(c.isalpha() for c in v):
         return False
@@ -72,11 +76,13 @@ def run(root, files, names=None, deadline=None):
                 continue
             hits = []
             for rx, why in ((R_KEY, "model-named key"), (R_CALL, "model-named call"), (R_PROVIDER, "provider:model string"), (R_SINK, "model-loading call"),
-                            (R_PIPE, "model-loading call"), (R_ENV, "env default"), (R_BICEP, "bicep parameter")):
+                            (R_PIPE, "model-loading call"), (R_ENV, "env default"), (R_BICEP, "bicep parameter"), (R_BEDROCK_ARN, "bedrock arn")):
                 for m in rx.finditer(line):
                     if rx in (R_KEY, R_CALL) and not KEY_END.search(m.group(1)):
                         continue
                     hits.append((m.group(m.lastindex), why, ln, m.start(m.lastindex)))
+            for m in R_VERTEX_PATH.finditer(line):
+                hits.append((m.group(2), f"{m.group(1).lower()} | vertex model path", ln, m.start(2)))
             if CALL_OPEN.search(line):  # a call formatted over several lines: read the next few lines as one
                 window = " ".join(x.strip() for x in lines[i:i + 4])
                 for rx in (R_SINK, R_PIPE):
