@@ -19,7 +19,9 @@ SHORT_MODE = {"chat model": "chat", "embedding model": "embedding", "image model
 
 def command():
     """How the person started aibom, so every hint they see can be copied and run as it is."""
-    exe = os.path.splitext(os.path.basename(sys.argv[0] or ""))[0].lower()
+    # Split on both separators: os.path only knows its own platform's, and the result must not depend on it.
+    name = (sys.argv[0] or "").replace("\\", "/").rsplit("/", 1)[-1]
+    exe = os.path.splitext(name)[0].lower()
     return "aibom" if exe in ("aibom", "aibom-script") else "python -m aibom_engine"
 
 
