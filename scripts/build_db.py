@@ -1,14 +1,15 @@
-"""Automated compiler for knowledge/ai_db.json (and knowledge/model_names.json).
+"""Automated compiler for aibom_engine/knowledge/ai_db.json (and aibom_engine/knowledge/model_names.json).
 
 Combines 4 live sources + our curated overlay:
-  1. knowledge/curated.json (licenses, AI package catalog, curated models & deprecations)
+  1. aibom_engine/knowledge/curated.json (licenses, AI package catalog, curated models & deprecations)
   2. LiteLLM model_prices_and_context_window.json (4,700+ models, deprecation_date, regions, limits, costs, capabilities)
   3. OpenRouter /api/v1/models (canonical_slug, hugging_face_id, modalities, cutoff/expiration dates)
   4. OSV.dev /v1/querybatch + /v1/vulns/{id} (all CVEs/GHSAs for AI packages, fixed versions, and affected symbols)
 
 Usage:
   python scripts/build_db.py              # full live build from all upstream sources
-  python scripts/build_db.py --offline    # build from local knowledge/model_names.json + curated.json only
+  python scripts/build_db.py --offline    # build from local aibom_engine/knowledge/model_names.json + curated.json only
+  python scripts/build_db.py --reformat   # rewrite ai_db.json in the reviewable one-entry-per-line layout (no network)
 """
 from __future__ import annotations
 
@@ -33,9 +34,10 @@ OPENROUTER_URL = "https://openrouter.ai/api/v1/models"
 OSV_BATCH_URL = "https://api.osv.dev/v1/querybatch"
 OSV_VULN_URL = "https://api.osv.dev/v1/vulns/"
 
-CURATED_PATH = os.path.join(ROOT, "knowledge", "curated.json")
-MODEL_NAMES_PATH = os.path.join(ROOT, "knowledge", "model_names.json")
-AI_DB_PATH = os.path.join(ROOT, "knowledge", "ai_db.json")
+KNOWLEDGE_DIR = os.path.join(ROOT, "aibom_engine", "knowledge")
+CURATED_PATH = os.path.join(KNOWLEDGE_DIR, "curated.json")
+MODEL_NAMES_PATH = os.path.join(KNOWLEDGE_DIR, "model_names.json")
+AI_DB_PATH = os.path.join(KNOWLEDGE_DIR, "ai_db.json")
 
 PINNED_RE = re.compile(
     r"(?:"
@@ -148,6 +150,28 @@ def infer_license_for_maker(maker: str, name: str) -> str:
     if maker in {"OpenAI", "Anthropic", "Google", "Cohere", "Amazon", "xAI", "AI21 Labs", "Perplexity", "Voyage AI"}:
         return "proprietary"
     return "unknown"
+
+
+def dump_db(path: str, db: dict) -> None:
+    """Write ai_db.json so that git diffs are reviewable: one table entry per line, keys sorted, no network needed.
+
+    The file stays plain JSON; only the layout is chosen for humans. A changed model, alias or advisory shows up as
+    a changed line instead of the whole file being one line.
+    """
+    def dumps(obj):
+        return json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+    parts = []
+    for key in sorted(db):
+        value = db[key]
+        if isinstance(value, dict) and key != "meta" and value:
+            rows = [f"  {json.dumps(k, ensure_ascii=False)}:{dumps(v)}" for k, v in sorted(value.items())]
+            body = "{\n" + ",\n".join(rows) + "\n }"
+        else:
+            body = dumps(value)
+        parts.append(f" {json.dumps(key)}:{body}")
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write("{\n" + ",\n".join(parts) + "\n}\n")
 
 
 def fetch_json(url: str, data: bytes | None = None, timeout: int = 30):
@@ -520,16 +544,16 @@ def build(offline: bool = False):
                 ),
                 "restricted_license_models": sum(1 for m in models.values() if m["license"]["restricted"]),
                 "ai_packages": len(packages_table),
-                "ai_vulnerabilities": sum(len(v) for v in vulnerabilities_table.values()),
+                "ai_vulnerable_packages": len(vulnerabilities_table),
+                "ai_advisories": sum(len(v) for v in vulnerabilities_table.values()),
             },
         },
         **db_body,
     }
 
-    with open(AI_DB_PATH, "w", encoding="utf-8") as f:
-        json.dump(full_db, f, indent=None, separators=(",", ":"), sort_keys=True)
+    dump_db(AI_DB_PATH, full_db)
 
-    # Also keep knowledge/model_names.json in sync
+    # Also keep aibom_engine/knowledge/model_names.json in sync
     legacy_out = {
         "meta": {
             "source": LITELLM_URL,
@@ -548,5 +572,10 @@ def build(offline: bool = False):
 
 
 if __name__ == "__main__":
-    offline_flag = "--offline" in sys.argv
-    build(offline=offline_flag)
+    if "--reformat" in sys.argv:
+        # Rewrite the existing database in the canonical layout without fetching anything.
+        with open(AI_DB_PATH, encoding="utf-8") as fh:
+            dump_db(AI_DB_PATH, json.load(fh))
+        print("Reformatted", AI_DB_PATH)
+    else:
+        build(offline="--offline" in sys.argv)

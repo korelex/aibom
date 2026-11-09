@@ -1,9 +1,9 @@
 {
 "meta": {
-"built": "2026-11-06",
-"entries_in_source": 4759,
+"built": "2026-11-09",
+"entries_in_source": 4871,
 "license": "MIT, Copyright (c) 2023 Berri AI (LiteLLM)",
-"names": 6639,
+"names": 6764,
 "source": "https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json"
 },
 "names": {
@@ -2799,6 +2799,10 @@
 "mode": "chat",
 "provider": "azure"
 },
+"azure/gpt-astra-latest": {
+"mode": "",
+"provider": ""
+},
 "azure/gpt-audio": {
 "mode": "chat",
 "provider": "azure"
@@ -2867,6 +2871,14 @@
 "mode": "audio_transcription",
 "provider": "azure"
 },
+"azure/gpt-luna-latest": {
+"mode": "",
+"provider": ""
+},
+"azure/gpt-mini-latest": {
+"mode": "",
+"provider": ""
+},
 "azure/gpt-realtime": {
 "mode": "realtime",
 "provider": "azure"
@@ -2934,6 +2946,14 @@
 "azure/gpt-realtime-whisper-2026-05-07": {
 "mode": "audio_transcription",
 "provider": "azure"
+},
+"azure/gpt-sol-latest": {
+"mode": "",
+"provider": ""
+},
+"azure/gpt-terra-latest": {
+"mode": "",
+"provider": ""
 },
 "azure/gpt-transcribe": {
 "mode": "audio_transcription",
@@ -3375,6 +3395,18 @@
 "mode": "chat",
 "provider": "azure"
 },
+"azure/us/gpt-realtime-1.5": {
+"mode": "realtime",
+"provider": "azure"
+},
+"azure/us/gpt-realtime-2.1": {
+"mode": "realtime",
+"provider": "azure"
+},
+"azure/us/gpt-realtime-2.1-mini": {
+"mode": "realtime",
+"provider": "azure"
+},
 "azure/us/o1": {
 "mode": "chat",
 "provider": "azure"
@@ -3639,6 +3671,10 @@
 "mode": "chat",
 "provider": "azure_ai"
 },
+"azure_ai/claude-fable-latest": {
+"mode": "",
+"provider": ""
+},
 "azure_ai/claude-haiku-4-5": {
 "mode": "chat",
 "provider": "azure_ai"
@@ -3646,6 +3682,10 @@
 "azure_ai/claude-haiku-5-5": {
 "mode": "chat",
 "provider": "azure_ai"
+},
+"azure_ai/claude-haiku-latest": {
+"mode": "",
+"provider": ""
 },
 "azure_ai/claude-mythos-5-1": {
 "mode": "chat",
@@ -3679,6 +3719,10 @@
 "mode": "chat",
 "provider": "azure_ai"
 },
+"azure_ai/claude-opus-latest": {
+"mode": "",
+"provider": ""
+},
 "azure_ai/claude-sonnet-4-5": {
 "mode": "chat",
 "provider": "azure_ai"
@@ -3695,6 +3739,10 @@
 "mode": "chat",
 "provider": "azure_ai"
 },
+"azure_ai/claude-sonnet-latest": {
+"mode": "",
+"provider": ""
+},
 "azure_ai/codex-mini": {
 "mode": "responses",
 "provider": "azure_ai"
@@ -3710,6 +3758,22 @@
 "azure_ai/cohere-rerank-v4.0-pro": {
 "mode": "rerank",
 "provider": "azure_ai"
+},
+"azure_ai/cohere-rerank-v5-fast": {
+"mode": "rerank",
+"provider": "azure_ai"
+},
+"azure_ai/cohere-rerank-v5-pro": {
+"mode": "rerank",
+"provider": "azure_ai"
+},
+"azure_ai/deepseek-flash-latest": {
+"mode": "",
+"provider": ""
+},
+"azure_ai/deepseek-pro-latest": {
+"mode": "",
+"provider": ""
 },
 "azure_ai/deepseek-r1": {
 "mode": "chat",
@@ -3762,6 +3826,14 @@
 "azure_ai/flux.2-pro": {
 "mode": "image_generation",
 "provider": "azure_ai"
+},
+"azure_ai/glm-flash-latest": {
+"mode": "",
+"provider": ""
+},
+"azure_ai/glm-latest": {
+"mode": "",
+"provider": ""
 },
 "azure_ai/gpt-5.4": {
 "mode": "chat",
@@ -3827,6 +3899,10 @@
 "mode": "chat",
 "provider": "azure_ai"
 },
+"azure_ai/gpt-astra-latest": {
+"mode": "",
+"provider": ""
+},
 "azure_ai/gpt-chat-latest": {
 "mode": "chat",
 "provider": "azure_ai"
@@ -3835,9 +3911,25 @@
 "mode": "image_generation",
 "provider": "azure_ai"
 },
+"azure_ai/gpt-luna-latest": {
+"mode": "",
+"provider": ""
+},
+"azure_ai/gpt-mini-latest": {
+"mode": "",
+"provider": ""
+},
 "azure_ai/gpt-oss-120b": {
 "mode": "chat",
 "provider": "azure_ai"
+},
+"azure_ai/gpt-sol-latest": {
+"mode": "",
+"provider": ""
+},
+"azure_ai/gpt-terra-latest": {
+"mode": "",
+"provider": ""
 },
 "azure_ai/grok-3": {
 "mode": "chat",
@@ -3891,6 +3983,10 @@
 "mode": "chat",
 "provider": "azure_ai"
 },
+"azure_ai/grok-latest": {
+"mode": "",
+"provider": ""
+},
 "azure_ai/jais-30b-chat": {
 "mode": "chat",
 "provider": "azure_ai"
@@ -3910,6 +4006,14 @@
 "azure_ai/kimi-k2.7-code": {
 "mode": "chat",
 "provider": "azure_ai"
+},
+"azure_ai/kimi-latest": {
+"mode": "",
+"provider": ""
+},
+"azure_ai/minimax-latest": {
+"mode": "",
+"provider": ""
 },
 "azure_ai/ministral-3b": {
 "mode": "chat",
@@ -4058,6 +4162,26 @@
 "baseten/deepseek-ai/DeepSeek-V4.1-Flash-Fast": {
 "mode": "chat",
 "provider": "baseten"
+},
+"baseten/deepseek-flash-latest": {
+"mode": "",
+"provider": ""
+},
+"baseten/deepseek-pro-latest": {
+"mode": "",
+"provider": ""
+},
+"baseten/glm-flash-latest": {
+"mode": "",
+"provider": ""
+},
+"baseten/glm-latest": {
+"mode": "",
+"provider": ""
+},
+"baseten/kimi-latest": {
+"mode": "",
+"provider": ""
 },
 "baseten/meta-models/muse-spark-open": {
 "mode": "chat",
@@ -4319,6 +4443,22 @@
 "mode": "chat",
 "provider": "bedrock"
 },
+"bedrock/claude-fable-latest": {
+"mode": "",
+"provider": ""
+},
+"bedrock/claude-haiku-latest": {
+"mode": "",
+"provider": ""
+},
+"bedrock/claude-opus-latest": {
+"mode": "",
+"provider": ""
+},
+"bedrock/claude-sonnet-latest": {
+"mode": "",
+"provider": ""
+},
 "bedrock/claude_platform/claude-fable-5": {
 "mode": "chat",
 "provider": "bedrock"
@@ -4523,9 +4663,37 @@
 "mode": "chat",
 "provider": "bedrock"
 },
+"bedrock/glm-latest": {
+"mode": "",
+"provider": ""
+},
+"bedrock/gpt-astra-latest": {
+"mode": "",
+"provider": ""
+},
+"bedrock/gpt-luna-latest": {
+"mode": "",
+"provider": ""
+},
+"bedrock/gpt-sol-latest": {
+"mode": "",
+"provider": ""
+},
+"bedrock/gpt-terra-latest": {
+"mode": "",
+"provider": ""
+},
+"bedrock/grok-latest": {
+"mode": "",
+"provider": ""
+},
 "bedrock/invoke/anthropic.claude-3-5-sonnet-20240620-v1:0": {
 "mode": "chat",
 "provider": "bedrock"
+},
+"bedrock/kimi-latest": {
+"mode": "",
+"provider": ""
 },
 "bedrock/moonshotai.kimi-k2-thinking": {
 "mode": "chat",
@@ -5019,6 +5187,18 @@
 "mode": "chat",
 "provider": "bedrock_mantle"
 },
+"bedrock_mantle/claude-haiku-latest": {
+"mode": "",
+"provider": ""
+},
+"bedrock_mantle/claude-opus-latest": {
+"mode": "",
+"provider": ""
+},
+"bedrock_mantle/claude-sonnet-latest": {
+"mode": "",
+"provider": ""
+},
 "bedrock_mantle/deepseek.v3.1": {
 "mode": "chat",
 "provider": "bedrock_mantle"
@@ -5034,6 +5214,26 @@
 "bedrock_mantle/google.gemma-4-e2b": {
 "mode": "chat",
 "provider": "bedrock_mantle"
+},
+"bedrock_mantle/gpt-astra-latest": {
+"mode": "",
+"provider": ""
+},
+"bedrock_mantle/gpt-luna-latest": {
+"mode": "",
+"provider": ""
+},
+"bedrock_mantle/gpt-sol-latest": {
+"mode": "",
+"provider": ""
+},
+"bedrock_mantle/gpt-terra-latest": {
+"mode": "",
+"provider": ""
+},
+"bedrock_mantle/grok-latest": {
+"mode": "",
+"provider": ""
 },
 "bedrock_mantle/moonshotai.kimi-k2-thinking": {
 "mode": "chat",
@@ -5615,6 +5815,10 @@
 "mode": "chat",
 "provider": "vertex_ai-anthropic_models"
 },
+"claude-fable-latest": {
+"mode": "",
+"provider": ""
+},
 "claude-haiku-4-5": {
 "mode": "chat",
 "provider": "aihubmix"
@@ -5646,6 +5850,10 @@
 "claude-haiku-5.5": {
 "mode": "chat",
 "provider": "github_copilot"
+},
+"claude-haiku-latest": {
+"mode": "",
+"provider": ""
 },
 "claude-instant-1": {
 "mode": "chat",
@@ -5763,6 +5971,10 @@
 "mode": "chat",
 "provider": "vertex_ai-anthropic_models"
 },
+"claude-opus-latest": {
+"mode": "",
+"provider": ""
+},
 "claude-sonnet-4": {
 "mode": "chat",
 "provider": "gmi"
@@ -5822,6 +6034,10 @@
 "claude-sonnet-5@default": {
 "mode": "chat",
 "provider": "vertex_ai-anthropic_models"
+},
+"claude-sonnet-latest": {
+"mode": "",
+"provider": ""
 },
 "clef-flash": {
 "mode": "evaluation",
@@ -6215,6 +6431,14 @@
 "mode": "rerank",
 "provider": "azure_ai"
 },
+"cohere-rerank-v5-fast": {
+"mode": "rerank",
+"provider": "azure_ai"
+},
+"cohere-rerank-v5-pro": {
+"mode": "rerank",
+"provider": "azure_ai"
+},
 "cohere.command-a-03-2025": {
 "mode": "chat",
 "provider": "oci"
@@ -6519,6 +6743,10 @@
 "mode": "chat",
 "provider": "dashscope"
 },
+"dashscope/qwen-flash-latest": {
+"mode": "",
+"provider": ""
+},
 "dashscope/qwen-image-2.0": {
 "mode": "image_generation",
 "provider": "dashscope"
@@ -6538,6 +6766,10 @@
 "dashscope/qwen-max": {
 "mode": "chat",
 "provider": "dashscope"
+},
+"dashscope/qwen-max-latest": {
+"mode": "",
+"provider": ""
 },
 "dashscope/qwen-plus": {
 "mode": "chat",
@@ -7031,6 +7263,22 @@
 "mode": "evaluation",
 "provider": "databricks"
 },
+"databricks/claude-fable-latest": {
+"mode": "",
+"provider": ""
+},
+"databricks/claude-haiku-latest": {
+"mode": "",
+"provider": ""
+},
+"databricks/claude-opus-latest": {
+"mode": "",
+"provider": ""
+},
+"databricks/claude-sonnet-latest": {
+"mode": "",
+"provider": ""
+},
 "databricks/databricks-bge-large-en": {
 "mode": "embedding",
 "provider": "databricks"
@@ -7366,6 +7614,42 @@
 "databricks/databricks-typesafeai-jev-1-14-0": {
 "mode": "evaluation",
 "provider": "databricks"
+},
+"databricks/glm-flash-latest": {
+"mode": "",
+"provider": ""
+},
+"databricks/glm-latest": {
+"mode": "",
+"provider": ""
+},
+"databricks/gpt-astra-latest": {
+"mode": "",
+"provider": ""
+},
+"databricks/gpt-luna-latest": {
+"mode": "",
+"provider": ""
+},
+"databricks/gpt-mini-latest": {
+"mode": "",
+"provider": ""
+},
+"databricks/gpt-sol-latest": {
+"mode": "",
+"provider": ""
+},
+"databricks/gpt-terra-latest": {
+"mode": "",
+"provider": ""
+},
+"databricks/grok-latest": {
+"mode": "",
+"provider": ""
+},
+"databricks/kimi-latest": {
+"mode": "",
+"provider": ""
 },
 "databricks/system.ai.deepseek-v4-flash-0731": {
 "mode": "chat",
@@ -8147,6 +8431,10 @@
 "mode": "chat",
 "provider": "deepseek"
 },
+"deepseek-flash-latest": {
+"mode": "",
+"provider": ""
+},
 "deepseek-llama3.3-70b": {
 "mode": "chat",
 "provider": "lambda_ai"
@@ -8162,6 +8450,10 @@
 "deepseek-ocr-maas": {
 "mode": "ocr",
 "provider": "vertex_ai"
+},
+"deepseek-pro-latest": {
+"mode": "",
+"provider": ""
 },
 "deepseek-prover-v2": {
 "mode": "chat",
@@ -8442,6 +8734,14 @@
 "deepseek/deepseek-flash": {
 "mode": "chat",
 "provider": "deepseek"
+},
+"deepseek/deepseek-flash-latest": {
+"mode": "",
+"provider": ""
+},
+"deepseek/deepseek-pro-latest": {
+"mode": "",
+"provider": ""
 },
 "deepseek/deepseek-r1": {
 "mode": "chat",
@@ -11567,6 +11867,14 @@
 "mode": "chat",
 "provider": "fireworks_ai"
 },
+"fireworks_ai/kimi-latest": {
+"mode": "",
+"provider": ""
+},
+"fireworks_ai/minimax-latest": {
+"mode": "",
+"provider": ""
+},
 "fireworks_ai/minimax-m2p1": {
 "mode": "chat",
 "provider": "fireworks_ai"
@@ -12575,6 +12883,10 @@
 "mode": "chat",
 "provider": "github_copilot"
 },
+"github_copilot/claude-fable-latest": {
+"mode": "",
+"provider": ""
+},
 "github_copilot/claude-haiku-4.5": {
 "mode": "chat",
 "provider": "github_copilot"
@@ -12582,6 +12894,10 @@
 "github_copilot/claude-haiku-5.5": {
 "mode": "chat",
 "provider": "github_copilot"
+},
+"github_copilot/claude-haiku-latest": {
+"mode": "",
+"provider": ""
 },
 "github_copilot/claude-opus-4.8": {
 "mode": "chat",
@@ -12599,6 +12915,10 @@
 "mode": "chat",
 "provider": "github_copilot"
 },
+"github_copilot/claude-opus-latest": {
+"mode": "",
+"provider": ""
+},
 "github_copilot/claude-sonnet-4.6": {
 "mode": "chat",
 "provider": "github_copilot"
@@ -12610,6 +12930,10 @@
 "github_copilot/claude-sonnet-5.5": {
 "mode": "chat",
 "provider": "github_copilot"
+},
+"github_copilot/claude-sonnet-latest": {
+"mode": "",
+"provider": ""
 },
 "github_copilot/gemini-3.7-flash": {
 "mode": "chat",
@@ -12735,6 +13059,22 @@
 "mode": "responses",
 "provider": "github_copilot"
 },
+"github_copilot/gpt-astra-latest": {
+"mode": "",
+"provider": ""
+},
+"github_copilot/gpt-luna-latest": {
+"mode": "",
+"provider": ""
+},
+"github_copilot/gpt-sol-latest": {
+"mode": "",
+"provider": ""
+},
+"github_copilot/gpt-terra-latest": {
+"mode": "",
+"provider": ""
+},
 "github_copilot/grok-4.5": {
 "mode": "chat",
 "provider": "github_copilot"
@@ -12747,9 +13087,17 @@
 "mode": "chat",
 "provider": "github_copilot"
 },
+"github_copilot/grok-latest": {
+"mode": "",
+"provider": ""
+},
 "github_copilot/kimi-k3": {
 "mode": "chat",
 "provider": "github_copilot"
+},
+"github_copilot/kimi-latest": {
+"mode": "",
+"provider": ""
 },
 "github_copilot/mai-code-1.1-flash": {
 "mode": "responses",
@@ -12987,6 +13335,14 @@
 "mode": "chat",
 "provider": "aihubmix"
 },
+"glm-flash-latest": {
+"mode": "",
+"provider": ""
+},
+"glm-latest": {
+"mode": "",
+"provider": ""
+},
 "global.amazon.nova-2-lite-v1:0": {
 "mode": "chat",
 "provider": "bedrock_converse"
@@ -13060,6 +13416,10 @@
 "provider": "bedrock"
 },
 "global.moonshotai.kimi-k3": {
+"mode": "chat",
+"provider": "bedrock_converse"
+},
+"global.moonshotai.kimi-k3.1": {
 "mode": "chat",
 "provider": "bedrock_converse"
 },
@@ -14151,6 +14511,10 @@
 "mode": "chat",
 "provider": "azure"
 },
+"gpt-astra-latest": {
+"mode": "",
+"provider": ""
+},
 "gpt-audio": {
 "mode": "chat",
 "provider": "azure"
@@ -14246,6 +14610,14 @@
 "gpt-live-transcribe": {
 "mode": "audio_transcription",
 "provider": "azure"
+},
+"gpt-luna-latest": {
+"mode": "",
+"provider": ""
+},
+"gpt-mini-latest": {
+"mode": "",
+"provider": ""
 },
 "gpt-oss-120b": {
 "mode": "chat",
@@ -14374,6 +14746,14 @@
 "gpt-rosalind-research": {
 "mode": "chat",
 "provider": "openai"
+},
+"gpt-sol-latest": {
+"mode": "",
+"provider": ""
+},
+"gpt-terra-latest": {
+"mode": "",
+"provider": ""
 },
 "gpt-transcribe": {
 "mode": "audio_transcription",
@@ -14775,6 +15155,10 @@
 "mode": "video_generation",
 "provider": "xai"
 },
+"grok-latest": {
+"mode": "",
+"provider": ""
+},
 "grok-voice-2.0": {
 "mode": "realtime",
 "provider": "xai"
@@ -15056,6 +15440,10 @@
 "provider": "aiml"
 },
 "in.moonshotai.kimi-k3": {
+"mode": "chat",
+"provider": "bedrock_converse"
+},
+"in.moonshotai.kimi-k3.1": {
 "mode": "chat",
 "provider": "bedrock_converse"
 },
@@ -15491,9 +15879,17 @@
 "mode": "chat",
 "provider": "gmi"
 },
+"kimi-k3.1-pro-highspeed": {
+"mode": "chat",
+"provider": "moonshot"
+},
 "kimi-k3p1-pro": {
 "mode": "chat",
 "provider": "fireworks_ai"
+},
+"kimi-latest": {
+"mode": "",
+"provider": ""
 },
 "kyma/claude-fable-5": {
 "mode": "chat",
@@ -17003,6 +17399,10 @@
 "mode": "chat",
 "provider": "kyma"
 },
+"minimax-latest": {
+"mode": "",
+"provider": ""
+},
 "minimax-m1-80k": {
 "mode": "chat",
 "provider": "fireworks_ai"
@@ -17114,6 +17514,10 @@
 "minimax/MiniMax-M3": {
 "mode": "chat",
 "provider": "minimax"
+},
+"minimax/minimax-latest": {
+"mode": "",
+"provider": ""
 },
 "minimax/speech-02-hd": {
 "mode": "audio_speech",
@@ -17947,6 +18351,14 @@
 "mode": "chat",
 "provider": "moonshot"
 },
+"moonshot/kimi-k3.1-pro-highspeed": {
+"mode": "chat",
+"provider": "moonshot"
+},
+"moonshot/kimi-latest": {
+"mode": "",
+"provider": ""
+},
 "moonshot/moonshot-v1-128k": {
 "mode": "chat",
 "provider": "moonshot"
@@ -17984,6 +18396,10 @@
 "provider": "bedrock"
 },
 "moonshotai.kimi-k3": {
+"mode": "chat",
+"provider": "bedrock_converse"
+},
+"moonshotai.kimi-k3.1": {
 "mode": "chat",
 "provider": "bedrock_converse"
 },
@@ -20715,6 +21131,10 @@
 "mode": "chat",
 "provider": "dashscope"
 },
+"qwen-flash-latest": {
+"mode": "",
+"provider": ""
+},
 "qwen-image-2.0": {
 "mode": "image_generation",
 "provider": "dashscope"
@@ -20734,6 +21154,10 @@
 "qwen-max": {
 "mode": "chat",
 "provider": "dashscope"
+},
+"qwen-max-latest": {
+"mode": "",
+"provider": ""
 },
 "qwen-mt-plus": {
 "mode": "chat",
@@ -22207,6 +22631,10 @@
 "mode": "rerank",
 "provider": "cohere"
 },
+"rnj-1-instruct": {
+"mode": "chat",
+"provider": "together_ai"
+},
 "rolm-ocr": {
 "mode": "chat",
 "provider": "fireworks_ai"
@@ -23319,6 +23747,14 @@
 "mode": "chat",
 "provider": "tencent"
 },
+"tencent/hy4": {
+"mode": "chat",
+"provider": "tencent"
+},
+"tencent/hy4-preview": {
+"mode": "chat",
+"provider": "tencent"
+},
 "tencent/kimi-k2.7-code": {
 "mode": "chat",
 "provider": "tencent"
@@ -23655,9 +24091,29 @@
 "mode": "chat",
 "provider": "together_ai"
 },
+"together_ai/deepseek-pro-latest": {
+"mode": "",
+"provider": ""
+},
+"together_ai/essentialai/rnj-1-instruct": {
+"mode": "chat",
+"provider": "together_ai"
+},
+"together_ai/glm-flash-latest": {
+"mode": "",
+"provider": ""
+},
+"together_ai/glm-latest": {
+"mode": "",
+"provider": ""
+},
 "together_ai/google/gemma-4-31B-it": {
 "mode": "chat",
 "provider": "together_ai"
+},
+"together_ai/kimi-latest": {
+"mode": "",
+"provider": ""
 },
 "together_ai/meta-llama/Llama-3.1-405B-Instruct": {
 "mode": "chat",
@@ -23758,6 +24214,10 @@
 "together_ai/openai/gpt-oss-20b": {
 "mode": "chat",
 "provider": "together_ai"
+},
+"together_ai/qwen-flash-latest": {
+"mode": "",
+"provider": ""
 },
 "together_ai/reflection/Beam-1.0-501B-A23B": {
 "mode": "chat",
@@ -24128,6 +24588,10 @@
 "provider": "bedrock_converse"
 },
 "us.moonshotai.kimi-k3": {
+"mode": "chat",
+"provider": "bedrock_converse"
+},
+"us.moonshotai.kimi-k3.1": {
 "mode": "chat",
 "provider": "bedrock_converse"
 },
@@ -24775,6 +25239,10 @@
 "mode": "chat",
 "provider": "vertex_ai-anthropic_models"
 },
+"vertex_ai/claude-fable-latest": {
+"mode": "",
+"provider": ""
+},
 "vertex_ai/claude-haiku-4-5": {
 "mode": "chat",
 "provider": "vertex_ai-anthropic_models"
@@ -24790,6 +25258,10 @@
 "vertex_ai/claude-haiku-5-5@default": {
 "mode": "chat",
 "provider": "vertex_ai-anthropic_models"
+},
+"vertex_ai/claude-haiku-latest": {
+"mode": "",
+"provider": ""
 },
 "vertex_ai/claude-opus-4-5": {
 "mode": "chat",
@@ -24839,6 +25311,10 @@
 "mode": "chat",
 "provider": "vertex_ai-anthropic_models"
 },
+"vertex_ai/claude-opus-latest": {
+"mode": "",
+"provider": ""
+},
 "vertex_ai/claude-sonnet-4-5": {
 "mode": "chat",
 "provider": "vertex_ai-anthropic_models"
@@ -24870,6 +25346,10 @@
 "vertex_ai/claude-sonnet-5@default": {
 "mode": "chat",
 "provider": "vertex_ai-anthropic_models"
+},
+"vertex_ai/claude-sonnet-latest": {
+"mode": "",
+"provider": ""
 },
 "vertex_ai/codestral-2": {
 "mode": "chat",
@@ -25086,6 +25566,10 @@
 "vertex_ai/google/gemma-4-26b-a4b-it-maas": {
 "mode": "chat",
 "provider": "vertex_ai-openai_models"
+},
+"vertex_ai/grok-latest": {
+"mode": "",
+"provider": ""
 },
 "vertex_ai/jamba-1.5": {
 "mode": "chat",
@@ -25823,6 +26307,10 @@
 "mode": "chat",
 "provider": "wandb"
 },
+"wandb/deepseek-ai/DeepSeek-V4.1-Flash-1017": {
+"mode": "chat",
+"provider": "wandb"
+},
 "wandb/google/gemma-4-26B-A4B-it": {
 "mode": "chat",
 "provider": "wandb"
@@ -26359,6 +26847,10 @@
 "mode": "video_generation",
 "provider": "xai"
 },
+"xai/grok-latest": {
+"mode": "",
+"provider": ""
+},
 "xai/grok-voice-2.0": {
 "mode": "realtime",
 "provider": "xai"
@@ -26506,6 +26998,14 @@
 "zai/glm-5v-turbo": {
 "mode": "chat",
 "provider": "zai"
+},
+"zai/glm-flash-latest": {
+"mode": "",
+"provider": ""
+},
+"zai/glm-latest": {
+"mode": "",
+"provider": ""
 },
 "zephyr-7b-beta": {
 "mode": "chat",

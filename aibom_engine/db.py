@@ -1,6 +1,6 @@
 """Runtime AI Knowledge Base & Database Engine (offline-first, with opt-in --online SQLite cache).
 
-Provides fast lookups over knowledge/ai_db.json:
+Provides fast lookups over aibom_engine/knowledge/ai_db.json:
   - Model resolution (canonical ID, maker, provider, version, pinned status, deprecation, license)
   - AI package classification (llm_sdk, agent_framework, mcp, vector_db, model_runtime, dataset_loader, guardrail)
   - AI package vulnerability matching (OSV version-range comparator + affected symbols + fix version)
@@ -19,7 +19,7 @@ from typing import Any
 
 from .vendors import maker_of, type_of
 
-AI_DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "knowledge", "ai_db.json")
+AI_DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "knowledge", "ai_db.json")
 DEFAULT_CACHE_DIR = os.path.join(os.path.expanduser("~"), ".cache", "aibom")
 ONLINE_CACHE_TTL = 24 * 3600
 
@@ -58,13 +58,19 @@ DATE_STRIP_RE = re.compile(
 
 
 def load_db(path: str = AI_DB_PATH) -> dict[str, Any]:
-    """Load knowledge/ai_db.json once and keep it in memory."""
+    """Load aibom_engine/knowledge/ai_db.json once and keep it in memory."""
     global _DB_CACHE, _PKG_NORM_INDEX
     if _DB_CACHE is not None and path == AI_DB_PATH:
         return _DB_CACHE
     if os.path.exists(path):
         with open(path, encoding="utf-8") as f:
             data = json.load(f)
+    elif path == AI_DB_PATH:
+        # The bundled database ships inside the package. If it is missing the install is broken, and scanning
+        # without it would silently drop every lifecycle, license and pinning fact, so fail loudly instead.
+        raise FileNotFoundError(
+            f"The bundled AI database is missing: {path}. Reinstall aibom (pip install --force-reinstall aibom)."
+        )
     else:
         data = {"meta": {}, "models": {}, "alias_index": {}, "packages": {}, "vulnerabilities": {}, "licenses": {}}
     if path == AI_DB_PATH:
