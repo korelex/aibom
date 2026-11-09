@@ -1,20 +1,8 @@
 # aibom — Task List & Progress
 
-## Working agreement
-
-- At least **5 hours/day** of technical progress; evenings **7–8 PM** are a working window.
-- **Daily testing:** at least **1 hour** on the product before a demo.
-- **Friday demo** to Manish; post blockers the **same day**, not at the end of the week.
-- **One PR per task**, with a test for each new detection or flag.
-- **Definition of done** for every task:
-  - tests added and passing; benchmark results unchanged or better;
-  - output still validates as CycloneDX 1.6;
-  - README and `--help` updated if behaviour changed;
-  - passes the release check from Milestone 2 onward.
-
 ## Milestone 1 — Honest beta (due 13 Nov 2026)
 
-Outcome: an "AI Model Inventory" beta Manish can demo to pilot customers, where every claim is true and the risk data is visible.
+Outcome: an "AI Model Inventory" beta that pilot users can try, where every claim is true and the risk data is visible.
 
 - [x] **M1.1** Rewrite the README to match today's tool.
 - [x] **M1.5** Fix the vulnerability count mismatch (`ai_advisories` vs `ai_vulnerable_packages`).
@@ -52,14 +40,13 @@ Outcome: the AI-BOM lists every AI SDK, agent framework and vector database with
 - [ ] **M4.2** Move to the `korelex:` schema and add repo/branch/commit/release/CI metadata.
 - [ ] **M4.3** Login and upload (`aibom login`, `aibom scan --upload`); handle 201/401/413/429; token as a secret, OIDC later.
 - [ ] **M4.4** No network calls without a flag; prove with a socket-blocking test.
-- [ ] **M4.5** CERT-In readiness score (Manish supplies the mapping by 27 Nov).
+- [ ] **M4.5** CERT-In readiness score (needs the CERT-In field mapping table from product).
 - [ ] **M4.6** "What aibom sends" page with an example upload payload.
 - [ ] **M4.7** Pilot run: 5 repos end to end with no blocker bugs.
 
 ## Progress log
 
-- **2026-11-09** — M1.1, M1.5, M1.6 complete. PR [#1](https://github.com/korelex/aibom/pull/1) opened. `python -m pytest` → 102 passed. `pip install -e .` → `aibom` console command works. `aibom scan` on the test app → 5 models, exit 0, valid CycloneDX 1.6.
-- **2026-11-09** — M1.2 complete. CSV/Markdown/HTML now show status, pinned, deprecation date, replacement and license; HTML and Markdown lead with a Risks block. Added `tests/fixtures/review-app/` and `tests/test_risk_report.py`. `python -m pytest` → 106 passed. Review app: Claude 3.5 Sonnet 20240620 is deprecated with replacement `claude-sonnet-4-5`; `gpt-4o` is flagged as floating.
-- **2026-11-09** — M1.3 complete. `build_db.py` now unwraps gateway/reseller prefixes and infers the first-party maker from the model name, with a curated `maker_segments`/`gateway_prefixes` registry in `curated.json` and an alias-collision priority (curated > first-party > reseller). `vercel-ai-gateway/.../text-embedding-3-small` → `openai/text-embedding-3-small`; `nscale/nscale/stabilityai/...` → `stabilityai/...`. Canonical models consolidated 4,687 → 3,029. Added `tests/test_canonical_ids.py` (22 identifiers). `python -m pytest` → 108 passed.
-- **2026-11-09** — Audit of the current build found and fixed two demo-breaking data bugs: (1) LiteLLM `deprecation_date` was shown as real retirement (e.g. `text-embedding-3-small` "deprecated"); now only curated entries set status → 12 verified retirements. (2) dotted Bedrock names leaked a duplicate `anthropic/anthropic.claude-*` ID; now folded. Verified determinism, robustness, and FP cleanliness.
-- **2026-11-09** — M1.4 complete. Added ~50 curated open-model license entries (Llama 2/3/3.1/3.2/3.3, Mistral, Mixtral, Gemma, Qwen 2.5, Stable Diffusion, Falcon, DeepSeek, Phi, sentence-transformers, BGE, Cohere Command R+) with source URL and date checked. Reports now show the license name and a commercial-use flag. `meta-llama/Llama-2-7b-hf` → `llama2` "conditional". `python -m pytest` → 109 passed.
+- **2026-11-09** - M1.1, M1.5, M1.6: the README describes only what ships, the database counts are labelled (`ai_advisories` vs `ai_vulnerable_packages`), and `aibom` installs as a console command. Review found that a normal `pip install .` crashed because the database was not packaged; it now lives inside the package and a wheel smoke test (`scripts/smoke_wheel.py`, run in CI) installs the built wheel in a clean virtualenv and scans with it.
+- **2026-11-09** - M1.2: CSV, Markdown and HTML show status, pinned, floating alias, deprecation and retirement dates, replacement and license, with a Risks block at the top. After review: status is worked out from dates on the day of the scan (a past retirement date is `retired`), only records with a source URL count (everything else is `not tracked`), a name is a floating alias only when a dated snapshot exists to pin, and Hugging Face repo ids are reported separately. In the review app `claude-3-5-sonnet-20240620` is retired (2025-10-28) with replacement `claude-sonnet-5-5`, per Anthropic's deprecations page.
+- **2026-11-09** - M1.3: reseller and gateway prefixes (`vercel-ai-gateway/...`, `nscale/...`) resolve to the maker's canonical id; first-party entries win alias collisions (curated > first-party > reseller). `tests/test_canonical_ids.py` covers 22 identifiers. Upstream catalogue lifecycle dates are no longer used: they mixed up deprecation with earliest-retirement dates (for example, an active model appeared as deprecated). Lifecycle is now stored per snapshot from provider pages (`lifecycle_records` in `curated.json`, 44 records covering 81 names), each with a source URL and the date it was checked, and a snapshot that no record lists stays `not tracked`.
+- **2026-11-09** - M1.4: curated license records for the 50 most-used open models (Llama 2/3/3.1/3.2/3.3, Mistral, Mixtral, Gemma, Qwen 2.5, Stable Diffusion, Falcon, DeepSeek, Phi, sentence-transformers, BGE, Command R+), each with the license name, a commercial-use flag, a source URL and the date checked. `meta-llama/Llama-2-7b-hf` shows the Llama 2 Community License as conditional. After review, models sold under a provider's API terms are labelled "Provider API terms", never "non-commercial".

@@ -19,7 +19,7 @@ SCAN = {"code", "config", "manifest", "notebook", "test", "docs", "data"}
 IDENT_SCAN = {"code", "config", "notebook", "test"}
 TOKEN = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.:/-]*[A-Za-z0-9]")
 IDENT = re.compile(r"(?<![A-Za-z0-9_\-])(?<!\d\.)[A-Za-z][A-Za-z0-9_]{5,}(?![A-Za-z0-9_\-])(?!\.\d)")  # Class.CONSTANT is fine; llama3 inside llama3.1 or llama3-8b is not
-KNOWLEDGE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "knowledge", "model_names.json")
+KNOWLEDGE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "knowledge", "model_names.json")
 
 
 def load_names(path=KNOWLEDGE):

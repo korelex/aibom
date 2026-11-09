@@ -360,174 +360,125 @@
       "maker": "OpenAI",
       "mode": "chat",
       "license": "proprietary",
-      "status": "deprecated",
-      "deprecation_date": "2024-09-13",
-      "replacement": "gpt-4o-mini",
       "aliases": ["gpt-3.5-turbo", "gpt-3.5-turbo-0125", "gpt-3.5-turbo-1106", "gpt-3.5-turbo-0613", "gpt-3.5-turbo-0301", "gpt-3.5-turbo-16k", "gpt-35-turbo"]
     },
     "openai/gpt-4-32k": {
       "maker": "OpenAI",
       "mode": "chat",
       "license": "proprietary",
-      "status": "retired",
-      "deprecation_date": "2025-06-06",
-      "replacement": "gpt-4o",
       "aliases": ["gpt-4-32k", "gpt-4-32k-0613", "gpt-4-32k-0314"]
     },
     "openai/gpt-4-vision-preview": {
       "maker": "OpenAI",
       "mode": "chat",
       "license": "proprietary",
-      "status": "retired",
-      "deprecation_date": "2024-12-06",
-      "replacement": "gpt-4o",
       "aliases": ["gpt-4-vision-preview", "gpt-4-1106-vision-preview"]
     },
     "openai/text-davinci-003": {
       "maker": "OpenAI",
       "mode": "completion",
       "license": "proprietary",
-      "status": "retired",
-      "deprecation_date": "2024-01-04",
-      "replacement": "gpt-4o-mini",
-      "aliases": ["text-davinci-003", "text-davinci-002", "text-curie-001", "text-babbage-001", "text-ada-001", "code-davinci-002"]
+      "aliases": ["text-davinci-003", "text-davinci-002", "text-curie-001", "text-babbage-001", "text-ada-001"]
     },
     "openai/gpt-4o": {
       "maker": "OpenAI",
       "mode": "chat",
       "license": "proprietary",
-      "status": "active",
-      "deprecation_date": null,
-      "replacement": null,
       "aliases": ["gpt-4o", "chatgpt-4o-latest", "gpt-4o-2024-11-20", "gpt-4o-2024-08-06", "gpt-4o-2024-05-13"]
     },
     "openai/gpt-4o-mini": {
       "maker": "OpenAI",
       "mode": "chat",
       "license": "proprietary",
-      "status": "active",
-      "deprecation_date": null,
-      "replacement": null,
       "aliases": ["gpt-4o-mini", "gpt-4o-mini-2024-07-18"]
     },
     "anthropic/claude-2": {
       "maker": "Anthropic",
       "mode": "chat",
       "license": "proprietary",
-      "status": "retired",
-      "deprecation_date": "2025-07-21",
-      "replacement": "claude-sonnet-4-5",
-      "aliases": ["claude-2", "claude-2.0", "claude-2.1", "claude-instant-1", "claude-instant-1.2", "anthropic.claude-v2", "anthropic.claude-v2:1"]
+      "deprecation_date": "2025-01-21",
+      "retirement_date": "2025-07-21",
+      "replacement": "claude-opus-4-8",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-2", "claude-2.0", "claude-2.1", "anthropic.claude-v2", "anthropic.claude-v2:1"]
     },
     "anthropic/claude-3-sonnet": {
       "maker": "Anthropic",
       "mode": "chat",
       "license": "proprietary",
-      "status": "retired",
-      "deprecation_date": "2025-07-21",
-      "replacement": "claude-sonnet-4-5",
+      "deprecation_date": "2025-01-21",
+      "retirement_date": "2025-07-21",
+      "replacement": "claude-sonnet-5-5",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
       "aliases": ["claude-3-sonnet", "claude-3-sonnet-20240229", "anthropic.claude-3-sonnet-20240229-v1:0"]
     },
     "anthropic/claude-3-opus": {
       "maker": "Anthropic",
       "mode": "chat",
       "license": "proprietary",
-      "status": "retired",
-      "deprecation_date": "2026-01-05",
-      "replacement": "claude-opus-4-6",
+      "deprecation_date": "2025-06-30",
+      "retirement_date": "2026-01-05",
+      "replacement": "claude-opus-4-8",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
       "aliases": ["claude-3-opus", "claude-3-opus-latest", "claude-3-opus-20240229", "anthropic.claude-3-opus-20240229-v1:0"]
     },
     "anthropic/claude-3-5-sonnet": {
       "maker": "Anthropic",
       "mode": "chat",
       "license": "proprietary",
-      "status": "deprecated",
-      "deprecation_date": "2025-10-22",
-      "replacement": "claude-sonnet-4-5",
-      "aliases": [
-        "claude-3-5-sonnet",
-        "claude-3.5-sonnet",
-        "claude-3-5-sonnet-latest",
-        "claude-3.5-sonnet-latest",
-        "claude-3-5-sonnet-20241022",
-        "claude-3-5-sonnet-20240620",
-        "anthropic.claude-3-5-sonnet-20241022-v2:0",
-        "anthropic.claude-3-5-sonnet-20240620-v1:0",
-        "anthropic.claude-3-5-sonnet-v2"
-      ]
+      "deprecation_date": "2025-08-13",
+      "retirement_date": "2025-10-28",
+      "replacement": "claude-sonnet-5-5",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-3-5-sonnet", "claude-3.5-sonnet", "claude-3-5-sonnet-latest", "claude-3.5-sonnet-latest", "claude-3-5-sonnet-20241022", "claude-3-5-sonnet-20240620", "anthropic.claude-3-5-sonnet-20241022-v2:0", "anthropic.claude-3-5-sonnet-20240620-v1:0", "anthropic.claude-3-5-sonnet-v2"]
     },
     "anthropic/claude-sonnet-4-5": {
       "maker": "Anthropic",
       "mode": "chat",
       "license": "proprietary",
-      "status": "active",
-      "deprecation_date": null,
-      "replacement": null,
-      "aliases": [
-        "claude-sonnet-4-5",
-        "claude-sonnet-4.5",
-        "claude-sonnet-4-5-latest",
-        "claude-sonnet-4-5-20250929",
-        "anthropic.claude-sonnet-4-5-20250929-v1:0",
-        "anthropic.claude-sonnet-4-5"
-      ]
+      "deprecation_date": "2026-09-30",
+      "retirement_date": "2026-11-30",
+      "replacement": "claude-sonnet-5-5",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-sonnet-4-5", "claude-sonnet-4.5", "claude-sonnet-4-5-latest", "claude-sonnet-4-5-20250929", "anthropic.claude-sonnet-4-5-20250929-v1:0", "anthropic.claude-sonnet-4-5"]
     },
     "anthropic/claude-haiku-4-5": {
       "maker": "Anthropic",
       "mode": "chat",
       "license": "proprietary",
-      "status": "active",
-      "deprecation_date": null,
-      "replacement": null,
-      "aliases": [
-        "claude-haiku-4-5",
-        "claude-haiku-4.5",
-        "claude-haiku-4-5-latest",
-        "claude-haiku-4-5-20251001",
-        "anthropic.claude-haiku-4-5-20251001-v1:0",
-        "anthropic.claude-haiku-4-5"
-      ]
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-haiku-4-5", "claude-haiku-4.5", "claude-haiku-4-5-latest", "claude-haiku-4-5-20251001", "anthropic.claude-haiku-4-5-20251001-v1:0", "anthropic.claude-haiku-4-5"]
     },
     "anthropic/claude-opus-4-5": {
       "maker": "Anthropic",
       "mode": "chat",
       "license": "proprietary",
-      "status": "active",
-      "deprecation_date": null,
-      "replacement": null,
-      "aliases": [
-        "claude-opus-4-5",
-        "claude-opus-4.5",
-        "claude-opus-4-5-20251101",
-        "anthropic.claude-opus-4-5-20251101-v1:0",
-        "anthropic.claude-opus-4-5"
-      ]
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-opus-4-5", "claude-opus-4.5", "claude-opus-4-5-20251101", "anthropic.claude-opus-4-5-20251101-v1:0", "anthropic.claude-opus-4-5"]
     },
     "google/gemini-1.0-pro": {
       "maker": "Google",
       "mode": "chat",
       "license": "proprietary",
-      "status": "retired",
-      "deprecation_date": "2025-04-09",
-      "replacement": "gemini-2.5-flash",
       "aliases": ["gemini-pro", "gemini-1.0-pro", "gemini-1.0-pro-001", "gemini-1.0-pro-002", "gemini-pro-vision"]
     },
     "google/gemini-1.5-pro": {
       "maker": "Google",
       "mode": "chat",
       "license": "proprietary",
-      "status": "deprecated",
-      "deprecation_date": "2025-09-24",
-      "replacement": "gemini-2.5-pro",
       "aliases": ["gemini-1.5-pro", "gemini-1.5-pro-latest", "gemini-1.5-pro-001", "gemini-1.5-pro-002"]
     },
     "google/gemini-1.5-flash": {
       "maker": "Google",
       "mode": "chat",
       "license": "proprietary",
-      "status": "deprecated",
-      "deprecation_date": "2025-09-24",
-      "replacement": "gemini-2.5-flash",
       "aliases": ["gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-1.5-flash-001", "gemini-1.5-flash-002"]
     },
     "meta-llama/llama-3.1-8b-instruct": {
@@ -535,7 +486,6 @@
       "mode": "chat",
       "license": "llama3.1",
       "hugging_face_id": "meta-llama/Llama-3.1-8B-Instruct",
-      "status": "active",
       "aliases": ["meta-llama/Llama-3.1-8B-Instruct", "llama-3.1-8b-instruct", "llama3.1:8b", "meta.llama3-1-8b-instruct-v1:0"]
     },
     "meta-llama/llama-3.1-70b-instruct": {
@@ -543,7 +493,6 @@
       "mode": "chat",
       "license": "llama3.1",
       "hugging_face_id": "meta-llama/Llama-3.1-70B-Instruct",
-      "status": "active",
       "aliases": ["meta-llama/Llama-3.1-70B-Instruct", "llama-3.1-70b-instruct", "llama3.1:70b", "meta.llama3-1-70b-instruct-v1:0"]
     },
     "meta-llama/llama-3.3-70b-instruct": {
@@ -551,7 +500,6 @@
       "mode": "chat",
       "license": "llama3.3",
       "hugging_face_id": "meta-llama/Llama-3.3-70B-Instruct",
-      "status": "active",
       "aliases": ["meta-llama/Llama-3.3-70B-Instruct", "llama-3.3-70b-instruct", "llama3.3:70b", "meta.llama3-3-70b-instruct-v1:0"]
     },
     "mistralai/mistral-large-2407": {
@@ -559,7 +507,6 @@
       "mode": "chat",
       "license": "mistral-research",
       "hugging_face_id": "mistralai/Mistral-Large-Instruct-2407",
-      "status": "active",
       "aliases": ["mistralai/Mistral-Large-Instruct-2407", "mistral-large-2407", "mistral.mistral-large-2407-v1:0"]
     },
     "cohere/command-r-v01": {
@@ -567,7 +514,6 @@
       "mode": "chat",
       "license": "cc-by-nc-4.0",
       "hugging_face_id": "CohereForAI/c4ai-command-r-v01",
-      "status": "active",
       "aliases": ["CohereForAI/c4ai-command-r-v01", "c4ai-command-r-v01", "CohereForAI/c4ai-command-r-plus"]
     },
     "black-forest-labs/flux.1-dev": {
@@ -575,7 +521,6 @@
       "mode": "image_generation",
       "license": "flux-1-dev-non-commercial",
       "hugging_face_id": "black-forest-labs/FLUX.1-dev",
-      "status": "active",
       "aliases": ["black-forest-labs/FLUX.1-dev", "flux-1-dev", "flux.1-dev"]
     },
     "black-forest-labs/flux.1-schnell": {
@@ -583,7 +528,6 @@
       "mode": "image_generation",
       "license": "apache-2.0",
       "hugging_face_id": "black-forest-labs/FLUX.1-schnell",
-      "status": "active",
       "aliases": ["black-forest-labs/FLUX.1-schnell", "flux-1-schnell", "flux.1-schnell"]
     },
     "google/gemma-2-9b-it": {
@@ -591,7 +535,6 @@
       "mode": "chat",
       "license": "gemma",
       "hugging_face_id": "google/gemma-2-9b-it",
-      "status": "active",
       "aliases": ["google/gemma-2-9b-it", "gemma-2-9b-it", "gemma2:9b"]
     },
     "deepseek-ai/deepseek-r1": {
@@ -599,7 +542,6 @@
       "mode": "chat",
       "license": "mit",
       "hugging_face_id": "deepseek-ai/DeepSeek-R1",
-      "status": "active",
       "aliases": ["deepseek-ai/DeepSeek-R1", "deepseek-r1", "deepseek-reasoner", "deepseek.r1-v1:0"]
     },
     "qwen/qwen-72b": {
@@ -607,8 +549,6 @@
       "mode": "chat",
       "license": "qwen-research",
       "hugging_face_id": "Qwen/Qwen-72B",
-      "status": "deprecated",
-      "replacement": "Qwen/Qwen2.5-72B-Instruct",
       "aliases": ["Qwen/Qwen-72B", "Qwen/Qwen-72B-Chat", "qwen-72b", "qwen-72b-chat"]
     },
     "meta-llama/llama-2-7b-hf": {"maker": "Meta", "mode": "chat", "license": "llama2", "hugging_face_id": "meta-llama/Llama-2-7b-hf", "license_source_url": "https://huggingface.co/meta-llama/Llama-2-7b-hf", "license_checked": "2026-11-09", "aliases": ["meta-llama/Llama-2-7b-hf", "llama-2-7b-hf"]},
@@ -660,6 +600,145 @@
     "sentence-transformers/all-mpnet-base-v2": {"maker": "sentence-transformers", "mode": "embedding", "license": "apache-2.0", "hugging_face_id": "sentence-transformers/all-mpnet-base-v2", "license_source_url": "https://huggingface.co/sentence-transformers/all-mpnet-base-v2", "license_checked": "2026-11-09", "aliases": ["sentence-transformers/all-mpnet-base-v2", "all-mpnet-base-v2"]},
     "baai/bge-large-en-v1.5": {"maker": "BAAI", "mode": "embedding", "license": "mit", "hugging_face_id": "BAAI/bge-large-en-v1.5", "license_source_url": "https://huggingface.co/BAAI/bge-large-en-v1.5", "license_checked": "2026-11-09", "aliases": ["BAAI/bge-large-en-v1.5", "bge-large-en-v1.5"]},
     "baai/bge-base-en-v1.5": {"maker": "BAAI", "mode": "embedding", "license": "mit", "hugging_face_id": "BAAI/bge-base-en-v1.5", "license_source_url": "https://huggingface.co/BAAI/bge-base-en-v1.5", "license_checked": "2026-11-09", "aliases": ["BAAI/bge-base-en-v1.5", "bge-base-en-v1.5"]},
-    "cohere/command-r-plus": {"maker": "Cohere", "mode": "chat", "license": "cc-by-nc-4.0", "hugging_face_id": "CohereForAI/c4ai-command-r-plus", "license_source_url": "https://huggingface.co/CohereForAI/c4ai-command-r-plus", "license_checked": "2026-11-09", "aliases": ["CohereForAI/c4ai-command-r-plus", "c4ai-command-r-plus"]}
-  }
+    "cohere/command-r-plus": {"maker": "Cohere", "mode": "chat", "license": "cc-by-nc-4.0", "hugging_face_id": "CohereForAI/c4ai-command-r-plus", "license_source_url": "https://huggingface.co/CohereForAI/c4ai-command-r-plus", "license_checked": "2026-11-09", "aliases": ["CohereForAI/c4ai-command-r-plus", "c4ai-command-r-plus"]},
+    "anthropic/claude-3-7-sonnet": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "deprecation_date": "2025-10-28",
+      "retirement_date": "2026-02-19",
+      "replacement": "claude-sonnet-5-5",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-3-7-sonnet", "claude-3.7-sonnet", "claude-3-7-sonnet-latest", "claude-3-7-sonnet-20250219", "anthropic.claude-3-7-sonnet-20250219-v1:0"]
+    },
+    "anthropic/claude-instant-1": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "deprecation_date": "2024-09-04",
+      "retirement_date": "2024-11-06",
+      "replacement": "claude-haiku-4-5-20251001",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-instant-1", "claude-instant-1.0", "claude-instant-1.1", "claude-instant-1.2", "claude-1.0", "claude-1.1", "claude-1.2", "claude-1.3", "anthropic.claude-instant-v1"]
+    },
+    "anthropic/claude-3-haiku": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "deprecation_date": "2026-02-19",
+      "retirement_date": "2026-04-20",
+      "replacement": "claude-haiku-4-5-20251001",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-3-haiku", "claude-3-haiku-20240307", "anthropic.claude-3-haiku-20240307-v1:0"]
+    },
+    "anthropic/claude-3-5-haiku": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "deprecation_date": "2025-12-19",
+      "retirement_date": "2026-02-19",
+      "replacement": "claude-haiku-4-5-20251001",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-3-5-haiku", "claude-3.5-haiku", "claude-3-5-haiku-latest", "claude-3-5-haiku-20241022", "anthropic.claude-3-5-haiku-20241022-v1:0"]
+    },
+    "anthropic/claude-sonnet-4": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "deprecation_date": "2026-04-14",
+      "retirement_date": "2026-06-15",
+      "replacement": "claude-sonnet-5-5",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-sonnet-4-20250514"]
+    },
+    "anthropic/claude-opus-4": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "deprecation_date": "2026-04-14",
+      "retirement_date": "2026-06-15",
+      "replacement": "claude-opus-4-8",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-opus-4-20250514"]
+    },
+    "anthropic/claude-opus-4-1": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "deprecation_date": "2026-06-05",
+      "retirement_date": "2026-08-05",
+      "replacement": "claude-opus-4-8",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-opus-4-1-20250805"]
+    },
+    "anthropic/claude-sonnet-5-5": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-sonnet-5-5"]
+    },
+    "anthropic/claude-opus-4-8": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-opus-4-8"]
+    }
+  },
+  "lifecycle_records": [
+    {"match": ["gpt-4o", "gpt-4o-2024-08-06", "gpt-4o-2024-11-20"], "family": "openai/gpt-4o", "maker": "OpenAI", "deprecation_date": "2026-10-14", "retirement_date": "2027-01-14", "replacement": "gpt-6-luna", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The alias follows the snapshot(s) it points to."},
+    {"match": ["gpt-4o-mini", "gpt-4o-mini-2024-07-18"], "family": "openai/gpt-4o-mini", "maker": "OpenAI", "deprecation_date": "2026-10-14", "retirement_date": "2027-01-14", "replacement": "gpt-6-luna", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The alias follows the snapshot(s) it points to."},
+    {"match": ["gpt-4.1", "gpt-4.1-2025-04-14"], "family": "openai/gpt-4.1", "maker": "OpenAI", "deprecation_date": "2026-10-14", "retirement_date": "2027-01-14", "replacement": "gpt-6-luna", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The alias follows the snapshot(s) it points to."},
+    {"match": ["gpt-4.1-mini", "gpt-4.1-mini-2025-04-14"], "family": "openai/gpt-4.1-mini", "maker": "OpenAI", "deprecation_date": "2026-10-14", "retirement_date": "2027-01-14", "replacement": "gpt-6-luna", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The alias follows the snapshot(s) it points to."},
+    {"match": ["gpt-4o-2024-05-13"], "family": "openai/gpt-4o", "maker": "OpenAI", "deprecation_date": "2026-04-22", "retirement_date": "2026-10-23", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09"},
+    {"match": ["gpt-4", "gpt-4-0613"], "family": "openai/gpt-4", "maker": "OpenAI", "deprecation_date": "2026-04-22", "retirement_date": "2026-10-23", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The alias follows the snapshot(s) it points to."},
+    {"match": ["gpt-4-1106-preview"], "family": "openai/gpt-4-1106-preview", "maker": "OpenAI", "deprecation_date": "2026-04-22", "retirement_date": "2026-10-23", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09"},
+    {"match": ["gpt-4-turbo", "gpt-4-turbo-2024-04-09"], "family": "openai/gpt-4-turbo", "maker": "OpenAI", "deprecation_date": "2026-04-22", "retirement_date": "2026-10-23", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The alias follows the snapshot(s) it points to."},
+    {"match": ["gpt-4.1-nano", "gpt-4.1-nano-2025-04-14"], "family": "openai/gpt-4.1-nano", "maker": "OpenAI", "deprecation_date": "2026-04-22", "retirement_date": "2026-10-23", "replacement": "gpt-5.6-luna", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The alias follows the snapshot(s) it points to."},
+    {"match": ["gpt-3.5-turbo", "gpt-3.5-turbo-0125"], "family": "openai/gpt-3.5-turbo", "maker": "OpenAI", "deprecation_date": "2026-04-22", "retirement_date": "2026-10-23", "replacement": "gpt-5.6-terra", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The alias follows the snapshot(s) it points to."},
+    {"match": ["o1-2024-12-17"], "family": "openai/o1", "maker": "OpenAI", "deprecation_date": "2026-04-22", "retirement_date": "2026-10-23", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09"},
+    {"match": ["o1-pro", "o1-pro-2025-03-19"], "family": "openai/o1-pro", "maker": "OpenAI", "deprecation_date": "2026-04-22", "retirement_date": "2026-10-23", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The alias follows the snapshot(s) it points to."},
+    {"match": ["o3-mini", "o3-mini-2025-01-31"], "family": "openai/o3-mini", "maker": "OpenAI", "deprecation_date": "2026-04-22", "retirement_date": "2026-10-23", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The alias follows the snapshot(s) it points to."},
+    {"match": ["o4-mini", "o4-mini-2025-04-16"], "family": "openai/o4-mini", "maker": "OpenAI", "deprecation_date": "2026-04-22", "retirement_date": "2026-10-23", "replacement": "gpt-5.6-terra", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The alias follows the snapshot(s) it points to."},
+    {"match": ["gpt-3.5-turbo-1106", "gpt-3.5-turbo-instruct", "babbage-002", "davinci-002"], "family": "openai/gpt-3.5-turbo", "maker": "OpenAI", "deprecation_date": "2025-09-26", "retirement_date": "2026-09-28", "replacement": "gpt-5.6-terra", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09"},
+    {"match": ["gpt-4-0314"], "family": "openai/gpt-4", "maker": "OpenAI", "deprecation_date": "2025-09-26", "retirement_date": "2026-03-26", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The notice names gpt-5 or gpt-4.1, which is itself scheduled to shut down; gpt-5.6-sol is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["gpt-4-0125-preview", "gpt-4-turbo-preview"], "family": "openai/gpt-4-turbo", "maker": "OpenAI", "deprecation_date": "2025-09-26", "retirement_date": "2026-03-26", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "gpt-4-turbo-preview points to the gpt-4-0125-preview snapshot. The notice names gpt-5 or gpt-4.1, which is itself scheduled to shut down; gpt-5.6-sol is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["gpt-5", "gpt-5-2025-08-07", "o3-2025-04-16"], "family": "openai/gpt-5", "maker": "OpenAI", "deprecation_date": "2026-06-11", "retirement_date": "2026-12-11", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09"},
+    {"match": ["gpt-5-mini", "gpt-5-mini-2025-08-07"], "family": "openai/gpt-5-mini", "maker": "OpenAI", "deprecation_date": "2026-06-11", "retirement_date": "2026-12-11", "replacement": "gpt-5.6-terra", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09"},
+    {"match": ["gpt-5-nano", "gpt-5-nano-2025-08-07"], "family": "openai/gpt-5-nano", "maker": "OpenAI", "deprecation_date": "2026-06-11", "retirement_date": "2026-12-11", "replacement": "gpt-5.6-luna", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09"},
+    {"match": ["gpt-5-pro", "gpt-5-pro-2025-10-06", "o3-pro", "o3-pro-2025-06-10"], "family": "openai/gpt-5-pro", "maker": "OpenAI", "deprecation_date": "2026-06-11", "retirement_date": "2026-12-11", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09"},
+    {"match": ["gpt-4.5-preview"], "family": "openai/gpt-4.5-preview", "maker": "OpenAI", "deprecation_date": "2025-04-14", "retirement_date": "2025-07-14", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The notice names gpt-4.1, which is itself scheduled to shut down; gpt-5.6-sol is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["o1-preview"], "family": "openai/o1-preview", "maker": "OpenAI", "deprecation_date": "2025-04-28", "retirement_date": "2025-07-28", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The notice names o3, which is itself scheduled to shut down; gpt-5.6-sol is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["o1-mini"], "family": "openai/o1-mini", "maker": "OpenAI", "deprecation_date": "2025-04-28", "retirement_date": "2025-10-27", "replacement": "gpt-5.6-terra", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The notice names o4-mini, which is itself scheduled to shut down; gpt-5.6-terra is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["gpt-4-32k", "gpt-4-32k-0613", "gpt-4-32k-0314"], "family": "openai/gpt-4-32k", "maker": "OpenAI", "deprecation_date": "2024-06-06", "retirement_date": "2025-06-06", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The notice names gpt-4o, which is itself scheduled to shut down; gpt-5.6-sol is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["gpt-4-vision-preview", "gpt-4-1106-vision-preview"], "family": "openai/gpt-4-vision-preview", "maker": "OpenAI", "deprecation_date": "2024-06-06", "retirement_date": "2024-12-06", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The notice names gpt-4o, which is itself scheduled to shut down; gpt-5.6-sol is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["gpt-3.5-turbo-0301"], "family": "openai/gpt-3.5-turbo", "maker": "OpenAI", "deprecation_date": "2023-06-13", "retirement_date": "2024-09-13", "replacement": "gpt-5.6-terra", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The notice names gpt-3.5-turbo, which is itself scheduled to shut down; gpt-5.6-terra is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["gpt-3.5-turbo-0613", "gpt-3.5-turbo-16k-0613"], "family": "openai/gpt-3.5-turbo", "maker": "OpenAI", "deprecation_date": "2023-11-06", "retirement_date": "2024-09-13", "replacement": "gpt-5.6-terra", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The notice names gpt-3.5-turbo, which is itself scheduled to shut down; gpt-5.6-terra is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["text-davinci-003", "text-davinci-002", "text-davinci-001", "text-curie-001", "text-babbage-001", "text-ada-001"], "family": "openai/text-davinci-003", "maker": "OpenAI", "deprecation_date": "2023-07-06", "retirement_date": "2024-01-04", "replacement": "gpt-5.6-terra", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The notice names gpt-3.5-turbo-instruct, which is itself scheduled to shut down; gpt-5.6-terra is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["code-davinci-002"], "family": "openai/code-davinci-002", "maker": "OpenAI", "move_to_family": true, "deprecation_date": "2023-03-20", "retirement_date": "2023-03-23", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The notice names gpt-4o, which is itself scheduled to shut down; gpt-5.6-sol is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["chatgpt-4o-latest"], "family": "openai/gpt-4o", "maker": "OpenAI", "deprecation_date": "2025-11-18", "retirement_date": "2026-02-17", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The notice names gpt-5.1-chat-latest, which is itself scheduled to shut down; gpt-5.6-sol is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["whisper-1", "gpt-4o-transcribe", "gpt-4o-mini-transcribe"], "family": "openai/whisper-1", "maker": "OpenAI", "deprecation_date": "2026-08-26", "retirement_date": "2027-02-26", "replacement": "gpt-transcribe", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "OpenAI names gpt-live-transcribe or gpt-transcribe."},
+    {"match": ["tts-1", "tts-1-hd"], "family": "openai/tts-1", "maker": "OpenAI", "deprecation_date": "2026-10-01", "retirement_date": "2027-01-06", "replacement": "gpt-realtime-2.1-mini", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09"},
+    {"match": ["gemini-2.0-flash", "gemini-2.0-flash-001"], "family": "google/gemini-2.0-flash", "maker": "Google", "retirement_date": "2026-06-01", "replacement": "gemini-3.6-flash", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date."},
+    {"match": ["gemini-2.0-flash-lite", "gemini-2.0-flash-lite-001"], "family": "google/gemini-2.0-flash-lite", "maker": "Google", "retirement_date": "2026-06-01", "replacement": "gemini-3.5-flash-lite", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date. The page names gemini-3.1-flash-lite, which is itself scheduled to shut down on 2027-05-07; gemini-3.5-flash-lite is the replacement named for it."},
+    {"match": ["gemini-2.5-pro"], "family": "google/gemini-2.5-pro", "maker": "Google", "retirement_date": "2026-12-01", "replacement": "gemini-3.8-flash", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date. From that date requests are routed automatically to gemini-3.8-flash."},
+    {"match": ["gemini-2.5-flash"], "family": "google/gemini-2.5-flash", "maker": "Google", "retirement_date": "2026-12-01", "replacement": "gemini-3.5-flash-lite", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date. From that date requests are routed automatically to gemini-3.5-flash-lite."},
+    {"match": ["gemini-3-pro-preview"], "family": "google/gemini-3-pro-preview", "maker": "Google", "retirement_date": "2026-03-09", "replacement": "gemini-3.1-pro-preview", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date."},
+    {"match": ["gemini-2.5-flash-preview-05-20"], "family": "google/gemini-2.5-flash", "maker": "Google", "retirement_date": "2025-11-18", "replacement": "gemini-3.6-flash", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date."},
+    {"match": ["gemini-2.5-flash-preview-09-2025"], "family": "google/gemini-2.5-flash", "maker": "Google", "retirement_date": "2026-02-17", "replacement": "gemini-3.6-flash", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date."},
+    {"match": ["gemini-2.5-pro-preview-06-05"], "family": "google/gemini-2.5-pro", "maker": "Google", "retirement_date": "2025-12-02", "replacement": "gemini-3.8-flash", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date."},
+    {"match": ["text-embedding-004"], "family": "google/text-embedding-004", "maker": "Google", "retirement_date": "2026-01-14", "replacement": "gemini-embedding-2", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date."},
+    {"match": ["embedding-001"], "family": "google/embedding-001", "maker": "Google", "retirement_date": "2025-10-30", "replacement": "gemini-embedding-2", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date."},
+    {"match": ["gemini-embedding-001"], "family": "google/gemini-embedding-001", "maker": "Google", "retirement_date": "2028-05-14", "replacement": "gemini-embedding-2", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date."}
+  ]
 }

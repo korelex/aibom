@@ -21,8 +21,8 @@ Every model entry carries:
   model-shaped string such as `llama3.1:8b` or a Bedrock ID.
 - Separates live code from comments, docstrings, messages, tests, docs, sample
   data and notebook outputs.
-- Adds canonical ID, provider, pinning, lifecycle status and license metadata to
-  the CycloneDX output from the bundled database (`knowledge/ai_db.json`).
+- Adds canonical ID, provider, pinning, sourced lifecycle status and license metadata to
+  the CycloneDX output from the bundled database (`aibom_engine/knowledge/ai_db.json`).
 - Writes a CycloneDX 1.6 AI-BOM (`aibom.cdx.json`) and three human reports:
   `report.html`, `report.md` and `models.csv`.
 
@@ -40,20 +40,20 @@ remote setting) cannot be seen by a scan that reads code.
 ## Run it
 
 ```bash
-python -m pip install -r requirements.txt
-python -m aibom_engine scan .
-python -m aibom_engine show runs/<app> --all
-python -m aibom_engine explain runs/<app> MODEL
+python -m pip install .
+aibom scan .
+aibom show runs/<app> --all
+aibom explain runs/<app> MODEL
 ```
 
 `scan` accepts a folder or a Git link. Results go to `runs/<app>/` unless
 `--out` is given. The command prints the models it found and the files it wrote.
+`python -m aibom_engine scan .` does the same without installing the command.
 
-Install the `aibom` command from this checkout with:
+For development, install in editable mode with the test tools:
 
 ```bash
-python -m pip install -e .
-aibom scan .
+python -m pip install -e ".[dev]"
 ```
 
 ## Output
@@ -67,22 +67,52 @@ aibom scan .
 
 ## Database
 
-`knowledge/ai_db.json` is compiled from `knowledge/curated.json`, the LiteLLM
+`aibom_engine/knowledge/ai_db.json` is compiled from `aibom_engine/knowledge/curated.json`, the LiteLLM
 model catalogue, OpenRouter and OSV advisories for AI packages. Rebuild it with:
 
 ```bash
 python scripts/build_db.py
 ```
 
-Lifecycle and license entries from `curated.json` are hand-checked. Entries that
-come only from an upstream catalogue are not yet verified and must not be
-presented as confirmed retirements.
+To apply a hand edit to `curated.json` without fetching anything (so the change
+shows up as a small, reviewable diff), run `python scripts/build_db.py --apply-curated`.
+
+### Lifecycle status
+
+A model's status comes only from curated records that carry a `lifecycle_source_url`
+(the provider's own page) and the date it was checked. Two dates are kept apart:
+`deprecation_date` (announced; the model still works) and `retirement_date` (API
+calls fail). The status is worked out from those dates on the day of the scan:
+
+| Status | Meaning |
+| --- | --- |
+| `retired` | the retirement date is today or in the past |
+| `deprecated` | announced, retirement scheduled, still working |
+| `active` | a sourced record exists and nothing is scheduled |
+| `not tracked` | no sourced record. This is not a statement that the model is fine |
+
+A retirement belongs to a specific snapshot, so records are stored per name
+(`lifecycle_records` in `curated.json`): `gpt-4-0314` is retired while another
+`gpt-4` snapshot is a different matter. Models are still grouped into one family for
+display. A snapshot that no record lists stays `not tracked`; it never inherits a
+neighbour's date. Dates are for the maker's own API. Amazon Bedrock, Azure and Google Vertex AI set
+their own schedules, so those rows carry a `*`. Set `AIBOM_TODAY=YYYY-MM-DD` to
+reproduce a report as of a given day. Lifecycle data from upstream catalogues is not
+used: it was found to mix up deprecation with earliest-retirement dates.
+
+### Floating aliases
+
+A name is a *floating alias* only when the provider also offers a dated snapshot you
+could pin (`gpt-4o` has `gpt-4o-2024-08-06`; `text-embedding-3-small` has none, so it
+is not flagged). Hugging Face repo ids are reported on their own: they are pinned by a
+commit revision, which this scan does not check.
 
 ## Tests
 
 ```bash
-python -m pip install -r requirements-dev.txt
+python -m pip install -e ".[dev]"
 python -m pytest
+python scripts/smoke_wheel.py   # builds the wheel, installs it in a clean virtualenv and scans with it
 ```
 
 The benchmark corpus and hand-written answer keys are in `benchmark/`.

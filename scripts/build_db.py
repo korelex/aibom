@@ -1,14 +1,16 @@
-"""Automated compiler for knowledge/ai_db.json (and knowledge/model_names.json).
+"""Automated compiler for aibom_engine/knowledge/ai_db.json (and aibom_engine/knowledge/model_names.json).
 
 Combines 4 live sources + our curated overlay:
-  1. knowledge/curated.json (licenses, AI package catalog, curated models & deprecations)
+  1. aibom_engine/knowledge/curated.json (licenses, AI package catalog, curated models & deprecations)
   2. LiteLLM model_prices_and_context_window.json (4,700+ models, deprecation_date, regions, limits, costs, capabilities)
   3. OpenRouter /api/v1/models (canonical_slug, hugging_face_id, modalities, cutoff/expiration dates)
   4. OSV.dev /v1/querybatch + /v1/vulns/{id} (all CVEs/GHSAs for AI packages, fixed versions, and affected symbols)
 
 Usage:
   python scripts/build_db.py              # full live build from all upstream sources
-  python scripts/build_db.py --offline    # build from local knowledge/model_names.json + curated.json only
+  python scripts/build_db.py --offline    # build from local aibom_engine/knowledge/model_names.json + curated.json only
+  python scripts/build_db.py --reformat   # rewrite ai_db.json in the reviewable one-entry-per-line layout (no network)
+  python scripts/build_db.py --apply-curated  # re-apply curated.json on the existing ai_db.json (no network, minimal diff)
 """
 from __future__ import annotations
 
@@ -33,9 +35,10 @@ OPENROUTER_URL = "https://openrouter.ai/api/v1/models"
 OSV_BATCH_URL = "https://api.osv.dev/v1/querybatch"
 OSV_VULN_URL = "https://api.osv.dev/v1/vulns/"
 
-CURATED_PATH = os.path.join(ROOT, "knowledge", "curated.json")
-MODEL_NAMES_PATH = os.path.join(ROOT, "knowledge", "model_names.json")
-AI_DB_PATH = os.path.join(ROOT, "knowledge", "ai_db.json")
+KNOWLEDGE_DIR = os.path.join(ROOT, "aibom_engine", "knowledge")
+CURATED_PATH = os.path.join(KNOWLEDGE_DIR, "curated.json")
+MODEL_NAMES_PATH = os.path.join(KNOWLEDGE_DIR, "model_names.json")
+AI_DB_PATH = os.path.join(KNOWLEDGE_DIR, "ai_db.json")
 
 PINNED_RE = re.compile(
     r"(?:"
@@ -148,6 +151,28 @@ def infer_license_for_maker(maker: str, name: str) -> str:
     if maker in {"OpenAI", "Anthropic", "Google", "Cohere", "Amazon", "xAI", "AI21 Labs", "Perplexity", "Voyage AI"}:
         return "proprietary"
     return "unknown"
+
+
+def dump_db(path: str, db: dict) -> None:
+    """Write ai_db.json so that git diffs are reviewable: one table entry per line, keys sorted, no network needed.
+
+    The file stays plain JSON; only the layout is chosen for humans. A changed model, alias or advisory shows up as
+    a changed line instead of the whole file being one line.
+    """
+    def dumps(obj):
+        return json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+    parts = []
+    for key in sorted(db):
+        value = db[key]
+        if isinstance(value, dict) and key != "meta" and value:
+            rows = [f"  {json.dumps(k, ensure_ascii=False)}:{dumps(v)}" for k, v in sorted(value.items())]
+            body = "{\n" + ",\n".join(rows) + "\n }"
+        else:
+            body = dumps(value)
+        parts.append(f" {json.dumps(key)}:{body}")
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write("{\n" + ",\n".join(parts) + "\n}\n")
 
 
 def fetch_json(url: str, data: bytes | None = None, timeout: int = 30):
@@ -334,9 +359,14 @@ def first_party_canonical(canonical_id, gateway_prefixes):
     return seg not in gateway_prefixes and seg not in ("unknown", "")
 
 
-def build(offline: bool = False):
+def build(offline: bool = False, from_existing: bool = False):
+    """Compile ai_db.json. With from_existing=True nothing is fetched: the existing database is kept and only the
+    curated overlay (curated.json) is re-applied on top of it. Use that for hand-curated changes, so the diff shows
+    exactly those changes and not a day's worth of upstream catalogue drift."""
     with open(CURATED_PATH, encoding="utf-8") as f:
         curated = json.load(f)
+    if from_existing:
+        offline = True
 
     licenses_table = curated["licenses"]
     packages_list = curated["packages"]
@@ -363,7 +393,7 @@ def build(offline: bool = False):
         except Exception as exc:
             print(f"   [warn] OpenRouter fetch failed ({exc})")
 
-    if not litellm_data and os.path.exists(MODEL_NAMES_PATH):
+    if not litellm_data and not from_existing and os.path.exists(MODEL_NAMES_PATH):
         with open(MODEL_NAMES_PATH, encoding="utf-8") as f:
             old = json.load(f).get("names", {})
         litellm_data = {k: {"litellm_provider": v.get("provider", ""), "mode": v.get("mode", "")} for k, v in old.items()}
@@ -371,6 +401,15 @@ def build(offline: bool = False):
     models: dict[str, dict] = {}
     alias_index: dict[str, dict] = {}
     legacy_names: dict[str, dict] = {}
+    existing_vulns: dict[str, list] = {}
+    existing_built = ""
+    if from_existing:
+        with open(AI_DB_PATH, encoding="utf-8") as fh:
+            existing = json.load(fh)
+        models.update(existing["models"])
+        alias_index.update(existing["alias_index"])
+        existing_vulns = existing["vulnerabilities"]
+        existing_built = existing.get("meta", {}).get("built", "")
 
     def register_model(canonical_id: str, name: str, maker: str, mode: str) -> dict:
         if canonical_id not in models:
@@ -387,11 +426,7 @@ def build(offline: bool = False):
                 "capabilities": [],
                 "supported_regions": [],
                 "pricing": {},
-                "lifecycle": {
-                    "status": "active",
-                    "deprecation_date": None,
-                    "replacement": None,
-                },
+                "lifecycle": {},  # filled only from sourced curated records (see the curated overlay below)
                 "license": {
                     "id": lic_id,
                     "category": lic_meta.get("category", "unknown"),
@@ -417,6 +452,13 @@ def build(offline: bool = False):
                 return
         alias_priority[low] = priority
         pinned = is_pinned_reference(raw)
+        previous = alias_index.get(low)
+        if previous and previous["canonical_id"] != canonical_id and previous["canonical_id"] in models:
+            # The alias moves to another model: forget it on the old one so no stale list remains.
+            old = models[previous["canonical_id"]]
+            for lst in (old["snapshots"], old["floating_aliases"]):
+                if raw in lst:
+                    lst.remove(raw)
         alias_index[low] = {
             "canonical_id": canonical_id,
             "provider": provider,
@@ -533,12 +575,16 @@ def build(offline: bool = False):
             "source_url": cmod.get("license_source_url", ""),
             "checked": cmod.get("license_checked", ""),
         }
-        if "status" in cmod and cmod["status"]:
-            rec["lifecycle"]["status"] = cmod["status"]
-        if "deprecation_date" in cmod:
-            rec["lifecycle"]["deprecation_date"] = cmod["deprecation_date"]
-        if "replacement" in cmod:
-            rec["lifecycle"]["replacement"] = cmod["replacement"]
+        # Lifecycle comes only from curated, sourced records. Dates are stored; the status is worked out from them at
+        # scan time (db.lifecycle_status), so a record never goes stale by itself.
+        claims = {"deprecation_date": cmod.get("deprecation_date"), "retirement_date": cmod.get("retirement_date"),
+                  "replacement": cmod.get("replacement"), "source_url": cmod.get("lifecycle_source_url"),
+                  "checked": cmod.get("lifecycle_checked")}
+        if claims["source_url"] and not claims["checked"]:
+            raise SystemExit(f"{canonical_id}: lifecycle_source_url needs lifecycle_checked (the date it was checked)")
+        if (claims["deprecation_date"] or claims["retirement_date"] or claims["replacement"]) and not claims["source_url"]:
+            raise SystemExit(f"{canonical_id}: lifecycle dates need a lifecycle_source_url")
+        rec["lifecycle"] = {k: v for k, v in claims.items() if v}
         if cmod.get("hugging_face_id"):
             rec["hugging_face_id"] = cmod["hugging_face_id"]
         for al in cmod.get("aliases", []):
@@ -547,13 +593,43 @@ def build(offline: bool = False):
             if usable(al) and al not in legacy_names:
                 legacy_names[al] = {"provider": cmod.get("maker", "").lower(), "mode": cmod.get("mode", "chat")}
 
+    # 3b. Per-snapshot lifecycle. Models are grouped into families for display, but a retirement belongs to a specific
+    # snapshot: gpt-4-0314 was shut down on 2026-03-26 while gpt-4 (the family) is a different matter. Each record is
+    # attached to the exact aliases it lists and wins over the family when that exact name is written in code.
+    iso = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+    seen_names: set[str] = set()
+    for rec in curated.get("lifecycle_records", []):
+        where = ", ".join(rec.get("match", [])[:2])
+        if not (rec.get("source_url", "").startswith("https://") and iso.match(rec.get("checked", ""))):
+            raise SystemExit(f"lifecycle record [{where}]: needs source_url (https) and checked (YYYY-MM-DD)")
+        if not iso.match(rec.get("retirement_date", "")) or (rec.get("deprecation_date") and not iso.match(rec["deprecation_date"])):
+            raise SystemExit(f"lifecycle record [{where}]: dates must be YYYY-MM-DD")
+        if rec.get("deprecation_date") and rec["deprecation_date"] > rec["retirement_date"]:
+            raise SystemExit(f"lifecycle record [{where}]: announced after it retires")
+        life = {k: rec[k] for k in ("deprecation_date", "retirement_date", "replacement", "note") if rec.get(k)}
+        life.update({"source_url": rec["source_url"], "checked": rec["checked"]})
+        for name in rec["match"]:
+            low = name.strip().lower()
+            if low in seen_names:
+                raise SystemExit(f"lifecycle record: {name!r} appears in two records")
+            seen_names.add(low)
+            family = rec.get("family", "")
+            current = alias_index.get(low)
+            if current is None or (rec.get("move_to_family") and current["canonical_id"] != family):
+                if not family:
+                    raise SystemExit(f"lifecycle record: {name!r} is not a known alias, so the record needs a family")
+                register_model(family, family.split("/")[-1], rec.get("maker", ""), "chat")
+                _, route, region, ver = normalize_family_slug(name)
+                register_alias(name, family, route or rec.get("maker", "").lower(), region, ver, 4)
+            alias_index[low]["lifecycle"] = dict(life)
+
     # 4. Build Packages & OSV Vulnerabilities
     packages_table = {}
     for p in packages_list:
         pkey = f"{p['ecosystem'].lower()}:{p['name'].lower()}"
         packages_table[pkey] = p
 
-    vulnerabilities_table = {}
+    vulnerabilities_table = dict(existing_vulns)
     if not offline:
         print("3. Fetching OSV advisories for AI packages...")
         vulnerabilities_table = fetch_osv_for_packages(packages_list)
@@ -571,13 +647,16 @@ def build(offline: bool = False):
     full_db = {
         "meta": {
             "schema_version": "1.0.0",
-            "built": today,
+            "built": existing_built or today,
             "sha256": digest,
             "counts": {
                 "canonical_models": len(models),
                 "aliases": len(alias_index),
-                "deprecated_or_retired_models": sum(
-                    1 for m in models.values() if m["lifecycle"]["status"] in ("deprecated", "retired")
+                "models_with_sourced_lifecycle": sum(1 for m in models.values() if m["lifecycle"].get("source_url")),
+                "aliases_with_sourced_lifecycle": sum(1 for a in alias_index.values() if a.get("lifecycle", {}).get("source_url")),
+                "models_with_scheduled_or_past_retirement": sum(
+                    1 for m in models.values()
+                    if m["lifecycle"].get("source_url") and (m["lifecycle"].get("deprecation_date") or m["lifecycle"].get("retirement_date"))
                 ),
                 "restricted_license_models": sum(1 for m in models.values() if m["license"]["restricted"]),
                 "ai_packages": len(packages_table),
@@ -588,10 +667,14 @@ def build(offline: bool = False):
         **db_body,
     }
 
-    with open(AI_DB_PATH, "w", encoding="utf-8") as f:
-        json.dump(full_db, f, indent=None, separators=(",", ":"), sort_keys=True)
+    dump_db(AI_DB_PATH, full_db)
 
-    # Also keep knowledge/model_names.json in sync
+    if from_existing:
+        print("4. Wrote", AI_DB_PATH, "(curated overlay applied to the existing database; nothing fetched)")
+        print("   Counts:", json.dumps(full_db["meta"]["counts"], indent=2))
+        return
+
+    # Also keep aibom_engine/knowledge/model_names.json in sync
     legacy_out = {
         "meta": {
             "source": LITELLM_URL,
@@ -610,5 +693,12 @@ def build(offline: bool = False):
 
 
 if __name__ == "__main__":
-    offline_flag = "--offline" in sys.argv
-    build(offline=offline_flag)
+    if "--reformat" in sys.argv:
+        # Rewrite the existing database in the canonical layout without fetching anything.
+        with open(AI_DB_PATH, encoding="utf-8") as fh:
+            dump_db(AI_DB_PATH, json.load(fh))
+        print("Reformatted", AI_DB_PATH)
+    elif "--apply-curated" in sys.argv:
+        build(from_existing=True)
+    else:
+        build(offline="--offline" in sys.argv)

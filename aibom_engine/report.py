@@ -27,16 +27,68 @@ def models(n):
     return f"{n} model" + ("" if n == 1 else "s")
 
 
+STATUS_TEXT = {"retired": "retired", "deprecated": "deprecated", "active": "active", "unknown": "not tracked"}
+PLATFORM_NOTE = ("* The date is for the maker's own API. Amazon Bedrock, Azure and Google Vertex AI set their own "
+                 "retirement schedules, so check the one you use.")
+
+
+def status_text(r):
+    """The status as a reader sees it. 'not tracked' means no sourced record exists, which is not the same as 'active'."""
+    s = r.get("status") or "unknown"
+    text = STATUS_TEXT.get(s, s)
+    return text + ("*" if s in ("retired", "deprecated", "active") and r.get("lifecycle_scope") == "platform" else "")
+
+
+def pin_text(r):
+    """Why a name is or is not pinned, so a reader can tell a real risk from a name that cannot be pinned."""
+    if r.get("pinned") is True:
+        return "yes"
+    if r.get("hf_repo"):
+        return "Hugging Face repo (revision not checked)"
+    if r.get("floating"):
+        return "no (floating alias)"
+    if r.get("pinned") is False:
+        return "no (no dated snapshot known)"
+    return "-"
+
+
 def risk_summary(rows):
     """Count the model-level risks a reader should see before the full table."""
     all_rows = rows["used"] + rows["listed"]
     return {
         "total": len(all_rows),
-        "deprecated": [r for r in all_rows if r.get("status") in ("deprecated", "retired")],
-        "floating": [r for r in all_rows if r.get("pinned") is False],
+        "retired": [r for r in all_rows if r.get("status") == "retired"],
+        "deprecated": [r for r in all_rows if r.get("status") == "deprecated"],
+        "floating": [r for r in all_rows if r.get("floating")],
+        "hf": [r for r in all_rows if r.get("hf_repo")],
         "restricted": [r for r in all_rows if r.get("license_restricted")],
         "unknown": [r for r in all_rows if not r.get("license") or r.get("license") == "unknown"],
+        "untracked": [r for r in all_rows if (r.get("status") or "unknown") == "unknown"],
+        "checked": max((r.get("lifecycle_checked") or "" for r in all_rows), default=""),
+        "platform": any(r.get("lifecycle_scope") == "platform" and r.get("status") in ("retired", "deprecated", "active") for r in all_rows),
     }
+
+
+def risk_lines(risk):
+    """(label, models) pairs shown in the Risks block of every output."""
+    return [("Retired (API calls fail)", risk["retired"]),
+            ("Deprecated (retirement scheduled, still works)", risk["deprecated"]),
+            ("Floating aliases (a dated snapshot exists to pin)", risk["floating"]),
+            ("Hugging Face models (pin a commit revision; this scan does not check for one)", risk["hf"]),
+            ("Restricted licenses", risk["restricted"]),
+            ("Unknown licenses", risk["unknown"])]
+
+
+def lifecycle_notes(risk):
+    """Plain-language limits of the lifecycle column, shown under the Risks block."""
+    notes = []
+    if risk["total"]:
+        notes.append(f"Lifecycle: {risk['total'] - len(risk['untracked'])} of {risk['total']} models have a sourced record"
+                     + (f" (checked against the providers' own pages on {risk['checked']})" if risk["checked"] else "")
+                     + ". \"Not tracked\" means no record, not that the model is fine.")
+    if risk["platform"]:
+        notes.append(PLATFORM_NOTE)
+    return notes
 
 
 def risk_names(items, limit=5):
@@ -87,16 +139,18 @@ def build_csv(items, links=None):
     buf = io.StringIO()
     w = csv.writer(buf, lineterminator="\r\n")
     w.writerow(["model", "made_by", "type", "role", "confidence", "where_first_place", "link", "places_in_code", "also_written_as",
-                "status", "pinned", "deprecation_date", "replacement", "license", "license_restricted", "license_name", "license_commercial_use"])
+                "status", "pinned", "floating_alias", "deprecation_date", "retirement_date", "replacement", "lifecycle_source", "license",
+                "license_restricted", "license_name", "license_commercial_use"])
     for role, group in (("used directly", rows["used"]), ("only listed", rows["listed"])):
         for r in group:
             p, url, _ = where(r, links)
             w.writerow([r["name"], r["maker"], MODE_TEXT.get(r["mode"], r["mode"]), role, TIER_TEXT[r["tier"]], p, url, len(r["places"]), "; ".join(r["also"]),
-                        r.get("status", ""), "yes" if r.get("pinned") is True else ("no" if r.get("pinned") is False else "unknown"),
-                        r.get("deprecation_date", ""), r.get("replacement", ""), r.get("license", "unknown"),
+                        r.get("status", "unknown"), "yes" if r.get("pinned") is True else ("no" if r.get("pinned") is False else "unknown"),
+                        "yes" if r.get("floating") else "no", r.get("deprecation_date", ""), r.get("retirement_date", ""),
+                        r.get("replacement", ""), r.get("lifecycle_source_url", ""), r.get("license", "unknown"),
                         "yes" if r.get("license_restricted") else "no", r.get("license_name", ""), r.get("license_commercial_use", "")])
     for g in rows["left_out"]:
-        w.writerow([g["name"], "", "", "left out", g["why"], f"{g['file']}:{g['line']}", links.url_for(g["file"], g["line"]) if links else "", 0, ""] + [""] * 8)
+        w.writerow([g["name"], "", "", "left out", g["why"], f"{g['file']}:{g['line']}", links.url_for(g["file"], g["line"]) if links else "", 0, ""] + [""] * 11)
     return buf.getvalue()
 
 
@@ -111,24 +165,24 @@ def build_markdown(items, app, source="", links=None, meta=None):
     out += [f"Summary (you can paste this into a message): {intro(rows, app)}", ""]
     risk = risk_summary(rows)
     out += ["## Risks", ""]
-    for label, found in (("Deprecated or retired", risk["deprecated"]), ("Floating aliases", risk["floating"]),
-                         ("Restricted licenses", risk["restricted"]), ("Unknown licenses", risk["unknown"])):
+    for label, found in risk_lines(risk):
         line = f"- {label}: {len(found)}"
         if found:
             line += f" ({risk_names(found)})"
         out.append(line)
     out.append("")
+    out += [f"_{note}_" for note in lifecycle_notes(risk)]
+    out.append("")
 
     def table(rs):
-        t = ["| Model | Made by | Type | Where it is used | Confidence | Status | Pinned | Deprecated | Replacement | License |",
-             "|---|---|---|---|---|---|---|---|---|---|"]
+        t = ["| Model | Made by | Type | Where it is used | Confidence | Status | Pinned | Deprecated | Retires or retired | Replacement | License |",
+             "|---|---|---|---|---|---|---|---|---|---|---|"]
         for r in rs:
             p, url, more = where(r, links)
             cell = f"[{p}]({url})" if url else p
             alias = f" (also written as {', '.join(r['also'][:3])})" if r["also"] else ""
-            pinned = "yes" if r.get("pinned") is True else ("no" if r.get("pinned") is False else "-")
             lic = license_label(r)
-            t.append(f"| {r['name']}{alias} | {r['maker'] or '-'} | {MODE_TEXT.get(r['mode'], r['mode']) or 'AI model'} | {cell}{f' (+{more} more)' if more else ''} | {TIER_TEXT[r['tier']]} | {r.get('status') or '-'} | {pinned} | {r.get('deprecation_date') or '-'} | {r.get('replacement') or '-'} | {lic} |")
+            t.append(f"| {r['name']}{alias} | {r['maker'] or '-'} | {MODE_TEXT.get(r['mode'], r['mode']) or 'AI model'} | {cell}{f' (+{more} more)' if more else ''} | {TIER_TEXT[r['tier']]} | {status_text(r)} | {pin_text(r)} | {r.get('deprecation_date') or '-'} | {r.get('retirement_date') or '-'} | {r.get('replacement') or '-'} | {lic} |")
         return t
 
     if used:
@@ -160,7 +214,7 @@ code{font-family:Consolas,Menlo,monospace;font-size:12.5px}a{color:#000;font-wei
 details{margin:12px 0}summary{cursor:pointer;font-weight:bold}details.grp>summary{font-size:16px;padding:6px 0}details.more{margin:4px 0 0}details.more summary{font-weight:normal;font-size:12px}
 details.more ul{margin:4px 0 0 16px;padding:0;font-size:12px}.limits{border:3px solid #000;padding:6px 20px 12px;margin-top:36px}.limits h2{border:0;margin-top:12px}
 .foot{font-size:12px;margin-top:28px;border-top:1px solid #000;padding-top:10px}#nomatch{display:none;font-weight:bold;margin:12px 0}
-.risks{border:3px solid #000;padding:8px 18px 12px;margin:18px 0}.risks h2{border:0;margin:6px 0 8px}.risks ul{margin:0 0 0 18px;padding:0}.risks li{margin:4px 0}
+.risks .note{font-size:13px;margin:6px 0 0}.risks{border:3px solid #000;padding:8px 18px 12px;margin:18px 0}.risks h2{border:0;margin:6px 0 8px}.risks ul{margin:0 0 0 18px;padding:0}.risks li{margin:4px 0}
 @media print{input#q{display:none}.wrap{padding:0}}
 """
 JS = """
@@ -194,21 +248,22 @@ def build_html(items, app, source="", links=None, meta=None):
             cell += f'<details class="more"><summary>+{len(more)} more place{"" if len(more) == 1 else "s"} in the code</summary><ul>{lis}{rest}</ul></details>'
         alias = f'<div class="also">also written as: {h(", ".join(r["also"][:4]))}{" ..." if len(r["also"]) > 4 else ""}</div>' if r["also"] else ""
         badge = f'<span class="badge{" worked" if r["tier"] == "inferred" else ""}" title="{h(TIER_LONG[r["tier"]])}">{TIER_TEXT[r["tier"]]}</span>'
-        status = r.get("status") or "-"
-        pinned = "yes" if r.get("pinned") is True else ("no" if r.get("pinned") is False else "-")
+        status = status_text(r)
+        pinned = pin_text(r)
         dep = r.get("deprecation_date") or "-"
+        ret = r.get("retirement_date") or "-"
         repl = r.get("replacement") or "-"
         lic = license_label(r)
-        text = " ".join([r["name"], r["maker"], r["mode"], status, dep, repl, lic, " ".join(r["also"]), " ".join(p["file"] for p in r["places"][:30])]).lower()
+        text = " ".join([r["name"], r["maker"], r["mode"], status, dep, ret, repl, lic, " ".join(r["also"]), " ".join(p["file"] for p in r["places"][:30])]).lower()
         return (f'<tr data-t="{h(text)}"><td><b>{h(r["name"])}</b>{alias}</td><td>{h(MODE_TEXT.get(r["mode"], r["mode"]) or "AI model")}</td><td>{cell}</td><td>{badge}</td>'
-                f'<td>{h(status)}</td><td>{h(pinned)}</td><td>{h(dep)}</td><td>{h(repl)}</td><td>{h(lic)}</td></tr>')
+                f'<td>{h(status)}</td><td>{h(pinned)}</td><td>{h(dep)}</td><td>{h(ret)}</td><td>{h(repl)}</td><td>{h(lic)}</td></tr>')
 
     def groups(rs, open_first):
         out = []
         for i, (maker, rr) in enumerate(by_maker(rs)):
             out.append(f'<details class="grp"{" open" if open_first and i < 3 else ""}><summary>{h(maker)} ({len(rr)})</summary>'
-                       '<div class="tw"><table><colgroup><col style="width:20%"><col style="width:9%"><col style="width:28%"><col style="width:9%"><col style="width:9%"><col style="width:6%"><col style="width:8%"><col style="width:10%"><col style="width:11%"></colgroup>'
-                       '<tr><th>Model</th><th>Type</th><th>Where it is used (click to see the line)</th><th>Confidence</th><th>Status</th><th>Pinned</th><th>Deprecated</th><th>Replacement</th><th>License</th></tr>' + "".join(row_html(r) for r in rr) + "</table></div></details>")
+                       '<div class="tw"><table><colgroup><col style="width:15%"><col style="width:7%"><col style="width:19%"><col style="width:8%"><col style="width:8%"><col style="width:11%"><col style="width:8%"><col style="width:8%"><col style="width:8%"><col style="width:8%"></colgroup>'
+                       '<tr><th>Model</th><th>Type</th><th>Where it is used (click to see the line)</th><th>Confidence</th><th>Status</th><th>Pinned</th><th>Deprecated</th><th>Retires or retired</th><th>Replacement</th><th>License</th></tr>' + "".join(row_html(r) for r in rr) + "</table></div></details>")
         return "".join(out)
 
     out = [f"<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>AI models in {h(app)}</title><style>{CSS}</style></head><body><div class='wrap'>",
@@ -225,12 +280,8 @@ def build_html(items, app, source="", links=None, meta=None):
         names = risk_names(found)
         return f"<li><b>{label}:</b> {len(found)}" + (f" &mdash; {h(names)}" if names else "") + "</li>"
 
-    out.append("<div class='risks'><h2>Risks</h2><ul>" +
-               risk_item("Deprecated or retired", risk["deprecated"]) +
-               risk_item("Floating aliases", risk["floating"]) +
-               risk_item("Restricted licenses", risk["restricted"]) +
-               risk_item("Unknown licenses", risk["unknown"]) +
-               "</ul></div>")
+    out.append("<div class='risks'><h2>Risks</h2><ul>" + "".join(risk_item(label, found) for label, found in risk_lines(risk)) + "</ul>"
+               + "".join(f"<p class='note'>{h(note)}</p>" for note in lifecycle_notes(risk)) + "</div>")
     out.append(f"<div class='cards'><div class='card'><b>{len(used)}</b><span>used directly in the code</span></div>"
                f"<div class='card'><b>{len(listed)}</b><span>only listed in long tables or lists</span></div><div class='card'><b>{len(gone)}</b><span>names left out (comments, messages, tests, docs)</span></div></div>")
     n_aibom = len([i for i in items if i["tier"] != "rejected"])
