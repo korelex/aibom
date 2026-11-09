@@ -1,5 +1,46 @@
 {
   "version": "1.0.0",
+  "maker_segments": {
+    "openai": "openai", "anthropic": "anthropic", "google": "google",
+    "stabilityai": "stabilityai", "stability": "stabilityai", "stability-ai": "stabilityai",
+    "meta-llama": "meta-llama", "meta": "meta-llama", "facebook": "meta-llama",
+    "mistralai": "mistralai", "mistral": "mistralai",
+    "cohere": "cohere", "cohereforai": "cohere",
+    "deepseek-ai": "deepseek-ai", "deepseek": "deepseek-ai",
+    "qwen": "qwen", "microsoft": "microsoft",
+    "black-forest-labs": "black-forest-labs", "black-forest": "black-forest-labs",
+    "sentence-transformers": "sentence-transformers", "baai": "baai",
+    "nvidia": "nvidia", "moonshotai": "moonshotai", "xai": "xai",
+    "amazon": "amazon", "ai21": "ai21", "ibm": "ibm",
+    "zai-org": "zai-org", "zai": "zai-org", "zhipu-ai": "zai-org",
+    "groq": "groq", "ollama": "ollama",
+    "voyage-ai": "voyage-ai", "voyage": "voyage-ai",
+    "alibaba": "alibaba",
+    "fal-ai": "fal-ai", "fal": "fal-ai",
+    "replicate": "replicate", "perplexity": "perplexity",
+    "together-ai": "together-ai", "together_ai": "together-ai", "together": "together-ai",
+    "fireworks-ai": "fireworks-ai", "fireworks_ai": "fireworks-ai", "fireworks": "fireworks-ai"
+  },
+  "gateway_prefixes": [
+    "vercel-ai-gateway", "nscale", "aiand", "wandb", "openrouter", "openrouter-ai",
+    "cloudflare", "github-models", "github", "azure-ml", "novita", "deepinfra",
+    "baseten", "nebius", "dashscope", "watsonx", "snowflake", "databricks", "gmi",
+    "aihubmix", "empiriolabs", "kyma", "oci", "inferenceapis", "opencode-go",
+    "github-copilot", "portkey", "unify", "lambdalabs", "runpod", "mindsdb",
+    "replicate", "perplexity", "together-ai", "fireworks-ai", "fal-ai", "fal"
+  ],
+  "maker_display": {
+    "stabilityai": "Stability AI", "black-forest-labs": "Black Forest Labs",
+    "zai-org": "Zhipu AI", "cohere": "Cohere", "meta-llama": "Meta",
+    "mistralai": "Mistral AI", "deepseek-ai": "DeepSeek", "qwen": "Alibaba",
+    "voyage-ai": "Voyage AI", "fal-ai": "fal.ai", "together-ai": "Together AI",
+    "fireworks-ai": "Fireworks AI", "openai": "OpenAI", "anthropic": "Anthropic",
+    "google": "Google", "amazon": "Amazon", "microsoft": "Microsoft",
+    "nvidia": "NVIDIA", "xai": "xAI", "moonshotai": "Moonshot AI", "ibm": "IBM",
+    "ai21": "AI21 Labs", "groq": "Groq", "ollama": "Ollama", "replicate": "Replicate",
+    "perplexity": "Perplexity", "sentence-transformers": "sentence-transformers",
+    "baai": "BAAI", "alibaba": "Alibaba"
+  },
   "licenses": {
     "apache-2.0": {
       "name": "Apache License 2.0",

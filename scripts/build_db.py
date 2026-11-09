@@ -289,6 +289,38 @@ def fetch_osv_for_packages(packages: list[dict]) -> dict[str, list[dict]]:
     return out
 
 
+def maker_model_for(raw_name, maker_segments, gateway_prefixes, maker_of_fn, display_to_slug):
+    segs = [s.replace("_", "-") for s in raw_name.strip().lower().split("/") if s]
+    if not segs:
+        return "", ""
+    while len(segs) >= 2 and segs[0] in gateway_prefixes:
+        segs.pop(0)
+
+    def strip_version(name):
+        base = re.sub(r"-v\d+(?::\d+)?$", "", name, flags=re.IGNORECASE)
+        m = DATE_TAIL_RE.match(base)
+        return m.group(1) if m and len(m.group(1)) >= 4 else base
+
+    if len(segs) >= 2 and segs[0] in maker_segments:
+        return maker_segments[segs[0]], strip_version("/".join(segs[1:]))
+    for cut in range(1, len(segs)):
+        tail_segs = segs[cut:]
+        tail = "/".join(tail_segs)
+        if len(tail_segs) >= 2 and tail_segs[0] in maker_segments:
+            return maker_segments[tail_segs[0]], strip_version("/".join(tail_segs[1:]))
+        maker_disp = maker_of_fn(tail)
+        if maker_disp:
+            slug = display_to_slug.get(maker_disp.lower()) or re.sub(r"[^a-z0-9]+", "-", maker_disp.lower()).strip("-")
+            if slug:
+                return slug, strip_version(tail)
+    return "", strip_version("/".join(segs))
+
+
+def first_party_canonical(canonical_id, gateway_prefixes):
+    seg = canonical_id.split("/")[0]
+    return seg not in gateway_prefixes and seg not in ("unknown", "")
+
+
 def build(offline: bool = False):
     with open(CURATED_PATH, encoding="utf-8") as f:
         curated = json.load(f)
@@ -296,6 +328,10 @@ def build(offline: bool = False):
     licenses_table = curated["licenses"]
     packages_list = curated["packages"]
     curated_models = curated["curated_models"]
+    maker_segments = curated.get("maker_segments", {})
+    gateway_prefixes = set(curated.get("gateway_prefixes", []))
+    maker_display = curated.get("maker_display", {})
+    display_to_slug = {v.lower(): k for k, v in maker_display.items()}
 
     litellm_data = {}
     openrouter_data = []
@@ -354,10 +390,17 @@ def build(offline: bool = False):
             }
         return models[canonical_id]
 
-    def register_alias(raw: str, canonical_id: str, provider: str = "", region: str = "", version: str = ""):
+    alias_priority: dict[str, int] = {}
+
+    def register_alias(raw: str, canonical_id: str, provider: str = "", region: str = "", version: str = "", priority: int = 1):
         low = raw.strip().lower()
         if not low:
             return
+        existing = alias_index.get(low)
+        if existing and existing["canonical_id"] != canonical_id:
+            if priority <= alias_priority.get(low, 0):
+                return
+        alias_priority[low] = priority
         pinned = is_pinned_reference(raw)
         alias_index[low] = {
             "canonical_id": canonical_id,
@@ -386,12 +429,16 @@ def build(offline: bool = False):
         if not usable(key) and not usable(key.split("/")[-1]):
             continue
         base_name, route, region, ver = normalize_family_slug(key)
-        if not usable(base_name):
-            base_name = key.split("/")[-1].lower()
-        maker = maker_of(key) or maker_of(base_name)
-        maker_slug = re.sub(r"[^a-z0-9]+", "-", (maker or provider or "unknown").lower()).strip("-")
-        canonical_id = f"{maker_slug}/{base_name}"
-        rec = register_model(canonical_id, base_name, maker, mode)
+        maker_slug, model_name = maker_model_for(key, maker_segments, gateway_prefixes, maker_of, display_to_slug)
+        if maker_slug:
+            maker_disp = maker_display.get(maker_slug, "") or maker_of(key) or maker_of(model_name)
+        else:
+            model_name = base_name if usable(base_name) else key.split("/")[-1].lower()
+            maker_disp = maker_of(key) or maker_of(model_name)
+            maker_slug = re.sub(r"[^a-z0-9]+", "-", (maker_disp or provider or "unknown").lower()).strip("-")
+        canonical_id = f"{maker_slug}/{model_name}"
+        priority = 2 if first_party_canonical(canonical_id, gateway_prefixes) else 1
+        rec = register_model(canonical_id, model_name, maker_disp, mode)
 
         # Enrich fields from LiteLLM
         max_in = v.get("max_input_tokens") or v.get("max_tokens") or 0
@@ -432,10 +479,10 @@ def build(offline: bool = False):
             rec["lifecycle"]["deprecation_date"] = dep_date
             rec["lifecycle"]["status"] = "retired" if dep_date <= today else "deprecated"
 
-        register_alias(key, canonical_id, route or provider, region, ver)
+        register_alias(key, canonical_id, route or provider, region, ver, priority)
         tail = key.split("/")[-1]
         if usable(tail):
-            register_alias(tail, canonical_id, route or provider, region, ver)
+            register_alias(tail, canonical_id, route or provider, region, ver, priority)
 
     # 2. Enrich from OpenRouter
     for item in openrouter_data:
@@ -443,13 +490,19 @@ def build(offline: bool = False):
         if not or_id:
             continue
         base_name, route, region, ver = normalize_family_slug(or_id)
-        maker = maker_of(or_id) or maker_of(base_name) or or_id.split("/")[0]
-        maker_slug = re.sub(r"[^a-z0-9]+", "-", maker.lower()).strip("-")
-        canonical_id = f"{maker_slug}/{base_name}"
-        rec = register_model(canonical_id, base_name, maker, "chat")
+        maker_slug, model_name = maker_model_for(or_id, maker_segments, gateway_prefixes, maker_of, display_to_slug)
+        if maker_slug:
+            maker_disp = maker_display.get(maker_slug, "") or maker_of(or_id) or maker_of(model_name) or or_id.split("/")[0]
+        else:
+            model_name = base_name if usable(base_name) else or_id.split("/")[-1].lower()
+            maker_disp = maker_of(or_id) or maker_of(model_name) or or_id.split("/")[0]
+            maker_slug = re.sub(r"[^a-z0-9]+", "-", maker_disp.lower()).strip("-") or "unknown"
+        canonical_id = f"{maker_slug}/{model_name}"
+        priority = 2 if first_party_canonical(canonical_id, gateway_prefixes) else 1
+        rec = register_model(canonical_id, model_name, maker_disp, "chat")
         if item.get("hugging_face_id") and not rec["hugging_face_id"]:
             rec["hugging_face_id"] = item["hugging_face_id"]
-            register_alias(item["hugging_face_id"], canonical_id, "huggingface", "", "")
+            register_alias(item["hugging_face_id"], canonical_id, "huggingface", "", "", priority)
         ctx = item.get("context_length") or 0
         if isinstance(ctx, int) and ctx > rec["context_window"]:
             rec["context_window"] = ctx
@@ -457,9 +510,9 @@ def build(offline: bool = False):
         if isinstance(exp, str) and re.match(r"^\d{4}-\d{2}-\d{2}", exp):
             rec["lifecycle"]["deprecation_date"] = exp[:10]
             rec["lifecycle"]["status"] = "retired" if exp[:10] <= today else "deprecated"
-        register_alias(or_id, canonical_id, "openrouter", region, ver)
+        register_alias(or_id, canonical_id, "openrouter", region, ver, priority)
         if item.get("canonical_slug"):
-            register_alias(item["canonical_slug"], canonical_id, "openrouter", region, ver)
+            register_alias(item["canonical_slug"], canonical_id, "openrouter", region, ver, priority)
 
     # 3. Apply Curated Models (highest priority override)
     for canonical_id, cmod in curated_models.items():
@@ -482,7 +535,7 @@ def build(offline: bool = False):
             rec["hugging_face_id"] = cmod["hugging_face_id"]
         for al in cmod.get("aliases", []):
             _, route, region, ver = normalize_family_slug(al)
-            register_alias(al, canonical_id, route or cmod.get("maker", "").lower(), region, ver)
+            register_alias(al, canonical_id, route or cmod.get("maker", "").lower(), region, ver, 3)
             if usable(al) and al not in legacy_names:
                 legacy_names[al] = {"provider": cmod.get("maker", "").lower(), "mode": cmod.get("mode", "chat")}
 
