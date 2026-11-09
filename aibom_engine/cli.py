@@ -244,7 +244,7 @@ def main():
             s.reconfigure(errors="replace")
         except Exception:
             pass
-    p = argparse.ArgumentParser(prog="aibom_engine", description="Find the AI models inside an app and prove each one with a line of code.")
+    p = argparse.ArgumentParser(prog=command(), description="Find the AI models inside an app and prove each one with a line of code.")
     sub = p.add_subparsers(dest="cmd", required=True)
     s = sub.add_parser("scan", help="scan a folder or a GitHub link and write an AI-BOM")
     s.add_argument("source", help="a folder, or a link such as https://github.com/owner/repo (also owner/repo)")
