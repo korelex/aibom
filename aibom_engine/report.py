@@ -1,10 +1,12 @@
 """The readable outputs for people who do not read JSON: a web page, a markdown summary and a spreadsheet (CSV).
 The CycloneDX file stays the source of truth; these are built from the same items."""
 import csv
+import datetime
 import html
 import io
 
 from . import __version__
+from .db import today_iso
 from .display import build_rows, by_maker
 
 TIER_TEXT = {"declared": "Confirmed", "inferred": "Worked out"}
@@ -15,8 +17,9 @@ MODE_TEXT = {"chat": "chat model", "embedding": "embedding model", "image_genera
 NO_MODELS = ("This usually means the app picks its model when it runs (for example from an environment variable, a settings page or a database), "
              "or that it uses no AI models. A scan of the code cannot see choices made at run time.")
 LISTED_NOTE = "long tables or lists of models, for example token-limit tables or model pickers"
-# Results of the independent test on five apps the scanner had never seen (benchmark/RESULTS.md, round 3).
-TESTED = "On five apps it had never seen, this scanner found about 79% of the real models, and about 99% of what it reported was correct. The best free scanners found about 10%."
+# Round-3 benchmark result; reproduce it with `python benchmark/run.py` (see benchmark/README.md).
+TESTED = ("In a blind test on five open-source apps, this scanner found about 79% of the AI models named in their code, and about "
+          "99% of what it reported was correct (benchmark/README.md in the aibom repository).")
 CANNOT_SEE = ["A model that the app chooses when it runs: an environment variable, a settings page, a database or a remote setting. A scan reads code; it does not run the app.",
               "Anything outside this one repository, such as code in other repositories or in private packages.",
               "AI parts other than models: agents, tools, vector databases and frameworks are not covered yet.",
@@ -75,13 +78,21 @@ def risk_lines(risk):
             ("Deprecated (retirement scheduled, still works)", risk["deprecated"]),
             ("Floating aliases (a dated snapshot exists to pin)", risk["floating"]),
             ("Hugging Face models (pin a commit revision; this scan does not check for one)", risk["hf"]),
-            ("Restricted licenses", risk["restricted"]),
+            ("Restricted licenses (flag for legal review)", risk["restricted"]),
             ("Unknown licenses", risk["unknown"])]
+
+
+STALE_AFTER_DAYS = 90
 
 
 def lifecycle_notes(risk):
     """Plain-language limits of the lifecycle column, shown under the Risks block."""
     notes = []
+    if risk["checked"]:
+        age = (datetime.date.fromisoformat(today_iso()) - datetime.date.fromisoformat(risk["checked"])).days
+        if age > STALE_AFTER_DAYS:
+            notes.append(f"Warning: the lifecycle data was last checked {age} days ago ({risk['checked']}). Retirements announced since "
+                         "then are not included; update aibom for newer data.")
     if risk["total"]:
         notes.append(f"Lifecycle: {risk['total'] - len(risk['untracked'])} of {risk['total']} models have a sourced record"
                      + (f" (checked against the providers' own pages on {risk['checked']})" if risk["checked"] else "")
@@ -92,9 +103,22 @@ def lifecycle_notes(risk):
 
 
 def risk_names(items, limit=5):
-    names = [r["name"] for r in items[:limit]]
+    # A "*" marks a date that is for the maker's own API while the code uses a cloud platform (see PLATFORM_NOTE).
+    names = [r["name"] + ("*" if r.get("lifecycle_scope") == "platform" and r.get("status") in ("retired", "deprecated") else "") for r in items[:limit]]
     more = len(items) - len(names)
     return ", ".join(names) + (f" and {more} more" if more > 0 else "")
+
+
+def license_label(r):
+    name = r.get("license_name") or r.get("license") or "unknown"
+    use = r.get("license_commercial_use") or ""
+    if use == "conditional":
+        return f"{name} (conditional)"
+    if use == "no":
+        return f"{name} (non-commercial)"
+    if use == "provider-terms":
+        return "Provider API terms"
+    return name
 
 
 def intro(rows, app):
@@ -130,7 +154,7 @@ def build_csv(items, links=None):
     w = csv.writer(buf, lineterminator="\r\n")
     w.writerow(["model", "made_by", "type", "role", "confidence", "where_first_place", "link", "places_in_code", "also_written_as",
                 "status", "pinned", "floating_alias", "deprecation_date", "retirement_date", "replacement", "lifecycle_source", "license",
-                "license_restricted"])
+                "license_restricted", "license_name", "license_commercial_use"])
     for role, group in (("used directly", rows["used"]), ("only listed", rows["listed"])):
         for r in group:
             p, url, _ = where(r, links)
@@ -138,9 +162,9 @@ def build_csv(items, links=None):
                         r.get("status", "unknown"), "yes" if r.get("pinned") is True else ("no" if r.get("pinned") is False else "unknown"),
                         "yes" if r.get("floating") else "no", r.get("deprecation_date", ""), r.get("retirement_date", ""),
                         r.get("replacement", ""), r.get("lifecycle_source_url", ""), r.get("license", "unknown"),
-                        "yes" if r.get("license_restricted") else "no"])
+                        "yes" if r.get("license_restricted") else "no", r.get("license_name", ""), r.get("license_commercial_use", "")])
     for g in rows["left_out"]:
-        w.writerow([g["name"], "", "", "left out", g["why"], f"{g['file']}:{g['line']}", links.url_for(g["file"], g["line"]) if links else "", 0, ""] + [""] * 8)
+        w.writerow([g["name"], "", "", "left out", g["why"], f"{g['file']}:{g['line']}", links.url_for(g["file"], g["line"]) if links else "", 0, ""] + [""] * 11)
     return buf.getvalue()
 
 
@@ -171,9 +195,7 @@ def build_markdown(items, app, source="", links=None, meta=None):
             p, url, more = where(r, links)
             cell = f"[{p}]({url})" if url else p
             alias = f" (also written as {', '.join(r['also'][:3])})" if r["also"] else ""
-            lic = r.get("license") or "unknown"
-            if r.get("license_restricted"):
-                lic += " (restricted)"
+            lic = license_label(r)
             t.append(f"| {r['name']}{alias} | {r['maker'] or '-'} | {MODE_TEXT.get(r['mode'], r['mode']) or 'AI model'} | {cell}{f' (+{more} more)' if more else ''} | {TIER_TEXT[r['tier']]} | {status_text(r)} | {pin_text(r)} | {r.get('deprecation_date') or '-'} | {r.get('retirement_date') or '-'} | {r.get('replacement') or '-'} | {lic} |")
         return t
 
@@ -200,7 +222,7 @@ CSS = """
 .cards{display:flex;gap:16px;flex-wrap:wrap;margin:18px 0}.card{border:3px solid #000;padding:14px 18px;flex:1;min-width:220px}.card b{display:block;font-size:44px;line-height:1.05}.card span{font-size:14px}
 .warn{border:4px double #000;padding:10px 18px;margin:16px 0;font-size:15px}.warn ul{margin:6px 0 0 18px;padding:0}.how{border:1px solid #000;padding:12px 18px;font-size:14px;margin:18px 0}.how ul{margin:6px 0 0 18px;padding:0}
 input#q{width:100%;padding:12px;border:3px solid #000;font-size:16px;margin:14px 0 4px}
-.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;table-layout:fixed;font-size:14px;margin:8px 0 16px}th,td{border:1px solid #000;padding:7px 10px;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{border-bottom:3px solid #000}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:980px;font-size:14px;margin:8px 0 16px}table.slim{min-width:0;table-layout:fixed}th,td{border:1px solid #000;padding:7px 10px;text-align:left;vertical-align:top;overflow-wrap:break-word}td:nth-child(3){min-width:190px;overflow-wrap:anywhere}th{border-bottom:3px solid #000}
 code{font-family:Consolas,Menlo,monospace;font-size:12.5px}a{color:#000;font-weight:bold}.also{font-size:12px;margin-top:2px}
 .badge{display:inline-block;border:2px solid #000;padding:0 8px;font-size:12px;font-weight:bold;white-space:nowrap}.badge.worked{border-style:dashed}
 details{margin:12px 0}summary{cursor:pointer;font-weight:bold}details.grp>summary{font-size:16px;padding:6px 0}details.more{margin:4px 0 0}details.more summary{font-weight:normal;font-size:12px}
@@ -245,9 +267,7 @@ def build_html(items, app, source="", links=None, meta=None):
         dep = r.get("deprecation_date") or "-"
         ret = r.get("retirement_date") or "-"
         repl = r.get("replacement") or "-"
-        lic = r.get("license") or "unknown"
-        if r.get("license_restricted"):
-            lic += " (restricted)"
+        lic = license_label(r)
         text = " ".join([r["name"], r["maker"], r["mode"], status, dep, ret, repl, lic, " ".join(r["also"]), " ".join(p["file"] for p in r["places"][:30])]).lower()
         return (f'<tr data-t="{h(text)}"><td><b>{h(r["name"])}</b>{alias}</td><td>{h(MODE_TEXT.get(r["mode"], r["mode"]) or "AI model")}</td><td>{cell}</td><td>{badge}</td>'
                 f'<td>{h(status)}</td><td>{h(pinned)}</td><td>{h(dep)}</td><td>{h(ret)}</td><td>{h(repl)}</td><td>{h(lic)}</td></tr>')
@@ -256,7 +276,7 @@ def build_html(items, app, source="", links=None, meta=None):
         out = []
         for i, (maker, rr) in enumerate(by_maker(rs)):
             out.append(f'<details class="grp"{" open" if open_first and i < 3 else ""}><summary>{h(maker)} ({len(rr)})</summary>'
-                       '<div class="tw"><table><colgroup><col style="width:15%"><col style="width:7%"><col style="width:19%"><col style="width:8%"><col style="width:8%"><col style="width:11%"><col style="width:8%"><col style="width:8%"><col style="width:8%"><col style="width:8%"></colgroup>'
+                       '<div class="tw"><table>'
                        '<tr><th>Model</th><th>Type</th><th>Where it is used (click to see the line)</th><th>Confidence</th><th>Status</th><th>Pinned</th><th>Deprecated</th><th>Retires or retired</th><th>Replacement</th><th>License</th></tr>' + "".join(row_html(r) for r in rr) + "</table></div></details>")
         return "".join(out)
 
@@ -296,7 +316,7 @@ def build_html(items, app, source="", links=None, meta=None):
     if gone:
         rws = "".join(f"<tr><td>{h(g['name'])}</td><td>{h(g['why'])}</td><td>{place_link({'file': g['file'], 'line': g['line']})}</td></tr>" for g in gone)
         out.append(f"<h2>Left out, and why</h2><details><summary>{len(gone)} names that look like models but are not used (click to open)</summary>"
-                   f"<div class='tw'><table><colgroup><col style='width:32%'><col style='width:36%'><col style='width:32%'></colgroup><tr><th>Name</th><th>Why it was left out</th><th>Example place</th></tr>{rws}</table></div></details>")
+                   f"<div class='tw'><table class='slim'><colgroup><col style='width:32%'><col style='width:36%'><col style='width:32%'></colgroup><tr><th>Name</th><th>Why it was left out</th><th>Example place</th></tr>{rws}</table></div></details>")
     out.append("<div class='limits'><h2>What this scan cannot see</h2><ul>" + "".join(f"<li>{h(c)}</li>" for c in CANNOT_SEE) + "</ul></div>")
     out.append("<p class='foot'>The standard AI-BOM file (aibom.cdx.json) holds the same facts for other tools, and models.csv opens in a spreadsheet. This page needs no internet connection.</p>")
     out.append(f"</div><script>{JS}</script></body></html>")

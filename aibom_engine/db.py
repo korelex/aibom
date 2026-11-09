@@ -168,23 +168,45 @@ def match_vulnerabilities(
     return matched
 
 
+# Whether the license lets you use the model commercially:
+#   yes             permissive license
+#   conditional     allowed under conditions (attribution, user limits, acceptable-use policy, copyleft)
+#   no              non-commercial or research-only
+#   provider-terms  a hosted model sold under the provider's API terms. Commercial use is the point of those terms;
+#                   they are not a non-commercial license, so they must never be shown as one.
+#   unknown         not stated
+_COMMERCIAL_USE = {
+    "permissive": "yes",
+    "conditional-commercial": "conditional",
+    "non-commercial": "no",
+    "copyleft": "conditional",
+    "proprietary": "provider-terms",
+    "custom": "unknown",
+    "unknown": "unknown",
+}
+
+
+def _commercial(info):
+    info["commercial_use"] = _COMMERCIAL_USE.get(info.get("category"), "unknown")
+    return info
+
+
 def lookup_license(license_id: str | None, db: dict[str, Any] | None = None) -> dict[str, Any]:
-    """Return license metadata {id, name, category, restricted, severity, reason}."""
+    """Return license metadata {id, name, category, restricted, severity, reason, commercial_use}."""
     db = db or load_db()
     table = db.get("licenses", {})
     raw = (license_id or "").strip().lower()
     if not raw or raw == "unknown":
-        return {
+        return _commercial({
             "id": "unknown",
             "name": "Unknown License",
             "category": "unknown",
             "restricted": False,
             "severity": "low",
             "reason": "Model license is not declared in the knowledge base or local model card.",
-        }
+        })
     if raw in table:
-        entry = table[raw]
-        return {"id": raw, **entry}
+        return _commercial({"id": raw, **table[raw]})
     # Normalize common SPDX / Hugging Face variations
     for prefix, mapped in (
         ("apache", "apache-2.0"),
@@ -205,24 +227,24 @@ def lookup_license(license_id: str | None, db: dict[str, Any] | None = None) -> 
         ("agpl", "agpl-3.0"),
     ):
         if raw.startswith(prefix) and mapped in table:
-            return {"id": mapped, **table[mapped]}
+            return _commercial({"id": mapped, **table[mapped]})
     if "non-commercial" in raw or "nc" in raw.split("-") or "research" in raw:
-        return {
+        return _commercial({
             "id": raw,
             "name": license_id or raw,
             "category": "non-commercial",
             "restricted": True,
             "severity": "high",
             "reason": f"License '{license_id}' restricts commercial use.",
-        }
-    return {
+        })
+    return _commercial({
         "id": raw,
         "name": license_id or raw,
         "category": "custom",
         "restricted": False,
         "severity": "info",
         "reason": "Custom or unmapped license identifier.",
-    }
+    })
 
 
 def today_iso() -> str:
@@ -409,7 +431,7 @@ def resolve_model(
     region = region_hint or (alias_hit or {}).get("region") or ""
     version = ver_extracted or (alias_hit or {}).get("version") or ""
     # Whether a reference is pinned is a fact about the name the code writes, so it is read from that name.
-    pinned = pinned_extracted
+    pinned = pinned_extracted or bool(exact and (alias_hit or {}).get("pinned_override"))
     is_latest = low.endswith("-latest") or low.endswith(":latest")
 
     # A record for this exact snapshot wins; otherwise the family's record applies (only set when the whole family
@@ -475,6 +497,9 @@ def resolve_model(
         "license_category": lic_info.get("category", "unknown"),
         "license_restricted": bool(lic_info.get("restricted", False)),
         "license_reason": lic_info.get("reason", ""),
+        "license_commercial_use": lic_info.get("commercial_use", "unknown"),
+        "license_source_url": ((canonical_rec or {}).get("license") or {}).get("source_url", ""),
+        "license_checked": ((canonical_rec or {}).get("license") or {}).get("checked", ""),
         "context_window": (canonical_rec or {}).get("context_window", 0),
         "capabilities": (canonical_rec or {}).get("capabilities", []),
         "hugging_face_id": hf_id,

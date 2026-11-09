@@ -488,6 +488,14 @@
   {
    "name": "gpt-3.5-turbo-1106",
    "why": "hard-coded model option (create-assistant.tsx:94)"
+  },
+  {
+   "name": "llama3-70b-4096",
+   "why": "real: hostedId value in lib/models/llm/groq-llm-list.ts:24 (labelled on 2026-11-10 from the line, after a benchmark run)"
+  },
+  {
+   "name": "mistral-7b",
+   "why": "real: the MISTRAL_7B model entry in lib/models/llm/mistral-llm-list.ts:8 (labelled on 2026-11-10 from the line, after a benchmark run)"
   }
  ],
  "junk": [

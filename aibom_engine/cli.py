@@ -17,6 +17,14 @@ SHORT_MODE = {"chat model": "chat", "embedding model": "embedding", "image model
               "completion": "text", "rerank": "rerank", "moderation": "moderation", "realtime": "realtime", "video_generation": "video"}
 
 
+def command():
+    """How the person started aibom, so every hint they see can be copied and run as it is."""
+    # Split on both separators: os.path only knows its own platform's, and the result must not depend on it.
+    name = (sys.argv[0] or "").replace("\\", "/").rsplit("/", 1)[-1]
+    exe = os.path.splitext(name)[0].lower()
+    return "aibom" if exe in ("aibom", "aibom-script") else "python -m aibom_engine"
+
+
 def width():
     return max(80, min(shutil.get_terminal_size((100, 24)).columns, 140))
 
@@ -29,7 +37,7 @@ def fit(text, n):
 def load(run_dir, name):
     path = os.path.join(run_dir, name)
     if not os.path.exists(path):
-        raise SourceError("There is no finished scan in '%s'. Run: python -m aibom_engine scan <folder or link>" % run_dir)
+        raise SourceError("There is no finished scan in '%s'. Run: %s scan <folder or link>" % (run_dir, command()))
     with open(path, encoding="utf-8") as f:
         return json.load(f)
 
@@ -78,7 +86,7 @@ def show(run_dir, limit, everything=False, left_out=False):
     show_rows = used + listed if everything else (used if used else listed)
     print(model_table(show_rows, links_for(info), len(show_rows) if everything else limit, role=everything))
     if not everything and listed and used:
-        print("\n  Also %d models only listed in long tables. See them with: python -m aibom_engine show %s --all" % (len(listed), run_dir))
+        print("\n  Also %d models only listed in long tables. See them with: %s show %s --all" % (len(listed), command(), run_dir))
 
 
 def explain(run_dir, name):
@@ -98,7 +106,7 @@ def explain(run_dir, name):
             print("%s was NOT counted as a model of this app: %s." % (gone["name"], gone["why"]))
             print("  Example place: %s:%s" % (gone["file"], gone["line"]))
             return
-        raise SourceError("I found nothing called '%s'. List the models with: python -m aibom_engine show %s --all" % (name, run_dir))
+        raise SourceError("I found nothing called '%s'. List the models with: %s show %s --all" % (name, command(), run_dir))
     print("%s  (%s, %s)" % (hit["name"], hit["maker"] or "maker unknown", MODE_TEXT.get(hit["mode"], hit["mode"]) or "AI model"))
     print("  How it is used:  %s" % ("set or used directly in the code" if hit["role"] == "used" else "only listed inside a long table or list, not set or called on its own"))
     print("  How sure:        %s" % TIER_LONG[hit["tier"]])
@@ -138,7 +146,7 @@ def open_report(run_dir):
     import webbrowser
     path = os.path.abspath(os.path.join(run_dir, "report.html"))
     if not os.path.exists(path):
-        raise SourceError("There is no report in '%s' yet. Try: python -m aibom_engine rebuild %s" % (run_dir, run_dir))
+        raise SourceError("There is no report in '%s' yet. Try: %s rebuild %s" % (run_dir, command(), run_dir))
     print("report:", path)
     webbrowser.open("file:///" + path.replace(os.sep, "/").lstrip("/"))
 
@@ -162,7 +170,7 @@ def check_tools():
         import cyclonedx  # noqa: F401
         import jsonschema  # noqa: F401
     except ImportError:
-        raise SourceError("Two Python packages are missing. Install them with:  python -m pip install -r requirements.txt")
+        raise SourceError("Two Python packages are missing. Install aibom with:  python -m pip install .  (from the aibom folder)")
 
 
 def do_scan(a):
@@ -218,11 +226,11 @@ def do_scan(a):
     for note in r["warnings"]:
         print("  Note: " + note)
     print("\nFiles in %s:" % out)
-    print("  report.html     the readable report: open it in a browser (python -m aibom_engine report %s)" % out)
+    print("  report.html     the readable report: open it in a browser (%s report %s)" % (command(), out))
     print("  models.csv      the same list for a spreadsheet")
     print("  aibom.cdx.json  the standard AI-BOM file (%s CycloneDX 1.6)" % ("valid" if r["valid"] else "NOT VALID"))
-    print("\nNext:  python -m aibom_engine show %s --all      list every model" % out)
-    print("       python -m aibom_engine explain %s MODEL   why is this model here?" % out)
+    print("\nNext:  %s show %s --all      list every model" % (command(), out))
+    print("       %s explain %s MODEL   why is this model here?" % (command(), out))
     print("Limits: finds AI models only. It cannot see a model chosen when the app runs.")
     if not r["valid"]:
         raise SourceError("The AI-BOM did not pass the format check: " + str(r["error"]))

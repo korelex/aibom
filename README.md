@@ -100,12 +100,35 @@ their own schedules, so those rows carry a `*`. Set `AIBOM_TODAY=YYYY-MM-DD` to
 reproduce a report as of a given day. Lifecycle data from upstream catalogues is not
 used: it was found to mix up deprecation with earliest-retirement dates.
 
+### Licenses
+
+Each model carries a license name and a *commercial use* value. The report flags
+licenses for legal review; it does not decide whether you are in compliance.
+
+| Commercial use | Shown as | Example |
+| --- | --- | --- |
+| `yes` | the license name | Apache-2.0, MIT |
+| `conditional` | `(conditional)` | Llama 2 Community License (attribution, 700M-user limit, acceptable-use policy) |
+| `no` | `(non-commercial)` | CC-BY-NC, research-only licenses |
+| `provider-terms` | `Provider API terms` | GPT-4o and Claude: hosted models sold under the provider's API terms |
+| `unknown` | the license name | not stated |
+
+Curated open-model entries carry the source URL of the license and the date it was
+checked; `python scripts/check_licenses.py` re-checks every one of them against the
+license its Hugging Face repo declares. A model that is not curated gets a license only
+when its family has one license for all its open releases (Llama, Gemma, Mixtral, Phi);
+anything else is `unknown` rather than a guess.
+
 ### Floating aliases
 
-A name is a *floating alias* only when the provider also offers a dated snapshot you
+A name is a *floating alias* only when the model catalogue lists a dated snapshot you
 could pin (`gpt-4o` has `gpt-4o-2024-08-06`; `text-embedding-3-small` has none, so it
-is not flagged). Hugging Face repo ids are reported on their own: they are pinned by a
-commit revision, which this scan does not check.
+is not flagged). Some providers pin the dateless name itself: Anthropic states that
+every Claude ID is a pinned snapshot, including the dateless IDs from the 4.6
+generation on, so `claude-opus-5` is pinned while `claude-haiku-4-5` is an alias. Such
+names are listed with their source under `pinned_names` in `curated.json`. Hugging Face
+repo ids are reported on their own: they are pinned by a commit revision, which this
+scan does not check.
 
 ## Tests
 
@@ -115,12 +138,22 @@ python -m pytest
 python scripts/smoke_wheel.py   # builds the wheel, installs it in a clean virtualenv and scans with it
 ```
 
-The benchmark corpus and hand-written answer keys are in `benchmark/`.
+## Accuracy
+
+On a blind test on five open-source apps, the scanner found about 79% of the AI models
+named in their code, and about 99% of what it reported was correct. The method, the
+answer keys, the per-repository results and their limits are in
+[benchmark/README.md](benchmark/README.md); `python benchmark/run.py` reproduces them.
 
 ## Status
 
 Alpha. The scanner currently covers model discovery only. SDKs, MCP, vector
 stores, secrets, weight files, SARIF, CI and KorelexOne upload are on the
 roadmap, not in this build.
+
+## License
+
+Apache License 2.0, see [LICENSE](LICENSE). The bundled model data is derived in part
+from third-party sources; their notices are in [NOTICE](NOTICE).
 
 Built and maintained by [Korelex](https://korelex.ai).

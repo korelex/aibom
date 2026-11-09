@@ -9,7 +9,7 @@ Combines 4 live sources + our curated overlay:
 Usage:
   python scripts/build_db.py              # full live build from all upstream sources
   python scripts/build_db.py --offline    # build from local aibom_engine/knowledge/model_names.json + curated.json only
-  python scripts/build_db.py --reformat   # rewrite ai_db.json in the reviewable one-entry-per-line layout (no network)
+  python scripts/build_db.py --reformat   # rewrite ai_db.json and curated.json in their one-entry-per-line layout (no network)
   python scripts/build_db.py --apply-curated  # re-apply curated.json on the existing ai_db.json (no network, minimal diff)
 """
 from __future__ import annotations
@@ -134,20 +134,22 @@ def infer_license_for_maker(maker: str, name: str) -> str:
         return "flux-1-dev-non-commercial"
     if "flux.1-schnell" in low or "flux-1-schnell" in low:
         return "apache-2.0"
+    # Name-based guesses are kept only for families whose open releases share one license (checked against the
+    # Hugging Face repos on 2026-11-10). Families that mix licenses get no guess: "unknown" is honest, a wrong
+    # license is not. Removed for that reason: deepseek (MIT code, DeepSeek License weights), qwen2.5/qwen3 (the
+    # 3B and 72B models use the Qwen License), ministral (research license) and codestral (non-production license).
     if "c4ai-command" in low:
         return "cc-by-nc-4.0"
     if "mistral-large-2407" in low:
         return "mistral-research"
-    if "mixtral" in low or "mistral-7b" in low or "ministral" in low or "codestral" in low:
-        return "apache-2.0"
-    if "deepseek" in low:
-        return "mit"
-    if "qwen2.5" in low or "qwen3" in low or "qwq" in low:
+    if "mixtral" in low or "mistral-7b" in low:
         return "apache-2.0"
     if "phi-3" in low or "phi-4" in low or "phi3" in low or "phi4" in low:
         return "mit"
-    if "bge-" in low or "all-minilm" in low:
+    if re.search(r"bge-(small|base|large)-(en|zh)", low):
         return "mit"
+    if "all-minilm" in low:
+        return "apache-2.0"
     if maker in {"OpenAI", "Anthropic", "Google", "Cohere", "Amazon", "xAI", "AI21 Labs", "Perplexity", "Voyage AI"}:
         return "proprietary"
     return "unknown"
@@ -171,6 +173,27 @@ def dump_db(path: str, db: dict) -> None:
         else:
             body = dumps(value)
         parts.append(f" {json.dumps(key)}:{body}")
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write("{\n" + ",\n".join(parts) + "\n}\n")
+
+
+def dump_curated(path: str, curated: dict) -> None:
+    """Write curated.json in one stable layout: one license, package, model or record per line, sections in a fixed
+    order. Hand edits stay easy, and every data change is a one-line diff."""
+    def dumps(obj):
+        return json.dumps(obj, ensure_ascii=False)
+
+    parts = []
+    for key, value in curated.items():  # keep the section order of the file
+        if isinstance(value, dict) and value:
+            rows = [f"    {dumps(k)}: {dumps(v)}" for k, v in value.items()]
+            body = "{\n" + ",\n".join(rows) + "\n  }"
+        elif isinstance(value, list) and value:
+            rows = [f"    {dumps(v)}" for v in value]
+            body = "[\n" + ",\n".join(rows) + "\n  ]"
+        else:
+            body = dumps(value)
+        parts.append(f"  {dumps(key)}: {body}")
     with open(path, "w", encoding="utf-8", newline="\n") as f:
         f.write("{\n" + ",\n".join(parts) + "\n}\n")
 
@@ -408,6 +431,16 @@ def build(offline: bool = False, from_existing: bool = False):
             existing = json.load(fh)
         models.update(existing["models"])
         alias_index.update(existing["alias_index"])
+        # Every model that is not in curated.json is reset: its license is re-derived from the name rules and it has
+        # no lifecycle. A rule change, or an entry removed from curated.json, then takes effect without a network
+        # rebuild, and nothing removed from curated.json lingers with a stale source.
+        for key, m in models.items():
+            if key not in curated_models:
+                m["lifecycle"] = {}
+                lic_id = infer_license_for_maker(m.get("maker") or "", m.get("name") or m.get("id", ""))
+                meta = licenses_table.get(lic_id, {})
+                m["license"] = {"id": lic_id, "category": meta.get("category", "unknown"),
+                                "restricted": meta.get("restricted", False), "source_url": "", "checked": ""}
         existing_vulns = existing["vulnerabilities"]
         existing_built = existing.get("meta", {}).get("built", "")
 
@@ -431,6 +464,8 @@ def build(offline: bool = False, from_existing: bool = False):
                     "id": lic_id,
                     "category": lic_meta.get("category", "unknown"),
                     "restricted": lic_meta.get("restricted", False),
+                    "source_url": "",
+                    "checked": "",
                 },
                 "hugging_face_id": None,
                 "snapshots": [],
@@ -570,6 +605,8 @@ def build(offline: bool = False, from_existing: bool = False):
             "id": lic_id,
             "category": lic_meta.get("category", "unknown"),
             "restricted": lic_meta.get("restricted", False),
+            "source_url": cmod.get("license_source_url", ""),
+            "checked": cmod.get("license_checked", ""),
         }
         # Lifecycle comes only from curated, sourced records. Dates are stored; the status is worked out from them at
         # scan time (db.lifecycle_status), so a record never goes stale by itself.
@@ -618,6 +655,27 @@ def build(offline: bool = False, from_existing: bool = False):
                 _, route, region, ver = normalize_family_slug(name)
                 register_alias(name, family, route or rec.get("maker", "").lower(), region, ver, 4)
             alias_index[low]["lifecycle"] = dict(life)
+
+    # 3c. Dateless ids that the provider says are pinned snapshots (for example Claude 4.6 and later). Without this a
+    # dateless name would always look like a floating alias.
+    for rec in curated.get("pinned_names", []):
+        if not (rec.get("source_url", "").startswith("https://") and re.match(r"^\d{4}-\d{2}-\d{2}$", rec.get("checked", ""))):
+            raise SystemExit("pinned_names record needs source_url (https) and checked (YYYY-MM-DD)")
+        pinned_names = set()
+        for name in rec["match"]:
+            low = name.strip().lower()
+            if low not in alias_index:
+                raise SystemExit(f"pinned_names: {name!r} is not a known alias; add it to curated_models first")
+            alias_index[low]["pinned_override"] = True
+            pinned_names.add(low)
+        # The same model written the way a cloud platform spells it (anthropic.claude-opus-5-5, us.anthropic.claude-...-v1:0,
+        # bedrock/anthropic....) is pinned too, as long as it is filed under the same model.
+        spelling = re.compile(r"^(?:(?:us|eu|apac|global|ca|sa|il|me|af|mx)\.)?(?:anthropic\.)?(.+?)(?:-v\d+:\d+|@.*)?$")
+        for alias, entry in alias_index.items():
+            m = spelling.match(alias.split("/")[-1])
+            base = m.group(1) if m else ""
+            if base in pinned_names and alias != base and entry["canonical_id"] == alias_index[base]["canonical_id"]:
+                entry["pinned_override"] = True
 
     # 4. Build Packages & OSV Vulnerabilities
     packages_table = {}
@@ -693,7 +751,9 @@ if __name__ == "__main__":
         # Rewrite the existing database in the canonical layout without fetching anything.
         with open(AI_DB_PATH, encoding="utf-8") as fh:
             dump_db(AI_DB_PATH, json.load(fh))
-        print("Reformatted", AI_DB_PATH)
+        with open(CURATED_PATH, encoding="utf-8") as fh:
+            dump_curated(CURATED_PATH, json.load(fh))
+        print("Reformatted", AI_DB_PATH, "and", CURATED_PATH)
     elif "--apply-curated" in sys.argv:
         build(from_existing=True)
     else:

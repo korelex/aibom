@@ -61,6 +61,13 @@ class ReviewAppRiskReport(unittest.TestCase):
         self.assertEqual((claude["pinned"], claude["floating_alias"]), ("yes", "no"))
         self.assertEqual((claude["license"], claude["license_restricted"]), ("proprietary", "no"))
 
+    def test_llama2_license_is_conditional(self):
+        rows = self.rows()
+        llama = next(r for r in rows if "llama-2-7b" in r["model"].lower())
+        self.assertEqual(llama["license"], "llama2")
+        self.assertIn("Llama 2", llama["license_name"])
+        self.assertEqual(llama["license_commercial_use"], "conditional")
+
     def test_all_three_human_outputs_agree_about_the_retired_model(self):
         markdown, page = self.read("report.md"), self.read("report.html")
         for text in (markdown, page):
@@ -76,10 +83,27 @@ class ReviewAppRiskReport(unittest.TestCase):
         self.assertEqual(self.row("claude-3-5-sonnet-20240620")["floating_alias"], "no")
 
     def test_hugging_face_repos_are_not_floating_aliases(self):
-        self.assertEqual(self.row("meta-llama/Llama-2-7b-hf")["floating_alias"], "no")
+        for name in ("meta-llama/Llama-2-7b-hf", "stabilityai/stable-diffusion-xl-base-1.0"):
+            self.assertEqual(self.row(name)["floating_alias"], "no", name)
         markdown = self.read("report.md")
         self.assertRegex(markdown, r"- Floating aliases[^\n]*: 2 \(gpt-4o, gpt-4o-mini\)")
-        self.assertRegex(markdown, r"- Hugging Face models[^\n]*: 1 \(meta-llama/Llama-2-7b-hf\)")
+        self.assertRegex(markdown, r"- Hugging Face models[^\n]*: 2 \(meta-llama/Llama-2-7b-hf, stabilityai/stable-diffusion-xl-base-1.0\)")
+
+    def test_provider_api_models_are_never_labelled_non_commercial(self):
+        # Review blocker: GPT-4o and Claude were printed as "(non-commercial)", which reads as "you cannot ship this".
+        for name in ("gpt-4o", "gpt-4o-mini", "text-embedding-3-small", "claude-3-5-sonnet-20240620"):
+            row = self.row(name)
+            self.assertEqual(row["license_commercial_use"], "provider-terms", name)
+            self.assertNotEqual(row["license_commercial_use"], "no", name)
+        for text in (self.read("report.md"), self.read("report.html")):
+            self.assertNotIn("non-commercial", text.lower())
+            self.assertIn("Provider API terms", text)
+
+    def test_conditional_licenses_are_flagged_for_legal_review_not_called_violations(self):
+        self.assertEqual(self.row("meta-llama/Llama-2-7b-hf")["license_commercial_use"], "conditional")
+        markdown = self.read("report.md")
+        self.assertRegex(markdown, r"- Restricted licenses \(flag for legal review\)[^\n]*: 2 \(")
+        self.assertNotIn("violation", markdown.lower())
 
     def test_untracked_models_say_so_instead_of_claiming_to_be_active(self):
         # No sourced record exists for text-embedding-3-small, so it is "not tracked", never "active".
@@ -127,6 +151,32 @@ class ReviewAppRiskReport(unittest.TestCase):
         names = {r["model"] for r in self.rows() if r["role"] != "left out"}
         self.assertNotIn("gpt-3.5-turbo", names)
         self.assertNotIn("gpt-4-turbo", names)
+
+
+class StaleLifecycleData(unittest.TestCase):
+    def scan_on(self, day):
+        with tempfile.TemporaryDirectory() as out, mock.patch.dict(os.environ, {"AIBOM_TODAY": day}):
+            run(APP, out, app="review-app")
+            with open(os.path.join(out, "report.md"), encoding="utf-8") as fh:
+                return fh.read()
+
+    def test_no_warning_while_the_data_is_recent(self):
+        self.assertNotIn("last checked", self.scan_on(TODAY))
+
+    def test_old_data_says_so(self):
+        markdown = self.scan_on("2027-06-01")
+        self.assertRegex(markdown, r"Warning: the lifecycle data was last checked \d+ days ago")
+
+
+class CommandHints(unittest.TestCase):
+    def test_hints_use_the_command_the_person_ran(self):
+        from aibom_engine import cli
+        with mock.patch.object(cli.sys, "argv", [r"C:\Python\Scripts\aibom.exe", "scan"]):
+            self.assertEqual(cli.command(), "aibom")
+        with mock.patch.object(cli.sys, "argv", ["/usr/local/bin/aibom", "scan"]):
+            self.assertEqual(cli.command(), "aibom")
+        with mock.patch.object(cli.sys, "argv", ["-m", "scan"]):
+            self.assertEqual(cli.command(), "python -m aibom_engine")
 
 
 class PlatformNote(unittest.TestCase):

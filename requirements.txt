@@ -1,3 +1,0 @@
-# Only two packages are needed. Everything else is the Python standard library. Python 3.9 or newer.
-cyclonedx-python-lib[validation]>=11
-jsonschema>=4
