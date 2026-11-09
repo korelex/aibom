@@ -1,5 +1,46 @@
 {
   "version": "1.0.0",
+  "maker_segments": {
+    "openai": "openai", "anthropic": "anthropic", "google": "google",
+    "stabilityai": "stabilityai", "stability": "stabilityai", "stability-ai": "stabilityai",
+    "meta-llama": "meta-llama", "meta": "meta-llama", "facebook": "meta-llama",
+    "mistralai": "mistralai", "mistral": "mistralai",
+    "cohere": "cohere", "cohereforai": "cohere",
+    "deepseek-ai": "deepseek-ai", "deepseek": "deepseek-ai",
+    "qwen": "qwen", "microsoft": "microsoft",
+    "black-forest-labs": "black-forest-labs", "black-forest": "black-forest-labs",
+    "sentence-transformers": "sentence-transformers", "baai": "baai",
+    "nvidia": "nvidia", "moonshotai": "moonshotai", "xai": "xai",
+    "amazon": "amazon", "ai21": "ai21", "ibm": "ibm",
+    "zai-org": "zai-org", "zai": "zai-org", "zhipu-ai": "zai-org",
+    "groq": "groq", "ollama": "ollama",
+    "voyage-ai": "voyage-ai", "voyage": "voyage-ai",
+    "alibaba": "alibaba",
+    "fal-ai": "fal-ai", "fal": "fal-ai",
+    "replicate": "replicate", "perplexity": "perplexity",
+    "together-ai": "together-ai", "together_ai": "together-ai", "together": "together-ai",
+    "fireworks-ai": "fireworks-ai", "fireworks_ai": "fireworks-ai", "fireworks": "fireworks-ai"
+  },
+  "gateway_prefixes": [
+    "vercel-ai-gateway", "nscale", "aiand", "wandb", "openrouter", "openrouter-ai",
+    "cloudflare", "github-models", "github", "azure-ml", "novita", "deepinfra",
+    "baseten", "nebius", "dashscope", "watsonx", "snowflake", "databricks", "gmi",
+    "aihubmix", "empiriolabs", "kyma", "oci", "inferenceapis", "opencode-go",
+    "github-copilot", "portkey", "unify", "lambdalabs", "runpod", "mindsdb",
+    "replicate", "perplexity", "together-ai", "fireworks-ai", "fal-ai", "fal"
+  ],
+  "maker_display": {
+    "stabilityai": "Stability AI", "black-forest-labs": "Black Forest Labs",
+    "zai-org": "Zhipu AI", "cohere": "Cohere", "meta-llama": "Meta",
+    "mistralai": "Mistral AI", "deepseek-ai": "DeepSeek", "qwen": "Alibaba",
+    "voyage-ai": "Voyage AI", "fal-ai": "fal.ai", "together-ai": "Together AI",
+    "fireworks-ai": "Fireworks AI", "openai": "OpenAI", "anthropic": "Anthropic",
+    "google": "Google", "amazon": "Amazon", "microsoft": "Microsoft",
+    "nvidia": "NVIDIA", "xai": "xAI", "moonshotai": "Moonshot AI", "ibm": "IBM",
+    "ai21": "AI21 Labs", "groq": "Groq", "ollama": "Ollama", "replicate": "Replicate",
+    "perplexity": "Perplexity", "sentence-transformers": "sentence-transformers",
+    "baai": "BAAI", "alibaba": "Alibaba"
+  },
   "licenses": {
     "apache-2.0": {
       "name": "Apache License 2.0",
@@ -337,7 +378,7 @@
       "maker": "OpenAI",
       "mode": "completion",
       "license": "proprietary",
-      "aliases": ["text-davinci-003", "text-davinci-002", "text-curie-001", "text-babbage-001", "text-ada-001", "code-davinci-002"]
+      "aliases": ["text-davinci-003", "text-davinci-002", "text-curie-001", "text-babbage-001", "text-ada-001"]
     },
     "openai/gpt-4o": {
       "maker": "OpenAI",
@@ -603,5 +644,51 @@
       "lifecycle_checked": "2026-11-09",
       "aliases": ["claude-opus-4-8"]
     }
-  }
+  },
+  "lifecycle_records": [
+    {"match": ["gpt-4o", "gpt-4o-2024-08-06", "gpt-4o-2024-11-20"], "family": "openai/gpt-4o", "maker": "OpenAI", "deprecation_date": "2026-10-14", "retirement_date": "2027-01-14", "replacement": "gpt-6-luna", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The alias follows the snapshot(s) it points to."},
+    {"match": ["gpt-4o-mini", "gpt-4o-mini-2024-07-18"], "family": "openai/gpt-4o-mini", "maker": "OpenAI", "deprecation_date": "2026-10-14", "retirement_date": "2027-01-14", "replacement": "gpt-6-luna", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The alias follows the snapshot(s) it points to."},
+    {"match": ["gpt-4.1", "gpt-4.1-2025-04-14"], "family": "openai/gpt-4.1", "maker": "OpenAI", "deprecation_date": "2026-10-14", "retirement_date": "2027-01-14", "replacement": "gpt-6-luna", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The alias follows the snapshot(s) it points to."},
+    {"match": ["gpt-4.1-mini", "gpt-4.1-mini-2025-04-14"], "family": "openai/gpt-4.1-mini", "maker": "OpenAI", "deprecation_date": "2026-10-14", "retirement_date": "2027-01-14", "replacement": "gpt-6-luna", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The alias follows the snapshot(s) it points to."},
+    {"match": ["gpt-4o-2024-05-13"], "family": "openai/gpt-4o", "maker": "OpenAI", "deprecation_date": "2026-04-22", "retirement_date": "2026-10-23", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09"},
+    {"match": ["gpt-4", "gpt-4-0613"], "family": "openai/gpt-4", "maker": "OpenAI", "deprecation_date": "2026-04-22", "retirement_date": "2026-10-23", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The alias follows the snapshot(s) it points to."},
+    {"match": ["gpt-4-1106-preview"], "family": "openai/gpt-4-1106-preview", "maker": "OpenAI", "deprecation_date": "2026-04-22", "retirement_date": "2026-10-23", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09"},
+    {"match": ["gpt-4-turbo", "gpt-4-turbo-2024-04-09"], "family": "openai/gpt-4-turbo", "maker": "OpenAI", "deprecation_date": "2026-04-22", "retirement_date": "2026-10-23", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The alias follows the snapshot(s) it points to."},
+    {"match": ["gpt-4.1-nano", "gpt-4.1-nano-2025-04-14"], "family": "openai/gpt-4.1-nano", "maker": "OpenAI", "deprecation_date": "2026-04-22", "retirement_date": "2026-10-23", "replacement": "gpt-5.6-luna", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The alias follows the snapshot(s) it points to."},
+    {"match": ["gpt-3.5-turbo", "gpt-3.5-turbo-0125"], "family": "openai/gpt-3.5-turbo", "maker": "OpenAI", "deprecation_date": "2026-04-22", "retirement_date": "2026-10-23", "replacement": "gpt-5.6-terra", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The alias follows the snapshot(s) it points to."},
+    {"match": ["o1-2024-12-17"], "family": "openai/o1", "maker": "OpenAI", "deprecation_date": "2026-04-22", "retirement_date": "2026-10-23", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09"},
+    {"match": ["o1-pro", "o1-pro-2025-03-19"], "family": "openai/o1-pro", "maker": "OpenAI", "deprecation_date": "2026-04-22", "retirement_date": "2026-10-23", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The alias follows the snapshot(s) it points to."},
+    {"match": ["o3-mini", "o3-mini-2025-01-31"], "family": "openai/o3-mini", "maker": "OpenAI", "deprecation_date": "2026-04-22", "retirement_date": "2026-10-23", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The alias follows the snapshot(s) it points to."},
+    {"match": ["o4-mini", "o4-mini-2025-04-16"], "family": "openai/o4-mini", "maker": "OpenAI", "deprecation_date": "2026-04-22", "retirement_date": "2026-10-23", "replacement": "gpt-5.6-terra", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The alias follows the snapshot(s) it points to."},
+    {"match": ["gpt-3.5-turbo-1106", "gpt-3.5-turbo-instruct", "babbage-002", "davinci-002"], "family": "openai/gpt-3.5-turbo", "maker": "OpenAI", "deprecation_date": "2025-09-26", "retirement_date": "2026-09-28", "replacement": "gpt-5.6-terra", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09"},
+    {"match": ["gpt-4-0314"], "family": "openai/gpt-4", "maker": "OpenAI", "deprecation_date": "2025-09-26", "retirement_date": "2026-03-26", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The notice names gpt-5 or gpt-4.1, which is itself scheduled to shut down; gpt-5.6-sol is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["gpt-4-0125-preview", "gpt-4-turbo-preview"], "family": "openai/gpt-4-turbo", "maker": "OpenAI", "deprecation_date": "2025-09-26", "retirement_date": "2026-03-26", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "gpt-4-turbo-preview points to the gpt-4-0125-preview snapshot. The notice names gpt-5 or gpt-4.1, which is itself scheduled to shut down; gpt-5.6-sol is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["gpt-5", "gpt-5-2025-08-07", "o3-2025-04-16"], "family": "openai/gpt-5", "maker": "OpenAI", "deprecation_date": "2026-06-11", "retirement_date": "2026-12-11", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09"},
+    {"match": ["gpt-5-mini", "gpt-5-mini-2025-08-07"], "family": "openai/gpt-5-mini", "maker": "OpenAI", "deprecation_date": "2026-06-11", "retirement_date": "2026-12-11", "replacement": "gpt-5.6-terra", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09"},
+    {"match": ["gpt-5-nano", "gpt-5-nano-2025-08-07"], "family": "openai/gpt-5-nano", "maker": "OpenAI", "deprecation_date": "2026-06-11", "retirement_date": "2026-12-11", "replacement": "gpt-5.6-luna", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09"},
+    {"match": ["gpt-5-pro", "gpt-5-pro-2025-10-06", "o3-pro", "o3-pro-2025-06-10"], "family": "openai/gpt-5-pro", "maker": "OpenAI", "deprecation_date": "2026-06-11", "retirement_date": "2026-12-11", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09"},
+    {"match": ["gpt-4.5-preview"], "family": "openai/gpt-4.5-preview", "maker": "OpenAI", "deprecation_date": "2025-04-14", "retirement_date": "2025-07-14", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The notice names gpt-4.1, which is itself scheduled to shut down; gpt-5.6-sol is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["o1-preview"], "family": "openai/o1-preview", "maker": "OpenAI", "deprecation_date": "2025-04-28", "retirement_date": "2025-07-28", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The notice names o3, which is itself scheduled to shut down; gpt-5.6-sol is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["o1-mini"], "family": "openai/o1-mini", "maker": "OpenAI", "deprecation_date": "2025-04-28", "retirement_date": "2025-10-27", "replacement": "gpt-5.6-terra", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The notice names o4-mini, which is itself scheduled to shut down; gpt-5.6-terra is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["gpt-4-32k", "gpt-4-32k-0613", "gpt-4-32k-0314"], "family": "openai/gpt-4-32k", "maker": "OpenAI", "deprecation_date": "2024-06-06", "retirement_date": "2025-06-06", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The notice names gpt-4o, which is itself scheduled to shut down; gpt-5.6-sol is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["gpt-4-vision-preview", "gpt-4-1106-vision-preview"], "family": "openai/gpt-4-vision-preview", "maker": "OpenAI", "deprecation_date": "2024-06-06", "retirement_date": "2024-12-06", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The notice names gpt-4o, which is itself scheduled to shut down; gpt-5.6-sol is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["gpt-3.5-turbo-0301"], "family": "openai/gpt-3.5-turbo", "maker": "OpenAI", "deprecation_date": "2023-06-13", "retirement_date": "2024-09-13", "replacement": "gpt-5.6-terra", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The notice names gpt-3.5-turbo, which is itself scheduled to shut down; gpt-5.6-terra is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["gpt-3.5-turbo-0613", "gpt-3.5-turbo-16k-0613"], "family": "openai/gpt-3.5-turbo", "maker": "OpenAI", "deprecation_date": "2023-11-06", "retirement_date": "2024-09-13", "replacement": "gpt-5.6-terra", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The notice names gpt-3.5-turbo, which is itself scheduled to shut down; gpt-5.6-terra is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["text-davinci-003", "text-davinci-002", "text-davinci-001", "text-curie-001", "text-babbage-001", "text-ada-001"], "family": "openai/text-davinci-003", "maker": "OpenAI", "deprecation_date": "2023-07-06", "retirement_date": "2024-01-04", "replacement": "gpt-5.6-terra", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The notice names gpt-3.5-turbo-instruct, which is itself scheduled to shut down; gpt-5.6-terra is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["code-davinci-002"], "family": "openai/code-davinci-002", "maker": "OpenAI", "move_to_family": true, "deprecation_date": "2023-03-20", "retirement_date": "2023-03-23", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The notice names gpt-4o, which is itself scheduled to shut down; gpt-5.6-sol is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["chatgpt-4o-latest"], "family": "openai/gpt-4o", "maker": "OpenAI", "deprecation_date": "2025-11-18", "retirement_date": "2026-02-17", "replacement": "gpt-5.6-sol", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "The notice names gpt-5.1-chat-latest, which is itself scheduled to shut down; gpt-5.6-sol is the substitute OpenAI names for this class in its newer notices."},
+    {"match": ["whisper-1", "gpt-4o-transcribe", "gpt-4o-mini-transcribe"], "family": "openai/whisper-1", "maker": "OpenAI", "deprecation_date": "2026-08-26", "retirement_date": "2027-02-26", "replacement": "gpt-transcribe", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09", "note": "OpenAI names gpt-live-transcribe or gpt-transcribe."},
+    {"match": ["tts-1", "tts-1-hd"], "family": "openai/tts-1", "maker": "OpenAI", "deprecation_date": "2026-10-01", "retirement_date": "2027-01-06", "replacement": "gpt-realtime-2.1-mini", "source_url": "https://developers.openai.com/api/docs/deprecations", "checked": "2026-11-09"},
+    {"match": ["gemini-2.0-flash", "gemini-2.0-flash-001"], "family": "google/gemini-2.0-flash", "maker": "Google", "retirement_date": "2026-06-01", "replacement": "gemini-3.6-flash", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date."},
+    {"match": ["gemini-2.0-flash-lite", "gemini-2.0-flash-lite-001"], "family": "google/gemini-2.0-flash-lite", "maker": "Google", "retirement_date": "2026-06-01", "replacement": "gemini-3.5-flash-lite", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date. The page names gemini-3.1-flash-lite, which is itself scheduled to shut down on 2027-05-07; gemini-3.5-flash-lite is the replacement named for it."},
+    {"match": ["gemini-2.5-pro"], "family": "google/gemini-2.5-pro", "maker": "Google", "retirement_date": "2026-12-01", "replacement": "gemini-3.8-flash", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date. From that date requests are routed automatically to gemini-3.8-flash."},
+    {"match": ["gemini-2.5-flash"], "family": "google/gemini-2.5-flash", "maker": "Google", "retirement_date": "2026-12-01", "replacement": "gemini-3.5-flash-lite", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date. From that date requests are routed automatically to gemini-3.5-flash-lite."},
+    {"match": ["gemini-3-pro-preview"], "family": "google/gemini-3-pro-preview", "maker": "Google", "retirement_date": "2026-03-09", "replacement": "gemini-3.1-pro-preview", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date."},
+    {"match": ["gemini-2.5-flash-preview-05-20"], "family": "google/gemini-2.5-flash", "maker": "Google", "retirement_date": "2025-11-18", "replacement": "gemini-3.6-flash", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date."},
+    {"match": ["gemini-2.5-flash-preview-09-2025"], "family": "google/gemini-2.5-flash", "maker": "Google", "retirement_date": "2026-02-17", "replacement": "gemini-3.6-flash", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date."},
+    {"match": ["gemini-2.5-pro-preview-06-05"], "family": "google/gemini-2.5-pro", "maker": "Google", "retirement_date": "2025-12-02", "replacement": "gemini-3.8-flash", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date."},
+    {"match": ["text-embedding-004"], "family": "google/text-embedding-004", "maker": "Google", "retirement_date": "2026-01-14", "replacement": "gemini-embedding-2", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date."},
+    {"match": ["embedding-001"], "family": "google/embedding-001", "maker": "Google", "retirement_date": "2025-10-30", "replacement": "gemini-embedding-2", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date."},
+    {"match": ["gemini-embedding-001"], "family": "google/gemini-embedding-001", "maker": "Google", "retirement_date": "2028-05-14", "replacement": "gemini-embedding-2", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date."}
+  ]
 }

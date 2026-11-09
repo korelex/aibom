@@ -82,11 +82,19 @@ class ReviewAppRiskReport(unittest.TestCase):
         self.assertRegex(markdown, r"- Hugging Face models[^\n]*: 1 \(meta-llama/Llama-2-7b-hf\)")
 
     def test_untracked_models_say_so_instead_of_claiming_to_be_active(self):
-        self.assertEqual(self.row("gpt-4o")["status"], "unknown")
+        # No sourced record exists for text-embedding-3-small, so it is "not tracked", never "active".
+        self.assertEqual(self.row("text-embedding-3-small")["status"], "unknown")
         markdown = self.read("report.md")
-        self.assertIn("not tracked", markdown)
+        self.assertRegex(markdown, r"\| text-embedding-3-small \|[^\n]*\| not tracked \|")
         self.assertIn("Not tracked", markdown)  # the explanation under the Risks block
-        self.assertNotRegex(markdown, r"\| gpt-4o \|[^\n]*\| active \|")
+        self.assertNotRegex(markdown, r"\| text-embedding-3-small \|[^\n]*\| active \|")
+
+    def test_gpt_4o_is_deprecated_and_floating(self):
+        # OpenAI announced on 2026-10-14 that gpt-4o (2024-08-06, 2024-11-20) shuts down on 2027-01-14.
+        gpt = self.row("gpt-4o")
+        self.assertEqual((gpt["status"], gpt["deprecation_date"], gpt["retirement_date"]), ("deprecated", "2026-10-14", "2027-01-14"))
+        self.assertEqual((gpt["pinned"], gpt["floating_alias"]), ("no", "yes"))
+        self.assertRegex(self.read("report.md"), r"- Deprecated \(retirement scheduled, still works\): 2 \(gpt-4o, gpt-4o-mini\)")
 
     def test_risks_block_has_every_label_in_markdown_and_html(self):
         markdown, page = self.read("report.md"), self.read("report.html")

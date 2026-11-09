@@ -380,10 +380,12 @@ def resolve_model(
     low = unwrapped.strip().lower()
     ver_extracted, pinned_extracted = extract_version_and_pinning(unwrapped)
 
-    # 1. Exact alias lookup
+    # 1. Exact alias lookup. `exact` records whether the very name that was written is in the index; only then may a
+    # per-snapshot lifecycle record apply (a name that merely resembles a known snapshot must not inherit its dates).
     alias_hit = alias_index.get(low)
     if not alias_hit and "/" in low:
         alias_hit = alias_index.get(low.split("/")[-1])
+    exact = alias_hit is not None
     if not alias_hit:
         # Try stripping Bedrock regional prefix or dated suffix
         m_br = BEDROCK_ID_RE.match(low)
@@ -394,6 +396,7 @@ def resolve_model(
         if base_candidate.startswith("claude-"):
             base_candidate = re.sub(r"(\d)\.(\d)", r"\1-\2", base_candidate)
         alias_hit = alias_index.get(inner) or alias_index.get(inner_clean) or alias_index.get(base_candidate)
+        exact = bool(alias_index.get(inner) or alias_index.get(inner_clean))
 
     canonical_rec = None
     if alias_hit:
@@ -409,7 +412,10 @@ def resolve_model(
     pinned = pinned_extracted
     is_latest = low.endswith("-latest") or low.endswith(":latest")
 
-    lifecycle = lifecycle_status((canonical_rec or {}).get("lifecycle"))
+    # A record for this exact snapshot wins; otherwise the family's record applies (only set when the whole family
+    # shares one schedule); otherwise nothing is known.
+    snapshot_lifecycle = (alias_hit or {}).get("lifecycle") if exact else None
+    lifecycle = lifecycle_status(snapshot_lifecycle or (canonical_rec or {}).get("lifecycle"))
     first_segment = low.split("/")[0] if "/" in low else ""
     lifecycle["lifecycle_scope"] = "platform" if (provider_hint in CLOUD_ROUTES or first_segment in CLOUD_ROUTES) else "first_party"
     lic_id = ((canonical_rec or {}).get("license") or {}).get("id") or "unknown"

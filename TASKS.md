@@ -8,7 +8,7 @@ Outcome: an "AI Model Inventory" beta that pilot users can try, where every clai
 - [x] **M1.5** Fix the vulnerability count mismatch (`ai_advisories` vs `ai_vulnerable_packages`).
 - [x] **M1.6** Make it installable (`pyproject.toml`, `aibom` console command, plain `pytest`).
 - [x] **M1.2** Show lifecycle and license risk in every human output (Status, Pinned, Deprecation date, Replacement, License columns + Risks summary).
-- [ ] **M1.3** Fix canonical IDs coming from reseller prefixes (`vercel-ai-gateway/...`, `nscale/...`); prefer first-party provider entries; test 20 common models.
+- [x] **M1.3** Fix canonical IDs coming from reseller prefixes (`vercel-ai-gateway/...`, `nscale/...`); prefer first-party provider entries; test 20 common models.
 - [ ] **M1.4** Fill license gaps for the 50 most-used open models in `curated.json`, with source URL and date checked.
 
 ## Milestone 2 — Packages, SDKs and vector databases (due 27 Nov 2026)
@@ -46,5 +46,6 @@ Outcome: the AI-BOM lists every AI SDK, agent framework and vector database with
 
 ## Progress log
 
-- **2026-11-09** — M1.1, M1.5, M1.6 complete. PR [#1](https://github.com/korelex/aibom/pull/1) opened. `python -m pytest` → 102 passed. `pip install -e .` → `aibom` console command works. `aibom scan` on the test app → 5 models, exit 0, valid CycloneDX 1.6.
-- **2026-11-09** — M1.2 complete. CSV/Markdown/HTML now show status, pinned, deprecation date, replacement and license; HTML and Markdown lead with a Risks block. Added `tests/fixtures/review-app/` and `tests/test_risk_report.py`. `python -m pytest` → 106 passed. Review app: Claude 3.5 Sonnet 20240620 is deprecated with replacement `claude-sonnet-4-5`; `gpt-4o` is flagged as floating.
+- **2026-11-09** - M1.1, M1.5, M1.6: the README describes only what ships, the database counts are labelled (`ai_advisories` vs `ai_vulnerable_packages`), and `aibom` installs as a console command. Review found that a normal `pip install .` crashed because the database was not packaged; it now lives inside the package and a wheel smoke test (`scripts/smoke_wheel.py`, run in CI) installs the built wheel in a clean virtualenv and scans with it.
+- **2026-11-09** - M1.2: CSV, Markdown and HTML show status, pinned, floating alias, deprecation and retirement dates, replacement and license, with a Risks block at the top. After review: status is worked out from dates on the day of the scan (a past retirement date is `retired`), only records with a source URL count (everything else is `not tracked`), a name is a floating alias only when a dated snapshot exists to pin, and Hugging Face repo ids are reported separately. In the review app `claude-3-5-sonnet-20240620` is retired (2025-10-28) with replacement `claude-sonnet-5-5`, per Anthropic's deprecations page.
+- **2026-11-09** - M1.3: reseller and gateway prefixes (`vercel-ai-gateway/...`, `nscale/...`) resolve to the maker's canonical id; first-party entries win alias collisions (curated > first-party > reseller). `tests/test_canonical_ids.py` covers 22 identifiers. Upstream catalogue lifecycle dates are no longer used: they mixed up deprecation with earliest-retirement dates (for example, an active model appeared as deprecated). Lifecycle is now stored per snapshot from provider pages (`lifecycle_records` in `curated.json`, 44 records covering 81 names), each with a source URL and the date it was checked, and a snapshot that no record lists stays `not tracked`.

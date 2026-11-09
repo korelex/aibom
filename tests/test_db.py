@@ -20,7 +20,7 @@ class TestDatabasePhase1(unittest.TestCase):
 
     def test_db_sections_and_counts(self):
         self.assertIn("meta", self.db)
-        self.assertGreater(len(self.db["models"]), 3000)
+        self.assertGreater(len(self.db["models"]), 2500)
         self.assertGreater(len(self.db["alias_index"]), 5000)
         self.assertGreaterEqual(len(self.db["packages"]), 120)
         self.assertGreater(len(self.db["vulnerabilities"]), 30)

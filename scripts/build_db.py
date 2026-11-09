@@ -314,6 +314,51 @@ def fetch_osv_for_packages(packages: list[dict]) -> dict[str, list[dict]]:
     return out
 
 
+DOTTED_MAKER_RE = re.compile(
+    r"^(?:(us|eu|apac|global|ca|sa|il|me|af|mx)\.)?"
+    r"(anthropic|amazon|meta|mistral|cohere|ai21|deepseek|openai|writer|qwen|stability|nvidia|moonshotai|minimax|xai)\.(.+)$",
+    re.IGNORECASE,
+)
+
+
+def maker_model_for(raw_name, maker_segments, gateway_prefixes, maker_of_fn, display_to_slug):
+    segs = [s.replace("_", "-") for s in raw_name.strip().lower().split("/") if s]
+    if not segs:
+        return "", ""
+    while len(segs) >= 2 and segs[0] in gateway_prefixes:
+        segs.pop(0)
+
+    def strip_version(name):
+        base = re.sub(r"-v\d+(?::\d+)?$", "", name, flags=re.IGNORECASE)
+        m = DATE_TAIL_RE.match(base)
+        return m.group(1) if m and len(m.group(1)) >= 4 else base
+
+    if len(segs) >= 2 and segs[0] in maker_segments:
+        return maker_segments[segs[0]], strip_version("/".join(segs[1:]))
+    for cut in range(1, len(segs)):
+        tail_segs = segs[cut:]
+        tail = "/".join(tail_segs)
+        if len(tail_segs) == 1:
+            dm = DOTTED_MAKER_RE.match(tail_segs[0])
+            if dm:
+                maker_seg = dm.group(2).lower()
+                slug = maker_segments.get(maker_seg, maker_seg)
+                return slug, strip_version(dm.group(3))
+        if len(tail_segs) >= 2 and tail_segs[0] in maker_segments:
+            return maker_segments[tail_segs[0]], strip_version("/".join(tail_segs[1:]))
+        maker_disp = maker_of_fn(tail)
+        if maker_disp:
+            slug = display_to_slug.get(maker_disp.lower()) or re.sub(r"[^a-z0-9]+", "-", maker_disp.lower()).strip("-")
+            if slug:
+                return slug, strip_version(tail)
+    return "", strip_version("/".join(segs))
+
+
+def first_party_canonical(canonical_id, gateway_prefixes):
+    seg = canonical_id.split("/")[0]
+    return seg not in gateway_prefixes and seg not in ("unknown", "")
+
+
 def build(offline: bool = False, from_existing: bool = False):
     """Compile ai_db.json. With from_existing=True nothing is fetched: the existing database is kept and only the
     curated overlay (curated.json) is re-applied on top of it. Use that for hand-curated changes, so the diff shows
@@ -326,6 +371,10 @@ def build(offline: bool = False, from_existing: bool = False):
     licenses_table = curated["licenses"]
     packages_list = curated["packages"]
     curated_models = curated["curated_models"]
+    maker_segments = curated.get("maker_segments", {})
+    gateway_prefixes = set(curated.get("gateway_prefixes", []))
+    maker_display = curated.get("maker_display", {})
+    display_to_slug = {v.lower(): k for k, v in maker_display.items()}
 
     litellm_data = {}
     openrouter_data = []
@@ -377,11 +426,7 @@ def build(offline: bool = False, from_existing: bool = False):
                 "capabilities": [],
                 "supported_regions": [],
                 "pricing": {},
-                "lifecycle": {
-                    "status": "active",
-                    "deprecation_date": None,
-                    "replacement": None,
-                },
+                "lifecycle": {},  # filled only from sourced curated records (see the curated overlay below)
                 "license": {
                     "id": lic_id,
                     "category": lic_meta.get("category", "unknown"),
@@ -393,10 +438,17 @@ def build(offline: bool = False, from_existing: bool = False):
             }
         return models[canonical_id]
 
-    def register_alias(raw: str, canonical_id: str, provider: str = "", region: str = "", version: str = ""):
+    alias_priority: dict[str, int] = {}
+
+    def register_alias(raw: str, canonical_id: str, provider: str = "", region: str = "", version: str = "", priority: int = 1):
         low = raw.strip().lower()
         if not low:
             return
+        existing = alias_index.get(low)
+        if existing and existing["canonical_id"] != canonical_id:
+            if priority <= alias_priority.get(low, 0):
+                return
+        alias_priority[low] = priority
         pinned = is_pinned_reference(raw)
         previous = alias_index.get(low)
         if previous and previous["canonical_id"] != canonical_id and previous["canonical_id"] in models:
@@ -432,12 +484,16 @@ def build(offline: bool = False, from_existing: bool = False):
         if not usable(key) and not usable(key.split("/")[-1]):
             continue
         base_name, route, region, ver = normalize_family_slug(key)
-        if not usable(base_name):
-            base_name = key.split("/")[-1].lower()
-        maker = maker_of(key) or maker_of(base_name)
-        maker_slug = re.sub(r"[^a-z0-9]+", "-", (maker or provider or "unknown").lower()).strip("-")
-        canonical_id = f"{maker_slug}/{base_name}"
-        rec = register_model(canonical_id, base_name, maker, mode)
+        maker_slug, model_name = maker_model_for(key, maker_segments, gateway_prefixes, maker_of, display_to_slug)
+        if maker_slug:
+            maker_disp = maker_display.get(maker_slug, "") or maker_of(key) or maker_of(model_name)
+        else:
+            model_name = base_name if usable(base_name) else key.split("/")[-1].lower()
+            maker_disp = maker_of(key) or maker_of(model_name)
+            maker_slug = re.sub(r"[^a-z0-9]+", "-", (maker_disp or provider or "unknown").lower()).strip("-")
+        canonical_id = f"{maker_slug}/{model_name}"
+        priority = 2 if first_party_canonical(canonical_id, gateway_prefixes) else 1
+        rec = register_model(canonical_id, model_name, maker_disp, mode)
 
         # Enrich fields from LiteLLM
         max_in = v.get("max_input_tokens") or v.get("max_tokens") or 0
@@ -473,15 +529,10 @@ def build(offline: bool = False, from_existing: bool = False):
                 "output_per_1m": round((out_cost or 0) * 1_000_000, 4),
             }
 
-        dep_date = v.get("deprecation_date")
-        if isinstance(dep_date, str) and re.match(r"^\d{4}-\d{2}-\d{2}$", dep_date):
-            rec["lifecycle"]["deprecation_date"] = dep_date
-            rec["lifecycle"]["status"] = "retired" if dep_date <= today else "deprecated"
-
-        register_alias(key, canonical_id, route or provider, region, ver)
+        register_alias(key, canonical_id, route or provider, region, ver, priority)
         tail = key.split("/")[-1]
         if usable(tail):
-            register_alias(tail, canonical_id, route or provider, region, ver)
+            register_alias(tail, canonical_id, route or provider, region, ver, priority)
 
     # 2. Enrich from OpenRouter
     for item in openrouter_data:
@@ -489,23 +540,25 @@ def build(offline: bool = False, from_existing: bool = False):
         if not or_id:
             continue
         base_name, route, region, ver = normalize_family_slug(or_id)
-        maker = maker_of(or_id) or maker_of(base_name) or or_id.split("/")[0]
-        maker_slug = re.sub(r"[^a-z0-9]+", "-", maker.lower()).strip("-")
-        canonical_id = f"{maker_slug}/{base_name}"
-        rec = register_model(canonical_id, base_name, maker, "chat")
+        maker_slug, model_name = maker_model_for(or_id, maker_segments, gateway_prefixes, maker_of, display_to_slug)
+        if maker_slug:
+            maker_disp = maker_display.get(maker_slug, "") or maker_of(or_id) or maker_of(model_name) or or_id.split("/")[0]
+        else:
+            model_name = base_name if usable(base_name) else or_id.split("/")[-1].lower()
+            maker_disp = maker_of(or_id) or maker_of(model_name) or or_id.split("/")[0]
+            maker_slug = re.sub(r"[^a-z0-9]+", "-", maker_disp.lower()).strip("-") or "unknown"
+        canonical_id = f"{maker_slug}/{model_name}"
+        priority = 2 if first_party_canonical(canonical_id, gateway_prefixes) else 1
+        rec = register_model(canonical_id, model_name, maker_disp, "chat")
         if item.get("hugging_face_id") and not rec["hugging_face_id"]:
             rec["hugging_face_id"] = item["hugging_face_id"]
-            register_alias(item["hugging_face_id"], canonical_id, "huggingface", "", "")
+            register_alias(item["hugging_face_id"], canonical_id, "huggingface", "", "", priority)
         ctx = item.get("context_length") or 0
         if isinstance(ctx, int) and ctx > rec["context_window"]:
             rec["context_window"] = ctx
-        exp = item.get("expiration_date")
-        if isinstance(exp, str) and re.match(r"^\d{4}-\d{2}-\d{2}", exp):
-            rec["lifecycle"]["deprecation_date"] = exp[:10]
-            rec["lifecycle"]["status"] = "retired" if exp[:10] <= today else "deprecated"
-        register_alias(or_id, canonical_id, "openrouter", region, ver)
+        register_alias(or_id, canonical_id, "openrouter", region, ver, priority)
         if item.get("canonical_slug"):
-            register_alias(item["canonical_slug"], canonical_id, "openrouter", region, ver)
+            register_alias(item["canonical_slug"], canonical_id, "openrouter", region, ver, priority)
 
     # 3. Apply Curated Models (highest priority override)
     for canonical_id, cmod in curated_models.items():
@@ -532,9 +585,39 @@ def build(offline: bool = False, from_existing: bool = False):
             rec["hugging_face_id"] = cmod["hugging_face_id"]
         for al in cmod.get("aliases", []):
             _, route, region, ver = normalize_family_slug(al)
-            register_alias(al, canonical_id, route or cmod.get("maker", "").lower(), region, ver)
+            register_alias(al, canonical_id, route or cmod.get("maker", "").lower(), region, ver, 3)
             if usable(al) and al not in legacy_names:
                 legacy_names[al] = {"provider": cmod.get("maker", "").lower(), "mode": cmod.get("mode", "chat")}
+
+    # 3b. Per-snapshot lifecycle. Models are grouped into families for display, but a retirement belongs to a specific
+    # snapshot: gpt-4-0314 was shut down on 2026-03-26 while gpt-4 (the family) is a different matter. Each record is
+    # attached to the exact aliases it lists and wins over the family when that exact name is written in code.
+    iso = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+    seen_names: set[str] = set()
+    for rec in curated.get("lifecycle_records", []):
+        where = ", ".join(rec.get("match", [])[:2])
+        if not (rec.get("source_url", "").startswith("https://") and iso.match(rec.get("checked", ""))):
+            raise SystemExit(f"lifecycle record [{where}]: needs source_url (https) and checked (YYYY-MM-DD)")
+        if not iso.match(rec.get("retirement_date", "")) or (rec.get("deprecation_date") and not iso.match(rec["deprecation_date"])):
+            raise SystemExit(f"lifecycle record [{where}]: dates must be YYYY-MM-DD")
+        if rec.get("deprecation_date") and rec["deprecation_date"] > rec["retirement_date"]:
+            raise SystemExit(f"lifecycle record [{where}]: announced after it retires")
+        life = {k: rec[k] for k in ("deprecation_date", "retirement_date", "replacement", "note") if rec.get(k)}
+        life.update({"source_url": rec["source_url"], "checked": rec["checked"]})
+        for name in rec["match"]:
+            low = name.strip().lower()
+            if low in seen_names:
+                raise SystemExit(f"lifecycle record: {name!r} appears in two records")
+            seen_names.add(low)
+            family = rec.get("family", "")
+            current = alias_index.get(low)
+            if current is None or (rec.get("move_to_family") and current["canonical_id"] != family):
+                if not family:
+                    raise SystemExit(f"lifecycle record: {name!r} is not a known alias, so the record needs a family")
+                register_model(family, family.split("/")[-1], rec.get("maker", ""), "chat")
+                _, route, region, ver = normalize_family_slug(name)
+                register_alias(name, family, route or rec.get("maker", "").lower(), region, ver, 4)
+            alias_index[low]["lifecycle"] = dict(life)
 
     # 4. Build Packages & OSV Vulnerabilities
     packages_table = {}
@@ -566,6 +649,7 @@ def build(offline: bool = False, from_existing: bool = False):
                 "canonical_models": len(models),
                 "aliases": len(alias_index),
                 "models_with_sourced_lifecycle": sum(1 for m in models.values() if m["lifecycle"].get("source_url")),
+                "aliases_with_sourced_lifecycle": sum(1 for a in alias_index.values() if a.get("lifecycle", {}).get("source_url")),
                 "models_with_scheduled_or_past_retirement": sum(
                     1 for m in models.values()
                     if m["lifecycle"].get("source_url") and (m["lifecycle"].get("deprecation_date") or m["lifecycle"].get("retirement_date"))

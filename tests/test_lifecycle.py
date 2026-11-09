@@ -100,7 +100,9 @@ class CuratedRecordsAreSourced(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         with open(CURATED, encoding="utf-8") as fh:
-            cls.curated = json.load(fh)["curated_models"]
+            data = json.load(fh)
+        cls.curated = data["curated_models"]
+        cls.records = data.get("lifecycle_records", [])
 
     def test_every_lifecycle_claim_has_a_source_and_a_check_date(self):
         problems = []
@@ -117,19 +119,103 @@ class CuratedRecordsAreSourced(unittest.TestCase):
                 problems.append(f"{key}: announced after it retires")
         self.assertFalse(problems, "\n".join(problems))
 
-    def test_every_recommended_replacement_is_an_active_model(self):
+    def test_every_snapshot_record_is_complete(self):
+        problems = []
+        seen = {}
+        for rec in self.records:
+            label = ", ".join(rec["match"][:2])
+            if not rec.get("source_url", "").startswith("https://") or not ISO.match(rec.get("checked", "")):
+                problems.append(f"[{label}] needs source_url and checked")
+            if not ISO.match(rec.get("retirement_date", "")):
+                problems.append(f"[{label}] needs a retirement_date")
+            if rec.get("deprecation_date") and not ISO.match(rec["deprecation_date"]):
+                problems.append(f"[{label}] bad deprecation_date")
+            if rec.get("deprecation_date") and rec["deprecation_date"] > rec["retirement_date"]:
+                problems.append(f"[{label}] announced after it retires")
+            if not rec.get("replacement"):
+                problems.append(f"[{label}] has no replacement")
+            for name in rec["match"]:
+                if name.lower() in seen:
+                    problems.append(f"{name} is in two records")
+                seen[name.lower()] = 1
+        self.assertFalse(problems, "\n".join(problems))
+
+    def test_no_recommended_replacement_is_itself_retired_or_deprecated(self):
         # Sending people to a model that is itself being retired is worse than recommending nothing.
         db = load_db()
+        claims = [(k, cm["replacement"]) for k, cm in self.curated.items() if cm.get("replacement")]
+        claims += [(", ".join(r["match"][:2]), r["replacement"]) for r in self.records if r.get("replacement")]
         problems = []
         with at("2026-11-09"):
-            for key, cm in self.curated.items():
-                repl = cm.get("replacement")
-                if not repl:
-                    continue
-                r = resolve_model(repl, db=db)
-                if r["status"] != "active":
-                    problems.append(f"{key} -> {repl!r} resolves to status {r['status']!r}")
+            for owner, repl in claims:
+                status = resolve_model(repl, db=db)["status"]
+                if status in ("retired", "deprecated"):
+                    problems.append(f"{owner} -> {repl!r} is {status}")
         self.assertFalse(problems, "\n".join(problems))
+
+    def test_anthropic_replacements_are_listed_as_active_on_the_providers_page(self):
+        db = load_db()
+        with at("2026-11-09"):
+            for name in ("claude-sonnet-5-5", "claude-opus-4-8", "claude-haiku-4-5-20251001"):
+                self.assertEqual(resolve_model(name, db=db)["status"], "active", name)
+
+
+class LifecycleIsPerSnapshot(unittest.TestCase):
+    """Models are grouped into families for display, but a retirement belongs to one snapshot (PR #3 review)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.db = load_db()
+
+    def life(self, name):
+        with at("2026-11-09"):
+            r = resolve_model(name, db=self.db)
+        return r["status"], r["retirement_date"]
+
+    def test_known_retired_snapshots_resolve_to_retired(self):
+        # Retired per OpenAI's and Anthropic's own pages.
+        expected = {
+            "gpt-4-0314": "2026-03-26", "gpt-4.5-preview": "2025-07-14", "o1-preview": "2025-07-28",
+            "claude-3-haiku-20240307": "2026-04-20", "gpt-4-0613": "2026-10-23", "gpt-4-1106-preview": "2026-10-23",
+            "gpt-3.5-turbo-0125": "2026-10-23", "gpt-3.5-turbo-1106": "2026-09-28", "gpt-4o-2024-05-13": "2026-10-23",
+            "gpt-4-turbo-preview": "2026-03-26", "chatgpt-4o-latest": "2026-02-17", "gpt-4-32k": "2025-06-06",
+            "gemini-2.0-flash": "2026-06-01",
+        }
+        for name, date in expected.items():
+            self.assertEqual(self.life(name), ("retired", date), name)
+
+    def test_snapshots_of_one_family_keep_their_own_dates(self):
+        # gpt-4o-2024-05-13 is already gone; its sibling snapshots and the alias retire on 2027-01-14.
+        self.assertEqual(self.life("gpt-4o-2024-05-13"), ("retired", "2026-10-23"))
+        for name in ("gpt-4o", "gpt-4o-2024-08-06", "gpt-4o-2024-11-20"):
+            self.assertEqual(self.life(name), ("deprecated", "2027-01-14"), name)
+        # gpt-3.5-turbo snapshots do not share one date
+        self.assertEqual(self.life("gpt-3.5-turbo-0301")[1], "2024-09-13")
+        self.assertEqual(self.life("gpt-3.5-turbo-1106")[1], "2026-09-28")
+        self.assertEqual(self.life("gpt-3.5-turbo-0125")[1], "2026-10-23")
+
+    def test_claude_snapshot_keeps_its_own_lifecycle_but_groups_with_its_family(self):
+        with at("2026-11-09"):
+            r = resolve_model("claude-3-5-sonnet-20240620", db=self.db)
+        self.assertEqual(r["canonical_id"], "anthropic/claude-3-5-sonnet")  # grouping
+        self.assertEqual((r["status"], r["retirement_date"]), ("retired", "2025-10-28"))  # lifecycle
+
+    def test_a_different_model_is_not_filed_under_a_retired_one(self):
+        # code-davinci-002 used to resolve to text-davinci-003, and claude-instant-1.2 to claude-2.
+        self.assertEqual(resolve_model("code-davinci-002", db=self.db)["canonical_id"], "openai/code-davinci-002")
+        self.assertEqual(resolve_model("claude-instant-1.2", db=self.db)["canonical_id"], "anthropic/claude-instant-1")
+
+    def test_an_unlisted_snapshot_does_not_inherit_a_neighbours_dates(self):
+        # Only names the provider lists carry a date. A name that merely looks like one stays "unknown".
+        self.assertEqual(self.life("gpt-4o-2099-01-01"), ("unknown", ""))
+        self.assertEqual(self.life("gpt-4-0999"), ("unknown", ""))
+
+    def test_a_model_with_no_provider_notice_is_not_called_active(self):
+        self.assertEqual(self.life("text-embedding-3-small"), ("unknown", ""))
+
+    def test_the_family_is_reported_as_a_whole_only_when_it_has_one_schedule(self):
+        # Every Anthropic claude-3-haiku name shares one retirement date, so the family record covers new spellings.
+        self.assertEqual(self.life("claude-3-haiku")[0], "retired")
 
 
 class FloatingAliasesAndHuggingFace(unittest.TestCase):
@@ -174,6 +260,8 @@ class FloatingAliasesAndHuggingFace(unittest.TestCase):
         for name in ("openai/gpt-4o", "anthropic/claude-sonnet-4-5", "azure/gpt-4o", "google/gemini-2.5-pro"):
             self.assertFalse(self.r(name)["hf_repo"], name)
         self.assertTrue(self.r("azure/gpt-4o")["floating"])
+        self.assertEqual(self.r("openai/gpt-4o")["canonical_id"], "openai/gpt-4o")
+        self.assertTrue(self.r("openai/gpt-4o")["floating"])
 
     def test_an_unknown_model_is_never_called_floating(self):
         r = self.r("totally-made-up-model")
