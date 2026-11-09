@@ -47,10 +47,18 @@ def build_rows(items):
         primary = min(members, key=lambda m: (bool(PREFIX.match(m["name"].lower())), "_" in m["name"], len(m["name"])))
         also = sorted({m["name"] for m in members if m is not primary} | {a for m in members for a in m.get("aliases", [])} - {primary["name"]})
         places = live_places(members)
+        status_rank = {"retired": 3, "deprecated": 2, "active": 1}
+        pinned_values = [m.get("pinned") for m in members if m.get("pinned") is not None]
         rows.append({"key": k, "name": primary["name"], "also": also, "maker": next((m.get("maker") for m in [primary] + members if m.get("maker")), ""),
                      "mode": next((m.get("mode") for m in [primary] + members if m.get("mode")), ""),
                      "role": "used" if any(m.get("role", "used") != "listed" for m in members) else "listed",
                      "tier": "declared" if any(m["tier"] == "declared" for m in members) else "inferred",
+                     "status": max((m.get("status") or "" for m in members), key=lambda s: status_rank.get(s, 0)),
+                     "deprecation_date": next((m.get("deprecation_date") for m in members if m.get("deprecation_date")), ""),
+                     "replacement": next((m.get("replacement") for m in members if m.get("replacement")), ""),
+                     "license": next((m.get("license") for m in members if m.get("license") and m.get("license") != "unknown"), "unknown"),
+                     "license_restricted": any(bool(m.get("license_restricted")) for m in members),
+                     "pinned": (all(pinned_values) if pinned_values else None),
                      "places": places, "other_places": sum(len(m["evidence"]) for m in members) - len(places), "members": members})
     order = lambda r: (r["tier"] != "declared", -len(r["places"]), r["name"].lower())
     used = sorted([r for r in rows if r["role"] == "used"], key=order)
