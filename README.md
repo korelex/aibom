@@ -22,7 +22,7 @@ Every model entry carries:
 - Separates live code from comments, docstrings, messages, tests, docs, sample
   data and notebook outputs.
 - Adds canonical ID, provider, pinning, lifecycle status and license metadata to
-  the CycloneDX output from the bundled database (`knowledge/ai_db.json`).
+  the CycloneDX output from the bundled database (`aibom_engine/knowledge/ai_db.json`).
 - Writes a CycloneDX 1.6 AI-BOM (`aibom.cdx.json`) and three human reports:
   `report.html`, `report.md` and `models.csv`.
 
@@ -40,20 +40,20 @@ remote setting) cannot be seen by a scan that reads code.
 ## Run it
 
 ```bash
-python -m pip install -r requirements.txt
-python -m aibom_engine scan .
-python -m aibom_engine show runs/<app> --all
-python -m aibom_engine explain runs/<app> MODEL
+python -m pip install .
+aibom scan .
+aibom show runs/<app> --all
+aibom explain runs/<app> MODEL
 ```
 
 `scan` accepts a folder or a Git link. Results go to `runs/<app>/` unless
 `--out` is given. The command prints the models it found and the files it wrote.
+`python -m aibom_engine scan .` does the same without installing the command.
 
-Install the `aibom` command from this checkout with:
+For development, install in editable mode with the test tools:
 
 ```bash
-python -m pip install -e .
-aibom scan .
+python -m pip install -e ".[dev]"
 ```
 
 ## Output
@@ -67,7 +67,7 @@ aibom scan .
 
 ## Database
 
-`knowledge/ai_db.json` is compiled from `knowledge/curated.json`, the LiteLLM
+`aibom_engine/knowledge/ai_db.json` is compiled from `aibom_engine/knowledge/curated.json`, the LiteLLM
 model catalogue, OpenRouter and OSV advisories for AI packages. Rebuild it with:
 
 ```bash
@@ -81,8 +81,9 @@ presented as confirmed retirements.
 ## Tests
 
 ```bash
-python -m pip install -r requirements-dev.txt
+python -m pip install -e ".[dev]"
 python -m pytest
+python scripts/smoke_wheel.py   # builds the wheel, installs it in a clean virtualenv and scans with it
 ```
 
 The benchmark corpus and hand-written answer keys are in `benchmark/`.

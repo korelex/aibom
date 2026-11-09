@@ -22,5 +22,8 @@ aibom = "aibom_engine.cli:main"
 [tool.setuptools.packages.find]
 include = ["aibom_engine*"]
 
+[tool.setuptools.package-data]
+aibom_engine = ["knowledge/*.json", "knowledge/README.md"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
