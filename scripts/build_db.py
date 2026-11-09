@@ -396,6 +396,8 @@ def build(offline: bool = False):
                     "id": lic_id,
                     "category": lic_meta.get("category", "unknown"),
                     "restricted": lic_meta.get("restricted", False),
+                    "source_url": "",
+                    "checked": "",
                 },
                 "hugging_face_id": None,
                 "snapshots": [],
@@ -528,6 +530,8 @@ def build(offline: bool = False):
             "id": lic_id,
             "category": lic_meta.get("category", "unknown"),
             "restricted": lic_meta.get("restricted", False),
+            "source_url": cmod.get("license_source_url", ""),
+            "checked": cmod.get("license_checked", ""),
         }
         if "status" in cmod and cmod["status"]:
             rec["lifecycle"]["status"] = cmod["status"]

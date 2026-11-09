@@ -21,7 +21,7 @@ Outcome: an "AI Model Inventory" beta Manish can demo to pilot customers, where 
 - [x] **M1.6** Make it installable (`pyproject.toml`, `aibom` console command, plain `pytest`).
 - [x] **M1.2** Show lifecycle and license risk in every human output (Status, Pinned, Deprecation date, Replacement, License columns + Risks summary).
 - [x] **M1.3** Fix canonical IDs coming from reseller prefixes (`vercel-ai-gateway/...`, `nscale/...`); prefer first-party provider entries; test 20 common models.
-- [ ] **M1.4** Fill license gaps for the 50 most-used open models in `curated.json`, with source URL and date checked.
+- [x] **M1.4** Fill license gaps for the 50 most-used open models in `curated.json`, with source URL and date checked.
 
 ## Milestone 2 — Packages, SDKs and vector databases (due 27 Nov 2026)
 
@@ -61,3 +61,5 @@ Outcome: the AI-BOM lists every AI SDK, agent framework and vector database with
 - **2026-11-09** — M1.1, M1.5, M1.6 complete. PR [#1](https://github.com/korelex/aibom/pull/1) opened. `python -m pytest` → 102 passed. `pip install -e .` → `aibom` console command works. `aibom scan` on the test app → 5 models, exit 0, valid CycloneDX 1.6.
 - **2026-11-09** — M1.2 complete. CSV/Markdown/HTML now show status, pinned, deprecation date, replacement and license; HTML and Markdown lead with a Risks block. Added `tests/fixtures/review-app/` and `tests/test_risk_report.py`. `python -m pytest` → 106 passed. Review app: Claude 3.5 Sonnet 20240620 is deprecated with replacement `claude-sonnet-4-5`; `gpt-4o` is flagged as floating.
 - **2026-11-09** — M1.3 complete. `build_db.py` now unwraps gateway/reseller prefixes and infers the first-party maker from the model name, with a curated `maker_segments`/`gateway_prefixes` registry in `curated.json` and an alias-collision priority (curated > first-party > reseller). `vercel-ai-gateway/.../text-embedding-3-small` → `openai/text-embedding-3-small`; `nscale/nscale/stabilityai/...` → `stabilityai/...`. Canonical models consolidated 4,687 → 3,029. Added `tests/test_canonical_ids.py` (22 identifiers). `python -m pytest` → 108 passed.
+- **2026-11-09** — Audit of the current build found and fixed two demo-breaking data bugs: (1) LiteLLM `deprecation_date` was shown as real retirement (e.g. `text-embedding-3-small` "deprecated"); now only curated entries set status → 12 verified retirements. (2) dotted Bedrock names leaked a duplicate `anthropic/anthropic.claude-*` ID; now folded. Verified determinism, robustness, and FP cleanliness.
+- **2026-11-09** — M1.4 complete. Added ~50 curated open-model license entries (Llama 2/3/3.1/3.2/3.3, Mistral, Mixtral, Gemma, Qwen 2.5, Stable Diffusion, Falcon, DeepSeek, Phi, sentence-transformers, BGE, Cohere Command R+) with source URL and date checked. Reports now show the license name and a commercial-use flag. `meta-llama/Llama-2-7b-hf` → `llama2` "conditional". `python -m pytest` → 109 passed.

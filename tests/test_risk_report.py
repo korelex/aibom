@@ -43,6 +43,13 @@ class ReviewAppRiskReport(unittest.TestCase):
         gpt4o = next(r for r in rows if r["model"] == "gpt-4o")
         self.assertEqual(gpt4o["pinned"], "no")
 
+    def test_llama2_license_is_conditional(self):
+        rows = self.rows()
+        llama = next(r for r in rows if "llama-2-7b" in r["model"].lower())
+        self.assertEqual(llama["license"], "llama2")
+        self.assertIn("Llama 2", llama["license_name"])
+        self.assertEqual(llama["license_commercial_use"], "conditional")
+
     def test_markdown_and_html_show_the_same_facts(self):
         markdown = self.read("report.md")
         page = self.read("report.html")

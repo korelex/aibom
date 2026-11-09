@@ -42,6 +42,10 @@ def enrich(items, names, online=False):
             it["license"] = resolved["license"]
             it["license_restricted"] = resolved["license_restricted"]
             it["license_reason"] = resolved["license_reason"]
+            it["license_name"] = resolved["license_name"]
+            it["license_commercial_use"] = resolved["license_commercial_use"]
+            it["license_source_url"] = resolved["license_source_url"]
+            it["license_checked"] = resolved["license_checked"]
     return items
 
 

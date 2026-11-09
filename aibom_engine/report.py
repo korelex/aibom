@@ -45,6 +45,16 @@ def risk_names(items, limit=5):
     return ", ".join(names) + (f" and {more} more" if more > 0 else "")
 
 
+def license_label(r):
+    name = r.get("license_name") or r.get("license") or "unknown"
+    use = r.get("license_commercial_use") or ""
+    if use == "conditional":
+        return f"{name} (conditional)"
+    if use == "no":
+        return f"{name} (non-commercial)"
+    return name
+
+
 def intro(rows, app):
     used, listed, gone = rows["used"], rows["listed"], rows["left_out"]
     if not used and not listed:
@@ -77,16 +87,16 @@ def build_csv(items, links=None):
     buf = io.StringIO()
     w = csv.writer(buf, lineterminator="\r\n")
     w.writerow(["model", "made_by", "type", "role", "confidence", "where_first_place", "link", "places_in_code", "also_written_as",
-                "status", "pinned", "deprecation_date", "replacement", "license", "license_restricted"])
+                "status", "pinned", "deprecation_date", "replacement", "license", "license_restricted", "license_name", "license_commercial_use"])
     for role, group in (("used directly", rows["used"]), ("only listed", rows["listed"])):
         for r in group:
             p, url, _ = where(r, links)
             w.writerow([r["name"], r["maker"], MODE_TEXT.get(r["mode"], r["mode"]), role, TIER_TEXT[r["tier"]], p, url, len(r["places"]), "; ".join(r["also"]),
                         r.get("status", ""), "yes" if r.get("pinned") is True else ("no" if r.get("pinned") is False else "unknown"),
                         r.get("deprecation_date", ""), r.get("replacement", ""), r.get("license", "unknown"),
-                        "yes" if r.get("license_restricted") else "no"])
+                        "yes" if r.get("license_restricted") else "no", r.get("license_name", ""), r.get("license_commercial_use", "")])
     for g in rows["left_out"]:
-        w.writerow([g["name"], "", "", "left out", g["why"], f"{g['file']}:{g['line']}", links.url_for(g["file"], g["line"]) if links else "", 0, ""] + [""] * 6)
+        w.writerow([g["name"], "", "", "left out", g["why"], f"{g['file']}:{g['line']}", links.url_for(g["file"], g["line"]) if links else "", 0, ""] + [""] * 8)
     return buf.getvalue()
 
 
@@ -117,9 +127,7 @@ def build_markdown(items, app, source="", links=None, meta=None):
             cell = f"[{p}]({url})" if url else p
             alias = f" (also written as {', '.join(r['also'][:3])})" if r["also"] else ""
             pinned = "yes" if r.get("pinned") is True else ("no" if r.get("pinned") is False else "-")
-            lic = r.get("license") or "unknown"
-            if r.get("license_restricted"):
-                lic += " (restricted)"
+            lic = license_label(r)
             t.append(f"| {r['name']}{alias} | {r['maker'] or '-'} | {MODE_TEXT.get(r['mode'], r['mode']) or 'AI model'} | {cell}{f' (+{more} more)' if more else ''} | {TIER_TEXT[r['tier']]} | {r.get('status') or '-'} | {pinned} | {r.get('deprecation_date') or '-'} | {r.get('replacement') or '-'} | {lic} |")
         return t
 
@@ -190,9 +198,7 @@ def build_html(items, app, source="", links=None, meta=None):
         pinned = "yes" if r.get("pinned") is True else ("no" if r.get("pinned") is False else "-")
         dep = r.get("deprecation_date") or "-"
         repl = r.get("replacement") or "-"
-        lic = r.get("license") or "unknown"
-        if r.get("license_restricted"):
-            lic += " (restricted)"
+        lic = license_label(r)
         text = " ".join([r["name"], r["maker"], r["mode"], status, dep, repl, lic, " ".join(r["also"]), " ".join(p["file"] for p in r["places"][:30])]).lower()
         return (f'<tr data-t="{h(text)}"><td><b>{h(r["name"])}</b>{alias}</td><td>{h(MODE_TEXT.get(r["mode"], r["mode"]) or "AI model")}</td><td>{cell}</td><td>{badge}</td>'
                 f'<td>{h(status)}</td><td>{h(pinned)}</td><td>{h(dep)}</td><td>{h(repl)}</td><td>{h(lic)}</td></tr>')

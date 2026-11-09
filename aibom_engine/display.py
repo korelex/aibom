@@ -58,6 +58,8 @@ def build_rows(items):
                      "replacement": next((m.get("replacement") for m in members if m.get("replacement")), ""),
                      "license": next((m.get("license") for m in members if m.get("license") and m.get("license") != "unknown"), "unknown"),
                      "license_restricted": any(bool(m.get("license_restricted")) for m in members),
+                     "license_name": next((m.get("license_name") for m in members if m.get("license_name")), ""),
+                     "license_commercial_use": next((m.get("license_commercial_use") for m in members if m.get("license_commercial_use")), ""),
                      "pinned": (all(pinned_values) if pinned_values else None),
                      "places": places, "other_places": sum(len(m["evidence"]) for m in members) - len(places), "members": members})
     order = lambda r: (r["tier"] != "declared", -len(r["places"]), r["name"].lower())

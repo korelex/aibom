@@ -3,7 +3,7 @@
 "built": "2026-11-09",
 "entries_in_source": 4871,
 "license": "MIT, Copyright (c) 2023 Berri AI (LiteLLM)",
-"names": 6764,
+"names": 6844,
 "source": "https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json"
 },
 "names": {
@@ -54,6 +54,14 @@
 "ALIA-40b-instruct_Q8_0": {
 "mode": "chat",
 "provider": "publicai"
+},
+"BAAI/bge-base-en-v1.5": {
+"mode": "embedding",
+"provider": "baai"
+},
+"BAAI/bge-large-en-v1.5": {
+"mode": "embedding",
+"provider": "baai"
 },
 "Beam-1.0": {
 "mode": "chat",
@@ -919,6 +927,26 @@
 "mode": "chat",
 "provider": "alibaba"
 },
+"Qwen/Qwen2.5-32B-Instruct": {
+"mode": "chat",
+"provider": "alibaba"
+},
+"Qwen/Qwen2.5-72B-Instruct": {
+"mode": "chat",
+"provider": "alibaba"
+},
+"Qwen/Qwen2.5-7B-Instruct": {
+"mode": "chat",
+"provider": "alibaba"
+},
+"Qwen/Qwen2.5-Coder-32B-Instruct": {
+"mode": "chat",
+"provider": "alibaba"
+},
+"Qwen/Qwen2.5-Coder-7B-Instruct": {
+"mode": "chat",
+"provider": "alibaba"
+},
 "Qwen2-1.5B-Instruct": {
 "mode": "chat",
 "provider": "together_ai"
@@ -1686,6 +1714,14 @@
 "alibaba-qwen3-32b": {
 "mode": "chat",
 "provider": "gradient_ai"
+},
+"all-MiniLM-L6-v2": {
+"mode": "embedding",
+"provider": "sentence-transformers"
+},
+"all-mpnet-base-v2": {
+"mode": "embedding",
+"provider": "sentence-transformers"
 },
 "allam-1-13b-instruct": {
 "mode": "chat",
@@ -5463,6 +5499,10 @@
 "mode": "embedding",
 "provider": "nebius"
 },
+"bge-large-en-v1.5": {
+"mode": "embedding",
+"provider": "baai"
+},
 "bge-m3": {
 "mode": "embedding",
 "provider": "libertai"
@@ -5530,6 +5570,10 @@
 "c4ai-aya-expanse-32b": {
 "mode": "chat",
 "provider": "cohere_chat"
+},
+"c4ai-command-r-plus": {
+"mode": "chat",
+"provider": "cohere"
 },
 "c4ai-command-r-v01": {
 "mode": "chat",
@@ -6310,6 +6354,10 @@
 "codellama-7b-instruct-awq": {
 "mode": "chat",
 "provider": "cloudflare"
+},
+"codellama-7b-instruct-hf": {
+"mode": "chat",
+"provider": "meta"
 },
 "codestral-2": {
 "mode": "chat",
@@ -8379,6 +8427,18 @@
 "mode": "chat",
 "provider": "deepseek"
 },
+"deepseek-ai/DeepSeek-V3": {
+"mode": "chat",
+"provider": "deepseek"
+},
+"deepseek-ai/deepseek-coder-6.7b-instruct": {
+"mode": "chat",
+"provider": "deepseek"
+},
+"deepseek-ai/deepseek-llm-7b-chat": {
+"mode": "chat",
+"provider": "deepseek"
+},
 "deepseek-chat": {
 "mode": "chat",
 "provider": "deepseek"
@@ -8398,6 +8458,10 @@
 "deepseek-coder-6.7b": {
 "mode": "chat",
 "provider": "llamagate"
+},
+"deepseek-coder-6.7b-instruct": {
+"mode": "chat",
+"provider": "deepseek"
 },
 "deepseek-coder-7b-base": {
 "mode": "chat",
@@ -8438,6 +8502,10 @@
 "deepseek-llama3.3-70b": {
 "mode": "chat",
 "provider": "lambda_ai"
+},
+"deepseek-llm-7b-chat": {
+"mode": "chat",
+"provider": "deepseek"
 },
 "deepseek-ocr": {
 "mode": "chat",
@@ -10470,6 +10538,18 @@
 "fal_ai/xhigh/3840-x-2160/openai/gpt-image-2.5/sunburst/text-to-image": {
 "mode": "image_generation",
 "provider": "fal_ai"
+},
+"falcon-40b": {
+"mode": "chat",
+"provider": "technology innovation institute"
+},
+"falcon-7b": {
+"mode": "chat",
+"provider": "technology innovation institute"
+},
+"falcon-7b-instruct": {
+"mode": "chat",
+"provider": "technology innovation institute"
 },
 "fare-20b": {
 "mode": "chat",
@@ -12731,11 +12811,23 @@
 "mode": "video_generation",
 "provider": "gemini"
 },
+"gemma-2-27b": {
+"mode": "chat",
+"provider": "google"
+},
+"gemma-2-27b-it": {
+"mode": "chat",
+"provider": "google"
+},
 "gemma-2-9b": {
 "mode": "chat",
 "provider": "vercel_ai_gateway"
 },
 "gemma-2-9b-it": {
+"mode": "chat",
+"provider": "google"
+},
+"gemma-2b": {
 "mode": "chat",
 "provider": "google"
 },
@@ -13991,7 +14083,27 @@
 "mode": "chat",
 "provider": "bedrock_mantle"
 },
+"google/gemma-2-27b": {
+"mode": "chat",
+"provider": "google"
+},
+"google/gemma-2-27b-it": {
+"mode": "chat",
+"provider": "google"
+},
+"google/gemma-2-9b": {
+"mode": "chat",
+"provider": "google"
+},
 "google/gemma-2-9b-it": {
+"mode": "chat",
+"provider": "google"
+},
+"google/gemma-2b": {
+"mode": "chat",
+"provider": "google"
+},
+"google/gemma-7b": {
 "mode": "chat",
 "provider": "google"
 },
@@ -16423,6 +16535,10 @@
 "mode": "chat",
 "provider": "replicate"
 },
+"llama-2-13b-hf": {
+"mode": "chat",
+"provider": "meta"
+},
 "llama-2-70b": {
 "mode": "chat",
 "provider": "replicate"
@@ -16430,6 +16546,14 @@
 "llama-2-70b-chat": {
 "mode": "chat",
 "provider": "perplexity"
+},
+"llama-2-70b-chat-hf": {
+"mode": "chat",
+"provider": "meta"
+},
+"llama-2-70b-hf": {
+"mode": "chat",
+"provider": "meta"
 },
 "llama-2-7b": {
 "mode": "chat",
@@ -16443,6 +16567,10 @@
 "mode": "chat",
 "provider": "cloudflare"
 },
+"llama-2-7b-chat-hf": {
+"mode": "chat",
+"provider": "meta"
+},
 "llama-2-7b-chat-hf-lora": {
 "mode": "chat",
 "provider": "cloudflare"
@@ -16450,6 +16578,10 @@
 "llama-2-7b-chat-int8": {
 "mode": "chat",
 "provider": "cloudflare"
+},
+"llama-2-7b-hf": {
+"mode": "chat",
+"provider": "meta"
 },
 "llama-3-2-11b-vision-instruct": {
 "mode": "chat",
@@ -16486,6 +16618,10 @@
 "llama-3-8b-instruct": {
 "mode": "chat",
 "provider": "novita"
+},
+"llama-3.1-405b-instruct": {
+"mode": "chat",
+"provider": "meta"
 },
 "llama-3.1-405b-instruct-maas": {
 "mode": "chat",
@@ -17175,7 +17311,39 @@
 "mode": "completion",
 "provider": "text-completion-inception"
 },
+"meta-llama/CodeLlama-7b-Instruct-hf": {
+"mode": "chat",
+"provider": "meta"
+},
+"meta-llama/Llama-2-13b-hf": {
+"mode": "chat",
+"provider": "meta"
+},
+"meta-llama/Llama-2-70b-chat-hf": {
+"mode": "chat",
+"provider": "meta"
+},
+"meta-llama/Llama-2-70b-hf": {
+"mode": "chat",
+"provider": "meta"
+},
+"meta-llama/Llama-2-7b-chat-hf": {
+"mode": "chat",
+"provider": "meta"
+},
+"meta-llama/Llama-2-7b-hf": {
+"mode": "chat",
+"provider": "meta"
+},
+"meta-llama/Llama-3.1-405B-Instruct": {
+"mode": "chat",
+"provider": "meta"
+},
 "meta-llama/Llama-3.1-70B-Instruct": {
+"mode": "chat",
+"provider": "meta"
+},
+"meta-llama/Llama-3.1-8B": {
 "mode": "chat",
 "provider": "meta"
 },
@@ -17183,7 +17351,27 @@
 "mode": "chat",
 "provider": "meta"
 },
+"meta-llama/Llama-3.2-1B-Instruct": {
+"mode": "chat",
+"provider": "meta"
+},
+"meta-llama/Llama-3.2-3B-Instruct": {
+"mode": "chat",
+"provider": "meta"
+},
 "meta-llama/Llama-3.3-70B-Instruct": {
+"mode": "chat",
+"provider": "meta"
+},
+"meta-llama/Meta-Llama-3-70B-Instruct": {
+"mode": "chat",
+"provider": "meta"
+},
+"meta-llama/Meta-Llama-3-8B": {
+"mode": "chat",
+"provider": "meta"
+},
+"meta-llama/Meta-Llama-3-8B-Instruct": {
 "mode": "chat",
 "provider": "meta"
 },
@@ -17354,6 +17542,22 @@
 "meta_llama/Llama-4-Scout-17B-16E-Instruct-FP8": {
 "mode": "chat",
 "provider": "meta_llama"
+},
+"microsoft/Phi-3-mini-4k-instruct": {
+"mode": "chat",
+"provider": "microsoft"
+},
+"microsoft/Phi-3.5-mini-instruct": {
+"mode": "chat",
+"provider": "microsoft"
+},
+"microsoft/phi-2": {
+"mode": "chat",
+"provider": "microsoft"
+},
+"microsoft/phi-4": {
+"mode": "chat",
+"provider": "microsoft"
 },
 "microsoft_365_copilot/chat": {
 "mode": "chat",
@@ -17623,6 +17827,10 @@
 "mode": "chat",
 "provider": "cloudflare"
 },
+"mistral-7b-instruct-v0.3": {
+"mode": "chat",
+"provider": "mistral ai"
+},
 "mistral-7b-instruct-v0p2": {
 "mode": "chat",
 "provider": "fireworks_ai"
@@ -17858,6 +18066,10 @@
 "mistral-small-4": {
 "mode": "chat",
 "provider": "empiriolabs"
+},
+"mistral-small-instruct-2409": {
+"mode": "chat",
+"provider": "mistral ai"
 },
 "mistral-small-latest": {
 "mode": "chat",
@@ -18251,7 +18463,39 @@
 "mode": "chat",
 "provider": "mistral"
 },
+"mistralai/Mistral-7B-Instruct-v0.1": {
+"mode": "chat",
+"provider": "mistral ai"
+},
+"mistralai/Mistral-7B-Instruct-v0.2": {
+"mode": "chat",
+"provider": "mistral ai"
+},
+"mistralai/Mistral-7B-Instruct-v0.3": {
+"mode": "chat",
+"provider": "mistral ai"
+},
+"mistralai/Mistral-7B-v0.1": {
+"mode": "chat",
+"provider": "mistral ai"
+},
 "mistralai/Mistral-Large-Instruct-2407": {
+"mode": "chat",
+"provider": "mistral ai"
+},
+"mistralai/Mistral-Nemo-Instruct-2407": {
+"mode": "chat",
+"provider": "mistral ai"
+},
+"mistralai/Mistral-Small-Instruct-2409": {
+"mode": "chat",
+"provider": "mistral ai"
+},
+"mistralai/Mixtral-8x7B-Instruct-v0.1": {
+"mode": "chat",
+"provider": "mistral ai"
+},
+"mistralai/Mixtral-8x7B-v0.1": {
 "mode": "chat",
 "provider": "mistral ai"
 },
@@ -18294,6 +18538,10 @@
 "mixtral-8x7b-instruct-v0.1": {
 "mode": "chat",
 "provider": "replicate"
+},
+"mixtral-8x7b-v0.1": {
+"mode": "chat",
+"provider": "mistral ai"
 },
 "model-router": {
 "mode": "chat",
@@ -20851,6 +21099,10 @@
 "mode": "responses",
 "provider": "perplexity"
 },
+"phi-2": {
+"mode": "chat",
+"provider": "microsoft"
+},
 "phi-2-3b": {
 "mode": "chat",
 "provider": "fireworks_ai"
@@ -20859,9 +21111,17 @@
 "mode": "chat",
 "provider": "fireworks_ai"
 },
+"phi-3-mini-4k-instruct": {
+"mode": "chat",
+"provider": "microsoft"
+},
 "phi-3-vision-128k-instruct": {
 "mode": "chat",
 "provider": "fireworks_ai"
+},
+"phi-3.5-mini-instruct": {
+"mode": "chat",
+"provider": "microsoft"
 },
 "phi-4": {
 "mode": "chat",
@@ -21295,6 +21555,14 @@
 "mode": "chat",
 "provider": "fireworks_ai"
 },
+"qwen2.5-32b-instruct": {
+"mode": "chat",
+"provider": "alibaba"
+},
+"qwen2.5-72b-instruct": {
+"mode": "chat",
+"provider": "alibaba"
+},
 "qwen2.5-7b-instruct": {
 "mode": "chat",
 "provider": "novita"
@@ -21306,6 +21574,10 @@
 "qwen2.5-coder-7b": {
 "mode": "chat",
 "provider": "llamagate"
+},
+"qwen2.5-coder-7b-instruct": {
+"mode": "chat",
+"provider": "alibaba"
 },
 "qwen2.5-vl-72b-instruct": {
 "mode": "chat",
@@ -23035,6 +23307,14 @@
 "mode": "rerank",
 "provider": "vertex_ai"
 },
+"sentence-transformers/all-MiniLM-L6-v2": {
+"mode": "embedding",
+"provider": "sentence-transformers"
+},
+"sentence-transformers/all-mpnet-base-v2": {
+"mode": "embedding",
+"provider": "sentence-transformers"
+},
 "skylark-embedding-vision": {
 "mode": "embedding",
 "provider": "empiriolabs"
@@ -23446,6 +23726,34 @@
 "stability/style-transfer": {
 "mode": "image_edit",
 "provider": "stability"
+},
+"stabilityai/stable-diffusion-2-1": {
+"mode": "image_generation",
+"provider": "stability ai"
+},
+"stabilityai/stable-diffusion-3-medium": {
+"mode": "image_generation",
+"provider": "stability ai"
+},
+"stabilityai/stable-diffusion-3.5-large": {
+"mode": "image_generation",
+"provider": "stability ai"
+},
+"stabilityai/stable-diffusion-xl-base-1.0": {
+"mode": "image_generation",
+"provider": "stability ai"
+},
+"stable-diffusion-2-1": {
+"mode": "image_generation",
+"provider": "stability ai"
+},
+"stable-diffusion-3-medium": {
+"mode": "image_generation",
+"provider": "stability ai"
+},
+"stable-diffusion-3.5-large": {
+"mode": "image_generation",
+"provider": "stability ai"
 },
 "stable-diffusion-v35-medium": {
 "mode": "image_generation",
@@ -23918,6 +24226,18 @@
 "text-unicorn@001": {
 "mode": "completion",
 "provider": "vertex_ai-text-models"
+},
+"tiiuae/falcon-40b": {
+"mode": "chat",
+"provider": "technology innovation institute"
+},
+"tiiuae/falcon-7b": {
+"mode": "chat",
+"provider": "technology innovation institute"
+},
+"tiiuae/falcon-7b-instruct": {
+"mode": "chat",
+"provider": "technology innovation institute"
 },
 "titan-embed-text-v2": {
 "mode": "chat",
