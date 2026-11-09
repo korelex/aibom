@@ -7,7 +7,7 @@ Outcome: an "AI Model Inventory" beta that pilot users can try, where every clai
 - [x] **M1.1** Rewrite the README to match today's tool.
 - [x] **M1.5** Fix the vulnerability count mismatch (`ai_advisories` vs `ai_vulnerable_packages`).
 - [x] **M1.6** Make it installable (`pyproject.toml`, `aibom` console command, plain `pytest`).
-- [ ] **M1.2** Show lifecycle and license risk in every human output (Status, Pinned, Deprecation date, Replacement, License columns + Risks summary).
+- [x] **M1.2** Show lifecycle and license risk in every human output (Status, Pinned, Deprecation date, Replacement, License columns + Risks summary).
 - [ ] **M1.3** Fix canonical IDs coming from reseller prefixes (`vercel-ai-gateway/...`, `nscale/...`); prefer first-party provider entries; test 20 common models.
 - [ ] **M1.4** Fill license gaps for the 50 most-used open models in `curated.json`, with source URL and date checked.
 
@@ -47,3 +47,4 @@ Outcome: the AI-BOM lists every AI SDK, agent framework and vector database with
 ## Progress log
 
 - **2026-11-09** — M1.1, M1.5, M1.6 complete. PR [#1](https://github.com/korelex/aibom/pull/1) opened. `python -m pytest` → 102 passed. `pip install -e .` → `aibom` console command works. `aibom scan` on the test app → 5 models, exit 0, valid CycloneDX 1.6.
+- **2026-11-09** — M1.2 complete. CSV/Markdown/HTML now show status, pinned, deprecation date, replacement and license; HTML and Markdown lead with a Risks block. Added `tests/fixtures/review-app/` and `tests/test_risk_report.py`. `python -m pytest` → 106 passed. Review app: Claude 3.5 Sonnet 20240620 is deprecated with replacement `claude-sonnet-4-5`; `gpt-4o` is flagged as floating.
