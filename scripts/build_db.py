@@ -289,6 +289,13 @@ def fetch_osv_for_packages(packages: list[dict]) -> dict[str, list[dict]]:
     return out
 
 
+DOTTED_MAKER_RE = re.compile(
+    r"^(?:(us|eu|apac|global|ca|sa|il|me|af|mx)\.)?"
+    r"(anthropic|amazon|meta|mistral|cohere|ai21|deepseek|openai|writer|qwen|stability|nvidia|moonshotai|minimax|xai)\.(.+)$",
+    re.IGNORECASE,
+)
+
+
 def maker_model_for(raw_name, maker_segments, gateway_prefixes, maker_of_fn, display_to_slug):
     segs = [s.replace("_", "-") for s in raw_name.strip().lower().split("/") if s]
     if not segs:
@@ -306,6 +313,12 @@ def maker_model_for(raw_name, maker_segments, gateway_prefixes, maker_of_fn, dis
     for cut in range(1, len(segs)):
         tail_segs = segs[cut:]
         tail = "/".join(tail_segs)
+        if len(tail_segs) == 1:
+            dm = DOTTED_MAKER_RE.match(tail_segs[0])
+            if dm:
+                maker_seg = dm.group(2).lower()
+                slug = maker_segments.get(maker_seg, maker_seg)
+                return slug, strip_version(dm.group(3))
         if len(tail_segs) >= 2 and tail_segs[0] in maker_segments:
             return maker_segments[tail_segs[0]], strip_version("/".join(tail_segs[1:]))
         maker_disp = maker_of_fn(tail)
@@ -474,11 +487,6 @@ def build(offline: bool = False):
                 "output_per_1m": round((out_cost or 0) * 1_000_000, 4),
             }
 
-        dep_date = v.get("deprecation_date")
-        if isinstance(dep_date, str) and re.match(r"^\d{4}-\d{2}-\d{2}$", dep_date):
-            rec["lifecycle"]["deprecation_date"] = dep_date
-            rec["lifecycle"]["status"] = "retired" if dep_date <= today else "deprecated"
-
         register_alias(key, canonical_id, route or provider, region, ver, priority)
         tail = key.split("/")[-1]
         if usable(tail):
@@ -506,10 +514,6 @@ def build(offline: bool = False):
         ctx = item.get("context_length") or 0
         if isinstance(ctx, int) and ctx > rec["context_window"]:
             rec["context_window"] = ctx
-        exp = item.get("expiration_date")
-        if isinstance(exp, str) and re.match(r"^\d{4}-\d{2}-\d{2}", exp):
-            rec["lifecycle"]["deprecation_date"] = exp[:10]
-            rec["lifecycle"]["status"] = "retired" if exp[:10] <= today else "deprecated"
         register_alias(or_id, canonical_id, "openrouter", region, ver, priority)
         if item.get("canonical_slug"):
             register_alias(item["canonical_slug"], canonical_id, "openrouter", region, ver, priority)
