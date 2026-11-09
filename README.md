@@ -2,158 +2,207 @@
 
 **Find the AI models in a codebase, with proof.**
 
-`aibom` scans a local folder or a Git repository and builds an AI model inventory:
-which AI models the code names, where each one appears, and whether the code
-actually uses it or only lists it in a table, test, comment or document.
+`aibom` scans a folder or a Git repository and lists every AI model the code names: `gpt-4o`,
+`claude-sonnet-5-5`, `meta-llama/Llama-2-7b-hf`, the model inside a Bedrock ARN, and so on. Each one comes with the file and line
+that proves it, whether that model has been retired or is about to be, and the license it is offered under. The
+result is an **AI bill of materials (AI-BOM)** in the CycloneDX 1.6 standard, plus a report a person can read.
 
-Every model entry carries:
+> **Status: alpha.** This version finds **models**. AI SDKs, agent frameworks, vector databases, MCP servers and
+> secrets are on the roadmap, not in this build. See [What it does not do yet](#what-it-does-not-do-yet).
 
-- the model name and the file and line where it appears
-- **used** (set or called in live code) or **listed** (only in a long table or list)
-- **Confirmed** (the name is written in the code) or **Worked out** (the code builds
-  it through a constant such as `GPT_4O_MINI`)
-- the evidence line behind the claim
+## Why aibom
 
-## What it does today
+- **Every finding has proof.** Each model is tied to a file and line, with a link to that exact line on GitHub,
+  GitLab or Bitbucket.
+- **Used or only mentioned?** Names that appear only in comments, tests, docs or example data are left out, and the
+  report says why. Names that only appear in big lookup tables are reported apart from models the code really uses.
+- **Retired and deprecated models.** `claude-3-5-sonnet-20240620` stopped working on 2025-10-28; the report says so,
+  names the replacement and links to the provider's announcement. Dates come only from the providers' own pages.
+- **License flags.** Llama, Gemma, Qwen, Stable Diffusion and other open models are flagged when their license sets
+  conditions (for example, a monthly-user limit) or forbids commercial use, for your legal team to review.
+- **Standard output.** A schema-validated CycloneDX 1.6 file that other SBOM tools can read.
+- **Runs locally.** A scan of a folder on your machine does not use the network, and aibom never uploads anything.
+- **Measured accuracy.** On a blind test with five open-source apps it found 79% of the models named in their code,
+  and 99% of what it reported was correct. [How this was measured](benchmark/README.md).
 
-- Reads Python, JavaScript/TypeScript, Java, Go, C#, Rust, PHP and Ruby source text.
-- Finds model names written directly, as the value of a model setting, or as a
-  model-shaped string such as `llama3.1:8b` or a Bedrock ID.
-- Separates live code from comments, docstrings, messages, tests, docs, sample
-  data and notebook outputs.
-- Adds canonical ID, provider, pinning, sourced lifecycle status and license metadata to
-  the CycloneDX output from the bundled database (`aibom_engine/knowledge/ai_db.json`).
-- Writes a CycloneDX 1.6 AI-BOM (`aibom.cdx.json`) and three human reports:
-  `report.html`, `report.md` and `models.csv`.
+## Quick start
 
-## What it does not do yet
-
-- Detect AI SDKs or frameworks, MCP servers, vector databases or datasets.
-- Detect hardcoded API keys or inspect model weight files.
-- Emit SARIF, upload to KorelexOne, or run as a GitHub Action.
-- Provide `pipx install` or a packaged single binary.
-- Prove entry-point reachability. Every finding is code usage, not exploitability.
-
-A model chosen at run time (environment variable, settings page, database or
-remote setting) cannot be seen by a scan that reads code.
-
-## Run it
+You need **Python 3.9 or newer** and **Git**.
 
 ```bash
+git clone https://github.com/korelex/aibom.git
+cd aibom
+python -m venv .venv
+source .venv/bin/activate          # Windows PowerShell: .venv\Scripts\Activate.ps1
 python -m pip install .
-aibom scan .
-aibom show runs/<app> --all
-aibom explain runs/<app> MODEL
 ```
 
-`scan` accepts a folder or a Git link. Results go to `runs/<app>/` unless
-`--out` is given. The command prints the models it found and the files it wrote.
-`python -m aibom_engine scan .` does the same without installing the command.
-
-For development, install in editable mode with the test tools:
+Scan the small demo app that ships with the repository:
 
 ```bash
-python -m pip install -e ".[dev]"
+aibom scan tests/fixtures/review-app
 ```
+
+```text
+Scan finished in 0.27s: review-app
+
+  6    models used directly in the code
+  2    names left out (only in comments, messages, tests or docs)
+
+The main ones:
+  MODEL                        MADE BY    TYPE        WHERE (file:line)
+  claude-3-5-sonnet-20240620   Anthropic  chat        src/agent.py:24
+  gpt-4o                       OpenAI     chat        src/agent.py:16
+  gpt-4o-mini                  OpenAI     chat        src/agent.py:11
+  meta-llama/Llama-2-7b-hf     Meta       chat        src/hf.py:4
+  ...
+
+Files in runs/review-app:
+  report.html     the readable report: open it in a browser (aibom report runs/review-app)
+  models.csv      the same list for a spreadsheet
+  aibom.cdx.json  the standard AI-BOM file (valid CycloneDX 1.6)
+```
+
+Open the report, which starts with a summary of the risks it found:
+
+```bash
+aibom report runs/review-app
+```
+
+```text
+Risks
+- Retired (API calls fail): 1 (claude-3-5-sonnet-20240620)
+- Deprecated (retirement scheduled, still works): 2 (gpt-4o, gpt-4o-mini)
+- Floating aliases (a dated snapshot exists to pin): 2 (gpt-4o, gpt-4o-mini)
+- Hugging Face models (pin a commit revision; this scan does not check for one): 2 (...)
+- Restricted licenses (flag for legal review): 2 (meta-llama/Llama-2-7b-hf, stabilityai/stable-diffusion-xl-base-1.0)
+- Unknown licenses: 0
+```
+
+Then scan your own code, or any public repository by its link:
+
+```bash
+aibom scan path/to/your/project
+aibom scan https://github.com/simonw/llm
+```
+
+## Installation
+
+aibom is not published on PyPI yet, so it is installed from this repository.
+
+**macOS and Linux**
+
+```bash
+git clone https://github.com/korelex/aibom.git
+cd aibom
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install .
+aibom --help
+```
+
+**Windows (PowerShell)**
+
+```powershell
+git clone https://github.com/korelex/aibom.git
+cd aibom
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install .
+aibom --help
+```
+
+If PowerShell refuses to run `Activate.ps1` ("running scripts is disabled on this system"), you can skip activation
+and run the command from the environment directly: `.venv\Scripts\aibom.exe scan .`
+
+**Without a virtual environment**, `python -m pip install .` puts the `aibom` command in the scripts folder of the
+Python you ran it with. If your shell then says `aibom` is not recognised, that folder is not on your `PATH`;
+`python -m aibom_engine` works everywhere and takes the same arguments (`python -m aibom_engine scan .`).
+
+On Debian and Ubuntu, if `python3 -m venv` fails, install the venv module first: `sudo apt install python3-venv`.
+
+## Usage
+
+| Command | What it does |
+| --- | --- |
+| `aibom scan SOURCE` | Scan a folder, or a repository link, and write the results |
+| `aibom report RUN` | Open the HTML report of a finished scan in your browser |
+| `aibom show RUN` | Print the models of a finished scan (`--all` for every model, `--left-out` for names left out) |
+| `aibom explain RUN MODEL` | Show why a model is in the result, every place it appears and how sure aibom is |
+| `aibom rebuild RUN` | Re-create the reports of a finished scan without scanning again |
+
+`SOURCE` can be:
+
+- a folder: `aibom scan .`
+- a repository link: `aibom scan https://github.com/owner/repo` (GitHub, GitLab and Bitbucket; shallow clone, no
+  password prompts, the copy is deleted after the scan unless you pass `--keep`)
+- a short GitHub name: `aibom scan owner/repo`
+- one branch or folder of a repository: `aibom scan https://github.com/owner/repo/tree/main/some/folder`
+
+`RUN` is the folder a scan wrote to. By default that is `runs/<name of the app>` in the current directory; choose
+another with `--out`.
+
+Useful options for `scan`:
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `--out DIR` | `runs/<app>` | where to write the results |
+| `--open` | off | open the report in your browser when the scan is done |
+| `--max-seconds N` | 120 | stop reading files after N seconds; a report that hit the limit says so at the top |
+| `--keep` | off | keep the downloaded copy of a repository |
+| `--quiet` | off | print only the summary, not the progress lines |
+
+Run `aibom <command> --help` for every option.
+
+**Exit codes:** `0` the scan finished, `2` it could not run (for example a wrong path or link; the message says
+why), `130` stopped with Ctrl-C.
 
 ## Output
 
+Each scan writes these files to its `RUN` folder:
+
 | File | What it is |
 | --- | --- |
-| `aibom.cdx.json` | CycloneDX 1.6 AI-BOM, the machine-readable source of truth |
-| `report.html` | Readable report with evidence and the "what this scan cannot see" section |
-| `report.md` | The same summary for a PR, an audit or a chat |
-| `models.csv` | The model list for a spreadsheet |
+| `aibom.cdx.json` | The AI-BOM: CycloneDX 1.6, validated against the official schema. Each model is a `machine-learning-model` component with its evidence (file and line) and properties for lifecycle, pinning and license. |
+| `report.html` | The readable report: a risk summary, every model grouped by maker with links to its lines, the names that were left out and why, and what the scan cannot see. Works offline and prints cleanly. |
+| `report.md` | The same report in Markdown, for a pull request, a ticket or a chat. |
+| `models.csv` | One row per model, for a spreadsheet. |
+| `merged.json`, `findings.json`, `files.json`, `manifest.json` | Working data behind the reports; `aibom rebuild` uses them. |
 
-## Database
+For the same code, a scan on the same day writes the same `aibom.cdx.json`, `report.html`, `report.md` and
+`models.csv`, byte for byte (`manifest.json` also records how long the scan took).
 
-`aibom_engine/knowledge/ai_db.json` is compiled from `aibom_engine/knowledge/curated.json`, the LiteLLM
-model catalogue, OpenRouter and OSV advisories for AI packages. Rebuild it with:
+### What the columns mean
 
-```bash
-python scripts/build_db.py
-```
+- **Status**: `retired` (calls fail), `deprecated` (retirement announced), `active`, or `not tracked`. Not tracked
+  means aibom has no sourced record for that model; it is not a claim that the model is fine. Dates are for the
+  maker's own API; a `*` marks code that uses Amazon Bedrock, Azure or Google Vertex AI, which set their own dates.
+- **Pinned**: whether the name fixes one model version. `gpt-4o` is a *floating alias*: the provider can move it to
+  a newer snapshot, and `gpt-4o-2024-08-06` would pin it.
+- **License**: the license name, with `(conditional)` or `(non-commercial)` where that applies. Hosted models sold
+  under a provider's terms (GPT, Claude, Gemini) show `Provider API terms`.
 
-To apply a hand edit to `curated.json` without fetching anything (so the change
-shows up as a small, reviewable diff), run `python scripts/build_db.py --apply-curated`.
+How each of these is decided, and where the data comes from, is in [docs/how-it-works.md](docs/how-it-works.md).
 
-### Lifecycle status
+## What it does not do yet
 
-A model's status comes only from curated records that carry a `lifecycle_source_url`
-(the provider's own page) and the date it was checked. Two dates are kept apart:
-`deprecation_date` (announced; the model still works) and `retirement_date` (API
-calls fail). The status is worked out from those dates on the day of the scan:
+- Find AI SDKs, agent frameworks, vector databases, MCP servers, datasets or hardcoded API keys.
+- Inspect model weight files, or check Hugging Face revision pinning.
+- Run as a GitHub Action, fail a build on a policy (`--fail-on`), or write SARIF.
+- See a model chosen at run time, from an environment variable, a settings page or a database. aibom reads code; it
+  does not run your app.
+- Find every model: about 1 in 5 is missed on unfamiliar code, mostly ids inside long lists and JSON catalogs.
+  [Known misses](benchmark/README.md#known-misses).
+- Track the lifecycle of every model: sourced records cover OpenAI, Anthropic and Google models today.
 
-| Status | Meaning |
-| --- | --- |
-| `retired` | the retirement date is today or in the past |
-| `deprecated` | announced, retirement scheduled, still working |
-| `active` | a sourced record exists and nothing is scheduled |
-| `not tracked` | no sourced record. This is not a statement that the model is fine |
+## Contributing
 
-A retirement belongs to a specific snapshot, so records are stored per name
-(`lifecycle_records` in `curated.json`): `gpt-4-0314` is retired while another
-`gpt-4` snapshot is a different matter. Models are still grouped into one family for
-display. A snapshot that no record lists stays `not tracked`; it never inherits a
-neighbour's date. Dates are for the maker's own API. Amazon Bedrock, Azure and Google Vertex AI set
-their own schedules, so those rows carry a `*`. Set `AIBOM_TODAY=YYYY-MM-DD` to
-reproduce a report as of a given day. Lifecycle data from upstream catalogues is not
-used: it was found to mix up deprecation with earliest-retirement dates.
-
-### Licenses
-
-Each model carries a license name and a *commercial use* value. The report flags
-licenses for legal review; it does not decide whether you are in compliance.
-
-| Commercial use | Shown as | Example |
-| --- | --- | --- |
-| `yes` | the license name | Apache-2.0, MIT |
-| `conditional` | `(conditional)` | Llama 2 Community License (attribution, 700M-user limit, acceptable-use policy) |
-| `no` | `(non-commercial)` | CC-BY-NC, research-only licenses |
-| `provider-terms` | `Provider API terms` | GPT-4o and Claude: hosted models sold under the provider's API terms |
-| `unknown` | the license name | not stated |
-
-Curated open-model entries carry the source URL of the license and the date it was
-checked; `python scripts/check_licenses.py` re-checks every one of them against the
-license its Hugging Face repo declares. A model that is not curated gets a license only
-when its family has one license for all its open releases (Llama, Gemma, Mixtral, Phi);
-anything else is `unknown` rather than a guess.
-
-### Floating aliases
-
-A name is a *floating alias* only when the model catalogue lists a dated snapshot you
-could pin (`gpt-4o` has `gpt-4o-2024-08-06`; `text-embedding-3-small` has none, so it
-is not flagged). Some providers pin the dateless name itself: Anthropic states that
-every Claude ID is a pinned snapshot, including the dateless IDs from the 4.6
-generation on, so `claude-opus-5` is pinned while `claude-haiku-4-5` is an alias. Such
-names are listed with their source under `pinned_names` in `curated.json`. Hugging Face
-repo ids are reported on their own: they are pinned by a commit revision, which this
-scan does not check.
-
-## Tests
-
-```bash
-python -m pip install -e ".[dev]"
-python -m pytest
-python scripts/smoke_wheel.py   # builds the wheel, installs it in a clean virtualenv and scans with it
-```
-
-## Accuracy
-
-On a blind test on five open-source apps, the scanner found about 79% of the AI models
-named in their code, and about 99% of what it reported was correct. The method, the
-answer keys, the per-repository results and their limits are in
-[benchmark/README.md](benchmark/README.md); `python benchmark/run.py` reproduces them.
-
-## Status
-
-Alpha. The scanner currently covers model discovery only. SDKs, MCP, vector
-stores, secrets, weight files, SARIF, CI and KorelexOne upload are on the
-roadmap, not in this build.
+Bug reports with a link to the code that was misread are the most useful contribution. To set up a development
+environment, run the tests and the benchmark, or update the model data, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-Apache License 2.0, see [LICENSE](LICENSE). The bundled model data is derived in part
-from third-party sources; their notices are in [NOTICE](NOTICE).
+Apache License 2.0, see [LICENSE](LICENSE). The bundled model data is derived in part from third-party sources; their
+notices are in [NOTICE](NOTICE).
 
 Built and maintained by [Korelex](https://korelex.ai).
