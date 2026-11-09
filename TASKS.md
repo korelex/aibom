@@ -1,20 +1,8 @@
 # aibom — Task List & Progress
 
-## Working agreement
-
-- At least **5 hours/day** of technical progress; evenings **7–8 PM** are a working window.
-- **Daily testing:** at least **1 hour** on the product before a demo.
-- **Friday demo** to Manish; post blockers the **same day**, not at the end of the week.
-- **One PR per task**, with a test for each new detection or flag.
-- **Definition of done** for every task:
-  - tests added and passing; benchmark results unchanged or better;
-  - output still validates as CycloneDX 1.6;
-  - README and `--help` updated if behaviour changed;
-  - passes the release check from Milestone 2 onward.
-
 ## Milestone 1 — Honest beta (due 13 Nov 2026)
 
-Outcome: an "AI Model Inventory" beta Manish can demo to pilot customers, where every claim is true and the risk data is visible.
+Outcome: an "AI Model Inventory" beta that pilot users can try, where every claim is true and the risk data is visible.
 
 - [x] **M1.1** Rewrite the README to match today's tool.
 - [x] **M1.5** Fix the vulnerability count mismatch (`ai_advisories` vs `ai_vulnerable_packages`).
@@ -52,7 +40,7 @@ Outcome: the AI-BOM lists every AI SDK, agent framework and vector database with
 - [ ] **M4.2** Move to the `korelex:` schema and add repo/branch/commit/release/CI metadata.
 - [ ] **M4.3** Login and upload (`aibom login`, `aibom scan --upload`); handle 201/401/413/429; token as a secret, OIDC later.
 - [ ] **M4.4** No network calls without a flag; prove with a socket-blocking test.
-- [ ] **M4.5** CERT-In readiness score (Manish supplies the mapping by 27 Nov).
+- [ ] **M4.5** CERT-In readiness score (needs the CERT-In field mapping table from product).
 - [ ] **M4.6** "What aibom sends" page with an example upload payload.
 - [ ] **M4.7** Pilot run: 5 repos end to end with no blocker bugs.
 

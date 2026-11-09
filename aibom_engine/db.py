@@ -1,6 +1,6 @@
 """Runtime AI Knowledge Base & Database Engine (offline-first, with opt-in --online SQLite cache).
 
-Provides fast lookups over knowledge/ai_db.json:
+Provides fast lookups over aibom_engine/knowledge/ai_db.json:
   - Model resolution (canonical ID, maker, provider, version, pinned status, deprecation, license)
   - AI package classification (llm_sdk, agent_framework, mcp, vector_db, model_runtime, dataset_loader, guardrail)
   - AI package vulnerability matching (OSV version-range comparator + affected symbols + fix version)
@@ -9,6 +9,7 @@ Provides fast lookups over knowledge/ai_db.json:
 """
 from __future__ import annotations
 
+import datetime
 import json
 import os
 import re
@@ -19,26 +20,37 @@ from typing import Any
 
 from .vendors import maker_of, type_of
 
-AI_DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "knowledge", "ai_db.json")
+AI_DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "knowledge", "ai_db.json")
 DEFAULT_CACHE_DIR = os.path.join(os.path.expanduser("~"), ".cache", "aibom")
 ONLINE_CACHE_TTL = 24 * 3600
 
 _DB_CACHE: dict[str, Any] | None = None
 _PKG_NORM_INDEX: dict[str, str] | None = None
 
+# A dated snapshot or revision in a model name. Providers spell the date many ways, so each spelling is listed.
 PINNED_VERSION_RE = re.compile(
     r"(?:"
-    r"(\d{4}-\d{2}-\d{2})"           # 2024-08-06
-    r"|(20\d{6})"                    # 20250929
-    r"|-(0\d{3}|1\d{3})$"            # -0613, -0125
-    r"|-(00\d)$"                     # -001, -002 (Google Vertex revisions)
-    r"|@(\d{8}|default)"             # @20250929 (Vertex)
-    r"|(-v\d+:\d+)$"                 # -v1:0 (Bedrock)
-    r"|:([0-9a-f]{12,64})$"          # digest
-    r"|:(?:\d+(?:\.\d+)?b[-a-z0-9._]*)$"  # Ollama tag e.g. :8b-instruct-q4_0
+    r"(\d{4}-\d{2}-\d{2})"                                   # 2024-08-06
+    r"|(20\d{6})"                                            # 20250929
+    r"|-((?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01]))"          # -0613, -0125, -1106 (MMDD) ...
+    r"(?:-(?:preview|vision-preview|instruct|chat))?$"       # ... also gpt-4-1106-preview
+    r"|-(2[3-9](?:0[1-9]|1[0-2]))$"                          # -2407 (YYMM), e.g. mistral-large-2407
+    r"|-((?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01]))$"        # -05-20 (Gemini previews)
+    r"|-((?:0[1-9]|1[0-2])-20\d{2})$"                        # -09-2025
+    r"|-(00\d)$"                                             # -001, -002 (Google Vertex revisions)
+    r"|@(\d{8}|default)"                                     # @20250929 (Vertex)
+    r"|(-v\d+:\d+)$"                                         # -v1:0 (Bedrock)
+    r"|:([0-9a-f]{12,64})$"                                  # digest
+    r"|:(?:\d+(?:\.\d+)?b[-a-z0-9._]*)$"                     # Ollama tag e.g. :8b-instruct-q4_0
     r")",
     re.IGNORECASE,
 )
+# Heads of "head/name" references that name an API provider rather than a Hugging Face account.
+API_HEADS = {
+    "openai", "anthropic", "google", "vertex_ai", "vertex-ai", "azure", "bedrock", "ollama", "groq", "gemini", "xai",
+    "mistral", "cohere", "together", "together_ai", "fireworks_ai", "openrouter", "perplexity",
+}
+CLOUD_ROUTES = {"azure", "azure_ai", "bedrock", "vertex_ai", "vertex-ai"}
 BEDROCK_ARN_RE = re.compile(
     r"^arn:aws[a-z-]*:bedrock:([a-z0-9-]*):\d*:(?:foundation-model|inference-profile)/(.+)$",
     re.IGNORECASE,
@@ -58,13 +70,19 @@ DATE_STRIP_RE = re.compile(
 
 
 def load_db(path: str = AI_DB_PATH) -> dict[str, Any]:
-    """Load knowledge/ai_db.json once and keep it in memory."""
+    """Load aibom_engine/knowledge/ai_db.json once and keep it in memory."""
     global _DB_CACHE, _PKG_NORM_INDEX
     if _DB_CACHE is not None and path == AI_DB_PATH:
         return _DB_CACHE
     if os.path.exists(path):
         with open(path, encoding="utf-8") as f:
             data = json.load(f)
+    elif path == AI_DB_PATH:
+        # The bundled database ships inside the package. If it is missing the install is broken, and scanning
+        # without it would silently drop every lifecycle, license and pinning fact, so fail loudly instead.
+        raise FileNotFoundError(
+            f"The bundled AI database is missing: {path}. Reinstall aibom (pip install --force-reinstall aibom)."
+        )
     else:
         data = {"meta": {}, "models": {}, "alias_index": {}, "packages": {}, "vulnerabilities": {}, "licenses": {}}
     if path == AI_DB_PATH:
@@ -207,6 +225,56 @@ def lookup_license(license_id: str | None, db: dict[str, Any] | None = None) -> 
     }
 
 
+def today_iso() -> str:
+    """Today's date as YYYY-MM-DD. Set AIBOM_TODAY to fix the date, for example to reproduce a report exactly."""
+    forced = os.environ.get("AIBOM_TODAY", "").strip()
+    if forced:
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", forced):
+            raise ValueError(f"AIBOM_TODAY must look like 2026-11-09, got {forced!r}")
+        return forced
+    return datetime.date.today().isoformat()
+
+
+def lifecycle_status(lifecycle: dict[str, Any] | None, today: str | None = None) -> dict[str, Any]:
+    """Work out where a model is in its life, from dates, as of today.
+
+    Two different dates matter and they are kept apart:
+      deprecation_date  the day the provider announced the model is going away (it still works)
+      retirement_date   the day API calls start to fail
+
+    The status follows from the dates, never from a stored word, so a record stays right as time passes:
+      retired     retirement_date is today or in the past
+      deprecated  announced (deprecation_date reached, or a retirement_date is scheduled) and still working
+      active      a sourced record exists and nothing is scheduled
+      unknown     nothing sourced is known about this model. Absence from the list is not evidence that it is fine.
+
+    A record only counts when it carries a source_url; the unsourced upstream guesses that used to be copied into
+    the database are ignored.
+    """
+    lc = lifecycle or {}
+    out = {"status": "unknown", "deprecation_date": "", "retirement_date": "", "replacement": "",
+           "lifecycle_source_url": "", "lifecycle_checked": ""}
+    if not lc.get("source_url"):
+        return out
+    today = today or today_iso()
+    dep = lc.get("deprecation_date") or ""
+    ret = lc.get("retirement_date") or ""
+    if ret and ret <= today:
+        status = "retired"
+    elif (dep and dep <= today) or ret:
+        status = "deprecated"
+    else:
+        status = "active"
+    out.update({"status": status, "deprecation_date": dep, "retirement_date": ret, "replacement": lc.get("replacement") or "",
+                "lifecycle_source_url": lc["source_url"], "lifecycle_checked": lc.get("checked") or ""})
+    return out
+
+
+def is_pinned_reference(raw_name: str) -> bool:
+    """True when the name pins a dated snapshot or revision rather than a floating alias."""
+    return extract_version_and_pinning(raw_name)[1]
+
+
 def extract_version_and_pinning(raw_name: str) -> tuple[str, bool]:
     """Return (extracted_version, is_pinned) for any raw model reference."""
     s = raw_name.strip()
@@ -337,15 +405,13 @@ def resolve_model(
     provider = provider_hint or (alias_hit or {}).get("provider") or (maker.lower() if maker else "")
     region = region_hint or (alias_hit or {}).get("region") or ""
     version = ver_extracted or (alias_hit or {}).get("version") or ""
-    pinned = pinned_extracted or bool((alias_hit or {}).get("pinned"))
-    if low.endswith("-latest") or low.endswith(":latest"):
-        pinned = False
+    # Whether a reference is pinned is a fact about the name the code writes, so it is read from that name.
+    pinned = pinned_extracted
+    is_latest = low.endswith("-latest") or low.endswith(":latest")
 
-    lifecycle = (canonical_rec or {}).get("lifecycle") or {
-        "status": "active",
-        "deprecation_date": None,
-        "replacement": None,
-    }
+    lifecycle = lifecycle_status((canonical_rec or {}).get("lifecycle"))
+    first_segment = low.split("/")[0] if "/" in low else ""
+    lifecycle["lifecycle_scope"] = "platform" if (provider_hint in CLOUD_ROUTES or first_segment in CLOUD_ROUTES) else "first_party"
     lic_id = ((canonical_rec or {}).get("license") or {}).get("id") or "unknown"
     if lic_id == "unknown" and maker in {
         "OpenAI", "Anthropic", "Google", "Cohere", "Amazon", "xAI", "AI21 Labs", "Perplexity", "Voyage AI",
@@ -357,6 +423,15 @@ def resolve_model(
         head = unwrapped.split("/")[0].lower()
         if head not in {"openai", "anthropic", "google", "vertex_ai", "azure", "bedrock", "ollama", "groq"}:
             hf_id = unwrapped
+    # A Hugging Face repo id is pinned by a commit revision, not by a dated name, so it is reported on its own
+    # instead of being called a "floating alias".
+    if hf_id and hf_id.lower() == low:
+        hf_repo = True
+    else:
+        hf_repo = low.count("/") == 1 and low.split("/")[0] not in API_HEADS
+    # A name floats only when the provider offers a dated snapshot to switch to (or the name says "latest").
+    snapshot_available = bool((canonical_rec or {}).get("snapshots"))
+    floating = (not hf_repo) and (not pinned) and (is_latest or snapshot_available)
 
     has_unsafe_weights = False
     if online and hf_id:
@@ -379,9 +454,16 @@ def resolve_model(
         "region": region,
         "version": version,
         "pinned": pinned,
-        "status": lifecycle.get("status", "active"),
-        "deprecation_date": lifecycle.get("deprecation_date"),
-        "replacement": lifecycle.get("replacement"),
+        "floating": floating,
+        "snapshot_available": snapshot_available,
+        "hf_repo": hf_repo,
+        "status": lifecycle["status"],
+        "deprecation_date": lifecycle["deprecation_date"],
+        "retirement_date": lifecycle["retirement_date"],
+        "replacement": lifecycle["replacement"],
+        "lifecycle_source_url": lifecycle["lifecycle_source_url"],
+        "lifecycle_checked": lifecycle["lifecycle_checked"],
+        "lifecycle_scope": lifecycle["lifecycle_scope"],
         "license": lic_info["id"],
         "license_name": lic_info.get("name", lic_info["id"]),
         "license_category": lic_info.get("category", "unknown"),

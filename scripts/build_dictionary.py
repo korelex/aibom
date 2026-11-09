@@ -1,4 +1,4 @@
-"""Builds knowledge/model_names.json from LiteLLM's public model list (MIT license, (c) 2023 Berri AI).
+"""Builds aibom_engine/knowledge/model_names.json from LiteLLM's public model list (MIT license, (c) 2023 Berri AI).
 Run again any time to refresh the list:  python scripts/build_dictionary.py [path-to-litellm-json]"""
 import json
 import os
@@ -8,7 +8,7 @@ import urllib.request
 
 URL = "https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json"
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, "..", "knowledge", "model_names.json")
+OUT = os.path.join(HERE, "..", "aibom_engine", "knowledge", "model_names.json")
 
 
 def usable(n):
