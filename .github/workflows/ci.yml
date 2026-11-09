@@ -17,6 +17,11 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         python: ["3.9", "3.11", "3.13"]
+        exclude:
+          # Python 3.9 is end-of-life and GitHub's current Ubuntu runner no longer provides it; it is still tested on
+          # Windows, so the "requires-python >= 3.9" promise stays checked.
+          - os: ubuntu-latest
+            python: "3.9"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
