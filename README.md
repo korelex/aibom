@@ -113,8 +113,11 @@ licenses for legal review; it does not decide whether you are in compliance.
 | `provider-terms` | `Provider API terms` | GPT-4o and Claude: hosted models sold under the provider's API terms |
 | `unknown` | the license name | not stated |
 
-Curated open-model entries carry the source URL of the license text and the date
-it was checked.
+Curated open-model entries carry the source URL of the license and the date it was
+checked; `python scripts/check_licenses.py` re-checks every one of them against the
+license its Hugging Face repo declares. A model that is not curated gets a license only
+when its family has one license for all its open releases (Llama, Gemma, Mixtral, Phi);
+anything else is `unknown` rather than a guess.
 
 ### Floating aliases
 

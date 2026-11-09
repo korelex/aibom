@@ -134,20 +134,22 @@ def infer_license_for_maker(maker: str, name: str) -> str:
         return "flux-1-dev-non-commercial"
     if "flux.1-schnell" in low or "flux-1-schnell" in low:
         return "apache-2.0"
+    # Name-based guesses are kept only for families whose open releases share one license (checked against the
+    # Hugging Face repos on 2026-11-10). Families that mix licenses get no guess: "unknown" is honest, a wrong
+    # license is not. Removed for that reason: deepseek (MIT code, DeepSeek License weights), qwen2.5/qwen3 (the
+    # 3B and 72B models use the Qwen License), ministral (research license) and codestral (non-production license).
     if "c4ai-command" in low:
         return "cc-by-nc-4.0"
     if "mistral-large-2407" in low:
         return "mistral-research"
-    if "mixtral" in low or "mistral-7b" in low or "ministral" in low or "codestral" in low:
-        return "apache-2.0"
-    if "deepseek" in low:
-        return "mit"
-    if "qwen2.5" in low or "qwen3" in low or "qwq" in low:
+    if "mixtral" in low or "mistral-7b" in low:
         return "apache-2.0"
     if "phi-3" in low or "phi-4" in low or "phi3" in low or "phi4" in low:
         return "mit"
-    if "bge-" in low or "all-minilm" in low:
+    if re.search(r"bge-(small|base|large)-(en|zh)", low):
         return "mit"
+    if "all-minilm" in low:
+        return "apache-2.0"
     if maker in {"OpenAI", "Anthropic", "Google", "Cohere", "Amazon", "xAI", "AI21 Labs", "Perplexity", "Voyage AI"}:
         return "proprietary"
     return "unknown"
@@ -429,6 +431,16 @@ def build(offline: bool = False, from_existing: bool = False):
             existing = json.load(fh)
         models.update(existing["models"])
         alias_index.update(existing["alias_index"])
+        # Every model that is not in curated.json is reset: its license is re-derived from the name rules and it has
+        # no lifecycle. A rule change, or an entry removed from curated.json, then takes effect without a network
+        # rebuild, and nothing removed from curated.json lingers with a stale source.
+        for key, m in models.items():
+            if key not in curated_models:
+                m["lifecycle"] = {}
+                lic_id = infer_license_for_maker(m.get("maker") or "", m.get("name") or m.get("id", ""))
+                meta = licenses_table.get(lic_id, {})
+                m["license"] = {"id": lic_id, "category": meta.get("category", "unknown"),
+                                "restricted": meta.get("restricted", False), "source_url": "", "checked": ""}
         existing_vulns = existing["vulnerabilities"]
         existing_built = existing.get("meta", {}).get("built", "")
 

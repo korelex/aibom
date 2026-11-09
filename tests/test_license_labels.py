@@ -20,7 +20,7 @@ class CommercialUse(unittest.TestCase):
             self.assertEqual(license_label(r), "Provider API terms", name)
 
     def test_real_non_commercial_licenses_are_still_flagged(self):
-        for name in ("CohereForAI/c4ai-command-r-plus", "black-forest-labs/FLUX.1-dev", "stabilityai/stable-diffusion-3-medium"):
+        for name in ("CohereForAI/c4ai-command-r-plus", "black-forest-labs/FLUX.1-dev", "mistralai/Mistral-Small-Instruct-2409"):
             r = resolve_model(name, db=self.db)
             self.assertEqual(r["license_commercial_use"], "no", name)
             self.assertTrue(r["license_restricted"], name)
@@ -50,6 +50,63 @@ class CommercialUse(unittest.TestCase):
         self.assertEqual(license_label({"license_name": "Commercial / Proprietary API Terms", "license_commercial_use": "provider-terms"}),
                          "Provider API terms")
         self.assertEqual(license_label({}), "unknown")
+
+
+class CuratedLicensesMatchTheirRepos(unittest.TestCase):
+    """Values checked against each Hugging Face repo and its license text on 2026-11-10
+    (re-check any time with `python scripts/check_licenses.py`)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.db = load_db()
+
+    def lic(self, name):
+        r = resolve_model(name, db=self.db)
+        return r["license"], r["license_commercial_use"]
+
+    def test_corrected_entries(self):
+        expected = {
+            # was apache-2.0: the repo is under the Mistral AI Research License
+            "mistralai/Mistral-Small-Instruct-2409": ("mistral-research", "no"),
+            # was apache-2.0: the 72B model has its own Qwen License (over 100M monthly users needs a license)
+            "Qwen/Qwen2.5-72B-Instruct": ("qwen", "conditional"),
+            # was "research" (non-commercial): Qwen-72B is under the Tongyi Qianwen License Agreement
+            "Qwen/Qwen-72B": ("tongyi-qianwen", "conditional"),
+            # was non-commercial: the Stability AI Community License allows commercial use under US$1M revenue
+            "stabilityai/stable-diffusion-3-medium": ("stabilityai-ai-community", "conditional"),
+            "stabilityai/stable-diffusion-3.5-large": ("stabilityai-ai-community", "conditional"),
+            # was mit: MIT covers the code; the weights are under the DeepSeek License
+            "deepseek-ai/DeepSeek-V3": ("deepseek", "conditional"),
+            "deepseek-ai/deepseek-llm-7b-chat": ("deepseek", "conditional"),
+            "deepseek-ai/deepseek-coder-6.7b-instruct": ("deepseek", "conditional"),
+            # was OpenRAIL-M: SDXL is under OpenRAIL++-M
+            "stabilityai/stable-diffusion-xl-base-1.0": ("openrail++", "conditional"),
+        }
+        for name, want in expected.items():
+            self.assertEqual(self.lic(name), want, name)
+
+    def test_unchanged_entries_that_were_verified(self):
+        for name, want in {"deepseek-ai/DeepSeek-R1": ("mit", "yes"), "Qwen/Qwen2.5-7B-Instruct": ("apache-2.0", "yes"),
+                           "mistralai/Mistral-Large-Instruct-2407": ("mistral-research", "no"),
+                           "sentence-transformers/all-MiniLM-L6-v2": ("apache-2.0", "yes")}.items():
+            self.assertEqual(self.lic(name), want, name)
+
+    def test_families_with_mixed_licenses_get_no_guess(self):
+        # A name rule used to call every deepseek model MIT and every qwen2.5/qwen3, ministral and codestral model
+        # Apache-2.0. Those families mix licenses, so an uncurated name now says "unknown" instead of guessing.
+        for name in ("deepseek-v4-flash", "qwen3-coder-next", "codestral-2501", "ministral-8b-2512"):
+            self.assertEqual(self.lic(name)[0], "unknown", name)
+
+    def test_every_hugging_face_backed_entry_is_sourced_and_dated(self):
+        import json
+        import os
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "aibom_engine", "knowledge", "curated.json")
+        with open(path, encoding="utf-8") as fh:
+            models = json.load(fh)["curated_models"]
+        for key, cm in models.items():
+            if cm.get("hugging_face_id"):
+                self.assertTrue(cm.get("license_source_url", "").startswith("https://huggingface.co/"), key)
+                self.assertRegex(cm.get("license_checked", ""), r"^\d{4}-\d{2}-\d{2}$", key)
 
 
 if __name__ == "__main__":
