@@ -263,6 +263,43 @@ class FloatingAliasesAndHuggingFace(unittest.TestCase):
         self.assertEqual(self.r("openai/gpt-4o")["canonical_id"], "openai/gpt-4o")
         self.assertTrue(self.r("openai/gpt-4o")["floating"])
 
+    def test_dateless_claude_ids_from_4_6_on_are_pinned_not_floating(self):
+        # Anthropic: "Every Claude model ID is a pinned snapshot, including the dateless IDs used from the 4.6 generation on."
+        # A real scan of anthropic-quickstarts flagged claude-opus-5 and claude-opus-4-6 as floating before this was handled.
+        for name in ("claude-opus-4-6", "claude-opus-4-7", "claude-opus-4-8", "claude-opus-5", "claude-opus-5-5", "claude-sonnet-4-6",
+                     "claude-sonnet-5", "claude-sonnet-5-5", "claude-haiku-5-5", "claude-fable-5-1"):
+            r = self.r(name)
+            self.assertTrue(r["pinned"], name)
+            self.assertFalse(r["floating"], name)
+
+    def test_earlier_claude_aliases_do_float(self):
+        # For models before 4.6 the undated name is "a convenience pointer that resolves to the dated ID".
+        for name in ("claude-haiku-4-5", "claude-sonnet-4-5", "claude-opus-4-5", "claude-3-5-sonnet-latest"):
+            self.assertTrue(self.r(name)["floating"], name)
+
+    def test_platform_spellings_of_a_pinned_name_are_pinned_too(self):
+        for name in ("anthropic.claude-opus-5-5", "us.anthropic.claude-opus-4-7-v1:0", "bedrock/anthropic.claude-sonnet-5"):
+            r = self.r(name)
+            self.assertTrue(r["pinned"], name)
+            self.assertFalse(r["floating"], name)
+        self.assertTrue(self.r("anthropic.claude-sonnet-4-5")["floating"])
+
+    def test_pinned_name_records_are_sourced(self):
+        with open(CURATED, encoding="utf-8") as fh:
+            records = json.load(fh).get("pinned_names", [])
+        self.assertTrue(records)
+        for rec in records:
+            self.assertTrue(rec["source_url"].startswith("https://"))
+            self.assertTrue(ISO.match(rec["checked"]))
+
+    def test_every_model_the_provider_lists_as_active_is_tracked_as_active(self):
+        with at("2026-11-09"):
+            for name in ("claude-fable-5-1", "claude-mythos-5-1", "claude-opus-5-5", "claude-opus-5", "claude-opus-4-8", "claude-opus-4-7",
+                         "claude-opus-4-6", "claude-opus-4-5-20251101", "claude-sonnet-5-5", "claude-sonnet-5", "claude-sonnet-4-6",
+                         "claude-haiku-5-5", "claude-haiku-4-5-20251001"):
+                self.assertEqual(resolve_model(name, db=self.db)["status"], "active", name)
+            self.assertEqual(resolve_model("claude-mythos-preview", db=self.db)["status"], "deprecated")
+
     def test_an_unknown_model_is_never_called_floating(self):
         r = self.r("totally-made-up-model")
         self.assertFalse(r["floating"])

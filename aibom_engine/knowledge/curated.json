@@ -693,6 +693,103 @@
       "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
       "lifecycle_checked": "2026-11-09",
       "aliases": ["claude-opus-4-8"]
+    },
+    "anthropic/claude-fable-5-1": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-fable-5-1"]
+    },
+    "anthropic/claude-mythos-5-1": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-mythos-5-1"]
+    },
+    "anthropic/claude-fable-5": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-fable-5"]
+    },
+    "anthropic/claude-mythos-5": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-mythos-5"]
+    },
+    "anthropic/claude-opus-5-5": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-opus-5-5"]
+    },
+    "anthropic/claude-opus-5": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-opus-5"]
+    },
+    "anthropic/claude-opus-4-7": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-opus-4-7"]
+    },
+    "anthropic/claude-opus-4-6": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-opus-4-6"]
+    },
+    "anthropic/claude-sonnet-5": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-sonnet-5"]
+    },
+    "anthropic/claude-sonnet-4-6": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-sonnet-4-6"]
+    },
+    "anthropic/claude-haiku-5-5": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-haiku-5-5"]
+    },
+    "anthropic/claude-mythos-preview": {
+      "maker": "Anthropic",
+      "mode": "chat",
+      "license": "proprietary",
+      "deprecation_date": "2026-06-09",
+      "lifecycle_source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "lifecycle_checked": "2026-11-09",
+      "aliases": ["claude-mythos-preview"]
     }
   },
   "lifecycle_records": [
@@ -740,5 +837,8 @@
     {"match": ["text-embedding-004"], "family": "google/text-embedding-004", "maker": "Google", "retirement_date": "2026-01-14", "replacement": "gemini-embedding-2", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date."},
     {"match": ["embedding-001"], "family": "google/embedding-001", "maker": "Google", "retirement_date": "2025-10-30", "replacement": "gemini-embedding-2", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date."},
     {"match": ["gemini-embedding-001"], "family": "google/gemini-embedding-001", "maker": "Google", "retirement_date": "2028-05-14", "replacement": "gemini-embedding-2", "source_url": "https://ai.google.dev/gemini-api/docs/deprecations", "checked": "2026-11-09", "note": "Google lists the earliest possible shutdown date."}
+  ],
+  "pinned_names": [
+    {"match": ["claude-opus-4-6", "claude-opus-4-7", "claude-opus-4-8", "claude-opus-5", "claude-opus-5-5", "claude-sonnet-4-6", "claude-sonnet-5", "claude-sonnet-5-5", "claude-haiku-5-5", "claude-fable-5", "claude-fable-5-1", "claude-mythos-5", "claude-mythos-5-1"], "source_url": "https://platform.claude.com/docs/en/about-claude/models/overview", "checked": "2026-11-09", "note": "Anthropic: every Claude model ID is a pinned snapshot, including the dateless IDs used from the 4.6 generation on."}
   ]
 }

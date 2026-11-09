@@ -118,10 +118,14 @@ it was checked.
 
 ### Floating aliases
 
-A name is a *floating alias* only when the provider also offers a dated snapshot you
+A name is a *floating alias* only when the model catalogue lists a dated snapshot you
 could pin (`gpt-4o` has `gpt-4o-2024-08-06`; `text-embedding-3-small` has none, so it
-is not flagged). Hugging Face repo ids are reported on their own: they are pinned by a
-commit revision, which this scan does not check.
+is not flagged). Some providers pin the dateless name itself: Anthropic states that
+every Claude ID is a pinned snapshot, including the dateless IDs from the 4.6
+generation on, so `claude-opus-5` is pinned while `claude-haiku-4-5` is an alias. Such
+names are listed with their source under `pinned_names` in `curated.json`. Hugging Face
+repo ids are reported on their own: they are pinned by a commit revision, which this
+scan does not check.
 
 ## Tests
 

@@ -623,6 +623,27 @@ def build(offline: bool = False, from_existing: bool = False):
                 register_alias(name, family, route or rec.get("maker", "").lower(), region, ver, 4)
             alias_index[low]["lifecycle"] = dict(life)
 
+    # 3c. Dateless ids that the provider says are pinned snapshots (for example Claude 4.6 and later). Without this a
+    # dateless name would always look like a floating alias.
+    for rec in curated.get("pinned_names", []):
+        if not (rec.get("source_url", "").startswith("https://") and re.match(r"^\d{4}-\d{2}-\d{2}$", rec.get("checked", ""))):
+            raise SystemExit("pinned_names record needs source_url (https) and checked (YYYY-MM-DD)")
+        pinned_names = set()
+        for name in rec["match"]:
+            low = name.strip().lower()
+            if low not in alias_index:
+                raise SystemExit(f"pinned_names: {name!r} is not a known alias; add it to curated_models first")
+            alias_index[low]["pinned_override"] = True
+            pinned_names.add(low)
+        # The same model written the way a cloud platform spells it (anthropic.claude-opus-5-5, us.anthropic.claude-...-v1:0,
+        # bedrock/anthropic....) is pinned too, as long as it is filed under the same model.
+        spelling = re.compile(r"^(?:(?:us|eu|apac|global|ca|sa|il|me|af|mx)\.)?(?:anthropic\.)?(.+?)(?:-v\d+:\d+|@.*)?$")
+        for alias, entry in alias_index.items():
+            m = spelling.match(alias.split("/")[-1])
+            base = m.group(1) if m else ""
+            if base in pinned_names and alias != base and entry["canonical_id"] == alias_index[base]["canonical_id"]:
+                entry["pinned_override"] = True
+
     # 4. Build Packages & OSV Vulnerabilities
     packages_table = {}
     for p in packages_list:

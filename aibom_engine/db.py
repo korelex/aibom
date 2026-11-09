@@ -431,7 +431,7 @@ def resolve_model(
     region = region_hint or (alias_hit or {}).get("region") or ""
     version = ver_extracted or (alias_hit or {}).get("version") or ""
     # Whether a reference is pinned is a fact about the name the code writes, so it is read from that name.
-    pinned = pinned_extracted
+    pinned = pinned_extracted or bool(exact and (alias_hit or {}).get("pinned_override"))
     is_latest = low.endswith("-latest") or low.endswith(":latest")
 
     # A record for this exact snapshot wins; otherwise the family's record applies (only set when the whole family
