@@ -17,8 +17,9 @@ MODE_TEXT = {"chat": "chat model", "embedding": "embedding model", "image_genera
 NO_MODELS = ("This usually means the app picks its model when it runs (for example from an environment variable, a settings page or a database), "
              "or that it uses no AI models. A scan of the code cannot see choices made at run time.")
 LISTED_NOTE = "long tables or lists of models, for example token-limit tables or model pickers"
-# Results of the independent test on five apps the scanner had never seen (benchmark/RESULTS.md, round 3).
-TESTED = "On five apps it had never seen, this scanner found about 79% of the real models, and about 99% of what it reported was correct. The best free scanners found about 10%."
+# Round-3 benchmark result; reproduce it with `python benchmark/run.py` (see benchmark/README.md).
+TESTED = ("In a blind test on five open-source apps, this scanner found about 79% of the AI models named in their code, and about "
+          "99% of what it reported was correct (benchmark/README.md in the aibom repository).")
 CANNOT_SEE = ["A model that the app chooses when it runs: an environment variable, a settings page, a database or a remote setting. A scan reads code; it does not run the app.",
               "Anything outside this one repository, such as code in other repositories or in private packages.",
               "AI parts other than models: agents, tools, vector databases and frameworks are not covered yet.",

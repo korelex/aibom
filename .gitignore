@@ -14,6 +14,9 @@ build/
 # Generated scan outputs (recreate with aibom scan)
 runs/
 
+# Benchmark clones (recreate with python scripts/fetch_repos.py)
+repos/
+
 # Local environment
 .env
 .env.*

@@ -138,7 +138,12 @@ python -m pytest
 python scripts/smoke_wheel.py   # builds the wheel, installs it in a clean virtualenv and scans with it
 ```
 
-The benchmark corpus and hand-written answer keys are in `benchmark/`.
+## Accuracy
+
+On a blind test on five open-source apps, the scanner found about 79% of the AI models
+named in their code, and about 99% of what it reported was correct. The method, the
+answer keys, the per-repository results and their limits are in
+[benchmark/README.md](benchmark/README.md); `python benchmark/run.py` reproduces them.
 
 ## Status
 

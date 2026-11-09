@@ -540,6 +540,10 @@
   {
    "name": "titan_v2",
    "why": "embedding model option (knowledgeBase types)"
+  },
+  {
+   "name": "cohere.embed-multilingual-v3",
+   "why": "real: BedrockFoundationModel.COHERE_EMBED_MULTILINGUAL_V3 in cdk/lib/utils/bedrock-knowledge-base-args.ts:58 (labelled on 2026-11-10 from the line, after a benchmark run)"
   }
  ],
  "junk": [

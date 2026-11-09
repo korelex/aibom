@@ -955,6 +955,10 @@
   {
    "name": "o4-mini-deep-research",
    "why": "model constant in completion.go or speech.go that my first key missed"
+  },
+  {
+   "name": "o1-preview-2024-09-12",
+   "why": "real: constant O1Preview20240912 in completion.go:19 (labelled on 2026-11-10 from the line, after a benchmark run)"
   }
  ],
  "junk": [
