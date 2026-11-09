@@ -30,8 +30,14 @@ def build_bom(items, app_name):
             props.append({"name": NS + "canonical-id", "value": it["canonical_id"]})
         if "pinned" in it:
             props.append({"name": NS + "pinned", "value": str(bool(it["pinned"])).lower()})
+        if "floating" in it:
+            props.append({"name": NS + "floating-alias", "value": str(bool(it["floating"])).lower()})
         if it.get("status"):
             props.append({"name": NS + "status", "value": it["status"]})
+        for key, name in (("deprecation_date", "deprecation-date"), ("retirement_date", "retirement-date"),
+                          ("replacement", "replacement"), ("lifecycle_source_url", "lifecycle-source")):
+            if it.get(key):
+                props.append({"name": NS + name, "value": it[key]})
         if it.get("license") and it.get("license") != "unknown":
             props.append({"name": NS + "license", "value": it["license"]})
         if it.get("places"):

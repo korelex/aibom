@@ -74,17 +74,10 @@ class TestDatabasePhase1(unittest.TestCase):
         self.assertTrue(res_vtx["pinned"])
 
     def test_deprecated_and_retired_models(self):
+        # Values come from Anthropic's deprecations page (see tests/test_lifecycle.py for the full set).
         c2 = resolve_model("claude-2.1", db=self.db)
         self.assertEqual(c2["status"], "retired")
-        self.assertEqual(c2["replacement"], "claude-sonnet-4-5")
-
-        g32k = resolve_model("gpt-4-32k", db=self.db)
-        self.assertEqual(g32k["status"], "retired")
-        self.assertEqual(g32k["replacement"], "gpt-4o")
-
-        gem1 = resolve_model("gemini-1.0-pro", db=self.db)
-        self.assertEqual(gem1["status"], "retired")
-        self.assertEqual(gem1["replacement"], "gemini-2.5-flash")
+        self.assertEqual(c2["replacement"], "claude-opus-4-8")
 
     def test_license_classification(self):
         cmd_r = resolve_model("CohereForAI/c4ai-command-r-v01", db=self.db)
@@ -177,7 +170,7 @@ class TestDatabasePhase1(unittest.TestCase):
             self.assertIn("claude-3-sonnet-20240229", by_name)
             self.assertTrue(by_name["claude-3-sonnet-20240229"]["pinned"])
             self.assertEqual(by_name["claude-3-sonnet-20240229"]["status"], "retired")
-            self.assertEqual(by_name["claude-3-sonnet-20240229"]["replacement"], "claude-sonnet-4-5")
+            self.assertEqual(by_name["claude-3-sonnet-20240229"]["replacement"], "claude-sonnet-5-5")
 
             self.assertIn("CohereForAI/c4ai-command-r-v01", by_name)
             self.assertTrue(by_name["CohereForAI/c4ai-command-r-v01"]["license_restricted"])
