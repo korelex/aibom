@@ -1,10 +1,12 @@
 """The readable outputs for people who do not read JSON: a web page, a markdown summary and a spreadsheet (CSV).
 The CycloneDX file stays the source of truth; these are built from the same items."""
 import csv
+import datetime
 import html
 import io
 
 from . import __version__
+from .db import today_iso
 from .display import build_rows, by_maker
 
 TIER_TEXT = {"declared": "Confirmed", "inferred": "Worked out"}
@@ -79,9 +81,17 @@ def risk_lines(risk):
             ("Unknown licenses", risk["unknown"])]
 
 
+STALE_AFTER_DAYS = 90
+
+
 def lifecycle_notes(risk):
     """Plain-language limits of the lifecycle column, shown under the Risks block."""
     notes = []
+    if risk["checked"]:
+        age = (datetime.date.fromisoformat(today_iso()) - datetime.date.fromisoformat(risk["checked"])).days
+        if age > STALE_AFTER_DAYS:
+            notes.append(f"Warning: the lifecycle data was last checked {age} days ago ({risk['checked']}). Retirements announced since "
+                         "then are not included; update aibom for newer data.")
     if risk["total"]:
         notes.append(f"Lifecycle: {risk['total'] - len(risk['untracked'])} of {risk['total']} models have a sourced record"
                      + (f" (checked against the providers' own pages on {risk['checked']})" if risk["checked"] else "")

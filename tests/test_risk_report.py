@@ -153,6 +153,32 @@ class ReviewAppRiskReport(unittest.TestCase):
         self.assertNotIn("gpt-4-turbo", names)
 
 
+class StaleLifecycleData(unittest.TestCase):
+    def scan_on(self, day):
+        with tempfile.TemporaryDirectory() as out, mock.patch.dict(os.environ, {"AIBOM_TODAY": day}):
+            run(APP, out, app="review-app")
+            with open(os.path.join(out, "report.md"), encoding="utf-8") as fh:
+                return fh.read()
+
+    def test_no_warning_while_the_data_is_recent(self):
+        self.assertNotIn("last checked", self.scan_on(TODAY))
+
+    def test_old_data_says_so(self):
+        markdown = self.scan_on("2027-06-01")
+        self.assertRegex(markdown, r"Warning: the lifecycle data was last checked \d+ days ago")
+
+
+class CommandHints(unittest.TestCase):
+    def test_hints_use_the_command_the_person_ran(self):
+        from aibom_engine import cli
+        with mock.patch.object(cli.sys, "argv", [r"C:\Python\Scripts\aibom.exe", "scan"]):
+            self.assertEqual(cli.command(), "aibom")
+        with mock.patch.object(cli.sys, "argv", ["/usr/local/bin/aibom", "scan"]):
+            self.assertEqual(cli.command(), "aibom")
+        with mock.patch.object(cli.sys, "argv", ["-m", "scan"]):
+            self.assertEqual(cli.command(), "python -m aibom_engine")
+
+
 class PlatformNote(unittest.TestCase):
     def test_bedrock_ids_carry_the_platform_footnote(self):
         with tempfile.TemporaryDirectory() as src, tempfile.TemporaryDirectory() as out, mock.patch.dict(os.environ, {"AIBOM_TODAY": TODAY}):
