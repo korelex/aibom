@@ -162,7 +162,7 @@ def check_tools():
         import cyclonedx  # noqa: F401
         import jsonschema  # noqa: F401
     except ImportError:
-        raise SourceError("Two Python packages are missing. Install them with:  python -m pip install -r requirements.txt")
+        raise SourceError("Two Python packages are missing. Install aibom with:  python -m pip install .  (from the aibom folder)")
 
 
 def do_scan(a):

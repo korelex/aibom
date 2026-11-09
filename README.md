@@ -146,4 +146,9 @@ Alpha. The scanner currently covers model discovery only. SDKs, MCP, vector
 stores, secrets, weight files, SARIF, CI and KorelexOne upload are on the
 roadmap, not in this build.
 
+## License
+
+Apache License 2.0, see [LICENSE](LICENSE). The bundled model data is derived in part
+from third-party sources; their notices are in [NOTICE](NOTICE).
+
 Built and maintained by [Korelex](https://korelex.ai).

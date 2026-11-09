@@ -1,5 +1,5 @@
 """Runs the engine on every benchmark repo and saves the results in runs/<name>.
-Usage: python scripts/run_all.py [--repos DIR]     (DIR holds the clones; default /tmp/repos, or run scripts/fetch_repos.py first)"""
+Usage: python scripts/run_all.py [--repos DIR]     (DIR holds the clones; default repos/, the folder scripts/fetch_repos.py fills)"""
 import argparse
 import json
 import os
@@ -10,7 +10,7 @@ sys.path.insert(0, ROOT)
 from aibom_engine.pipeline import run  # noqa: E402
 
 p = argparse.ArgumentParser()
-p.add_argument("--repos", default="/tmp/repos")
+p.add_argument("--repos", default="repos")
 a = p.parse_args()
 for r in json.load(open(os.path.join(ROOT, "benchmark", "repos.json"), encoding="utf-8"))["repos"]:
     d = os.path.join(a.repos, r["name"])
