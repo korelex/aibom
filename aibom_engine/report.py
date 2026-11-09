@@ -92,7 +92,8 @@ def lifecycle_notes(risk):
 
 
 def risk_names(items, limit=5):
-    names = [r["name"] for r in items[:limit]]
+    # A "*" marks a date that is for the maker's own API while the code uses a cloud platform (see PLATFORM_NOTE).
+    names = [r["name"] + ("*" if r.get("lifecycle_scope") == "platform" and r.get("status") in ("retired", "deprecated") else "") for r in items[:limit]]
     more = len(items) - len(names)
     return ", ".join(names) + (f" and {more} more" if more > 0 else "")
 
@@ -210,7 +211,7 @@ CSS = """
 .cards{display:flex;gap:16px;flex-wrap:wrap;margin:18px 0}.card{border:3px solid #000;padding:14px 18px;flex:1;min-width:220px}.card b{display:block;font-size:44px;line-height:1.05}.card span{font-size:14px}
 .warn{border:4px double #000;padding:10px 18px;margin:16px 0;font-size:15px}.warn ul{margin:6px 0 0 18px;padding:0}.how{border:1px solid #000;padding:12px 18px;font-size:14px;margin:18px 0}.how ul{margin:6px 0 0 18px;padding:0}
 input#q{width:100%;padding:12px;border:3px solid #000;font-size:16px;margin:14px 0 4px}
-.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;table-layout:fixed;font-size:14px;margin:8px 0 16px}th,td{border:1px solid #000;padding:7px 10px;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{border-bottom:3px solid #000}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:980px;font-size:14px;margin:8px 0 16px}table.slim{min-width:0;table-layout:fixed}th,td{border:1px solid #000;padding:7px 10px;text-align:left;vertical-align:top;overflow-wrap:break-word}td:nth-child(3){min-width:190px;overflow-wrap:anywhere}th{border-bottom:3px solid #000}
 code{font-family:Consolas,Menlo,monospace;font-size:12.5px}a{color:#000;font-weight:bold}.also{font-size:12px;margin-top:2px}
 .badge{display:inline-block;border:2px solid #000;padding:0 8px;font-size:12px;font-weight:bold;white-space:nowrap}.badge.worked{border-style:dashed}
 details{margin:12px 0}summary{cursor:pointer;font-weight:bold}details.grp>summary{font-size:16px;padding:6px 0}details.more{margin:4px 0 0}details.more summary{font-weight:normal;font-size:12px}
@@ -264,7 +265,7 @@ def build_html(items, app, source="", links=None, meta=None):
         out = []
         for i, (maker, rr) in enumerate(by_maker(rs)):
             out.append(f'<details class="grp"{" open" if open_first and i < 3 else ""}><summary>{h(maker)} ({len(rr)})</summary>'
-                       '<div class="tw"><table><colgroup><col style="width:15%"><col style="width:7%"><col style="width:19%"><col style="width:8%"><col style="width:8%"><col style="width:11%"><col style="width:8%"><col style="width:8%"><col style="width:8%"><col style="width:8%"></colgroup>'
+                       '<div class="tw"><table>'
                        '<tr><th>Model</th><th>Type</th><th>Where it is used (click to see the line)</th><th>Confidence</th><th>Status</th><th>Pinned</th><th>Deprecated</th><th>Retires or retired</th><th>Replacement</th><th>License</th></tr>' + "".join(row_html(r) for r in rr) + "</table></div></details>")
         return "".join(out)
 
@@ -304,7 +305,7 @@ def build_html(items, app, source="", links=None, meta=None):
     if gone:
         rws = "".join(f"<tr><td>{h(g['name'])}</td><td>{h(g['why'])}</td><td>{place_link({'file': g['file'], 'line': g['line']})}</td></tr>" for g in gone)
         out.append(f"<h2>Left out, and why</h2><details><summary>{len(gone)} names that look like models but are not used (click to open)</summary>"
-                   f"<div class='tw'><table><colgroup><col style='width:32%'><col style='width:36%'><col style='width:32%'></colgroup><tr><th>Name</th><th>Why it was left out</th><th>Example place</th></tr>{rws}</table></div></details>")
+                   f"<div class='tw'><table class='slim'><colgroup><col style='width:32%'><col style='width:36%'><col style='width:32%'></colgroup><tr><th>Name</th><th>Why it was left out</th><th>Example place</th></tr>{rws}</table></div></details>")
     out.append("<div class='limits'><h2>What this scan cannot see</h2><ul>" + "".join(f"<li>{h(c)}</li>" for c in CANNOT_SEE) + "</ul></div>")
     out.append("<p class='foot'>The standard AI-BOM file (aibom.cdx.json) holds the same facts for other tools, and models.csv opens in a spreadsheet. This page needs no internet connection.</p>")
     out.append(f"</div><script>{JS}</script></body></html>")
