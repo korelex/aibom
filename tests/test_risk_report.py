@@ -83,10 +83,27 @@ class ReviewAppRiskReport(unittest.TestCase):
         self.assertEqual(self.row("claude-3-5-sonnet-20240620")["floating_alias"], "no")
 
     def test_hugging_face_repos_are_not_floating_aliases(self):
-        self.assertEqual(self.row("meta-llama/Llama-2-7b-hf")["floating_alias"], "no")
+        for name in ("meta-llama/Llama-2-7b-hf", "stabilityai/stable-diffusion-xl-base-1.0"):
+            self.assertEqual(self.row(name)["floating_alias"], "no", name)
         markdown = self.read("report.md")
         self.assertRegex(markdown, r"- Floating aliases[^\n]*: 2 \(gpt-4o, gpt-4o-mini\)")
-        self.assertRegex(markdown, r"- Hugging Face models[^\n]*: 1 \(meta-llama/Llama-2-7b-hf\)")
+        self.assertRegex(markdown, r"- Hugging Face models[^\n]*: 2 \(meta-llama/Llama-2-7b-hf, stabilityai/stable-diffusion-xl-base-1.0\)")
+
+    def test_provider_api_models_are_never_labelled_non_commercial(self):
+        # Review blocker: GPT-4o and Claude were printed as "(non-commercial)", which reads as "you cannot ship this".
+        for name in ("gpt-4o", "gpt-4o-mini", "text-embedding-3-small", "claude-3-5-sonnet-20240620"):
+            row = self.row(name)
+            self.assertEqual(row["license_commercial_use"], "provider-terms", name)
+            self.assertNotEqual(row["license_commercial_use"], "no", name)
+        for text in (self.read("report.md"), self.read("report.html")):
+            self.assertNotIn("non-commercial", text.lower())
+            self.assertIn("Provider API terms", text)
+
+    def test_conditional_licenses_are_flagged_for_legal_review_not_called_violations(self):
+        self.assertEqual(self.row("meta-llama/Llama-2-7b-hf")["license_commercial_use"], "conditional")
+        markdown = self.read("report.md")
+        self.assertRegex(markdown, r"- Restricted licenses \(flag for legal review\)[^\n]*: 2 \(")
+        self.assertNotIn("violation", markdown.lower())
 
     def test_untracked_models_say_so_instead_of_claiming_to_be_active(self):
         # No sourced record exists for text-embedding-3-small, so it is "not tracked", never "active".

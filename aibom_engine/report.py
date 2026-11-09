@@ -75,7 +75,7 @@ def risk_lines(risk):
             ("Deprecated (retirement scheduled, still works)", risk["deprecated"]),
             ("Floating aliases (a dated snapshot exists to pin)", risk["floating"]),
             ("Hugging Face models (pin a commit revision; this scan does not check for one)", risk["hf"]),
-            ("Restricted licenses", risk["restricted"]),
+            ("Restricted licenses (flag for legal review)", risk["restricted"]),
             ("Unknown licenses", risk["unknown"])]
 
 
@@ -104,6 +104,8 @@ def license_label(r):
         return f"{name} (conditional)"
     if use == "no":
         return f"{name} (non-commercial)"
+    if use == "provider-terms":
+        return "Provider API terms"
     return name
 
 

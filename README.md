@@ -100,6 +100,22 @@ their own schedules, so those rows carry a `*`. Set `AIBOM_TODAY=YYYY-MM-DD` to
 reproduce a report as of a given day. Lifecycle data from upstream catalogues is not
 used: it was found to mix up deprecation with earliest-retirement dates.
 
+### Licenses
+
+Each model carries a license name and a *commercial use* value. The report flags
+licenses for legal review; it does not decide whether you are in compliance.
+
+| Commercial use | Shown as | Example |
+| --- | --- | --- |
+| `yes` | the license name | Apache-2.0, MIT |
+| `conditional` | `(conditional)` | Llama 2 Community License (attribution, 700M-user limit, acceptable-use policy) |
+| `no` | `(non-commercial)` | CC-BY-NC, research-only licenses |
+| `provider-terms` | `Provider API terms` | GPT-4o and Claude: hosted models sold under the provider's API terms |
+| `unknown` | the license name | not stated |
+
+Curated open-model entries carry the source URL of the license text and the date
+it was checked.
+
 ### Floating aliases
 
 A name is a *floating alias* only when the provider also offers a dated snapshot you

@@ -168,12 +168,19 @@ def match_vulnerabilities(
     return matched
 
 
+# Whether the license lets you use the model commercially:
+#   yes             permissive license
+#   conditional     allowed under conditions (attribution, user limits, acceptable-use policy, copyleft)
+#   no              non-commercial or research-only
+#   provider-terms  a hosted model sold under the provider's API terms. Commercial use is the point of those terms;
+#                   they are not a non-commercial license, so they must never be shown as one.
+#   unknown         not stated
 _COMMERCIAL_USE = {
     "permissive": "yes",
     "conditional-commercial": "conditional",
     "non-commercial": "no",
     "copyleft": "conditional",
-    "proprietary": "no",
+    "proprietary": "provider-terms",
     "custom": "unknown",
     "unknown": "unknown",
 }
