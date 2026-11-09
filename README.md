@@ -91,7 +91,11 @@ calls fail). The status is worked out from those dates on the day of the scan:
 | `active` | a sourced record exists and nothing is scheduled |
 | `not tracked` | no sourced record. This is not a statement that the model is fine |
 
-Dates are for the maker's own API. Amazon Bedrock, Azure and Google Vertex AI set
+A retirement belongs to a specific snapshot, so records are stored per name
+(`lifecycle_records` in `curated.json`): `gpt-4-0314` is retired while another
+`gpt-4` snapshot is a different matter. Models are still grouped into one family for
+display. A snapshot that no record lists stays `not tracked`; it never inherits a
+neighbour's date. Dates are for the maker's own API. Amazon Bedrock, Azure and Google Vertex AI set
 their own schedules, so those rows carry a `*`. Set `AIBOM_TODAY=YYYY-MM-DD` to
 reproduce a report as of a given day. Lifecycle data from upstream catalogues is not
 used: it was found to mix up deprecation with earliest-retirement dates.

@@ -589,6 +589,36 @@ def build(offline: bool = False, from_existing: bool = False):
             if usable(al) and al not in legacy_names:
                 legacy_names[al] = {"provider": cmod.get("maker", "").lower(), "mode": cmod.get("mode", "chat")}
 
+    # 3b. Per-snapshot lifecycle. Models are grouped into families for display, but a retirement belongs to a specific
+    # snapshot: gpt-4-0314 was shut down on 2026-03-26 while gpt-4 (the family) is a different matter. Each record is
+    # attached to the exact aliases it lists and wins over the family when that exact name is written in code.
+    iso = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+    seen_names: set[str] = set()
+    for rec in curated.get("lifecycle_records", []):
+        where = ", ".join(rec.get("match", [])[:2])
+        if not (rec.get("source_url", "").startswith("https://") and iso.match(rec.get("checked", ""))):
+            raise SystemExit(f"lifecycle record [{where}]: needs source_url (https) and checked (YYYY-MM-DD)")
+        if not iso.match(rec.get("retirement_date", "")) or (rec.get("deprecation_date") and not iso.match(rec["deprecation_date"])):
+            raise SystemExit(f"lifecycle record [{where}]: dates must be YYYY-MM-DD")
+        if rec.get("deprecation_date") and rec["deprecation_date"] > rec["retirement_date"]:
+            raise SystemExit(f"lifecycle record [{where}]: announced after it retires")
+        life = {k: rec[k] for k in ("deprecation_date", "retirement_date", "replacement", "note") if rec.get(k)}
+        life.update({"source_url": rec["source_url"], "checked": rec["checked"]})
+        for name in rec["match"]:
+            low = name.strip().lower()
+            if low in seen_names:
+                raise SystemExit(f"lifecycle record: {name!r} appears in two records")
+            seen_names.add(low)
+            family = rec.get("family", "")
+            current = alias_index.get(low)
+            if current is None or (rec.get("move_to_family") and current["canonical_id"] != family):
+                if not family:
+                    raise SystemExit(f"lifecycle record: {name!r} is not a known alias, so the record needs a family")
+                register_model(family, family.split("/")[-1], rec.get("maker", ""), "chat")
+                _, route, region, ver = normalize_family_slug(name)
+                register_alias(name, family, route or rec.get("maker", "").lower(), region, ver, 4)
+            alias_index[low]["lifecycle"] = dict(life)
+
     # 4. Build Packages & OSV Vulnerabilities
     packages_table = {}
     for p in packages_list:
@@ -619,6 +649,7 @@ def build(offline: bool = False, from_existing: bool = False):
                 "canonical_models": len(models),
                 "aliases": len(alias_index),
                 "models_with_sourced_lifecycle": sum(1 for m in models.values() if m["lifecycle"].get("source_url")),
+                "aliases_with_sourced_lifecycle": sum(1 for a in alias_index.values() if a.get("lifecycle", {}).get("source_url")),
                 "models_with_scheduled_or_past_retirement": sum(
                     1 for m in models.values()
                     if m["lifecycle"].get("source_url") and (m["lifecycle"].get("deprecation_date") or m["lifecycle"].get("retirement_date"))
