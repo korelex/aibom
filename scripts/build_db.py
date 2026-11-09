@@ -9,7 +9,7 @@ Combines 4 live sources + our curated overlay:
 Usage:
   python scripts/build_db.py              # full live build from all upstream sources
   python scripts/build_db.py --offline    # build from local aibom_engine/knowledge/model_names.json + curated.json only
-  python scripts/build_db.py --reformat   # rewrite ai_db.json in the reviewable one-entry-per-line layout (no network)
+  python scripts/build_db.py --reformat   # rewrite ai_db.json and curated.json in their one-entry-per-line layout (no network)
   python scripts/build_db.py --apply-curated  # re-apply curated.json on the existing ai_db.json (no network, minimal diff)
 """
 from __future__ import annotations
@@ -171,6 +171,27 @@ def dump_db(path: str, db: dict) -> None:
         else:
             body = dumps(value)
         parts.append(f" {json.dumps(key)}:{body}")
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write("{\n" + ",\n".join(parts) + "\n}\n")
+
+
+def dump_curated(path: str, curated: dict) -> None:
+    """Write curated.json in one stable layout: one license, package, model or record per line, sections in a fixed
+    order. Hand edits stay easy, and every data change is a one-line diff."""
+    def dumps(obj):
+        return json.dumps(obj, ensure_ascii=False)
+
+    parts = []
+    for key, value in curated.items():  # keep the section order of the file
+        if isinstance(value, dict) and value:
+            rows = [f"    {dumps(k)}: {dumps(v)}" for k, v in value.items()]
+            body = "{\n" + ",\n".join(rows) + "\n  }"
+        elif isinstance(value, list) and value:
+            rows = [f"    {dumps(v)}" for v in value]
+            body = "[\n" + ",\n".join(rows) + "\n  ]"
+        else:
+            body = dumps(value)
+        parts.append(f"  {dumps(key)}: {body}")
     with open(path, "w", encoding="utf-8", newline="\n") as f:
         f.write("{\n" + ",\n".join(parts) + "\n}\n")
 
@@ -718,7 +739,9 @@ if __name__ == "__main__":
         # Rewrite the existing database in the canonical layout without fetching anything.
         with open(AI_DB_PATH, encoding="utf-8") as fh:
             dump_db(AI_DB_PATH, json.load(fh))
-        print("Reformatted", AI_DB_PATH)
+        with open(CURATED_PATH, encoding="utf-8") as fh:
+            dump_curated(CURATED_PATH, json.load(fh))
+        print("Reformatted", AI_DB_PATH, "and", CURATED_PATH)
     elif "--apply-curated" in sys.argv:
         build(from_existing=True)
     else:
