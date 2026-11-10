@@ -10,6 +10,7 @@ from . import packages as package_finder
 from .finders import context, dictionary, shapes
 from .merge import merge
 from .display import build_rows
+from .evidence import assign_levels
 from .report import build_csv, build_html, build_markdown
 from .triage import triage
 from .vendors import maker_of, type_of
@@ -85,6 +86,7 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
     except Exception as e:  # the package step must never stop the model scan
         warnings.append(f"Dependency files could not be read: {type(e).__name__}: {e}")
         found_packages = {"packages": [], "files": [], "problems": [], "summary": {}}
+    model_arguments = found_packages.pop("model_arguments", [])
     ps = found_packages["summary"]
     if ps:
         log(f"  {ps['dependency_files']:,} dependency files, {ps['packages_read']:,} packages, {ps['ai_packages']:,} AI packages ({ps['seconds']:.1f}s)")
@@ -106,7 +108,7 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
     if partial:
         warnings.append(f"The time limit of {max_seconds} seconds was reached, so part of the repository was not read. Raise it with --max-seconds.")
     log("Checking every name (live code, comment, message, test, docs) ...")
-    items = verify(enrich(merge(findings), names), root)
+    items = assign_levels(verify(enrich(merge(findings), names), root), model_arguments)
     included = [i for i in items if i["tier"] != "rejected"]
     used = sum(1 for i in included if i.get("role") == "used")
     log("Writing the AI-BOM and the report ...")

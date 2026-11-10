@@ -7,7 +7,7 @@ import sys
 import traceback
 
 from .display import build_rows
-from .report import CANNOT_SEE, MODE_TEXT, TIER_LONG
+from .report import CANNOT_SEE, LEVEL_LONG, MODE_TEXT, REACHABILITY_TEXT, TIER_LONG
 from .source import Linker, SourceError, cleanup, fetch, linker_for_git_folder, parse
 
 
@@ -110,11 +110,13 @@ def explain(run_dir, name):
     print("%s  (%s, %s)" % (hit["name"], hit["maker"] or "maker unknown", MODE_TEXT.get(hit["mode"], hit["mode"]) or "AI model"))
     print("  How it is used:  %s" % ("set or used directly in the code" if hit["role"] == "used" else "only listed inside a long table or list, not set or called on its own"))
     print("  How sure:        %s" % TIER_LONG[hit["tier"]])
+    print("  Evidence:        %s" % LEVEL_LONG[hit["evidence_level"]])
+    print("  Reachable:       %s" % REACHABILITY_TEXT)
     if hit["also"]:
         print("  Also written as: %s" % ", ".join(hit["also"][:6]))
     print("  Written in %d place%s in code and settings:" % (len(hit["places"]), "" if len(hit["places"]) == 1 else "s"))
     for p in hit["places"][:8]:
-        print("    %s:%s" % (fit(p["file"], 60), p["line"]))
+        print("    %s:%s%s" % (fit(p["file"], 60), p["line"], "   (passed into an AI call)" if p.get("called") else ""))
         print("        %s" % fit(p["snippet"], 90)[:90] if len(p["snippet"]) <= 90 else "        %s" % p["snippet"][:87] + "...")
         url = links.url_for(p["file"], p["line"])
         if url:

@@ -11,6 +11,11 @@ from .display import build_rows, by_maker
 
 TIER_TEXT = {"declared": "Confirmed", "inferred": "Worked out"}
 TIER_LONG = {"declared": "Confirmed: the name is written in the code", "inferred": "Worked out: the code names it through a constant such as GPT_4O"}
+LEVEL_TEXT = {"called": "Called", "declared": "Declared"}
+LEVEL_LONG = {"called": "Called: live code passes this name into a call on an AI SDK",
+              "declared": "Declared: the name is written in the code or settings, but no call on an AI SDK was proven to receive it "
+                          "(it may still be used, for example through a variable, a lookup table or plain HTTP)"}
+REACHABILITY_TEXT = "not yet verified: the scanner does not prove that a request from outside reaches this code"
 MODE_TEXT = {"chat": "chat model", "embedding": "embedding model", "image_generation": "image model", "audio_transcription": "speech-to-text model",
              "audio_speech": "text-to-speech model", "responses": "chat model", "completion": "text model", "rerank": "reranking model",
              "moderation": "moderation model", "realtime": "realtime voice model", "video_generation": "video model"}
@@ -152,19 +157,19 @@ def build_csv(items, links=None):
     rows = build_rows(items)
     buf = io.StringIO()
     w = csv.writer(buf, lineterminator="\r\n")
-    w.writerow(["model", "made_by", "type", "role", "confidence", "where_first_place", "link", "places_in_code", "also_written_as",
+    w.writerow(["model", "made_by", "type", "role", "confidence", "evidence_level", "reachability", "where_first_place", "link", "places_in_code", "also_written_as",
                 "status", "pinned", "floating_alias", "deprecation_date", "retirement_date", "replacement", "lifecycle_source", "license",
                 "license_restricted", "license_name", "license_commercial_use"])
     for role, group in (("used directly", rows["used"]), ("only listed", rows["listed"])):
         for r in group:
             p, url, _ = where(r, links)
-            w.writerow([r["name"], r["maker"], MODE_TEXT.get(r["mode"], r["mode"]), role, TIER_TEXT[r["tier"]], p, url, len(r["places"]), "; ".join(r["also"]),
+            w.writerow([r["name"], r["maker"], MODE_TEXT.get(r["mode"], r["mode"]), role, TIER_TEXT[r["tier"]], r["evidence_level"], "not_verified", p, url, len(r["places"]), "; ".join(r["also"]),
                         r.get("status", "unknown"), "yes" if r.get("pinned") is True else ("no" if r.get("pinned") is False else "unknown"),
                         "yes" if r.get("floating") else "no", r.get("deprecation_date", ""), r.get("retirement_date", ""),
                         r.get("replacement", ""), r.get("lifecycle_source_url", ""), r.get("license", "unknown"),
                         "yes" if r.get("license_restricted") else "no", r.get("license_name", ""), r.get("license_commercial_use", "")])
     for g in rows["left_out"]:
-        w.writerow([g["name"], "", "", "left out", g["why"], f"{g['file']}:{g['line']}", links.url_for(g["file"], g["line"]) if links else "", 0, ""] + [""] * 11)
+        w.writerow([g["name"], "", "", "left out", g["why"], "", "", f"{g['file']}:{g['line']}", links.url_for(g["file"], g["line"]) if links else "", 0, ""] + [""] * 11)
     return buf.getvalue()
 
 

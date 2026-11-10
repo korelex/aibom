@@ -11,6 +11,7 @@ import os
 import time
 
 from ..db import load_db, lookup_package
+from ..evidence import REACHABILITY
 from .common import Declaration, left_out_reason, normalize, purl
 from . import javascript, python
 from .calls import find_calls
@@ -19,6 +20,9 @@ from .imports import find_imports
 PARSERS = python.PARSERS + javascript.PARSERS
 ECOSYSTEM_LABEL = {"pypi": "PyPI", "npm": "npm"}
 SCOPE_ORDER = ("runtime", "optional", "peer", "dev", "unknown")
+# Evidence levels, weakest first. Level 4, proof that an entry point reaches the code, is not attempted, and every
+# component says so.
+LEVELS = ("declared", "imported", "called")
 SERVICE_VENDOR = {"boto3": "Amazon Web Services"}  # general SDKs that are reported when code calls an AI service with them
 
 
@@ -119,6 +123,7 @@ def _component(eco, version, g, info, left_out):
         "scope": next(s for s in SCOPE_ORDER if s in scopes),
         "requested": sorted({d.spec for d in g["decls"] if d.spec}),
         "evidence_level": "declared",
+        "reachability": REACHABILITY,
         "declared": True,
         "left_out": left_out,
         "evidence": [{"file": d.file, "line": d.line, "kind": d.kind, "direct": d.direct, "scope": d.scope}
@@ -151,7 +156,7 @@ def _targets(components, eco, norm, group, db):
     c = {
         "kind": "package", "ecosystem": eco, "name": group[0]["package"], "version": "", "purl": purl(eco, group[0]["package"]),
         "category": info.get("category", ""), "vendor": info.get("vendor", ""), "direct": None, "scope": "runtime",
-        "requested": [], "evidence_level": "declared", "declared": False,
+        "requested": [], "evidence_level": "declared", "reachability": REACHABILITY, "declared": False,
         "left_out": "" if live else sorted({h["left_out"] for h in group})[0], "evidence": [], "imports": [], "calls": [],
     }
     components.append(c)
@@ -234,7 +239,8 @@ def find(root, files, db=None, deadline=None):
                 c["evidence_level"] = "imported"
 
     # Calls in code (evidence level: called), credited to the package whose import bound the name.
-    calls = find_calls(root, files, hits, deadline=deadline)
+    arguments = []
+    calls = find_calls(root, files, hits, deadline=deadline, arguments=arguments)
     for (eco, norm), group in sorted(_group(calls).items()):
         services = sorted({h["service"] for h in group if h["service"]})
         if services and not any(c["ecosystem"] == eco and normalize(eco, c["name"]) == norm for c in components):
@@ -257,6 +263,7 @@ def find(root, files, db=None, deadline=None):
     kept = [c for c in components if not c["left_out"]]
     return {
         "packages": components,
+        "model_arguments": arguments,  # for the model step: what live code passes into AI calls
         "files": read,
         "problems": problems,
         "summary": {

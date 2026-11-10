@@ -112,11 +112,15 @@ class Outputs(unittest.TestCase):
 
     def test_csv_is_readable_in_a_spreadsheet(self):
         rows = list(csv.reader(io.StringIO(build_csv(self.ITEMS, self.LINKS))))
-        self.assertEqual(rows[0][:5], ["model", "made_by", "type", "role", "confidence"])
-        self.assertEqual({r[3] for r in rows[1:]}, {"used directly", "only listed", "left out"})
+        header = rows[0]
+        self.assertEqual(header[:7], ["model", "made_by", "type", "role", "confidence", "evidence_level", "reachability"])
+        self.assertTrue(all(len(r) == len(header) for r in rows), "every row has a value for every column")
+        col = {name: i for i, name in enumerate(header)}
+        self.assertEqual({r[col["role"]] for r in rows[1:]}, {"used directly", "only listed", "left out"})
         first = next(r for r in rows if r[0] == "gpt-4o")
-        self.assertEqual(first[6], "https://github.com/o/r/blob/deadbeefcafe/src/app.py#L12")
-        self.assertIn("openai-gpt-4o", first[8])
+        self.assertEqual(first[col["link"]], "https://github.com/o/r/blob/deadbeefcafe/src/app.py#L12")
+        self.assertIn("openai-gpt-4o", first[col["also_written_as"]])
+        self.assertEqual((first[col["evidence_level"]], first[col["reachability"]]), ("declared", "not_verified"))
 
     def test_pipeline_writes_the_csv_with_an_excel_friendly_start(self):
         with tempfile.TemporaryDirectory() as d, tempfile.TemporaryDirectory() as out:

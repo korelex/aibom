@@ -16,6 +16,10 @@
 
 version: "2026.11.0"
 
+# A model name passed into a call on an AI package proves the model is called (evidence level "called" for the model).
+# These packages take a model name only to load its tokenizer, so a name passed to them proves nothing about the model.
+not_model_calls: [tiktoken, js-tiktoken, "@dqbd/tiktoken", gpt-tokenizer]
+
 rules:
   # ---- LLM provider SDKs ----
   - id: openai.client

@@ -52,6 +52,9 @@ class Rules:
         if not isinstance(data, dict) or not isinstance(data.get("rules"), list):
             raise ValueError(f"{source}: expected a 'rules' list")
         self.version = str(data.get("version", ""))
+        # Packages whose calls take a model name without calling the model (tokenizers): a name passed to them is not
+        # proof that the model is called.
+        self.not_model_calls = {str(x) for x in data.get("not_model_calls") or []}
         self.exact = {"python": {}, "javascript": {}}
         self.wild = {"python": [], "javascript": []}
         self.services = []
@@ -118,9 +121,40 @@ def load_rules(path=RULES_PATH):
 class _PythonCalls:
     """Walks one file's syntax trees in source order, keeping what each name is bound to."""
 
-    def __init__(self, rules):
+    def __init__(self, rules, ai_roots=()):
         self.rules = rules
-        self.env = {}  # name or self.attr -> fully qualified name ("openai.OpenAI", "<service:aws.bedrock>")
+        self.env = {}        # name or self.attr -> fully qualified name ("openai.OpenAI", "<service:aws.bedrock>")
+        self.strs = {}       # name -> (text, line) for names bound to a plain string: MODEL = "gpt-4o"
+        self.ai_roots = tuple(ai_roots)  # modules of the AI imports in this file
+        self.arguments = []  # (line, text) for what is passed into calls on AI SDK names
+        self.line_of = lambda n: n
+
+    def _is_ai(self, q):
+        return q.startswith("<service:") or any(q == r or q.startswith((r + ".", r + "(")) for r in self.ai_roots)
+
+    def _collect_arguments(self, call):
+        """Strings, string constants and dotted names passed into an AI call, with the line that holds each one. A string
+        with a space is prose (a prompt), never a model name, so it is not kept. Nor is anything inside a comparison:
+        max_tokens=4096 if settings.model == "gpt-4o" else None tests a name, it does not pass it."""
+        for arg in list(call.args) + [k.value for k in call.keywords]:
+            compared = {id(x) for c in ast.walk(arg) if isinstance(c, ast.Compare) for x in ast.walk(c)}
+            for node in ast.walk(arg):
+                if id(node) in compared:
+                    continue
+                if isinstance(node, ast.Constant) and isinstance(node.value, str):
+                    if node.value and not any(c.isspace() for c in node.value):
+                        self.arguments.append((self.line_of(node.lineno), node.value))
+                elif isinstance(node, ast.Name):
+                    if node.id in self.strs:
+                        self.arguments.append(self.strs[node.id])
+                    self.arguments.append((self.line_of(node.lineno), node.id))
+                elif isinstance(node, ast.Attribute):
+                    dotted = self._dotted(node)
+                    if dotted:
+                        hit = self.strs.get(dotted) or self.strs.get(node.attr)  # self.MODEL, or a class constant
+                        if hit:
+                            self.arguments.append(hit)
+                        self.arguments.append((self.line_of(node.lineno), dotted))
 
     def qual(self, node):
         if isinstance(node, ast.Name):
@@ -153,6 +187,10 @@ class _PythonCalls:
         key = target.id if isinstance(target, ast.Name) else self._dotted(target) if isinstance(target, ast.Attribute) else None
         if not key:
             return
+        if isinstance(value, ast.Constant) and isinstance(value.value, str) and value.value and not any(c.isspace() for c in value.value):
+            self.strs[key] = (self.line_of(value.lineno), value.value)
+        else:
+            self.strs.pop(key, None)
         q = self.qual(value) if value is not None else None
         if q:
             self.env[key] = q
@@ -165,6 +203,7 @@ class _PythonCalls:
                                                                ast.With, ast.AsyncWith, ast.Call, ast.FunctionDef,
                                                                ast.AsyncFunctionDef, ast.ClassDef))]
         nodes.sort(key=lambda n: (n.lineno, n.col_offset, not isinstance(n, ast.Call)))
+        self.line_of = line_of
         out = []
         for n in nodes:
             if isinstance(n, ast.Import):
@@ -204,6 +243,8 @@ class _PythonCalls:
                 q = self.qual(n.func)
                 if not q:
                     continue
+                if self._is_ai(q):
+                    self._collect_arguments(n)
                 svc = self.rules.service_for(q, n)
                 if svc:
                     out.append((svc, q, line_of(n.lineno), None))
@@ -220,14 +261,15 @@ class _PythonCalls:
         return out
 
 
-def _python_calls(text, rules, notebook=False):
-    """[(rule, qualified name, line, operation)] for a Python file or notebook; None when it does not parse."""
-    walker = _PythonCalls(rules)
+def _python_calls(text, rules, notebook=False, ai_roots=()):
+    """([(rule, qualified name, line, operation)], [(line, argument)]) for a Python file or notebook. The calls are None
+    when the file does not parse."""
+    walker = _PythonCalls(rules, ai_roots)
     if not notebook:
         try:
-            return walker.run(ast.parse(text))
+            return walker.run(ast.parse(text)), walker.arguments
         except (SyntaxError, ValueError, RecursionError):
-            return None
+            return None, []
     out = []
     for code, line_map, _src in notebook_cells(text):  # one cell after another, so names bound earlier carry over
         try:
@@ -235,7 +277,7 @@ def _python_calls(text, rules, notebook=False):
         except (SyntaxError, ValueError, RecursionError):
             continue
         out += walker.run(tree, lambda li, m=line_map: m[li - 1] if 0 < li <= len(m) else 0)
-    return out
+    return out, walker.arguments
 
 
 # ------------------------------------------------------------------------------------------------------------ javascript
@@ -287,8 +329,44 @@ def _js_bindings(text, live):
     return env
 
 
-def _js_calls(text, ext, rules):
-    """[(rule, binding name, line, None)] for calls on imported names outside comments and strings."""
+_JS_INSTANCE = re.compile(r"(?<![\w$.])((?:this\.)?" + _IDENT + r")\s*(?::\s*[\w$.<>\[\], ]+?)?\s*=\s*(?:await\s+)?(?:new\s+)?(" + _IDENT + r")\s*[.(<]")
+_JS_CONST = re.compile(r"\b(?:const|let|var)\s+(" + _IDENT + r")\s*(?::\s*\w+)?\s*=\s*(['\"`])([^'\"`\s]+)\2")
+_JS_STRING = re.compile(r"(['\"`])((?:\\.|(?!\1)[^\\\n])*)\1")
+_JS_NAME = re.compile(_IDENT + r"(?:\." + _IDENT + r")*")
+
+
+def _js_close(text, start, limit=20000):
+    """The position of the ")" that closes the "(" at `start`, skipping strings and comments; the limit when not found."""
+    depth, i, n = 0, start, min(len(text), start + limit)
+    while i < n:
+        ch = text[i]
+        if ch in "'\"`":
+            j = i + 1
+            while j < n and text[j] != ch:
+                j += 2 if text[j] == "\\" else 1
+            i = j + 1
+            continue
+        if text.startswith("//", i):
+            j = text.find("\n", i)
+            i = n if j < 0 else j
+            continue
+        if text.startswith("/*", i):
+            j = text.find("*/", i + 2)
+            i = n if j < 0 else j + 2
+            continue
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth -= 1
+            if depth == 0:
+                return i
+        i += 1
+    return n
+
+
+def _js_calls(text, ext, rules, ai_packages=()):
+    """([(rule, binding name, line, None)], [(line, argument)]) for calls on imported names outside comments and strings.
+    The arguments are what is passed into calls on AI SDK names (the packages in `ai_packages`) and on objects they made."""
     spans = lex(text, {".mts": ".ts", ".cts": ".ts"}.get(ext, ext))
     starts = [0]
     for line in text.split("\n"):
@@ -300,12 +378,31 @@ def _js_calls(text, ext, rules):
         col = pos - starts[li]
         return not inside(spans, li, col) and not in_string(lines[li], col)
 
+    def line_at(pos):
+        return bisect.bisect_right(starts, pos)
+
     env = _js_bindings(text, live)
     if not env:
-        return []
-    out = []
+        return [], []
+    ai = {local for local, target in env.items() if _js_package(target.split(":", 1)[0]) in ai_packages}
+    for m in _JS_INSTANCE.finditer(text):  # const client = new OpenAI(...); this.llm = new ChatOpenAI(...)
+        if m.group(2) in ai and live(m.start()):
+            ai.add(m.group(1))
+    consts = {m.group(1): (line_at(m.start(3)), m.group(3)) for m in _JS_CONST.finditer(text) if live(m.start())}
+    out, arguments = [], []
     for m in _JS_CALL.finditer(text):
         chain = [p.strip() for p in m.group(2).split(".")]
+        head = "this." + chain[1] if chain[0] == "this" and len(chain) > 1 else chain[0]
+        if head in ai and chain[0] not in _JS_SKIP and live(m.start(2)):
+            body = text[m.end():_js_close(text, m.end() - 1)]
+            for s in _JS_STRING.finditer(body):
+                compared = re.search(r"[=!]==?\s*$", body[:s.start()]) or re.match(r"\s*[=!]==?", body[s.end():])
+                if s.group(2) and not any(c.isspace() for c in s.group(2)) and not compared:
+                    arguments.append((line_at(m.end() + s.start(2)), s.group(2)))
+            for s in _JS_NAME.finditer(_JS_STRING.sub(lambda x: " " * len(x.group(0)), body)):
+                if s.group(0) in consts:
+                    arguments.append(consts[s.group(0)])
+                arguments.append((line_at(m.end() + s.start()), s.group(0)))
         if chain[0] not in env or chain[0] in _JS_SKIP or not live(m.start(2)):
             continue
         before = text[max(0, m.start() - 12):m.start()]
@@ -323,15 +420,18 @@ def _js_calls(text, ext, rules):
             if rule:
                 out.append((rule, name, bisect.bisect_right(starts, m.start(2)), None))
                 break
-    return out
+    return out, arguments
 
 
 # ------------------------------------------------------------------------------------------------------------------ find
 
-def find_calls(root, files, import_hits, rules=None, deadline=None):
+def find_calls(root, files, import_hits, rules=None, deadline=None, arguments=None):
     """Every call that proves an AI package is used: {ecosystem, package, rule, what, call, operation, service, file, line,
     snippet, left_out}. `import_hits` come from find_imports: a call is credited to the package whose import, in the same
-    file, bound the name. Service clients (boto3 for Amazon Bedrock) need no AI import, only the SDK's own."""
+    file, bound the name. Service clients (boto3 for Amazon Bedrock) need no AI import, only the SDK's own.
+
+    When `arguments` is a list, it is filled with {file, line, value} for what live code passes into calls on AI SDK
+    names (strings, string constants and dotted names): the proof that a model name reaches an AI call."""
     rules = rules or load_rules()
     by_file = {}
     for h in import_hits:
@@ -351,8 +451,16 @@ def find_calls(root, files, import_hits, rules=None, deadline=None):
         python = notebook or ext in PY_EXT
         if not hits and not (python and service_roots and re.search(r"\b(?:" + "|".join(map(re.escape, service_roots)) + r")\b", text)):
             continue
-        found = _python_calls(text, rules, notebook) if python else _js_calls(text, ext, rules)
+        if python:
+            # Bedrock clients count through their service mark; tokenizers do not count at all
+            roots = {h["module"] for h in hits if h["ecosystem"] == "pypi" and h["package"] not in rules.not_model_calls}
+            found, args = _python_calls(text, rules, notebook, roots)
+        else:
+            ai = {h["package"] for h in hits if h["ecosystem"] == "npm" and h["package"] not in rules.not_model_calls}
+            found, args = _js_calls(text, ext, rules, ai)
         reason = {"test": "test", "docs": "docs"}.get(fi.category) or left_out_reason(fi.path)
+        if arguments is not None and not reason:
+            arguments += [{"file": fi.path, "line": li, "value": v} for li, v in dict.fromkeys(args) if li > 0]
         for rule, name, li, operation in found or []:
             if "service" in rule:
                 eco, package, service = rule["ecosystem"], rule["package"], rule["service"]

@@ -163,10 +163,11 @@ Each scan writes these files to its `RUN` folder:
 
 | File | What it is |
 | --- | --- |
-| `aibom.cdx.json` | The AI-BOM: CycloneDX 1.6, validated against the official schema. Each model is a `machine-learning-model` component with its evidence (file and line) and properties for lifecycle, pinning and license. |
+| `aibom.cdx.json` | The AI-BOM: CycloneDX 1.6, validated against the official schema. Each model is a `machine-learning-model` component with its evidence (file and line), its evidence level, confidence and reachability, and properties for lifecycle, pinning and license. |
 | `report.html` | The readable report: a risk summary, every model grouped by maker with links to its lines, the names that were left out and why, and what the scan cannot see. Works offline and prints cleanly. |
 | `report.md` | The same report in Markdown, for a pull request, a ticket or a chat. |
 | `models.csv` | One row per model, for a spreadsheet. |
+| `packages.json` | The AI packages found in dependency files, with the imports and calls that prove their use and an evidence level for each. Not in the reports yet. |
 | `merged.json`, `findings.json`, `files.json`, `manifest.json` | Working data behind the reports; `aibom rebuild` uses them. |
 
 For the same code, a scan on the same day writes the same `aibom.cdx.json`, `report.html`, `report.md` and
@@ -181,12 +182,17 @@ For the same code, a scan on the same day writes the same `aibom.cdx.json`, `rep
   a newer snapshot, and `gpt-4o-2024-08-06` would pin it.
 - **License**: the license name, with `(conditional)` or `(non-commercial)` where that applies. Hosted models sold
   under a provider's terms (GPT, Claude, Gemini) show `Provider API terms`.
+- **Evidence level** (in `models.csv` and the AI-BOM): `called` when live code passes the name into a call on an AI
+  SDK, otherwise `declared`. `declared` means not proven, not unused. **Reachability** is always `not_verified`:
+  aibom does not prove that a request from outside reaches the code.
 
 How each of these is decided, and where the data comes from, is in [docs/how-it-works.md](docs/how-it-works.md).
 
 ## What it does not do yet
 
-- Find AI SDKs, agent frameworks, vector databases, MCP servers, datasets or hardcoded API keys.
+- List AI SDKs, agent frameworks and vector databases in the AI-BOM and the reports. They are found (from
+  dependency files, imports and calls) and written to `packages.json`, but not reported yet.
+- Find MCP servers, datasets or hardcoded API keys.
 - Inspect model weight files, or check Hugging Face revision pinning.
 - Run as a GitHub Action, fail a build on a policy (`--fail-on`), or write SARIF.
 - See a model chosen at run time, from an environment variable, a settings page or a database. aibom reads code; it
