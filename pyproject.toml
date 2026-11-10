@@ -33,7 +33,7 @@ aibom = "aibom_engine.cli:main"
 include = ["aibom_engine*"]
 
 [tool.setuptools.package-data]
-aibom_engine = ["knowledge/*.json", "knowledge/README.md"]
+aibom_engine = ["knowledge/*.json", "knowledge/README.md", "rules/*.yaml"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

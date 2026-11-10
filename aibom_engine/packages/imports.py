@@ -85,7 +85,8 @@ class PythonIndex:
 
 
 def _python_imports(source):
-    """(module, line) for every absolute import in Python source; None when it does not parse."""
+    """(module, line, names) for every absolute import in Python source; None when it does not parse. `names` are the
+    names a from-import takes, because the package can be in them: "from google import genai" is google.genai."""
     try:
         tree = ast.parse(source)
     except (SyntaxError, ValueError):
@@ -93,14 +94,15 @@ def _python_imports(source):
     out = []
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
-            out += [(alias.name, node.lineno) for alias in node.names]
+            out += [(alias.name, node.lineno, ()) for alias in node.names]
         elif isinstance(node, ast.ImportFrom) and node.module and not node.level:  # relative imports are the project's own
-            out.append((node.module, node.lineno))
+            out.append((node.module, node.lineno, tuple(a.name for a in node.names if a.name != "*")))
     return sorted(out, key=lambda x: x[1])  # ast.walk is breadth-first; callers rely on source order
 
 
-def _notebook_imports(text):
-    """(module, line in the .ipynb file) for imports in notebook code cells. Shell (!) and magic (%) lines are skipped."""
+def notebook_cells(text):
+    """[(code, line_map, source_lines)] for each code cell of a notebook. Shell (!) and magic (%) lines become empty lines,
+    so line numbers stay right; line_map[i] is the line of the .ipynb file that holds code line i + 1 (0 when not found)."""
     try:
         cells = json.loads(text).get("cells") or []
     except (ValueError, AttributeError):
@@ -108,21 +110,31 @@ def _notebook_imports(text):
     lines = text.split("\n")
     out, cursor = [], 0
     for cell in cells:
-        if cell.get("cell_type") != "code":
+        if not isinstance(cell, dict) or cell.get("cell_type") != "code":
             continue
         src = cell.get("source") or []
-        src = src if isinstance(src, list) else str(src).splitlines(True)
-        code = "".join(("\n" if s.lstrip().startswith(("!", "%")) else s) for s in src)  # keep the line, so numbers stay right
-        for module, li in _python_imports(code) or []:
-            wanted = src[li - 1].strip() if li - 1 < len(src) else ""
+        src = [str(s) for s in src] if isinstance(src, list) else str(src).splitlines(True)
+        code = "".join(("\n" if s.lstrip().startswith(("!", "%")) else s) for s in src)
+        line_map = []
+        for s in "".join(src).split("\n"):
+            needle = json.dumps(s.strip())[1:-1][:80]
             where = 0
-            needle = json.dumps(wanted)[1:-1][:80]
-            for i in range(cursor, len(lines)):
-                if needle and needle in lines[i]:
-                    where = i + 1
-                    cursor = i + 1
-                    break
-            out.append((module, where, wanted))
+            if needle:
+                for i in range(cursor, len(lines)):
+                    if needle in lines[i]:
+                        where = cursor = i + 1
+                        break
+            line_map.append(where)
+        out.append((code, line_map, code.split("\n")))
+    return out
+
+
+def _notebook_imports(text):
+    """(module, line in the .ipynb file, source line, names) for imports in notebook code cells."""
+    out = []
+    for code, line_map, src in notebook_cells(text):
+        for module, li, names in _python_imports(code) or []:
+            out.append((module, line_map[li - 1] if li - 1 < len(line_map) else 0, src[li - 1].strip() if li - 1 < len(src) else "", names))
     return out
 
 
@@ -188,23 +200,30 @@ def find_imports(root, files, declared=frozenset(), db=None, deadline=None):
         lines = read_lines(root, fi)
         text = "\n".join(lines)
         if fi.category == "notebook":
-            found = [(m, li, s, "pypi") for m, li, s in _notebook_imports(text)]
+            found = [(m, li, s, "pypi", names) for m, li, s, names in _notebook_imports(text)]
         elif ext in PY_EXT:
             if not quick.search(text):
                 continue  # no import of any AI package can be in this file
             parsed = _python_imports(text)
             if parsed is None:  # not valid Python 3 (a template or Python 2): fall back to whole-line imports
-                parsed = [(m.group(1) or m.group(2), text[:m.start()].count("\n") + 1)
+                parsed = [(m.group(1) or m.group(2), text[:m.start()].count("\n") + 1, ())
                           for m in re.finditer(r"^\s*(?:from\s+([\w.]+)\s+import|import\s+([\w.]+))", text, re.M)]
-            found = [(m, li, lines[li - 1].strip() if 0 < li <= len(lines) else "", "pypi") for m, li in parsed]
+            found = [(m, li, lines[li - 1].strip() if 0 < li <= len(lines) else "", "pypi", names) for m, li, names in parsed]
         else:
             if "import" not in text and "require" not in text:
                 continue
-            found = [(p, li, lines[li - 1].strip() if 0 < li <= len(lines) else "", "npm") for p, li in _js_imports(text, ext)]
+            found = [(p, li, lines[li - 1].strip() if 0 < li <= len(lines) else "", "npm", ()) for p, li in _js_imports(text, ext)]
 
-        for module, li, snippet, eco in found:
+        for module, li, snippet, eco, names in found:
             if eco == "pypi":
                 candidates = index.package_of(module)
+                if not candidates:
+                    # "from google import genai": the package is the module plus a name the import takes
+                    for name in names:
+                        candidates = index.package_of(f"{module}.{name}")
+                        if candidates:
+                            module = f"{module}.{name}"
+                            break
                 if not candidates:
                     continue
                 top = module.split(".")[0]

@@ -1,0 +1,378 @@
+# Call rules: which calls prove that live code uses an AI package (evidence level "called").
+#
+# A call counts only when the name is bound by an import of that package in the same file, so a project's own class
+# called Agent or Client never matches. Patterns are matched against the fully qualified name of what is called:
+#   python:      module.path.Name, after following aliases ("from openai import OpenAI as C" makes C() openai.OpenAI)
+#                and simple assignments ("s = boto3.Session()" makes s.client boto3.Session().client).
+#                "*" matches any part of a name: "transformers.*.from_pretrained". A rule with "classes: true" counts
+#                only calls through a public class (OpenAIEmbedding(), Chroma.from_documents()), not helper functions.
+#   javascript:  "specifier:export" for what an import binds: "openai:default" is `import OpenAI from "openai"`,
+#                "ai:generateText" is `import { generateText } from "ai"`. A method on a binding adds ".name":
+#                "ollama:default.chat" is `ollama.chat(...)` after `import ollama from "ollama"`.
+#
+# Each rule names the package (ecosystem and name, as in the package catalogue) that the call proves is used, or a
+# package family ("family: llama-index-") when one rule covers the integrations of a family. The call itself is credited
+# to the package of the import that bound the name. Add a rule here to support a new SDK; no code change is needed.
+
+version: "2026.11.0"
+
+rules:
+  # ---- LLM provider SDKs ----
+  - id: openai.client
+    package: {ecosystem: pypi, name: openai}
+    what: creates an OpenAI API client
+    python: [openai.OpenAI, openai.AsyncOpenAI, openai.AzureOpenAI, openai.AsyncAzureOpenAI]
+  - id: openai.client.js
+    package: {ecosystem: npm, name: openai}
+    what: creates an OpenAI API client
+    javascript: ["openai:default", "openai:OpenAI", "openai:AzureOpenAI"]
+  - id: anthropic.client
+    package: {ecosystem: pypi, name: anthropic}
+    what: creates an Anthropic API client
+    python: [anthropic.Anthropic, anthropic.AsyncAnthropic, anthropic.AnthropicBedrock, anthropic.AsyncAnthropicBedrock,
+             anthropic.AnthropicVertex, anthropic.AsyncAnthropicVertex]
+  - id: anthropic.client.js
+    package: {ecosystem: npm, name: "@anthropic-ai/sdk"}
+    what: creates an Anthropic API client
+    javascript: ["@anthropic-ai/sdk:default", "@anthropic-ai/sdk:Anthropic"]
+  - id: google.genai.client
+    package: {ecosystem: pypi, name: google-genai}
+    what: creates a Google Gen AI client
+    python: [google.genai.Client]
+  - id: google.generativeai.model
+    package: {ecosystem: pypi, name: google-generativeai}
+    what: uses a Gemini model through the older Google SDK
+    python: [google.generativeai.GenerativeModel, google.generativeai.configure]
+  - id: google.genai.client.js
+    package: {ecosystem: npm, name: "@google/genai"}
+    what: creates a Google Gen AI client
+    javascript: ["@google/genai:GoogleGenAI"]
+  - id: google.generativeai.js
+    package: {ecosystem: npm, name: "@google/generative-ai"}
+    what: creates a Gemini client through the older Google SDK
+    javascript: ["@google/generative-ai:GoogleGenerativeAI"]
+  - id: vertexai.model
+    package: {ecosystem: pypi, name: google-cloud-aiplatform}
+    what: uses a Vertex AI model
+    python: [vertexai.init, "vertexai.generative_models.GenerativeModel", "vertexai.*.GenerativeModel"]
+  - id: mistral.client
+    package: {ecosystem: pypi, name: mistralai}
+    what: creates a Mistral client
+    python: [mistralai.Mistral, mistralai.client.MistralClient]
+  - id: mistral.client.js
+    package: {ecosystem: npm, name: "@mistralai/mistralai"}
+    what: creates a Mistral client
+    javascript: ["@mistralai/mistralai:Mistral", "@mistralai/mistralai:default"]
+  - id: cohere.client
+    package: {ecosystem: pypi, name: cohere}
+    what: creates a Cohere client
+    python: [cohere.Client, cohere.ClientV2, cohere.AsyncClient, cohere.AsyncClientV2]
+  - id: cohere.client.js
+    package: {ecosystem: npm, name: cohere-ai}
+    what: creates a Cohere client
+    javascript: ["cohere-ai:CohereClient", "cohere-ai:CohereClientV2"]
+  - id: groq.client
+    package: {ecosystem: pypi, name: groq}
+    what: creates a Groq client
+    python: [groq.Groq, groq.AsyncGroq]
+  - id: groq.client.js
+    package: {ecosystem: npm, name: groq-sdk}
+    what: creates a Groq client
+    javascript: ["groq-sdk:default", "groq-sdk:Groq"]
+  - id: ollama.calls
+    package: {ecosystem: pypi, name: ollama}
+    what: calls a model through Ollama
+    python: [ollama.chat, ollama.generate, ollama.embed, ollama.embeddings, ollama.Client, ollama.AsyncClient]
+  - id: ollama.calls.js
+    package: {ecosystem: npm, name: ollama}
+    what: calls a model through Ollama
+    javascript: ["ollama:default.chat", "ollama:default.generate", "ollama:default.embed", "ollama:Ollama",
+                 "ollama/browser:default.chat", "ollama/browser:default.generate"]
+  - id: litellm.calls
+    package: {ecosystem: pypi, name: litellm}
+    what: calls a model through LiteLLM
+    python: [litellm.completion, litellm.acompletion, litellm.embedding, litellm.aembedding, litellm.Router]
+  - id: together.client
+    package: {ecosystem: pypi, name: together}
+    what: creates a Together AI client
+    python: [together.Together, together.AsyncTogether]
+  - id: replicate.calls
+    package: {ecosystem: pypi, name: replicate}
+    what: runs a model on Replicate
+    python: [replicate.run, replicate.Client]
+  - id: huggingface.inference
+    package: {ecosystem: pypi, name: huggingface-hub}
+    what: calls a model through the Hugging Face Inference API
+    python: [huggingface_hub.InferenceClient, huggingface_hub.AsyncInferenceClient]
+  - id: bedrock.client.js
+    package: {ecosystem: npm, name: "@aws-sdk/client-bedrock-runtime"}
+    what: calls a model on Amazon Bedrock
+    javascript: ["@aws-sdk/client-bedrock-runtime:BedrockRuntimeClient", "@aws-sdk/client-bedrock-runtime:InvokeModelCommand",
+                 "@aws-sdk/client-bedrock-runtime:ConverseCommand", "@aws-sdk/client-bedrock-runtime:ConverseStreamCommand",
+                 "@aws-sdk/client-bedrock-runtime:InvokeModelWithResponseStreamCommand"]
+
+  # ---- Vercel AI SDK ----
+  - id: ai-sdk.core
+    package: {ecosystem: npm, name: ai}
+    what: calls a model through the Vercel AI SDK
+    javascript: ["ai:generateText", "ai:streamText", "ai:generateObject", "ai:streamObject", "ai:embed", "ai:embedMany",
+                 "ai:experimental_generateImage", "ai:generateImage"]
+  - id: ai-sdk.openai
+    package: {ecosystem: npm, name: "@ai-sdk/openai"}
+    what: selects an OpenAI model through the Vercel AI SDK
+    javascript: ["@ai-sdk/openai:openai", "@ai-sdk/openai:createOpenAI"]
+  - id: ai-sdk.anthropic
+    package: {ecosystem: npm, name: "@ai-sdk/anthropic"}
+    what: selects an Anthropic model through the Vercel AI SDK
+    javascript: ["@ai-sdk/anthropic:anthropic", "@ai-sdk/anthropic:createAnthropic"]
+  - id: ai-sdk.google
+    package: {ecosystem: npm, name: "@ai-sdk/google"}
+    what: selects a Google model through the Vercel AI SDK
+    javascript: ["@ai-sdk/google:google", "@ai-sdk/google:createGoogleGenerativeAI"]
+  - id: ai-sdk.providers
+    package: {ecosystem: npm, family: "@ai-sdk/"}
+    what: sets up a model provider for the Vercel AI SDK
+    javascript: ["@ai-sdk/mistral:createMistral", "@ai-sdk/mistral:mistral", "@ai-sdk/fireworks:createFireworks",
+                 "@ai-sdk/google-vertex:createVertex", "@ai-sdk/google-vertex:vertex", "@ai-sdk/amazon-bedrock:createAmazonBedrock",
+                 "@ai-sdk/amazon-bedrock:bedrock", "@ai-sdk/azure:createAzure", "@ai-sdk/azure:azure", "@ai-sdk/groq:createGroq",
+                 "@ai-sdk/groq:groq", "@ai-sdk/xai:createXai", "@ai-sdk/xai:xai", "@ai-sdk/deepseek:createDeepSeek",
+                 "@ai-sdk/deepseek:deepseek", "@ai-sdk/cohere:createCohere", "@ai-sdk/togetherai:createTogetherAI",
+                 "@ai-sdk/perplexity:createPerplexity", "@ai-sdk/openai-compatible:createOpenAICompatible"]
+  - id: ai-sdk.ollama-provider
+    package: {ecosystem: npm, name: ollama-ai-provider}
+    what: sets up Ollama as a model provider for the Vercel AI SDK
+    javascript: ["ollama-ai-provider:createOllama", "ollama-ai-provider:ollama"]
+  - id: ai-sdk.legacy-streams
+    package: {ecosystem: npm, name: ai}
+    what: streams a model response with the older Vercel AI SDK helpers
+    javascript: ["ai:OpenAIStream", "ai:AnthropicStream", "ai:CohereStream", "ai:HuggingFaceStream", "ai:LangChainStream"]
+  - id: bedrock.agent.js
+    package: {ecosystem: npm, name: "@aws-sdk/client-bedrock-agent-runtime"}
+    what: calls an agent or knowledge base on Amazon Bedrock
+    javascript: ["@aws-sdk/client-bedrock-agent-runtime:BedrockAgentRuntimeClient", "@aws-sdk/client-bedrock-agent-runtime:RetrieveCommand",
+                 "@aws-sdk/client-bedrock-agent-runtime:RetrieveAndGenerateCommand", "@aws-sdk/client-bedrock-agent-runtime:InvokeAgentCommand"]
+  - id: tiktoken.encoding
+    package: {ecosystem: pypi, name: tiktoken}
+    what: loads a model's tokenizer
+    python: [tiktoken.get_encoding, tiktoken.encoding_for_model]
+  - id: huggingface.download
+    package: {ecosystem: pypi, name: huggingface-hub}
+    what: downloads a model or its files from the Hugging Face Hub
+    python: [huggingface_hub.hf_hub_download, huggingface_hub.snapshot_download]
+  - id: llm.models
+    package: {ecosystem: pypi, name: llm}
+    what: selects a model through the llm library
+    python: [llm.get_model, llm.get_async_model, llm.get_embedding_model]
+
+  # ---- Agent frameworks ----
+  - id: langchain.chat-models
+    package: {ecosystem: pypi, name: langchain-openai}
+    what: creates a LangChain model or embedding client for OpenAI
+    python: [langchain_openai.ChatOpenAI, langchain_openai.AzureChatOpenAI, langchain_openai.OpenAIEmbeddings,
+             langchain_openai.AzureOpenAIEmbeddings, langchain_openai.OpenAI]
+  - id: langchain.anthropic
+    package: {ecosystem: pypi, name: langchain-anthropic}
+    what: creates a LangChain model client for Anthropic
+    python: [langchain_anthropic.ChatAnthropic]
+  - id: langchain.google
+    package: {ecosystem: pypi, name: langchain-google-genai}
+    what: creates a LangChain model client for Google
+    python: [langchain_google_genai.ChatGoogleGenerativeAI, langchain_google_genai.GoogleGenerativeAIEmbeddings]
+  - id: langchain.aws
+    package: {ecosystem: pypi, name: langchain-aws}
+    what: creates a LangChain model client for Amazon Bedrock
+    python: [langchain_aws.ChatBedrock, langchain_aws.ChatBedrockConverse, langchain_aws.BedrockEmbeddings, langchain_aws.BedrockLLM]
+  - id: langchain.ollama
+    package: {ecosystem: pypi, name: langchain-ollama}
+    what: creates a LangChain model client for Ollama
+    python: [langchain_ollama.ChatOllama, langchain_ollama.OllamaEmbeddings, langchain_ollama.OllamaLLM]
+  - id: langchain.community
+    package: {ecosystem: pypi, name: langchain-community}
+    what: creates a LangChain community model, embedding or vector store
+    classes: true
+    python: ["langchain_community.vectorstores.*", "langchain_community.chat_models.*", "langchain_community.llms.*",
+             "langchain_community.embeddings.*"]
+  - id: langchain.core
+    package: {ecosystem: pypi, name: langchain}
+    what: creates a LangChain model or agent
+    python: [langchain.chat_models.init_chat_model, langchain.agents.create_agent, langchain.agents.AgentExecutor,
+             langchain.agents.initialize_agent, "langchain.embeddings.init_embeddings"]
+  - id: langgraph.graph
+    package: {ecosystem: pypi, name: langgraph}
+    what: builds a LangGraph agent or graph
+    python: [langgraph.graph.StateGraph, langgraph.graph.MessageGraph, langgraph.prebuilt.create_react_agent, "langgraph.graph.state.StateGraph"]
+  - id: langchain.mcp-adapters
+    package: {ecosystem: pypi, name: langchain-mcp-adapters}
+    what: connects LangChain to MCP servers
+    python: [langchain_mcp_adapters.client.MultiServerMCPClient]
+  - id: langgraph.sdk
+    package: {ecosystem: pypi, name: langgraph-sdk}
+    what: connects to a deployed LangGraph agent
+    python: [langgraph_sdk.get_client, langgraph_sdk.get_sync_client]
+  - id: langgraph.sdk.js
+    package: {ecosystem: npm, name: "@langchain/langgraph-sdk"}
+    what: connects to a deployed LangGraph agent
+    javascript: ["@langchain/langgraph-sdk:Client"]
+  - id: langchain.js.universal
+    package: {ecosystem: npm, name: langchain}
+    what: creates a LangChain.js model by name
+    javascript: ["langchain/chat_models/universal:initChatModel", "langchain:initChatModel", "langchain:createAgent"]
+  - id: llamaindex.integrations
+    package: {ecosystem: pypi, family: "llama-index-"}
+    what: creates a LlamaIndex model, embedding or vector store integration
+    classes: true
+    python: ["llama_index.llms.*", "llama_index.embeddings.*", "llama_index.vector_stores.*"]
+  - id: claude-code-sdk
+    package: {ecosystem: pypi, name: claude-code-sdk}
+    what: runs a Claude agent
+    python: [claude_code_sdk.query, claude_code_sdk.ClaudeSDKClient]
+  - id: langchain.js.models
+    package: {ecosystem: npm, name: "@langchain/openai"}
+    what: creates a LangChain.js model or embedding client for OpenAI
+    javascript: ["@langchain/openai:ChatOpenAI", "@langchain/openai:AzureChatOpenAI", "@langchain/openai:OpenAIEmbeddings", "@langchain/openai:OpenAI"]
+  - id: langchain.js.anthropic
+    package: {ecosystem: npm, name: "@langchain/anthropic"}
+    what: creates a LangChain.js model client for Anthropic
+    javascript: ["@langchain/anthropic:ChatAnthropic"]
+  - id: langgraph.js
+    package: {ecosystem: npm, name: "@langchain/langgraph"}
+    what: builds a LangGraph.js agent or graph
+    javascript: ["@langchain/langgraph:StateGraph", "@langchain/langgraph/prebuilt:createReactAgent", "@langchain/langgraph:MessageGraph"]
+  - id: crewai.agents
+    package: {ecosystem: pypi, name: crewai}
+    what: creates a CrewAI agent, crew or task
+    python: [crewai.Agent, crewai.Crew, crewai.Task, crewai.LLM]
+  - id: openai-agents.agents
+    package: {ecosystem: pypi, name: openai-agents}
+    what: creates or runs an OpenAI Agents SDK agent
+    python: [agents.Agent, agents.Runner.run, agents.Runner.run_sync, agents.Runner.run_streamed]
+  - id: openai-agents.js
+    package: {ecosystem: npm, name: "@openai/agents"}
+    what: creates or runs an OpenAI Agents SDK agent
+    javascript: ["@openai/agents:Agent", "@openai/agents:run"]
+  - id: autogen.agents
+    package: {ecosystem: pypi, name: autogen-agentchat}
+    what: creates an AutoGen agent
+    python: [autogen_agentchat.agents.AssistantAgent, "autogen_agentchat.agents.*Agent", "autogen_agentchat.teams.*"]
+  - id: pyautogen.agents
+    package: {ecosystem: pypi, name: pyautogen}
+    what: creates an AutoGen agent
+    python: [autogen.AssistantAgent, autogen.ConversableAgent, autogen.UserProxyAgent]
+  - id: claude-agent-sdk
+    package: {ecosystem: pypi, name: claude-agent-sdk}
+    what: runs a Claude agent
+    python: [claude_agent_sdk.query, claude_agent_sdk.ClaudeSDKClient]
+  - id: pydantic-ai.agent
+    package: {ecosystem: pypi, name: pydantic-ai}
+    what: creates a Pydantic AI agent
+    python: [pydantic_ai.Agent]
+  - id: smolagents.agent
+    package: {ecosystem: pypi, name: smolagents}
+    what: creates a smolagents agent
+    python: [smolagents.CodeAgent, smolagents.ToolCallingAgent]
+  - id: strands.agent
+    package: {ecosystem: pypi, name: strands-agents}
+    what: creates a Strands agent
+    python: [strands.Agent]
+  - id: llamaindex.index
+    package: {ecosystem: pypi, name: llama-index-core}
+    what: builds a LlamaIndex index or query engine
+    python: [llama_index.core.VectorStoreIndex, "llama_index.core.VectorStoreIndex.from_documents", "llama_index.core.VectorStoreIndex.from_vector_store"]
+  - id: dspy.lm
+    package: {ecosystem: pypi, name: dspy}
+    what: configures a DSPy language model
+    python: [dspy.LM, dspy.configure]
+
+  # ---- MCP ----
+  - id: mcp.server
+    package: {ecosystem: pypi, name: mcp}
+    what: creates an MCP server or client session
+    python: [mcp.server.fastmcp.FastMCP, mcp.server.Server, "mcp.server.lowlevel.Server", mcp.ClientSession]
+  - id: fastmcp.server
+    package: {ecosystem: pypi, name: fastmcp}
+    what: creates an MCP server
+    python: [fastmcp.FastMCP]
+  - id: mcp.js
+    package: {ecosystem: npm, name: "@modelcontextprotocol/sdk"}
+    what: creates an MCP server or client
+    javascript: ["@modelcontextprotocol/sdk/server/mcp.js:McpServer", "@modelcontextprotocol/sdk/server/index.js:Server",
+                 "@modelcontextprotocol/sdk/client/index.js:Client"]
+
+  # ---- Vector databases ----
+  - id: chromadb.client
+    package: {ecosystem: pypi, name: chromadb}
+    what: opens a Chroma vector database
+    python: [chromadb.Client, chromadb.PersistentClient, chromadb.HttpClient, chromadb.EphemeralClient, chromadb.AsyncHttpClient]
+  - id: chromadb.client.js
+    package: {ecosystem: npm, name: chromadb}
+    what: opens a Chroma vector database
+    javascript: ["chromadb:ChromaClient", "chromadb:CloudClient"]
+  - id: pinecone.client
+    package: {ecosystem: pypi, name: pinecone}
+    what: opens a Pinecone vector database
+    python: [pinecone.Pinecone, pinecone.PineconeAsyncio, pinecone.init]
+  - id: pinecone.client.js
+    package: {ecosystem: npm, name: "@pinecone-database/pinecone"}
+    what: opens a Pinecone vector database
+    javascript: ["@pinecone-database/pinecone:Pinecone"]
+  - id: qdrant.client
+    package: {ecosystem: pypi, name: qdrant-client}
+    what: opens a Qdrant vector database
+    python: [qdrant_client.QdrantClient, qdrant_client.AsyncQdrantClient]
+  - id: qdrant.client.js
+    package: {ecosystem: npm, name: "@qdrant/js-client-rest"}
+    what: opens a Qdrant vector database
+    javascript: ["@qdrant/js-client-rest:QdrantClient"]
+  - id: weaviate.client
+    package: {ecosystem: pypi, name: weaviate-client}
+    what: opens a Weaviate vector database
+    python: [weaviate.connect_to_local, weaviate.connect_to_weaviate_cloud, weaviate.connect_to_custom, weaviate.Client, weaviate.WeaviateClient]
+  - id: faiss.index
+    package: {ecosystem: pypi, name: faiss-cpu}
+    what: builds or loads a FAISS index
+    python: ["faiss.Index*", faiss.read_index]
+  - id: lancedb.connect
+    package: {ecosystem: pypi, name: lancedb}
+    what: opens a LanceDB database
+    python: [lancedb.connect, lancedb.connect_async]
+  - id: milvus.client
+    package: {ecosystem: pypi, name: pymilvus}
+    what: opens a Milvus vector database
+    python: [pymilvus.MilvusClient, pymilvus.connections.connect]
+
+  # ---- Local models and runtimes ----
+  - id: transformers.load
+    package: {ecosystem: pypi, name: transformers}
+    what: loads a model with Hugging Face Transformers
+    python: ["transformers.*.from_pretrained", transformers.pipeline]
+  - id: sentence-transformers.load
+    package: {ecosystem: pypi, name: sentence-transformers}
+    what: loads an embedding model with Sentence Transformers
+    python: [sentence_transformers.SentenceTransformer, sentence_transformers.CrossEncoder]
+  - id: diffusers.load
+    package: {ecosystem: pypi, name: diffusers}
+    what: loads a diffusion model
+    python: ["diffusers.*.from_pretrained"]
+  - id: vllm.engine
+    package: {ecosystem: pypi, name: vllm}
+    what: runs a model with vLLM
+    python: [vllm.LLM, "vllm.AsyncLLMEngine.from_engine_args"]
+  - id: llama-cpp.model
+    package: {ecosystem: pypi, name: llama-cpp-python}
+    what: runs a local model with llama.cpp
+    python: [llama_cpp.Llama, "llama_cpp.Llama.from_pretrained"]
+  - id: transformers.js
+    package: {ecosystem: npm, name: "@huggingface/transformers"}
+    what: runs a model with Transformers.js
+    javascript: ["@huggingface/transformers:pipeline", "@huggingface/transformers:AutoModel.from_pretrained",
+                 "@xenova/transformers:pipeline", "@xenova/transformers:AutoModel.from_pretrained"]
+
+# AI services reached through a general cloud SDK. The client counts only when it is created for the AI service
+# (the service name is the first argument or service_name=), and calls on that client are recorded too.
+services:
+  - id: aws.bedrock
+    service: Amazon Bedrock
+    via: {ecosystem: pypi, name: boto3}
+    python: [boto3.client, "boto3.Session().client", "boto3.session.Session().client"]
+    service_names: [bedrock-runtime, bedrock-agent-runtime, bedrock, bedrock-agent]
+    methods: [invoke_model, invoke_model_with_response_stream, converse, converse_stream, invoke_agent, retrieve_and_generate, retrieve]

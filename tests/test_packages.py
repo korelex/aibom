@@ -423,8 +423,9 @@ class ReviewApp(unittest.TestCase):
     """Release-check rows for the review app.
 
     requirements.txt declares openai==1.30.0, langchain-community==0.0.20 and transformers==4.30.0. src/agent.py imports
-    openai, anthropic, chromadb, pinecone and langchain_community; src/hf.py imports transformers. (The release-check
-    table says "4 packages at Imported or Called level"; the fixture's code actually imports six.)
+    openai, anthropic, chromadb, pinecone and langchain_community; src/hf.py imports transformers. Every one of them is
+    also called: a client is created, a vector store opened or a model loaded. (The release-check table says "4 packages
+    at Imported or Called level"; the fixture's code actually imports and calls six.)
     """
 
     def test_declared_and_imported_packages(self):
@@ -432,12 +433,14 @@ class ReviewApp(unittest.TestCase):
         result = find(root, triage(root))
         got = {(c["name"], c["version"], c["declared"], c["evidence_level"]) for c in result["packages"]}
         self.assertEqual(got, {
-            ("openai", "1.30.0", True, "imported"), ("langchain-community", "0.0.20", True, "imported"),
-            ("transformers", "4.30.0", True, "imported"),
-            ("anthropic", "", False, "imported"), ("chromadb", "", False, "imported"), ("pinecone", "", False, "imported"),
+            ("openai", "1.30.0", True, "called"), ("langchain-community", "0.0.20", True, "called"),
+            ("transformers", "4.30.0", True, "called"),
+            ("anthropic", "", False, "called"), ("chromadb", "", False, "called"), ("pinecone", "", False, "called"),
         })
         openai = by_name(result, "openai")
         self.assertEqual((openai["imports"][0]["file"], openai["imports"][0]["line"]), ("src/agent.py", 1))
+        self.assertEqual([(c["file"], c["line"]) for c in openai["calls"]], [("src/agent.py", 9)])
+        self.assertEqual([(c["file"], c["line"]) for c in by_name(result, "transformers")["calls"]], [("src/hf.py", 3)])
 
 
 class Purl(unittest.TestCase):
