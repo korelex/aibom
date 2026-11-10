@@ -132,6 +132,64 @@ class JavaScriptModels(Scan):
         self.assertEqual(self.level("claude-3-opus-20240229"), "declared")
 
 
+class DefaultModels(Scan):
+    """A model set as the default at the end of a fallback chain is what the call gets when nothing else is set."""
+    files = {
+        "server/providers.js": """
+            class OpenAiLLM {
+              constructor(modelPreference = null) {
+                const { OpenAI: OpenAIApi } = require("openai");
+                this.openai = new OpenAIApi({ apiKey: process.env.OPEN_AI_KEY });
+                this.model =
+                  modelPreference || process.env.OPEN_MODEL_PREF || "gpt-4o-2024-08-06";
+              }
+              async chat(messages) {
+                return this.openai.chat.completions.create({ model: this.model, messages });
+              }
+            }
+
+            class OtherLLM {
+              constructor(modelPreference = null) {
+                this.model = modelPreference ?? "gpt-4o-mini-2024-07-18";
+              }
+              async chat(messages) {
+                return fetch("https://example.com", { body: JSON.stringify({ model: this.model }) });
+              }
+            }
+            """,
+        "app/llm.py": """
+            import os
+            from openai import OpenAI
+
+            class Chat:
+                def __init__(self, model=None):
+                    self.client = OpenAI()
+                    self.model = model or "o3-mini-2025-01-31"
+
+                def ask(self, prompt):
+                    return self.client.chat.completions.create(model=self.model, messages=[])
+
+            EMBED = os.getenv("EMBED_MODEL", "text-embedding-3-large")
+            UNUSED = os.environ.get("OTHER_MODEL", "gpt-4.1-2025-04-14")
+            vectors = OpenAI().embeddings.create(model=EMBED, input=["x"])
+            """,
+    }
+
+    def test_a_js_default_at_the_end_of_a_fallback_chain_is_called(self):
+        it = self.items["gpt-4o-2024-08-06"]
+        self.assertEqual(it["evidence_level"], "called")
+        self.assertEqual([e["line"] for e in it["evidence"] if e.get("called")], [6])  # the line that holds the default
+
+    def test_another_class_in_the_same_file_does_not_borrow_the_call(self):
+        # OtherLLM sets this.model too, but only sends it with fetch, which is not an AI SDK call
+        self.assertEqual(self.level("gpt-4o-mini-2024-07-18"), "declared")
+
+    def test_python_defaults_with_or_and_getenv(self):
+        self.assertEqual(self.level("o3-mini-2025-01-31"), "called")       # self.model = model or "..."
+        self.assertEqual(self.level("text-embedding-3-large"), "called")   # os.getenv("X", "...") passed on
+        self.assertEqual(self.level("gpt-4.1-2025-04-14"), "declared")     # a default nobody passes
+
+
 class ComparisonsAndTokenizers(Scan):
     files = {
         "app.py": """

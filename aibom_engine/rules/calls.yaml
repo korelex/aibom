@@ -343,6 +343,26 @@ rules:
     package: {ecosystem: pypi, name: pymilvus}
     what: opens a Milvus vector database
     python: [pymilvus.MilvusClient, pymilvus.connections.connect]
+  - id: milvus.client.js
+    package: {ecosystem: npm, name: "@zilliz/milvus2-sdk-node"}
+    what: opens a Milvus vector database
+    javascript: ["@zilliz/milvus2-sdk-node:MilvusClient"]
+  - id: weaviate.client.js
+    package: {ecosystem: npm, name: weaviate-client}
+    what: opens a Weaviate vector database
+    javascript: ["weaviate-client:connectTo*", "weaviate-client:client", "weaviate-client:default.connectTo*", "weaviate-client:default.client"]
+  - id: lancedb.connect.js
+    package: {ecosystem: npm, name: "@lancedb/lancedb"}
+    what: opens a LanceDB database
+    javascript: ["@lancedb/lancedb:connect", "@lancedb/lancedb:default.connect", "vectordb:connect", "vectordb:default.connect"]
+  - id: astra.client.js
+    package: {ecosystem: npm, name: "@datastax/astra-db-ts"}
+    what: opens an Astra DB vector database
+    javascript: ["@datastax/astra-db-ts:DataAPIClient", "@datastax/astra-db-ts:AstraDB"]
+  - id: pinecone.community.js
+    package: {ecosystem: npm, name: pinecone-client}
+    what: opens a Pinecone vector database through the community client
+    javascript: ["pinecone-client:PineconeClient"]
 
   # ---- Local models and runtimes ----
   - id: transformers.load

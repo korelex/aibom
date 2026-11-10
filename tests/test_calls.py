@@ -296,6 +296,24 @@ class JavaScriptCalls(Case):
         self.assertEqual([c["line"] for c in self.pkg("ollama")["calls"]], [15])
 
 
+class JavaScriptVectorDatabases(Case):
+    """The JavaScript forms of these vector databases, which had only Python rules before."""
+    files = {
+        "package.json": json.dumps({"dependencies": {"@zilliz/milvus2-sdk-node": "^2.3.5", "weaviate-client": "^3.9.0",
+                                                     "@lancedb/lancedb": "0.30.0", "@datastax/astra-db-ts": "^0.1.3"}}, indent=2),
+        "milvus.js": 'const {\n  MilvusClient,\n} = require("@zilliz/milvus2-sdk-node");\nconst client = new MilvusClient({ address: "x" });\n',
+        "weaviate.js": 'const { default: weaviate } = require("weaviate-client");\nconst c = await weaviate.connectToCustom({ httpHost: "x" });\n',
+        "lance.js": 'const lancedb = require("@lancedb/lancedb");\nconst db = await lancedb.connect("./data");\n',
+        "astra.js": 'const { AstraDB: AstraClient } = require("@datastax/astra-db-ts");\nconst client = new AstraClient("token", "url");\n',
+    }
+
+    def test_each_client_is_called(self):
+        for name, line in (("@zilliz/milvus2-sdk-node", 4), ("weaviate-client", 2), ("@lancedb/lancedb", 2), ("@datastax/astra-db-ts", 2)):
+            pkg = self.pkg(name)
+            self.assertEqual((pkg["evidence_level"], [c["line"] for c in pkg["calls"]]), ("called", [line]), name)
+            self.assertEqual(pkg["category"], "vector_db")
+
+
 class RuleFile(unittest.TestCase):
     def test_every_rule_names_a_package_in_the_catalogue(self):
         with open(RULES_PATH, encoding="utf-8") as fh:

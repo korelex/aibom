@@ -183,12 +183,27 @@ class _PythonCalls:
             return ".".join([node.id] + parts[::-1])
         return None
 
+    def _string_value(self, value):
+        """The string constant a name ends up holding when nothing else is set: "gpt-4o", model or "gpt-4o",
+        os.getenv("MODEL", "gpt-4o"), os.environ.get("MODEL", "gpt-4o"). None for anything else, or for prose."""
+        node = None
+        if isinstance(value, ast.Constant):
+            node = value
+        elif isinstance(value, ast.BoolOp) and isinstance(value.op, ast.Or):
+            node = value.values[-1]
+        elif isinstance(value, ast.Call) and len(value.args) >= 2 and self.qual(value.func) in ("os.getenv", "os.environ.get"):
+            node = value.args[1]
+        if isinstance(node, ast.Constant) and isinstance(node.value, str) and node.value and not any(c.isspace() for c in node.value):
+            return node
+        return None
+
     def _bind(self, target, value):
         key = target.id if isinstance(target, ast.Name) else self._dotted(target) if isinstance(target, ast.Attribute) else None
         if not key:
             return
-        if isinstance(value, ast.Constant) and isinstance(value.value, str) and value.value and not any(c.isspace() for c in value.value):
-            self.strs[key] = (self.line_of(value.lineno), value.value)
+        text = self._string_value(value)
+        if text is not None:
+            self.strs[key] = (self.line_of(text.lineno), text.value)
         else:
             self.strs.pop(key, None)
         q = self.qual(value) if value is not None else None
@@ -330,7 +345,10 @@ def _js_bindings(text, live):
 
 
 _JS_INSTANCE = re.compile(r"(?<![\w$.])((?:this\.)?" + _IDENT + r")\s*(?::\s*[\w$.<>\[\], ]+?)?\s*=\s*(?:await\s+)?(?:new\s+)?(" + _IDENT + r")\s*[.(<]")
-_JS_CONST = re.compile(r"\b(?:const|let|var)\s+(" + _IDENT + r")\s*(?::\s*\w+)?\s*=\s*(['\"`])([^'\"`\s]+)\2")
+# NAME = "x", const NAME: string = "x", this.name = a || process.env.B ?? "x": the string a name ends up holding when
+# nothing earlier in a || / ?? chain is set. "==", "===" and "=>" are not assignments.
+_JS_CONST = re.compile(r"(?<![\w$.])((?:this\.)?" + _IDENT + r")\s*(?::\s*[\w$.<>\[\]| ]+?)?\s*=(?![=>])\s*"
+                       r"((?:[\w$.?\[\]]+\s*(?:\|\||\?\?)\s*)*)(['\"`])([^'\"`\s]+)\3")
 _JS_STRING = re.compile(r"(['\"`])((?:\\.|(?!\1)[^\\\n])*)\1")
 _JS_NAME = re.compile(_IDENT + r"(?:\." + _IDENT + r")*")
 
@@ -388,7 +406,18 @@ def _js_calls(text, ext, rules, ai_packages=()):
     for m in _JS_INSTANCE.finditer(text):  # const client = new OpenAI(...); this.llm = new ChatOpenAI(...)
         if m.group(2) in ai and live(m.start()):
             ai.add(m.group(1))
-    consts = {m.group(1): (line_at(m.start(3)), m.group(3)) for m in _JS_CONST.finditer(text) if live(m.start())}
+    # Names bound to a model-like string, with every place that binds them: MODEL = "gpt-4o", or a default at the end
+    # of a fallback chain, this.model = pref || process.env.MODEL || "gpt-4o". A call uses the last binding before it,
+    # so two classes in one file that both set this.model do not lend each other their defaults.
+    consts = {}
+    for m in _JS_CONST.finditer(text):
+        if live(m.start()) and live(m.start(3)):  # the opening quote: a position inside the string is never "live"
+            consts.setdefault(m.group(1), []).append((m.start(), line_at(m.start(4)), m.group(4)))
+
+    def bound(name, pos):
+        before = [c for c in consts.get(name, []) if c[0] < pos]
+        return before[-1][1:] if before else None
+
     out, arguments = [], []
     for m in _JS_CALL.finditer(text):
         chain = [p.strip() for p in m.group(2).split(".")]
@@ -400,8 +429,9 @@ def _js_calls(text, ext, rules, ai_packages=()):
                 if s.group(2) and not any(c.isspace() for c in s.group(2)) and not compared:
                     arguments.append((line_at(m.end() + s.start(2)), s.group(2)))
             for s in _JS_NAME.finditer(_JS_STRING.sub(lambda x: " " * len(x.group(0)), body)):
-                if s.group(0) in consts:
-                    arguments.append(consts[s.group(0)])
+                value = bound(s.group(0), m.start())
+                if value:
+                    arguments.append(value)
                 arguments.append((line_at(m.end() + s.start()), s.group(0)))
         if chain[0] not in env or chain[0] in _JS_SKIP or not live(m.start(2)):
             continue
