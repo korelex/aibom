@@ -13,6 +13,7 @@ import time
 from ..db import load_db, lookup_package
 from .common import Declaration, left_out_reason, normalize, purl
 from . import javascript, python
+from .imports import find_imports
 
 PARSERS = python.PARSERS + javascript.PARSERS
 ECOSYSTEM_LABEL = {"pypi": "PyPI", "npm": "npm"}
@@ -148,10 +149,39 @@ def find(root, files, db=None, deadline=None):
             "scope": next(s for s in SCOPE_ORDER if s in scopes),
             "requested": sorted({d.spec for d in g["decls"] if d.spec}),
             "evidence_level": "declared",
+            "declared": True,
             "left_out": left_out,
             "evidence": [{"file": d.file, "line": d.line, "kind": d.kind, "direct": d.direct, "scope": d.scope}
                          for d in sorted(g["decls"], key=lambda d: (d.file, d.line))],
+            "imports": [],
         })
+
+    # Imports in code (evidence level: imported). An import belongs to the version the project depends on directly;
+    # transitive copies of the same package are not what its own code imports.
+    declared = {(c["ecosystem"], normalize(c["ecosystem"], c["name"])) for c in components}
+    hits = find_imports(root, files, declared=declared, db=db, deadline=deadline)
+    by_package = {}
+    for h in hits:
+        by_package.setdefault((h["ecosystem"], normalize(h["ecosystem"], h["package"])), []).append(h)
+    for (eco, norm), group in sorted(by_package.items()):
+        targets = [c for c in components if c["ecosystem"] == eco and normalize(eco, c["name"]) == norm and not c["left_out"]]
+        targets = [c for c in targets if c["direct"] is True] or targets
+        if not targets:
+            info = lookup_package(ECOSYSTEM_LABEL[eco], norm, db=db) or {}
+            live = [h for h in group if not h["left_out"]]
+            targets = [{
+                "kind": "package", "ecosystem": eco, "name": group[0]["package"], "version": "", "purl": purl(eco, group[0]["package"]),
+                "category": info.get("category", ""), "vendor": info.get("vendor", ""), "direct": None, "scope": "runtime",
+                "requested": [], "evidence_level": "declared", "declared": False,
+                "left_out": "" if live else sorted({h["left_out"] for h in group})[0], "evidence": [], "imports": [],
+            }]
+            components.append(targets[0])
+        for c in targets:
+            c["imports"] = sorted(({k: h[k] for k in ("module", "file", "line", "snippet", "left_out")} for h in group),
+                                  key=lambda h: (h["file"], h["line"]))
+            if any(not h["left_out"] for h in group):
+                c["evidence_level"] = "imported"
+    components.sort(key=lambda c: (c["ecosystem"], normalize(c["ecosystem"], c["name"]), c["version"]))
     kept = [c for c in components if not c["left_out"]]
     return {
         "packages": components,
@@ -164,6 +194,8 @@ def find(root, files, db=None, deadline=None):
             "ai_direct": sum(1 for c in kept if c["direct"] is True),
             "ai_transitive": sum(1 for c in kept if c["direct"] is False),
             "ai_left_out": len(components) - len(kept),
+            "ai_imported": sum(1 for c in kept if c["evidence_level"] == "imported"),
+            "ai_imported_not_declared": sum(1 for c in kept if not c["declared"]),
             "has_lockfile": any(d.kind == "lock" for d in decls),
             "seconds": round(time.time() - started, 2),
         },

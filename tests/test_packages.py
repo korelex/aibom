@@ -420,14 +420,24 @@ class Families(unittest.TestCase):
 
 
 class ReviewApp(unittest.TestCase):
-    """Release-check row: requirements.txt with openai==1.30.0, langchain-community==0.0.20, transformers==4.30.0."""
+    """Release-check rows for the review app.
 
-    def test_three_declared_packages(self):
+    requirements.txt declares openai==1.30.0, langchain-community==0.0.20 and transformers==4.30.0. src/agent.py imports
+    openai, anthropic, chromadb, pinecone and langchain_community; src/hf.py imports transformers. (The release-check
+    table says "4 packages at Imported or Called level"; the fixture's code actually imports six.)
+    """
+
+    def test_declared_and_imported_packages(self):
         root = os.path.join(HERE, "fixtures", "review-app")
         result = find(root, triage(root))
-        got = {(c["name"], c["version"], c["direct"], c["evidence_level"]) for c in result["packages"]}
-        self.assertEqual(got, {("openai", "1.30.0", True, "declared"), ("langchain-community", "0.0.20", True, "declared"),
-                               ("transformers", "4.30.0", True, "declared")})
+        got = {(c["name"], c["version"], c["declared"], c["evidence_level"]) for c in result["packages"]}
+        self.assertEqual(got, {
+            ("openai", "1.30.0", True, "imported"), ("langchain-community", "0.0.20", True, "imported"),
+            ("transformers", "4.30.0", True, "imported"),
+            ("anthropic", "", False, "imported"), ("chromadb", "", False, "imported"), ("pinecone", "", False, "imported"),
+        })
+        openai = by_name(result, "openai")
+        self.assertEqual((openai["imports"][0]["file"], openai["imports"][0]["line"]), ("src/agent.py", 1))
 
 
 class Purl(unittest.TestCase):

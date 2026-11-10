@@ -287,7 +287,8 @@
     {"ecosystem": "PyPI", "name": "openai-harmony", "category": "model_runtime", "vendor": "OpenAI", "import_names": ["openai_harmony"]},
     {"ecosystem": "PyPI", "name": "mistral-common", "category": "model_runtime", "vendor": "Mistral AI", "import_names": ["mistral_common"]},
     {"ecosystem": "PyPI", "name": "claude-code-sdk", "category": "agent_framework", "vendor": "Anthropic", "import_names": ["claude_code_sdk"]},
-    {"ecosystem": "PyPI", "name": "llm", "category": "llm_sdk", "vendor": "Simon Willison", "import_names": ["llm"]}
+    {"ecosystem": "PyPI", "name": "llm", "category": "llm_sdk", "vendor": "Simon Willison", "import_names": ["llm"]},
+    {"ecosystem": "PyPI", "name": "llama-index-workflows", "category": "agent_framework", "vendor": "LlamaIndex", "import_names": ["workflows"]}
   ],
   "curated_models": {
     "openai/gpt-3.5-turbo": {"maker": "OpenAI", "mode": "chat", "license": "proprietary", "aliases": ["gpt-3.5-turbo", "gpt-3.5-turbo-0125", "gpt-3.5-turbo-1106", "gpt-3.5-turbo-0613", "gpt-3.5-turbo-0301", "gpt-3.5-turbo-16k", "gpt-35-turbo"]},
