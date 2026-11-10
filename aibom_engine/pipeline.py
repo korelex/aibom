@@ -6,6 +6,7 @@ import time
 
 from . import __version__
 from .db import resolve_model
+from . import packages as package_finder
 from .finders import context, dictionary, shapes
 from .merge import merge
 from .display import build_rows
@@ -78,6 +79,17 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
     log(f"  {len(files):,} files: {cats.get('code', 0):,} code, {cats.get('config', 0):,} settings, {cats.get('docs', 0):,} docs, {cats.get('test', 0):,} tests")
     names = dictionary.load_names()
     deadline = t0 + max_seconds
+    log("Reading dependency files ...")
+    try:
+        found_packages = package_finder.find(root, files, deadline=deadline)
+    except Exception as e:  # the package step must never stop the model scan
+        warnings.append(f"Dependency files could not be read: {type(e).__name__}: {e}")
+        found_packages = {"packages": [], "files": [], "problems": [], "summary": {}}
+    ps = found_packages["summary"]
+    if ps:
+        log(f"  {ps['dependency_files']:,} dependency files, {ps['packages_read']:,} packages, {ps['ai_packages']:,} AI packages ({ps['seconds']:.1f}s)")
+    for p in found_packages["problems"]:
+        warnings.append(f"Could not read the dependency file {p['file']}: {p['error']}")
     findings, partial = [], False
     log("Looking for model names ...")
     for name in finders:
@@ -103,6 +115,7 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
     save(os.path.join(out, "files.json"), {"categories": cats, "files": [vars(f) for f in files]})
     save(os.path.join(out, "findings.json"), [f.to_dict() for f in findings])
     save(os.path.join(out, "merged.json"), items)
+    save(os.path.join(out, "packages.json"), found_packages)
     save(os.path.join(out, "aibom.cdx.json"), bom)
     write_readable(out, items, app, source, links, warnings)
     rows = build_rows(items)
@@ -113,7 +126,7 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
                                               "finders": list(finders), "raw_findings": len(findings), "items_in_aibom": len(included), "models_used": used,
                                               "models_only_listed": len(included) - used, "display_models_used": len(rows["used"]), "display_models_listed": len(rows["listed"]),
                                               "display_left_out": len(rows["left_out"]), "items_by_tier": tiers, "rejected_reasons": reasons, "partial": partial,
-                                              "warnings": warnings, "cyclonedx_1_6_valid": problem is None, "validation_error": problem, "seconds": seconds,
+                                              "warnings": warnings, "packages": found_packages["summary"], "cyclonedx_1_6_valid": problem is None, "validation_error": problem, "seconds": seconds,
                                               **(links.to_dict() if links else {})})
-    return {"items": len(included), "used": len(rows["used"]), "listed": len(rows["listed"]), "left_out": len(rows["left_out"]), "rows": rows, "rejected": len(items) - len(included), "valid": problem is None, "error": problem,
+    return {"packages": found_packages["summary"], "items": len(included), "used": len(rows["used"]), "listed": len(rows["listed"]), "left_out": len(rows["left_out"]), "rows": rows, "rejected": len(items) - len(included), "valid": problem is None, "error": problem,
             "seconds": seconds, "tiers": tiers, "partial": partial, "warnings": warnings, "app": app, "files": len(files)}

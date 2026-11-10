@@ -696,6 +696,7 @@ def build(offline: bool = False, from_existing: bool = False):
         "packages": dict(sorted(packages_table.items())),
         "vulnerabilities": dict(sorted(vulnerabilities_table.items())),
         "licenses": dict(sorted(licenses_table.items())),
+        "package_families": {f"{f['ecosystem'].lower()}:{f['prefix']}": f for f in curated.get("package_families", [])},
     }
     digest = hashlib.sha256(json.dumps(db_body, sort_keys=True).encode("utf-8")).hexdigest()
     full_db = {
