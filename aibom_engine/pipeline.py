@@ -85,13 +85,15 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
         found_packages = package_finder.find(root, files, deadline=deadline)
     except Exception as e:  # the package step must never stop the model scan
         warnings.append(f"Dependency files could not be read: {type(e).__name__}: {e}")
-        found_packages = {"packages": [], "files": [], "problems": [], "summary": {}}
+        found_packages = {"packages": [], "files": [], "problems": [], "notes": [], "summary": {}}
     model_arguments = found_packages.pop("model_arguments", [])
     ps = found_packages["summary"]
     if ps:
         log(f"  {ps['dependency_files']:,} dependency files, {ps['packages_read']:,} packages, {ps['ai_packages']:,} AI packages ({ps['seconds']:.1f}s)")
     for p in found_packages["problems"]:
         warnings.append(f"Could not read the dependency file {p['file']}: {p['error']}")
+    for note in found_packages.get("notes", []):
+        warnings.append(f"Dependency file {note}.")
     findings, partial = [], False
     log("Looking for model names ...")
     for name in finders:

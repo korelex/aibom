@@ -14,7 +14,8 @@ TIER_LONG = {"declared": "Confirmed: the name is written in the code", "inferred
 LEVEL_TEXT = {"called": "Called", "declared": "Declared"}
 LEVEL_LONG = {"called": "Called: live code passes this name into a call on an AI SDK",
               "declared": "Declared: the name is written in the code or settings, but no call on an AI SDK was proven to receive it "
-                          "(it may still be used, for example through a variable, a lookup table or plain HTTP)"}
+                          "(it may still be used, for example through a variable, a lookup table or plain HTTP)",
+              "": "Not assessed: this scan was made by an older version of aibom, which did not check it. Scan again to see it"}
 REACHABILITY_TEXT = "not yet verified: the scanner does not prove that a request from outside reaches this code"
 MODE_TEXT = {"chat": "chat model", "embedding": "embedding model", "image_generation": "image model", "audio_transcription": "speech-to-text model",
              "audio_speech": "text-to-speech model", "responses": "chat model", "completion": "text model", "rerank": "reranking model",
@@ -163,7 +164,7 @@ def build_csv(items, links=None):
     for role, group in (("used directly", rows["used"]), ("only listed", rows["listed"])):
         for r in group:
             p, url, _ = where(r, links)
-            w.writerow([r["name"], r["maker"], MODE_TEXT.get(r["mode"], r["mode"]), role, TIER_TEXT[r["tier"]], r["evidence_level"], "not_verified", p, url, len(r["places"]), "; ".join(r["also"]),
+            w.writerow([r["name"], r["maker"], MODE_TEXT.get(r["mode"], r["mode"]), role, TIER_TEXT[r["tier"]], r["evidence_level"] or "not_assessed", "not_verified", p, url, len(r["places"]), "; ".join(r["also"]),
                         r.get("status", "unknown"), "yes" if r.get("pinned") is True else ("no" if r.get("pinned") is False else "unknown"),
                         "yes" if r.get("floating") else "no", r.get("deprecation_date", ""), r.get("retirement_date", ""),
                         r.get("replacement", ""), r.get("lifecycle_source_url", ""), r.get("license", "unknown"),

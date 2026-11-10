@@ -5,7 +5,7 @@ import re
 
 from packaging.requirements import InvalidRequirement, Requirement
 
-from .common import Declaration, line_of, read_text
+from .common import Declaration, Parsed, line_of, read_text
 
 try:
     import tomllib  # Python 3.11+
@@ -43,10 +43,10 @@ def parse_requirements(root, rel, seen=None):
     """
     seen = set() if seen is None else seen
     if rel in seen:
-        return []
+        return Parsed()
     seen.add(rel)
     lines = read_text(root, rel).split("\n")
-    out, pending = [], None
+    out, pending = Parsed(), None
     i = 0
     while i < len(lines):
         start = i
@@ -73,7 +73,12 @@ def parse_requirements(root, rel, seen=None):
             target = re.sub(r"^(-r|--requirement)[ =]?", "", text).strip()
             path = os.path.normpath(os.path.join(os.path.dirname(rel), target)).replace(os.sep, "/")
             if os.path.isfile(os.path.join(root, path)):
-                out += parse_requirements(root, path, seen)
+                sub = parse_requirements(root, path, seen)
+                out += sub
+                out.notes += sub.notes
+            else:
+                out.notes.append(f"{rel} line {start + 1} includes {target}, which is not in the repository, so the "
+                                 f"packages it lists are not in the results")
             pending = None
             continue
         if text.startswith("-"):  # -e, -c, --index-url, --hash ...: not a package requirement

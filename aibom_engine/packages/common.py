@@ -32,6 +32,15 @@ class Declaration:
         return asdict(self)
 
 
+class Parsed(list):
+    """The declarations a parser read from a file, plus notes about what it could not follow (a missing `-r` file),
+    which the scan shows as warnings."""
+
+    def __init__(self, items=(), notes=()):
+        super().__init__(items)
+        self.notes = list(notes)
+
+
 def normalize(ecosystem, name):
     """The comparable form of a package name: PyPI ignores case and treats -, _ and . alike; npm names are lowercase."""
     name = name.strip()

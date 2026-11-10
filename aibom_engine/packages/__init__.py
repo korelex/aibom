@@ -194,7 +194,7 @@ def find(root, files, db=None, deadline=None):
     """Read every dependency file and return the AI packages found, with what was read and any file that failed."""
     db = db or load_db()
     started = time.time()
-    decls, read, problems = [], [], []
+    decls, read, problems, notes = [], [], [], []
     seen = set()
     for path, parser in select(files):
         if deadline and time.time() > deadline:
@@ -205,6 +205,7 @@ def find(root, files, db=None, deadline=None):
         except Exception as exc:  # a broken or unusual file must not stop the scan; it is reported instead
             problems.append({"file": path, "error": f"{type(exc).__name__}: {str(exc)[:200]}"})
             continue
+        notes += [n for n in getattr(got, "notes", []) if n not in notes]
         fresh = []
         for d in got:
             key = (d.file, d.line, d.ecosystem, normalize(d.ecosystem, d.name), d.version)
@@ -266,6 +267,7 @@ def find(root, files, db=None, deadline=None):
         "model_arguments": arguments,  # for the model step: what live code passes into AI calls
         "files": read,
         "problems": problems,
+        "notes": notes,  # what a file refers to but the scan could not follow, such as a missing -r file
         "summary": {
             "dependency_files": len(read),
             "packages_read": len(total),

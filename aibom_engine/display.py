@@ -57,7 +57,8 @@ def build_rows(items):
                      "mode": next((m.get("mode") for m in [primary] + members if m.get("mode")), ""),
                      "role": "used" if any(m.get("role", "used") != "listed" for m in members) else "listed",
                      "tier": "declared" if any(m["tier"] == "declared" for m in members) else "inferred",
-                     "evidence_level": "called" if any(m.get("evidence_level") == "called" for m in members) else "declared",
+                     # "" when the scan that made these items did not work out levels (an older version): not assessed
+                     "evidence_level": next((lv for lv in ("called", "declared") if any(m.get("evidence_level") == lv for m in members)), ""),
                      "status": worst.get("status") or "unknown",
                      "deprecation_date": worst.get("deprecation_date") or "",
                      "retirement_date": worst.get("retirement_date") or "",

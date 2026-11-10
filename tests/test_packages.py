@@ -53,6 +53,28 @@ class Case(unittest.TestCase):
         return by_name(self.result, name, version)
 
 
+class MissingIncludedFile(Case):
+    files = {
+        "requirements.txt": "-r base.txt\n-r missing-dev.txt\nopenai==1.30.0\n",
+        "base.txt": "-r ../outside/common.txt\nanthropic==0.30.0\n",
+    }
+
+    def test_a_missing_r_file_is_a_note_with_its_file_and_line(self):
+        self.assertEqual({c["name"] for c in self.result["packages"]}, {"openai", "anthropic"})
+        self.assertEqual(self.result["notes"], [
+            "base.txt line 1 includes ../outside/common.txt, which is not in the repository, so the packages it lists are not in the results",
+            "requirements.txt line 2 includes missing-dev.txt, which is not in the repository, so the packages it lists are not in the results",
+        ])
+        self.assertEqual(self.result["problems"], [])  # the files themselves were read fine
+
+    def test_the_scan_shows_the_note_as_a_warning(self):
+        from aibom_engine.pipeline import run
+        with tempfile.TemporaryDirectory() as out:
+            warnings = run(self.repo.tmp.name, out)["warnings"]
+        self.assertIn("Dependency file requirements.txt line 2 includes missing-dev.txt, which is not in the repository, "
+                      "so the packages it lists are not in the results.", warnings)
+
+
 class Requirements(Case):
     files = {
         "requirements.txt": """

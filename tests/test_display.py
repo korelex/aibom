@@ -1,5 +1,6 @@
 import csv
 import io
+import json
 import os
 import re
 import subprocess
@@ -120,7 +121,8 @@ class Outputs(unittest.TestCase):
         first = next(r for r in rows if r[0] == "gpt-4o")
         self.assertEqual(first[col["link"]], "https://github.com/o/r/blob/deadbeefcafe/src/app.py#L12")
         self.assertIn("openai-gpt-4o", first[col["also_written_as"]])
-        self.assertEqual((first[col["evidence_level"]], first[col["reachability"]]), ("declared", "not_verified"))
+        # these items carry no evidence level, like a run made before levels existed: never shown as "declared"
+        self.assertEqual((first[col["evidence_level"]], first[col["reachability"]]), ("not_assessed", "not_verified"))
 
     def test_pipeline_writes_the_csv_with_an_excel_friendly_start(self):
         with tempfile.TemporaryDirectory() as d, tempfile.TemporaryDirectory() as out:
@@ -195,6 +197,26 @@ class Commands(unittest.TestCase):
         for must in ("Scan finished", "models used directly in the code", "The main ones:", "gpt-4o-mini", "report.html", "models.csv", "explain", "Limits:"):
             self.assertIn(must, self.r.stdout)
         self.assertTrue(all(len(line) <= 140 for line in self.r.stdout.splitlines()))
+        # the limits line must not claim that only models are found: packages are found too, in packages.json
+        self.assertIn("packages.json", self.r.stdout)
+        self.assertNotIn("finds AI models only", self.r.stdout)
+
+    def test_a_run_made_before_evidence_levels_says_not_assessed(self):
+        merged = os.path.join(self.out, "merged.json")
+        with open(merged, encoding="utf-8") as fh:
+            items = json.load(fh)
+        for it in items:  # what an older aibom wrote: no levels at all
+            for key in ("evidence_level", "reachability", "confidence"):
+                it.pop(key, None)
+        with open(merged, "w", encoding="utf-8") as fh:
+            json.dump(items, fh)
+        self.assertEqual(self.cli("rebuild", self.out).returncode, 0)
+        explained = self.cli("explain", self.out, "gpt-4o-mini").stdout
+        self.assertIn("Not assessed", explained)
+        self.assertNotIn("Declared", explained)
+        with open(os.path.join(self.out, "models.csv"), encoding="utf-8-sig") as fh:
+            rows = list(csv.DictReader(fh))
+        self.assertEqual(next(r for r in rows if r["model"] == "gpt-4o-mini")["evidence_level"], "not_assessed")
 
     def test_show_all_and_left_out(self):
         self.assertIn("gpt-4o-mini", self.cli("show", self.out, "--all").stdout)

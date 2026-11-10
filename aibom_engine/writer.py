@@ -21,11 +21,13 @@ def build_bom(items, app_name):
     for it in items:
         # evidence-level: how strongly the use is proven (declared / called); confidence: how sure the name itself is
         # (confirmed / worked_out). Kept apart on purpose: they answer different questions.
-        props = [{"name": NS + "kind", "value": it["kind"]},
-                 {"name": NS + "evidence-level", "value": it.get("evidence_level") or "declared"},
-                 {"name": NS + "reachability", "value": it.get("reachability") or REACHABILITY},
-                 {"name": NS + "confidence", "value": it.get("confidence") or "unverified"},
-                 {"name": NS + "found-by", "value": ",".join(it["found_by"])}]
+        props = [{"name": NS + "kind", "value": it["kind"]}]
+        if it.get("evidence_level"):  # never claimed when it was not worked out
+            props.append({"name": NS + "evidence-level", "value": it["evidence_level"]})
+        props.append({"name": NS + "reachability", "value": it.get("reachability") or REACHABILITY})
+        if it.get("confidence"):
+            props.append({"name": NS + "confidence", "value": it["confidence"]})
+        props.append({"name": NS + "found-by", "value": ",".join(it["found_by"])})
         if it.get("maker"):
             props.append({"name": NS + "made-by", "value": it["maker"]})
         if it.get("mode"):

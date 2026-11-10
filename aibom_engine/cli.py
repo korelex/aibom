@@ -233,7 +233,8 @@ def do_scan(a):
     print("  aibom.cdx.json  the standard AI-BOM file (%s CycloneDX 1.6)" % ("valid" if r["valid"] else "NOT VALID"))
     print("\nNext:  %s show %s --all      list every model" % (command(), out))
     print("       %s explain %s MODEL   why is this model here?" % (command(), out))
-    print("Limits: finds AI models only. It cannot see a model chosen when the app runs.")
+    print("Limits: the reports list AI models only; the AI packages found are in packages.json.")
+    print("        It cannot see a model chosen when the app runs.")
     if not r["valid"]:
         raise SourceError("The AI-BOM did not pass the format check: " + str(r["error"]))
     if a.open:
