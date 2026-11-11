@@ -143,12 +143,13 @@ class Outputs(unittest.TestCase):
         self.assertIn("&lt;script&gt;alert(1)&lt;/script&gt;", page)
         self.assertNotIn("x<b>", page)
 
-    def test_html_follows_the_light_or_dark_setting_prints_cleanly_and_needs_no_internet(self):
+    def test_html_is_a_white_page_prints_cleanly_and_needs_no_internet(self):
         page = build_html(self.ITEMS, "demo", "", self.LINKS)
         head = page.split("<body>")[0]
-        self.assertIn("prefers-color-scheme:dark", head)
+        self.assertNotIn("prefers-color-scheme", head)  # one light page: white background, black text
+        self.assertIn("--bg:#fff", head)
         self.assertIn("@media print", head)
-        self.assertIn("<meta name='color-scheme' content='light dark'>", head)
+        self.assertIn("<meta name='color-scheme' content='light'>", head)
         body_style = re.search(r"body\{[^}]*\}", head).group(0)
         self.assertIn("var(--bg)", body_style)  # the page colours come from the theme, not from fixed values on the elements
         self.assertNotRegex(page, r"<(script|link|img)[^>]+(src|href)=[\"']https?://")

@@ -389,12 +389,8 @@ def build_markdown(items, app, source="", links=None, meta=None):
 
 
 CSS = """
-:root{--bg:#f6f7f9;--card:#fff;--text:#1b1f27;--muted:#586272;--line:#dde1e7;--zebra:#f4f6f9;--accent:#1f4fd1;--chip:#eef1f6;
+:root{--bg:#fff;--card:#fff;--text:#000;--muted:#4a4f57;--line:#cfd3d9;--zebra:#f4f5f7;--accent:#0b3fb8;--chip:#eef0f3;
 --critical:#7a0019;--high:#c62828;--medium:#f5b800;--low:#1769aa;--unknown:#8a919c;--on-medium:#000;--on-sev:#fff}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#10131a;--card:#171b24;--text:#e8ebf0;--muted:#9aa4b2;--line:#2a303c;--zebra:#1b202b;--accent:#8fb0ff;--chip:#222836;
---critical:#c4153e;--high:#e0453a;--medium:#f2c230;--low:#3d8fd1;--unknown:#6d7683}}
-:root[data-theme=dark]{--bg:#10131a;--card:#171b24;--text:#e8ebf0;--muted:#9aa4b2;--line:#2a303c;--zebra:#1b202b;--accent:#8fb0ff;--chip:#222836;
---critical:#c4153e;--high:#e0453a;--medium:#f2c230;--low:#3d8fd1;--unknown:#6d7683}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;margin:0;color:var(--text);background:var(--bg);line-height:1.55}
 .wrap{max-width:1180px;margin:0 auto;padding:28px 20px 72px}h1{font-size:30px;margin:0 0 4px;letter-spacing:-.01em}
 h2{font-size:21px;margin:44px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line);scroll-margin-top:64px}h3{font-size:17px;margin:28px 0 8px;scroll-margin-top:64px}
@@ -404,7 +400,7 @@ a{color:var(--accent);font-weight:600;text-decoration:none}a:hover{text-decorati
 .nav a{padding:5px 12px;border-radius:999px;font-size:13px;font-weight:600;color:var(--muted)}.nav a:hover{background:var(--chip);color:var(--text);text-decoration:none}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:18px 0}
 .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px}.card b{display:block;font-size:38px;line-height:1.1}.card span{font-size:13px;color:var(--muted)}
-.card.vulncard{grid-column:span 2}.card.vulncard .sevkey{margin:6px 0 0}
+.card .sev{color:var(--on-sev);font-size:11.5px}.card .sev-medium{color:var(--on-medium)}.card.vulncard{grid-column:span 2}.card.vulncard .sevkey{margin:6px 0 0}
 .warn{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--medium);border-radius:8px;padding:10px 18px;margin:16px 0;font-size:15px}.warn ul{margin:6px 0 0 18px;padding:0}
 .how{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:4px 18px;font-size:14px;margin:18px 0}.how ul{margin:6px 0 10px 18px;padding:0}
 .risks{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 20px 14px;margin:18px 0}.risks h2{border:0;margin:6px 0 8px;padding:0}.risks ul{margin:0 0 0 18px;padding:0}.risks li{margin:4px 0}.risks .note{font-size:13px;color:var(--muted);margin:6px 0 0}
@@ -425,12 +421,10 @@ details.more{margin:6px 0 0}details.more summary{font-weight:500;font-size:13px;
 .sevkey{font-size:13px;margin:0 0 10px}.sevkey .sev{margin:0 4px 0 10px}.sevkey .sev:first-child{margin-left:0}
 .ev{display:inline-block;border-radius:999px;padding:0 9px;font-size:12px;font-weight:700;white-space:nowrap;background:var(--chip);cursor:help}
 .ev-called{color:#0a7a3d;background:rgba(10,122,61,.12)}.ev-imported{color:#8a6100;background:rgba(245,184,0,.18)}.ev-declared{color:var(--muted)}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .ev-called{color:#4fd48a}:root:not([data-theme=light]) .ev-imported{color:#f2c230}}
 .vcard{background:var(--card);border:1px solid var(--line);border-radius:10px;margin:12px 0;overflow:hidden}
 .vhead{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 16px;background:var(--zebra);border-bottom:1px solid var(--line)}.vhead b{font-size:16px}.vhead .grow{flex:1}
 .adv{list-style:none;margin:0;padding:0}.adv li{display:grid;grid-template-columns:86px minmax(150px,230px) 1fr;gap:6px 14px;padding:9px 16px;border-bottom:1px solid var(--line);align-items:start}.adv li:last-child{border-bottom:0}
-.adv .fix{font-size:13px;color:var(--muted)}.adv .fix b{color:#0a7a3d}@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .adv .fix b{color:#4fd48a}}
-.adv .what{grid-column:3;font-size:14px}.vcard details.more{margin:0;padding:8px 16px;border-top:1px solid var(--line)}.vcard details.more .adv{margin:6px -16px 0}
+.adv .fix{font-size:13px;color:var(--muted)}.adv .fix b{color:#0a7a3d}.adv .what{grid-column:3;font-size:14px}.vcard details.more{margin:0;padding:8px 16px;border-top:1px solid var(--line)}.vcard details.more .adv{margin:6px -16px 0}
 @media (max-width:720px){.adv li{grid-template-columns:1fr}.adv .what{grid-column:1}.card.vulncard{grid-column:auto}}
 @media print{:root{--bg:#fff;--card:#fff;--text:#000;--muted:#333;--line:#999;--zebra:#fff;--accent:#000}.nav,input#q{display:none}.wrap{padding:0}.tw{overflow:visible}table.wide{min-width:0}th{position:static}.vcard{break-inside:avoid}}
 """
@@ -483,7 +477,7 @@ def build_html(items, app, source="", links=None, meta=None):
                        '<tr><th>Model</th><th>Type</th><th>Where it is used (click to see the line)</th><th>Confidence</th><th>Status</th><th>Pinned</th><th>Deprecated</th><th>Retires or retired</th><th>Replacement</th><th>License</th></tr>' + "".join(row_html(r) for r in rr) + "</table></div></details>")
         return "".join(out)
 
-    out = [f"<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='color-scheme' content='light dark'><title>AI models in {h(app)}</title><style>{CSS}</style></head><body><div class='wrap'>",
+    out = [f"<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='color-scheme' content='light'><title>AI models in {h(app)}</title><style>{CSS}</style></head><body><div class='wrap'>",
            f"<h1>AI models found in {h(app)}</h1>"]
     sub = source_line(source, links, meta)
     out.append(f"<p class='sub'>{('Scanned: ' + h(sub) + '. ') if sub else ''}Scanner version {h(__version__)}.</p>")

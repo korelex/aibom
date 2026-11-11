@@ -371,6 +371,12 @@ class Reports(unittest.TestCase):
         self.assertIn("class='ev ev-called' title=\"Called: live code calls this package", self.html)
         self.assertIn("class='card vulncard'><b><a href='#vulns'>6</a>", self.html)
 
+    def test_severity_labels_stay_readable_inside_the_summary_cards(self):
+        # `.card span` greys out text; a label inside a card must keep its own colour or red text lands on a red chip
+        head = self.html.split("<body>")[0]
+        self.assertIn(".card .sev{color:var(--on-sev)", head)
+        self.assertIn(".card .sev-medium{color:var(--on-medium)}", head)
+
     def test_a_scan_without_vulnerabilities_has_no_fix_plan(self):
         clean = {"packages": [package("gamma", "9.0.0", "called", set())]}
         self.assertNotIn("Fix plan", report.build_html([], "demo", meta=clean))
