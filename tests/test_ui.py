@@ -377,6 +377,12 @@ class Reports(unittest.TestCase):
         self.assertIn(".card .sev{color:var(--on-sev)", head)
         self.assertIn(".card .sev-medium{color:var(--on-medium)}", head)
 
+    def test_the_packages_table_lets_long_paths_break_so_it_fits_the_page(self):
+        # a path has no spaces: without this the table grows wider than the page and its last column is cut off
+        head = self.html.split("<body>")[0]
+        self.assertIn("table.pk td:nth-child(5){overflow-wrap:anywhere", head)
+        self.assertIn("<table class='pk'>", self.html)
+
     def test_a_scan_without_vulnerabilities_has_no_fix_plan(self):
         clean = {"packages": [package("gamma", "9.0.0", "called", set())]}
         self.assertNotIn("Fix plan", report.build_html([], "demo", meta=clean))

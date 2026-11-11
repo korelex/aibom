@@ -407,7 +407,7 @@ a{color:var(--accent);font-weight:600;text-decoration:none}a:hover{text-decorati
 input#q{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--text);font-size:16px;margin:14px 0 4px}input#q:focus{outline:2px solid var(--accent);outline-offset:1px}
 .tw{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:10px;margin:8px 0 16px}
 table{border-collapse:collapse;width:100%;font-size:14px}table.wide{min-width:1040px}
-th,td{padding:9px 12px;text-align:left;vertical-align:top;overflow-wrap:break-word;border-bottom:1px solid var(--line)}table.wide td:nth-child(3){overflow-wrap:anywhere;min-width:240px}table.wide td{min-width:84px}.vcell{min-width:170px}table.wide td:first-child{min-width:130px}tr:last-child td{border-bottom:0}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;overflow-wrap:break-word;border-bottom:1px solid var(--line)}table.wide td:nth-child(3){overflow-wrap:anywhere;min-width:240px}table.pk td:nth-child(5){overflow-wrap:anywhere;min-width:180px}table.pk td:nth-child(1){min-width:150px}table.wide td{min-width:84px}.vcell{min-width:170px}table.wide td:first-child{min-width:130px}tr:last-child td{border-bottom:0}
 th{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);background:var(--zebra);position:sticky;top:0}tbody tr:nth-child(even) td,table tr:nth-child(even) td{background:var(--zebra)}
 .also{font-size:12px;color:var(--muted);margin-top:2px}
 .badge{display:inline-block;border:1px solid currentColor;border-radius:999px;padding:0 9px;font-size:12px;font-weight:700;white-space:nowrap}.badge.worked{border-style:dashed}
@@ -557,10 +557,10 @@ def build_html(items, app, source="", links=None, meta=None):
                    + (f", and {sm['transitive']} more only in a lockfile" if sm["transitive"] else "")
                    + f". <b>{sm['vulnerable']}</b> have known vulnerabilities ({sm['advisories']} advisories); {sm['not_checked']} could not be checked."
                    + (f" Advisory data from {h(date)}." if date else "") + f"</p><p class='also' style='font-size:13px'>{h(PACKAGE_NOTE)}</p>"
-                   + f"<div class='tw'><table>{head}{''.join(prow(r) for r in direct)}</table></div>")
+                   + f"<div class='tw'><table class='pk'>{head}{''.join(prow(r) for r in direct)}</table></div>")
         if later:
             out.append(f"<details><summary>{len(later)} more AI packages only in a lockfile (transitive)</summary>"
-                       f"<div class='tw'><table>{head}{''.join(prow(r) for r in later)}</table></div></details>")
+                       f"<div class='tw'><table class='pk'>{head}{''.join(prow(r) for r in later)}</table></div></details>")
         cards = [r for r in direct if r["advisories"]]
         cards_later = [r for r in later if r["advisories"]]
         if cards or cards_later:
