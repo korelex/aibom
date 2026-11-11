@@ -160,6 +160,8 @@ Useful options for `scan`:
 
 Run `aibom <command> --help` for every option.
 
+To run aibom on your own servers, in CI, or without internet, see [Running aibom in your own infrastructure](docs/running-in-your-infra.md).
+
 ### The guided menu
 
 Type `aibom` with nothing after it, in a terminal, and a menu opens:
