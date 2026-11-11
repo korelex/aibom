@@ -147,7 +147,7 @@ class JavaScriptImports(Case):
         "src/app.ts": """
             import OpenAI from "openai";
             import { ChatPromptTemplate } from "@langchain/core/prompts";
-            import type { Message } from '@anthropic-ai/sdk';
+            import Anthropic, { type Message } from '@anthropic-ai/sdk';
             export { streamText } from "ai";
             import "@ai-sdk/openai";
             const cohere = require('cohere-ai');
@@ -159,9 +159,17 @@ class JavaScriptImports(Case):
             import {
               ChatOpenAI,
             } from "@langchain/openai";
+            import type { GoogleGenAI } from "@google/genai";
+            export type { Groq } from "groq-sdk";
             """,
         "src/app.test.ts": 'import Anthropic from "@anthropic-ai/sdk";\n',
     }
+
+    def test_type_only_imports_do_not_count(self):
+        # `import type` and `export type ... from` are erased at compile time: the package is never loaded
+        names = {c["name"] for c in self.result["packages"]}
+        self.assertNotIn("@google/genai", names)
+        self.assertNotIn("groq-sdk", names)
 
     def test_every_import_form(self):
         names = {c["name"] for c in self.result["packages"] if not c["left_out"]}

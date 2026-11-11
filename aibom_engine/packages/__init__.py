@@ -7,15 +7,18 @@ tree, so they are where transitive dependencies come from; a project with only a
 Only packages the database knows as AI packages are reported; the others are counted, so the report can say how much
 was read.
 """
+import fnmatch
+import json
 import os
 import time
 
 from ..db import load_db, lookup_package
 from ..evidence import REACHABILITY
-from .common import Declaration, left_out_reason, normalize, purl
+from .common import Declaration, left_out_reason, normalize, purl, read_text, vendored_dirs
 from . import javascript, python
 from .calls import find_calls
 from .imports import find_imports
+from .python import tomllib
 
 PARSERS = python.PARSERS + javascript.PARSERS
 ECOSYSTEM_LABEL = {"pypi": "PyPI", "npm": "npm"}
@@ -37,25 +40,71 @@ def select(files):
     return out
 
 
-def _project_of(path, lock_dirs):
-    """The folder of the nearest lockfile at or above this file: the project it belongs to."""
-    d = os.path.dirname(path)
+def _workspace_globs(root, lock_dir, lock_name):
+    """The workspace member patterns a lockfile's project declares, from the small files beside it."""
+    def read(name):
+        try:
+            return read_text(root, os.path.join(lock_dir, name).replace("\\", "/"))
+        except (OSError, ValueError):
+            return None
+    try:
+        if lock_name in ("package-lock.json", "npm-shrinkwrap.json", "yarn.lock"):
+            ws = json.loads(read("package.json") or "{}").get("workspaces") or []
+            return ws.get("packages", []) if isinstance(ws, dict) else ws
+        if lock_name == "pnpm-lock.yaml":
+            import yaml
+            return (yaml.safe_load(read("pnpm-workspace.yaml") or "") or {}).get("packages") or []
+        if lock_name == "uv.lock":
+            data = tomllib.loads(read("pyproject.toml") or "")
+            return ((data.get("tool") or {}).get("uv") or {}).get("workspace", {}).get("members") or []
+    except Exception:
+        return []
+    return []
+
+
+def _lock_scopes(root, decls):
+    """{lockfile folder: the manifest folders it installs}: its own folder and its workspace members. A manifest below a
+    lockfile that is not one of its members (a package.json in a sub-folder of a pnpm project whose workspace lists only the root) has
+    its own installs, and does not get the lockfile's versions."""
+    manifest_dirs = {os.path.dirname(d.file) for d in decls if d.kind == "manifest"}
+    scopes = {}
+    for d in decls:
+        if d.kind != "lock":
+            continue
+        lock_dir = os.path.dirname(d.file)
+        if lock_dir in scopes:
+            continue
+        covered = {lock_dir}
+        for pattern in _workspace_globs(root, lock_dir, os.path.basename(d.file)):
+            if not isinstance(pattern, str) or pattern.startswith("!"):
+                continue
+            pat = os.path.normpath(os.path.join(lock_dir, pattern)).replace("\\", "/").rstrip("/")
+            pat = "" if pat == "." else pat
+            covered |= {m for m in manifest_dirs if m == pat or fnmatch.fnmatch(m, pat)}
+        scopes[lock_dir] = covered
+    return scopes
+
+
+def _project_of(path, scopes):
+    """The folder of the lockfile that installs this manifest (the nearest one at or above it whose project includes
+    it), or None when no lockfile does."""
+    here = os.path.dirname(path)
+    d = here
     while True:
-        if d in lock_dirs:
+        if d in scopes and here in scopes[d]:
             return d
         if not d:
             return None
         d = os.path.dirname(d)
 
 
-def _resolve_direct(decls):
+def _resolve_direct(decls, scopes):
     """Lockfiles that do not mark direct dependencies (yarn.lock, package-lock v1, Pipfile.lock, poetry.lock) learn it
     from the manifests of their project: the same folder, or workspace folders below it without a lockfile of their own."""
-    lock_dirs = {os.path.dirname(d.file) for d in decls if d.kind == "lock"}
     declared = {}
     for d in decls:
         if d.kind == "manifest":
-            project = _project_of(d.file, lock_dirs)
+            project = _project_of(d.file, scopes)
             if project is not None:
                 wanted = declared.setdefault((project, d.ecosystem), {}).setdefault(normalize(d.ecosystem, d.name), set())
                 wanted.update(x for x in (d.spec, d.version) if x)
@@ -74,34 +123,39 @@ def _resolve_direct(decls):
                 d.direct = True
 
 
-def _merge(decls):
+def _merge(decls, scopes):
     """One component per (ecosystem, package, version). A manifest range with a lockfile in the same project joins the
     version that lockfile resolved, so "langchain>=0.1" in pyproject.toml and "0.1.20" in uv.lock become one entry."""
-    lock_dirs = {os.path.dirname(d.file) for d in decls if d.kind == "lock"}
     in_lock = {}
     for d in decls:
         if d.kind == "lock" and d.version:
             in_lock.setdefault((os.path.dirname(d.file), d.ecosystem, normalize(d.ecosystem, d.name)), []).append(d)
 
-    def resolved_version(d, norm):
-        project = _project_of(d.file, lock_dirs)
+    def resolved_versions(d, norm):
+        """The versions the project's lockfile installs for this declaration: one, or several when the lockfile itself
+        marks several as direct (poetry.lock keeps one per Python version marker); [""] when it cannot be told."""
+        project = _project_of(d.file, scopes)
         candidates = in_lock.get((project, d.ecosystem, norm)) if project is not None else None
         if not candidates:
-            return ""
+            return [""]
         exact = [c for c in candidates if d.spec and d.spec in c.resolves]  # the lockfile names the range it resolved
-        if not exact:
-            exact = [c for c in candidates if c.direct is True]  # the version the project itself depends on
-        versions = {c.version for c in (exact or candidates)}
-        return versions.pop() if len(versions) == 1 else ""  # several possible versions and no way to tell: do not guess
+        if exact:
+            versions = {c.version for c in exact}
+            return sorted(versions) if len(versions) == 1 else [""]
+        direct = {c.version for c in candidates if c.direct is True}  # the versions the project itself depends on
+        if direct:
+            return sorted(direct)
+        versions = {c.version for c in candidates}
+        return sorted(versions) if len(versions) == 1 else [""]  # only transitive copies at several versions: do not guess
 
     groups = {}
     for d in decls:
         norm = normalize(d.ecosystem, d.name)
-        version = d.version or (resolved_version(d, norm) if d.kind == "manifest" else "")
-        g = groups.setdefault((d.ecosystem, norm, version), {"decls": [], "names": []})
-        g["decls"].append(d)
-        if d.name not in g["names"]:
-            g["names"].append(d.name)
+        for version in ([d.version] if d.version or d.kind != "manifest" else resolved_versions(d, norm)):
+            g = groups.setdefault((d.ecosystem, norm, version), {"decls": [], "names": []})
+            g["decls"].append(d)
+            if d.name not in g["names"]:
+                g["names"].append(d.name)
     return groups
 
 
@@ -163,31 +217,88 @@ def _targets(components, eco, norm, group, db):
     return [c]
 
 
-def _depth(component, path):
-    """How deep the nearest folder declaring this component is, among the folders at or above `path`; -1 when none."""
-    best = -1
-    for e in component["evidence"]:
-        d = os.path.dirname(e["file"])
-        if not d or path.startswith(d + "/"):
-            best = max(best, len(d.split("/")) if d else 0)
-    return best
+def _project_dir(path, dep_dirs):
+    """The nearest folder at or above a file that holds a dependency file: the project the file belongs to; None when
+    there is none (a notebook folder with no manifest)."""
+    d = os.path.dirname(path)
+    while True:
+        if d in dep_dirs:
+            return d
+        if not d:
+            return None
+        d = os.path.dirname(d)
 
 
-def _attach(components, eco, norm, group, db):
-    """[(component, hits)]: each import or call goes to the version declared by the nearest project at or above its file,
-    so a monorepo with boto3 1.34 in one service and 1.40 in another credits each file to its own. A file with no
-    declaration above it goes to every candidate version."""
-    targets = _targets(components, eco, norm, group, db)
-    if len(targets) == 1:
-        return [(targets[0], group)]
-    out = {id(c): (c, []) for c in targets}
+def _installed_for(path, candidates, scopes):
+    """npm: the version Node itself would load for a file, by its own resolution rule: walk up the folders to the first
+    one a lockfile installs that has the package (in that project's manifest or its lockfile). [] when none does."""
+    d = os.path.dirname(path)
+    while True:
+        installer = next((lock for lock, covered in scopes.items() if d in covered), None)
+        if installer is not None:
+            mine = [c for c in candidates if any(os.path.dirname(e["file"]) in (d, installer) for e in c["evidence"])]
+            if mine:
+                return mine
+        if not d:
+            return []
+        d = os.path.dirname(d)
+
+
+def _attach(components, eco, norm, group, db, dep_dirs, scopes=None):
+    """[(component, hits)]: each import or call goes to the version its own project declares or locks: the nearest
+    folder with a dependency file at or above the file. A project that does not have the package (a notebook folder
+    without a manifest, a plugin with its own pyproject.toml that never lists it) does not borrow another project's
+    version: the hit goes to the package with no version, imported but not declared there.
+
+    npm differs, because Node walks up the folders to find a package: a file gets the version installed for the
+    nearest project above it that a lockfile installs, even through a nested package.json nothing installs from."""
+    same = [c for c in components if c["ecosystem"] == eco and normalize(eco, c["name"]) == norm]
+    candidates = [c for c in same if not c["left_out"]]
+    out = {}
     for h in group:
-        depths = [(_depth(c, h["file"]), c) for c in targets]
-        deepest = max(d for d, _ in depths)
-        for d, c in depths:
-            if d == deepest:
-                out[id(c)][1].append(h)
-    return [v for v in out.values() if v[1]]
+        project = _project_dir(h["file"], dep_dirs)
+        mine = _installed_for(h["file"], candidates, scopes or {}) if eco == "npm" else []
+        if not mine:
+            mine = [c for c in candidates if project is not None and any(os.path.dirname(e["file"]) == project for e in c["evidence"])]
+        mine = [c for c in mine if c["direct"] is True] or mine  # the version the project itself depends on
+        if not mine:
+            # no version the file's own project has: the package without a version, declared that way elsewhere (a
+            # range with no lockfile) or not declared at all; one such component per package
+            unversioned = [c for c in candidates if c["version"] == ""] or [c for c in same if c["version"] == "" and not c["evidence"]]
+            mine = unversioned[:1] or _targets([], eco, norm, [h], db)
+            if mine[0] not in same:
+                same.append(mine[0])
+                components.append(mine[0])
+        for c in mine:
+            out.setdefault(id(c), (c, []))[1].append(h)
+    for c, hits in out.values():
+        if not c["evidence"]:  # not declared anywhere: left out only when every place that uses it is left out
+            uses = hits + [u for u in c["imports"] + c["calls"] if u not in hits]
+            c["left_out"] = "" if any(not u["left_out"] for u in uses) else sorted({u["left_out"] for u in uses})[0]
+    return list(out.values())
+
+
+def _own_packages(root, files):
+    """(ecosystem, normalized name) of every package this repository defines: the name in each package.json and
+    pyproject.toml. A file that does not parse is skipped; the dependency step reports it."""
+    own = set()
+    for fi in files:
+        base = os.path.basename(fi.path)
+        try:
+            if base == "package.json":
+                name = json.loads(read_text(root, fi.path) or "{}").get("name")
+                eco = "npm"
+            elif base == "pyproject.toml":
+                data = tomllib.loads(read_text(root, fi.path))
+                name = (data.get("project") or {}).get("name") or ((data.get("tool") or {}).get("poetry") or {}).get("name")
+                eco = "pypi"
+            else:
+                continue
+        except Exception:
+            continue
+        if isinstance(name, str) and name.strip():
+            own.add((eco, normalize(eco, name)))
+    return own
 
 
 def find(root, files, db=None, deadline=None):
@@ -195,6 +306,7 @@ def find(root, files, db=None, deadline=None):
     db = db or load_db()
     started = time.time()
     decls, read, problems, notes = [], [], [], []
+    vendored = vendored_dirs(fi.path for fi in files)
     seen = set()
     for path, parser in select(files):
         if deadline and time.time() > deadline:
@@ -213,12 +325,20 @@ def find(root, files, db=None, deadline=None):
                 seen.add(key)
                 fresh.append(d)
         decls += fresh
-        read.append({"file": path, "entries": len(fresh), "left_out": left_out_reason(path)})
+        read.append({"file": path, "entries": len(fresh), "left_out": left_out_reason(path, vendored)})
 
-    _resolve_direct(decls)
+    # The repository's own packages (its npm workspaces, its Python projects) are its code, not dependencies: a root
+    # package.json that lists "@scope/server-memory": "*" is pointing at a folder of the same repository.
+    own = _own_packages(root, files)
+    decls = [d for d in decls if (d.ecosystem, normalize(d.ecosystem, d.name)) not in own]
+    scopes = _lock_scopes(root, decls)
+    dep_dirs = {"pypi": set(), "npm": set()}
+    for path, parser in select(files):
+        dep_dirs["pypi" if parser in [p for _, p in python.PARSERS] else "npm"].add(os.path.dirname(path))
+    _resolve_direct(decls, scopes)
     components, total, other = [], set(), {}
-    for (eco, norm, version), g in sorted(_merge(decls).items()):
-        reasons = {left_out_reason(d.file) for d in g["decls"]}
+    for (eco, norm, version), g in sorted(_merge(decls, scopes).items()):
+        reasons = {left_out_reason(d.file, vendored) for d in g["decls"]}
         left_out = "" if "" in reasons else sorted(reasons)[0]
         if not left_out:
             total.add((eco, norm, version))
@@ -231,27 +351,30 @@ def find(root, files, db=None, deadline=None):
 
     # Imports in code (evidence level: imported). An import belongs to the version the project depends on directly;
     # transitive copies of the same package are not what its own code imports.
-    declared = {(c["ecosystem"], normalize(c["ecosystem"], c["name"])) for c in components}
-    hits = find_imports(root, files, declared=declared, db=db, deadline=deadline)
+    # Packages the project depends on itself settle shared import names (vertexai is in both vertexai and
+    # google-cloud-aiplatform): a transitive copy in a lockfile is not what its code was written against.
+    declared = {(c["ecosystem"], normalize(c["ecosystem"], c["name"])) for c in components if c["direct"] is not False}
+    hits = find_imports(root, files, declared=declared, db=db, deadline=deadline, vendored=vendored)
+    hits = [h for h in hits if (h["ecosystem"], normalize(h["ecosystem"], h["package"])) not in own]
     for (eco, norm), group in sorted(_group(hits).items()):
-        for c, mine in _attach(components, eco, norm, group, db):
+        for c, mine in _attach(components, eco, norm, group, db, dep_dirs[eco], scopes):
             c["imports"] = _evidence(mine, ("module", "file", "line", "snippet", "left_out"))
             if any(not h["left_out"] for h in mine):
                 c["evidence_level"] = "imported"
 
     # Calls in code (evidence level: called), credited to the package whose import bound the name.
     arguments = []
-    calls = find_calls(root, files, hits, deadline=deadline, arguments=arguments)
+    calls = find_calls(root, files, hits, deadline=deadline, arguments=arguments, vendored=vendored)
     for (eco, norm), group in sorted(_group(calls).items()):
         services = sorted({h["service"] for h in group if h["service"]})
         if services and not any(c["ecosystem"] == eco and normalize(eco, c["name"]) == norm for c in components):
             # boto3 calling Bedrock: the versions of the SDK whose project makes the call are now AI packages; a copy
             # declared by a service that only uses S3 is not
             pool = list(other.get((eco, norm), []))
-            pairs = _attach(pool, eco, norm, group, db)
+            pairs = _attach(pool, eco, norm, group, db, dep_dirs[eco], scopes)
             components += [c for c, _ in pairs]
         else:
-            pairs = _attach(components, eco, norm, group, db)
+            pairs = _attach(components, eco, norm, group, db, dep_dirs[eco], scopes)
         for c, mine in pairs:
             c["calls"] = _evidence(mine, ("rule", "what", "call", "operation", "file", "line", "snippet", "left_out"))
             if services:

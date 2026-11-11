@@ -160,6 +160,8 @@ def _js_imports(text, ext):
             li = bisect.bisect_right(starts, pos) - 1  # the line that names the package, so the proof shows it
             if inside(spans, first, m.start() - starts[first]) or inside(spans, li, pos - starts[li]):
                 continue  # commented out
+            if re.match(r"(?:import|export)\s+type\b", m.group(0)):
+                continue  # `import type`: erased at compile time, the package is never loaded
             pkg = _js_package(m.group(2))
             if pkg:
                 out.append((pkg, li + 1))
@@ -177,7 +179,7 @@ def _local_modules(files):
     return names
 
 
-def find_imports(root, files, declared=frozenset(), db=None, deadline=None):
+def find_imports(root, files, declared=frozenset(), db=None, deadline=None, vendored=None):
     """Every import of an AI package: {ecosystem, package, module, file, line, snippet, left_out}.
 
     `declared` holds (ecosystem, normalized name) of packages the dependency files declare; it settles shared and
@@ -196,7 +198,7 @@ def find_imports(root, files, declared=frozenset(), db=None, deadline=None):
         ext = os.path.splitext(fi.path)[1].lower()
         if fi.category not in SCANNED or (ext not in PY_EXT and ext not in JS_EXT and fi.category != "notebook"):
             continue
-        reason = {"test": "test", "docs": "docs"}.get(fi.category) or left_out_reason(fi.path)
+        reason = {"test": "test", "docs": "docs"}.get(fi.category) or left_out_reason(fi.path, vendored)
         lines = read_lines(root, fi)
         text = "\n".join(lines)
         if fi.category == "notebook":

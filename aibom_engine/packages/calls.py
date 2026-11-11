@@ -302,6 +302,9 @@ _JS_IMPORT = re.compile(r"\bimport\s+(?!type\b)([^;'\"`]*?)\s*\bfrom\s*(['\"])([
 _JS_REQUIRE = re.compile(r"\b(?:const|let|var)\s+(\{[^}]*\}|" + _IDENT + r")\s*=\s*(?:await\s+)?(require|import)\s*\(\s*(['\"])([^'\"\n]+)\3\s*\)")
 _JS_CALL = re.compile(r"(?<![\w$.])(new\s+)?(" + _IDENT + r"(?:\s*\.\s*" + _IDENT + r")*)\s*(?:<[^()<>;]*(?:<[^()<>;]*>[^()<>;]*)*>\s*)?\(")
 _JS_SKIP = {"if", "for", "while", "switch", "catch", "function", "return", "typeof", "await", "import", "require", "super"}
+_JS_LAZY = re.compile(r"\b(?:const|let|var)\s+(" + _IDENT + r")\s*(?::[^=;]{1,200}?)?=\s*(?:await\s+)?[\w$.]+\s*\(((?:(?!;).){0,500}?)\bimport\(\s*(['\"])([^'\"\n]+)\3\s*\)", re.S)
+_JS_THEN = re.compile(r"\bimport\(\s*(['\"])([^'\"\n]+)\1\s*\)\s*\.then\(\s*\(?\s*(\{[^}]*\})")
+_JS_MEMBER = re.compile(r"(?<![\w$.])(" + _IDENT + r")\s*=\s*(" + _IDENT + r")\.(" + _IDENT + r")\s*;")
 
 
 def _js_bindings(text, live):
@@ -341,6 +344,20 @@ def _js_bindings(text, live):
             names(target, spec, ":")
         else:
             env[target] = f"{spec}:{'default' if how == 'require' else '*'}"
+    # Lazy loading through a helper: const sdk = await loadPeer("x", "...", () => import("x")) binds the module.
+    for m in _JS_LAZY.finditer(text):
+        if live(m.start()) and m.group(1) not in env:
+            env[m.group(1)] = f"{m.group(4)}:*"
+    # import("x").then(({ A, B }) => ...) binds A and B.
+    for m in _JS_THEN.finditer(text):
+        if live(m.start()):
+            names(m.group(3), m.group(2), ":")
+    # A member of a module object: const weaviate = sdk.default; MilvusClient = sdk.MilvusClient. With require() the
+    # module object is what the binding calls "default".
+    for m in _JS_MEMBER.finditer(text):
+        spec, _, export = env.get(m.group(2), "").partition(":")
+        if export in ("*", "default") and live(m.start()) and m.group(1) not in env:
+            env[m.group(1)] = f"{spec}:{m.group(3)}"
     return env
 
 
@@ -455,7 +472,7 @@ def _js_calls(text, ext, rules, ai_packages=()):
 
 # ------------------------------------------------------------------------------------------------------------------ find
 
-def find_calls(root, files, import_hits, rules=None, deadline=None, arguments=None):
+def find_calls(root, files, import_hits, rules=None, deadline=None, arguments=None, vendored=None):
     """Every call that proves an AI package is used: {ecosystem, package, rule, what, call, operation, service, file, line,
     snippet, left_out}. `import_hits` come from find_imports: a call is credited to the package whose import, in the same
     file, bound the name. Service clients (boto3 for Amazon Bedrock) need no AI import, only the SDK's own.
@@ -488,7 +505,7 @@ def find_calls(root, files, import_hits, rules=None, deadline=None, arguments=No
         else:
             ai = {h["package"] for h in hits if h["ecosystem"] == "npm" and h["package"] not in rules.not_model_calls}
             found, args = _js_calls(text, ext, rules, ai)
-        reason = {"test": "test", "docs": "docs"}.get(fi.category) or left_out_reason(fi.path)
+        reason = {"test": "test", "docs": "docs"}.get(fi.category) or left_out_reason(fi.path, vendored)
         if arguments is not None and not reason:
             arguments += [{"file": fi.path, "line": li, "value": v} for li, v in dict.fromkeys(args) if li > 0]
         for rule, name, li, operation in found or []:

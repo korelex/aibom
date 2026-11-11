@@ -58,7 +58,7 @@ rules:
   - id: vertexai.model
     package: {ecosystem: pypi, name: google-cloud-aiplatform}
     what: uses a Vertex AI model
-    python: [vertexai.init, "vertexai.generative_models.GenerativeModel", "vertexai.*.GenerativeModel"]
+    python: [vertexai.init, "vertexai.generative_models.GenerativeModel", "vertexai.*.GenerativeModel", "vertexai.*.from_pretrained"]
   - id: mistral.client
     package: {ecosystem: pypi, name: mistralai}
     what: creates a Mistral client
@@ -142,6 +142,14 @@ rules:
                  "@ai-sdk/groq:groq", "@ai-sdk/xai:createXai", "@ai-sdk/xai:xai", "@ai-sdk/deepseek:createDeepSeek",
                  "@ai-sdk/deepseek:deepseek", "@ai-sdk/cohere:createCohere", "@ai-sdk/togetherai:createTogetherAI",
                  "@ai-sdk/perplexity:createPerplexity", "@ai-sdk/openai-compatible:createOpenAICompatible"]
+  - id: ai-sdk.ui
+    package: {ecosystem: npm, name: "@ai-sdk/react"}
+    what: uses the Vercel AI SDK chat UI hooks
+    javascript: ["@ai-sdk/react:useChat", "@ai-sdk/react:useCompletion", "@ai-sdk/react:useObject", "@ai-sdk/react:experimental_useObject"]
+  - id: ai-sdk.gateway
+    package: {ecosystem: npm, name: "@ai-sdk/gateway"}
+    what: sets up the Vercel AI Gateway as a model provider
+    javascript: ["@ai-sdk/gateway:createGateway", "@ai-sdk/gateway:gateway"]
   - id: ai-sdk.ollama-provider
     package: {ecosystem: npm, name: ollama-ai-provider}
     what: sets up Ollama as a model provider for the Vercel AI SDK
@@ -167,6 +175,45 @@ rules:
     package: {ecosystem: pypi, name: llm}
     what: selects a model through the llm library
     python: [llm.get_model, llm.get_async_model, llm.get_embedding_model]
+
+  - id: voyage.client
+    package: {ecosystem: pypi, name: voyageai}
+    what: creates a Voyage AI embedding and reranking client
+    python: [voyageai.Client, voyageai.AsyncClient]
+  - id: elevenlabs.client
+    package: {ecosystem: pypi, name: elevenlabs}
+    what: creates an ElevenLabs speech client
+    python: [elevenlabs.ElevenLabs, elevenlabs.AsyncElevenLabs, elevenlabs.client.ElevenLabs, elevenlabs.client.AsyncElevenLabs]
+  - id: deepgram.client
+    package: {ecosystem: pypi, name: deepgram-sdk}
+    what: creates a Deepgram speech-to-text client
+    python: [deepgram.DeepgramClient, deepgram.AsyncDeepgramClient]
+  - id: aisuite.client
+    package: {ecosystem: pypi, name: aisuite}
+    what: creates an aisuite client for many LLM providers
+    python: [aisuite.Client]
+  - id: embedchain.app
+    package: {ecosystem: pypi, name: embedchain}
+    what: creates an Embedchain RAG app
+    python: [embedchain.App, embedchain.Pipeline]
+  - id: ai-sdk.ollama-community
+    package: {ecosystem: npm, name: ai-sdk-ollama}
+    what: sets up Ollama as a model provider for the Vercel AI SDK (community provider)
+    javascript: ["ai-sdk-ollama:createOllama", "ai-sdk-ollama:ollama"]
+  - id: vertex.node
+    package: {ecosystem: npm, name: "@google-cloud/aiplatform"}
+    what: creates a Vertex AI client
+    javascript: ["@google-cloud/aiplatform:PredictionServiceClient", "@google-cloud/aiplatform:v1.PredictionServiceClient",
+                 "@google-cloud/aiplatform:MatchServiceClient", "@google-cloud/aiplatform:v1.MatchServiceClient"]
+  - id: zeroentropy.client
+    package: {ecosystem: npm, name: zeroentropy}
+    what: creates a ZeroEntropy reranking client
+    javascript: ["zeroentropy:ZeroEntropy", "zeroentropy:default"]
+  - id: fastembed.models
+    package: {ecosystem: pypi, name: fastembed}
+    what: loads an embedding model with FastEmbed
+    python: [fastembed.TextEmbedding, fastembed.SparseTextEmbedding, fastembed.ImageEmbedding, fastembed.LateInteractionTextEmbedding]
+    javascript: ["fastembed:FlagEmbedding.init", "fastembed:EmbeddingModel"]
 
   # ---- Agent frameworks ----
   - id: langchain.chat-models
@@ -225,7 +272,21 @@ rules:
     package: {ecosystem: pypi, family: "llama-index-"}
     what: creates a LlamaIndex model, embedding or vector store integration
     classes: true
-    python: ["llama_index.llms.*", "llama_index.embeddings.*", "llama_index.vector_stores.*"]
+    python: ["llama_index.llms.*", "llama_index.embeddings.*", "llama_index.vector_stores.*", "llama_index.multi_modal_llms.*"]
+  - id: langchain.legacy-models
+    package: {ecosystem: pypi, name: langchain}
+    what: creates a model client through the older langchain.llms / langchain.chat_models modules
+    classes: true
+    python: ["langchain.llms.*", "langchain.chat_models.*", "langchain.embeddings.*"]
+  - id: langchain.nvidia
+    package: {ecosystem: pypi, name: langchain-nvidia-ai-endpoints}
+    what: creates a LangChain model client for NVIDIA
+    python: [langchain_nvidia_ai_endpoints.ChatNVIDIA, langchain_nvidia_ai_endpoints.NVIDIAEmbeddings, langchain_nvidia_ai_endpoints.NVIDIARerank]
+  - id: crewai-tools.tools
+    package: {ecosystem: pypi, name: crewai-tools}
+    what: creates a CrewAI agent tool
+    classes: true
+    python: ["crewai_tools.*Tool"]
   - id: claude-code-sdk
     package: {ecosystem: pypi, name: claude-code-sdk}
     what: runs a Claude agent
@@ -291,7 +352,14 @@ rules:
   - id: mcp.server
     package: {ecosystem: pypi, name: mcp}
     what: creates an MCP server or client session
-    python: [mcp.server.fastmcp.FastMCP, mcp.server.Server, "mcp.server.lowlevel.Server", mcp.ClientSession]
+    python: [mcp.server.fastmcp.FastMCP, mcp.server.Server, "mcp.server.lowlevel.Server", mcp.ClientSession,
+             mcp.server.MCPServer, mcp.server.mcpserver.MCPServer, mcp.Client]
+  - id: mcp.js.v2
+    package: {ecosystem: npm, family: "@modelcontextprotocol/"}
+    what: creates an MCP server, client or transport (the split SDK packages, version 2)
+    javascript: ["@modelcontextprotocol/server:McpServer", "@modelcontextprotocol/server/stdio:StdioServerTransport",
+                 "@modelcontextprotocol/node:NodeStreamableHTTPServerTransport", "@modelcontextprotocol/server-legacy/sse:SSEServerTransport",
+                 "@modelcontextprotocol/client:Client", "@modelcontextprotocol/client/stdio:StdioClientTransport"]
   - id: fastmcp.server
     package: {ecosystem: pypi, name: fastmcp}
     what: creates an MCP server
@@ -388,8 +456,25 @@ rules:
   - id: transformers.js
     package: {ecosystem: npm, name: "@huggingface/transformers"}
     what: runs a model with Transformers.js
-    javascript: ["@huggingface/transformers:pipeline", "@huggingface/transformers:AutoModel.from_pretrained",
-                 "@xenova/transformers:pipeline", "@xenova/transformers:AutoModel.from_pretrained"]
+    javascript: ["@huggingface/transformers:pipeline", "@huggingface/transformers:*.from_pretrained",
+                 "@xenova/transformers:pipeline", "@xenova/transformers:*.from_pretrained"]
+
+  - id: more.vector-stores
+    package: {ecosystem: pypi, name: upstash-vector}
+    what: opens a vector database (Upstash Vector, Supabase vecs, Baidu Mochow, RedisVL, turbopuffer, Pinecone sparse encoders)
+    python: [upstash_vector.Index, upstash_vector.AsyncIndex, vecs.create_client, pymochow.MochowClient,
+             redisvl.index.SearchIndex, "redisvl.index.SearchIndex.from_dict", redisvl.index.AsyncSearchIndex,
+             turbopuffer.Turbopuffer, turbopuffer.AsyncTurbopuffer, pinecone_text.sparse.BM25Encoder, "pinecone_text.sparse.BM25Encoder.default"]
+  - id: more.vector-stores.js
+    package: {ecosystem: npm, name: "@upstash/vector"}
+    what: opens a vector database (Upstash Vector, turbopuffer, Baidu Mochow, Amazon S3 Vectors)
+    javascript: ["@upstash/vector:Index", "@turbopuffer/turbopuffer:Turbopuffer", "@turbopuffer/turbopuffer:default",
+                 "@mochow/mochow-sdk-node:MochowClient", "@aws-sdk/client-s3vectors:S3VectorsClient",
+                 "@aws-sdk/client-s3vectors:PutVectorsCommand", "@aws-sdk/client-s3vectors:QueryVectorsCommand"]
+  - id: agent.tools.js
+    package: {ecosystem: npm, family: "@deepseek-ai/dsh-"}
+    what: defines a tool for an AI agent (DeepSeek Harness, opencode)
+    javascript: ["@deepseek-ai/dsh-tools:defineTool", "@opencode-ai/plugin:tool"]
 
 # AI services reached through a general cloud SDK. The client counts only when it is created for the AI service
 # (the service name is the first argument or service_name=), and calls on that client are recorded too.

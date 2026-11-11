@@ -9,9 +9,28 @@ LEFT_OUT_DIRS = {
     "test": {"test", "tests", "__tests__", "spec", "specs", "e2e", "cypress", "fixtures", "testdata", "test_data", "mocks", "__mocks__"},
     "example": {"example", "examples", "sample", "samples", "demo", "demos"},
     "docs": {"docs", "doc", "documentation"},
-    "vendored": {"vendor", "vendors", "third_party", "third-party", "external", "extern"},
+    "vendored": {"vendor", "vendors"},
 }
+# Folder names that hold copied libraries in some projects and the project's own integrations in others
+# (for example a third_party/ folder of notebooks for outside services). One counts as vendored only where it holds a
+# license file, which copied code nearly always brings with it.
+MAYBE_VENDORED = {"third_party", "third-party", "external", "extern"}
+LICENSE_FILE = re.compile(r"^(license|licence|copying|notice)([.-].*)?$", re.I)
 MAX_LOCK_BYTES = 60_000_000  # real package-lock.json files reach 10 MB and more
+
+
+def vendored_dirs(paths):
+    """The third_party/-like folders that hold copied code: third_party/x/ when a license file is anywhere under it,
+    or third_party/ itself when the license file is directly inside it."""
+    out = set()
+    for p in paths:
+        segs = p.replace("\\", "/").split("/")
+        if not LICENSE_FILE.match(segs[-1]):
+            continue
+        for i, s in enumerate(segs[:-1]):
+            if s.lower() in MAYBE_VENDORED:
+                out.add("/".join(segs[:i + 2]) if i + 2 < len(segs) else "/".join(segs[:i + 1]))
+    return out
 
 
 @dataclass
@@ -59,12 +78,19 @@ def purl(ecosystem, name, version=""):
     return f"{base}@{version}" if version else base
 
 
-def left_out_reason(rel_path):
-    """Why a dependency file is not counted as the product's own (test, example, docs, vendored), or "" when it is."""
-    segments = [s.lower() for s in rel_path.replace("\\", "/").split("/")[:-1]]
+def left_out_reason(rel_path, vendored=None):
+    """Why a file is not counted as the product's own (test, example, docs, vendored), or "" when it is.
+
+    `vendored` is the set from vendored_dirs(): a third_party/-like folder is vendored only when it is in it. Without
+    the set (None), every such folder counts as vendored, the cautious choice."""
+    path = rel_path.replace("\\", "/")
+    segments = [s.lower() for s in path.split("/")[:-1]]
     for reason, names in LEFT_OUT_DIRS.items():
         if any(s in names for s in segments):
             return reason
+    if any(s in MAYBE_VENDORED for s in segments):
+        if vendored is None or any(path == d or path.startswith(d + "/") for d in vendored):
+            return "vendored"
     return ""
 
 
