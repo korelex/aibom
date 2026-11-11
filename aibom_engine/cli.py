@@ -6,6 +6,10 @@ import shutil
 import sys
 import traceback
 
+from rich.text import Text
+
+from . import screens, ui
+from . import __version__
 from .display import build_rows
 from .report import (CANNOT_SEE, LEVEL_LONG, MODE_TEXT, PACKAGE_NOTE, REACHABILITY_TEXT, TIER_LONG, advisory_date, package_level_text,
                      package_rows, package_summary)
@@ -126,9 +130,12 @@ def packages_view(run_dir, name=None, everything=False):
         print("No AI packages found in %s. It may use none, or declare them in a language aibom does not read yet (Python and JavaScript/TypeScript only)." % app)
         return
     sm = package_summary(rows)
-    print("%s: %d AI packages found%s. %d have known vulnerabilities (%d advisories), %d could not be checked.\n"
+    if not ui.pretty():
+      print("%s: %d AI packages found%s. %d have known vulnerabilities (%d advisories), %d could not be checked.\n"
           % (app, sm["direct"], ", and %d more only in a lockfile" % sm["transitive"] if sm["transitive"] else "", sm["vulnerable"], sm["advisories"], sm["not_checked"]))
     shown = rows if everything else [r for r in rows if r["direct"] is not False]
+    if ui.pretty():
+        return screens.packages_pretty(app, rows, sm, shown, len(rows) - len(shown), command(), run_dir, advisory_date())
     room = max(width() - 2 - 24 - 10 - 9 - 9 - 4, 20)
     print("  %-24s %-10s %-9s %-9s %s" % ("PACKAGE", "VERSION", "KIND", "EVIDENCE", "KNOWN VULNERABILITIES"))
     for r in shown:
@@ -143,6 +150,38 @@ def packages_view(run_dir, name=None, everything=False):
     print("\nLook closer at one:  %s packages %s PACKAGE" % (command(), run_dir))
     date = advisory_date()
     print("A known vulnerability means this exact version is in an advisory, not that the app reaches the vulnerable code.%s" % (" Advisory data from %s." % date if date else ""))
+
+
+def vulns_view(run_dir, severity=None, called=False, everything=False):
+    """Print the known vulnerabilities of a finished scan, worst first, with a verified fix plan."""
+    from .screens import vulns_screen
+    packages = load_packages(run_dir)
+    info = load(run_dir, "manifest.json")
+    app = info.get("app") or os.path.basename(info["scanned_folder"])
+    vulns_screen(app, packages, severity, called, everything, advisory_date(), "%s vulns %s" % (command(), run_dir))
+
+
+def data_line():
+    """`models 2026-11-09 · vulnerabilities 2026-11-11`: how fresh the data behind a scan is."""
+    try:
+        from .db import load_db
+        meta = load_db().get("meta") or {}
+        return "models %s · vulnerabilities %s" % (meta.get("built", "?"), (meta.get("vulnerabilities") or {}).get("fetched", "?"))
+    except Exception:
+        return ""
+
+
+def version_text():
+    """`aibom 0.1.0` and the dates of the data it ships with."""
+    from . import __version__
+    meta = {}
+    try:
+        from .db import load_db
+        meta = load_db().get("meta") or {}
+    except Exception:
+        pass
+    return "aibom %s\n  model data:          %s\n  vulnerability data:  %s" % (
+        __version__, meta.get("built", "unknown"), (meta.get("vulnerabilities") or {}).get("fetched", "unknown"))
 
 
 def package_detail(app, packages, name, links):
@@ -283,8 +322,15 @@ def do_scan(a):
     src = parse(a.source)
     tmp = None
     links = Linker()
-    log = (lambda m: None) if a.quiet else (lambda m: print(m, flush=True))
+    fancy = ui.pretty()  # colour, a live view and a dashboard, only for a person at a terminal
+    stages = screens.StageProgress(6 if src["kind"] == "git" else 5) if fancy and not a.quiet else None
+    log = stages or ((lambda m: None) if a.quiet else (lambda m: print(m, flush=True)))
+    if fancy:
+        ui.console().print(ui.banner(__version__, data_line()))
+        ui.console().print()
     try:
+        if stages:
+            stages.__enter__()
         if src["kind"] == "git":
             log("Downloading %s%s ..." % (src["url"], " (" + src["branch"] + ")" if src["branch"] else ""))
             root, tmp = fetch(src)
@@ -305,8 +351,26 @@ def do_scan(a):
             raise SourceError("Something went wrong while scanning (%s: %s). The details are in %s. If you are in the middle of a demo, scan a local folder or use the saved results."
                               % (type(e).__name__, str(e)[:120], os.path.join(out, "error.txt")))
     finally:
+        if stages:
+            stages.__exit__(*sys.exc_info())
         if tmp and not a.keep:
             cleanup(tmp)
+    if fancy:
+        try:
+            packages = load_packages(out)
+        except SourceError:
+            packages = []
+        if r["items"] == 0 and not packages:
+            print("Scan finished in %ss: no AI model names found in %s." % (r["seconds"], r["app"]))
+        else:
+            screens.dashboard(r, out, packages, links, command(), advisory_date(), __version__)
+        for note in r["warnings"]:
+            ui.console().print(Text("Note: " + note, style="yellow"))
+        if not r["valid"]:
+            raise SourceError("The AI-BOM did not pass the format check: " + str(r["error"]))
+        if a.open:
+            open_report(out)
+        return
     w = width()
     print()
     if r["items"] == 0 and r["partial"]:
@@ -356,6 +420,8 @@ def main():
             pass
     p = argparse.ArgumentParser(prog=command(), description="Find the AI models and AI packages inside an app and prove each one with a line of code.",
                                 epilog="Run %s with no arguments, in a terminal, for a guided menu that shows the command behind every step." % command())
+    p.add_argument("--version", action="store_true", help="print the version and the dates of the model and vulnerability data")
+    p.add_argument("--plain", action="store_true", help="no colour or boxes, even in a terminal (also: NO_COLOR=1)")
     sub = p.add_subparsers(dest="cmd")
     s = sub.add_parser("scan", help="scan a folder or a GitHub link and write an AI-BOM")
     s.add_argument("source", help="a folder, or a link such as https://github.com/owner/repo (also owner/repo)")
@@ -381,11 +447,22 @@ def main():
     k.add_argument("run_dir")
     k.add_argument("package", nargs="?", help="a package name, to see where it is used and its advisories")
     k.add_argument("--all", action="store_true", help="include the packages that are only in a lockfile")
+    v = sub.add_parser("vulns", help="list the known vulnerabilities of a finished scan, worst first, with a fix plan")
+    v.add_argument("run_dir")
+    v.add_argument("--severity", choices=["critical", "high", "medium", "low"], help="show this severity and worse")
+    v.add_argument("--called", action="store_true", help="only packages your code calls")
+    v.add_argument("--all", action="store_true", help="include the packages that are only in a lockfile")
     b = sub.add_parser("rebuild", help="rebuild the report and spreadsheet of a finished scan, or of every scan in a folder (--all)")
     b.add_argument("run_dir")
     b.add_argument("--all", action="store_true", help="treat run_dir as a folder that holds many scans")
     a = p.parse_args()
+    if a.plain:
+        from . import ui
+        ui.set_plain()
     try:
+        if a.version:
+            print(version_text())
+            return
         if a.cmd is None:
             from . import interactive
             if not interactive.is_interactive():  # a script, a pipe or CI: never wait for a key
@@ -402,6 +479,8 @@ def main():
             explain(a.run_dir, a.model)
         elif a.cmd == "packages":
             packages_view(a.run_dir, a.package, a.all)
+        elif a.cmd == "vulns":
+            vulns_view(a.run_dir, a.severity, a.called, a.all)
         elif a.cmd == "rebuild":
             dirs = sorted(os.path.join(a.run_dir, d) for d in os.listdir(a.run_dir) if os.path.exists(os.path.join(a.run_dir, d, "merged.json"))) if a.all else [a.run_dir]
             for d in dirs:

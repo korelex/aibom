@@ -131,6 +131,17 @@ class MenuFlows(InTempFolder):
         self.assertIn("Same thing without the menu:  %s show %s" % (cli.command(), run_dir), text)
         self.assertIn("Same thing without the menu:  %s packages %s langchain-community" % (cli.command(), run_dir), text)
 
+    def test_vulnerabilities_worst_first_is_in_the_menu_and_names_its_command(self):
+        run_dir = os.path.join("runs", "first")
+        os.makedirs("runs")
+        import shutil
+        shutil.copytree(self.first, run_dir)
+        prompts = Scripted(("What do you want to do", "open"), ("Which scan", run_dir), ("first", "vulns"), ("first", "back"), ("What do you want to do", "quit"))
+        _, text = self.drive(prompts)
+        self.assertIn("Fix plan", text)
+        self.assertIn("Same thing without the menu:  %s vulns %s" % (cli.command(), run_dir), text)
+        self.assertEqual(prompts.offered(2)[:3], ["report", "models", "vulns"])
+
     def test_esc_goes_back_one_step_and_quits_at_the_main_menu(self):
         code, text = self.drive(Scripted(("What do you want to do", "scan"), ("Folder or GitHub link", BACK), ("What do you want to do", BACK)))
         self.assertEqual(code, 0)

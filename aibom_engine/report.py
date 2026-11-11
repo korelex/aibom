@@ -174,6 +174,44 @@ def advisory_date():
         return ""
 
 
+def sev_chip(severity):
+    """A severity as a coloured label. The word is always there, so a black-and-white print or a colour-blind reader loses nothing."""
+    sev = severity if severity in SEVERITIES else "unknown"
+    return f'<span class="sev sev-{sev}">{sev.upper()}</span>'
+
+
+def sev_order(advisories):
+    """Advisories worst first, then by id, so the order never depends on how the data was stored."""
+    return sorted(advisories, key=lambda a: (-SEVERITY_RANK.get(a["severity"], 1), a["id"]))
+
+
+def sev_bar_html(rows):
+    """A stacked bar and key of the advisories by severity, worst first; nothing when there are none."""
+    counts = {sev: sum(1 for r in rows for a in r["advisories"] if a["severity"] == sev) for sev in SEVERITIES}
+    total = sum(counts.values())
+    if not total:
+        return ""
+    bar = "".join(f'<i class="sev-{sev}" style="width:{counts[sev] * 100 / total:.2f}%" title="{counts[sev]} {sev}"></i>' for sev in SEVERITIES if counts[sev])
+    key = " ".join(f'<span class="sev sev-{sev}">{sev.upper()}</span> {counts[sev]}' for sev in SEVERITIES if counts[sev])
+    return f'<div class="sevbar" role="img" aria-label="{total} known vulnerabilities by severity">{bar}</div><p class="sevkey">{key}</p>'
+
+
+def fix_plan_rows(packages):
+    """The verified fix plan of a scan's packages; empty when it cannot be worked out (the report must still be written)."""
+    try:
+        from . import findings
+        return findings.fix_plan(findings.counted(packages))
+    except Exception:
+        return []
+
+
+def fix_plan_text(p):
+    if not p["target"]:
+        return "no fixed version is named by its advisories"
+    done = f"clears all {p['total']}" if not p["remaining"] else f"clears {p['clears']} of {p['total']} (still open: {', '.join(p['remaining'])})"
+    return f"upgrade to {p['target']}: {done}" + (f". Test your code: {p['warning']}" if p["warning"] else "")
+
+
 def package_rows(packages):
     """Display rows for the AI packages the scan counts (left-out ones are dropped), most urgent first: known
     vulnerabilities by severity, then the strongest proof of use, then the name."""
@@ -317,14 +355,20 @@ def build_markdown(items, app, source="", links=None, meta=None):
         for r in pk:
             if r["advisories"]:
                 out += ["", f"**{r['name']} {r['version']}**", ""]
-                for a in r["advisories"][:15]:
+                for a in sev_order(r["advisories"])[:15]:
                     fix = f", fixed in {a['fixed_in']}" if a["fixed_in"] else ", no fixed version stated"
-                    out.append(f"- {a['severity']}: [{a['id']}]({a['url']}) {a['summary'][:140]}{fix}")
+                    out.append(f"- **{a['severity'].upper()}**: [{a['id']}]({a['url']}) {a['summary'][:140]}{fix}")
                 if len(r["advisories"]) > 15:
                     out.append(f"- and {len(r['advisories']) - 15} more (see aibom.cdx.json)")
         later = [r for r in pk if r["direct"] is False]
         if later:
             out += ["", f"### Also in the lockfile (transitive, {len(later)})", ""] + ptable(later)
+        plan = fix_plan_rows((meta or {}).get("packages"))
+        if plan:
+            out += ["", "### Fix plan", "", "For each package with known vulnerabilities, the lowest version that its advisories say fixes all of them. "
+                    "Each target was checked again against the advisory data. Upgrading can break code: test it.", "",
+                    "| Package | Now | Worst | What to do |", "|---|---|---|---|"]
+            out += [f"| {p['package']} | {p['version'] or '-'} | {p['worst'].upper()} | {fix_plan_text(p)} |" for p in plan]
     out += ["", "## What this scan cannot see", ""] + [f"- {c}" for c in CANNOT_SEE]
     out += ["", "How to read this: every row links a model name to a line of code. Confirmed means the name is written in the code; Worked out means the code spells it through a constant. "
                 "The standard AI-BOM file (aibom.cdx.json) holds the same facts for other tools; models.csv opens in a spreadsheet."]
@@ -345,6 +389,10 @@ details{margin:12px 0}summary{cursor:pointer;font-weight:bold}details.grp>summar
 details.more ul{margin:4px 0 0 16px;padding:0;font-size:12px}.limits{border:3px solid #000;padding:6px 20px 12px;margin-top:36px}.limits h2{border:0;margin-top:12px}
 .foot{font-size:12px;margin-top:28px;border-top:1px solid #000;padding-top:10px}#nomatch{display:none;font-weight:bold;margin:12px 0}
 .risks .note{font-size:13px;margin:6px 0 0}.risks{border:3px solid #000;padding:8px 18px 12px;margin:18px 0}.risks h2{border:0;margin:6px 0 8px}.risks ul{margin:0 0 0 18px;padding:0}.risks li{margin:4px 0}
+.sev{display:inline-block;border:2px solid #000;padding:0 7px;font-size:12px;font-weight:bold;white-space:nowrap;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.sev-critical{background:#7a0019}.sev-high{background:#c62828}.sev-medium{background:#f5b800;color:#000}.sev-low{background:#1769aa}.sev-unknown{background:#fff;color:#000}
+.sevbar{display:flex;height:18px;border:2px solid #000;margin:8px 0 4px;-webkit-print-color-adjust:exact;print-color-adjust:exact}.sevbar i{display:block;height:100%}
+.sevbar .sev-unknown{background:#999}.sevkey{font-size:13px;margin:0 0 10px}.sevkey .sev{margin-right:4px}.warnnote{font-size:12px}
 @media print{input#q{display:none}.wrap{padding:0}}
 """
 JS = """
@@ -438,10 +486,10 @@ def build_html(items, app, source="", links=None, meta=None):
         def vuln_cell(r):
             if not r["advisories"]:
                 return h(r["vuln_text"]) + (f"<div class='also'>{h(r['vuln_reason'])}</div>" if r["vuln_status"] != "checked" and r["vuln_reason"] else "")
-            lis = "".join(f"<li><b>{h(a['severity'])}</b> <a href=\"{h(a['url'])}\" target=\"_blank\" rel=\"noopener\">{h(a['id'])}</a> {h(a['summary'][:140])} "
-                          f"<i>{('fixed in ' + h(a['fixed_in'])) if a['fixed_in'] else 'no fixed version stated'}</i></li>" for a in r["advisories"][:15])
+            lis = "".join(f"<li>{sev_chip(a['severity'])} <a href=\"{h(a['url'])}\" target=\"_blank\" rel=\"noopener\">{h(a['id'])}</a> {h(a['summary'][:140])} "
+                          f"<i>{('fixed in ' + h(a['fixed_in'])) if a['fixed_in'] else 'no fixed version stated'}</i></li>" for a in sev_order(r["advisories"])[:15])
             rest = f"<li>and {len(r['advisories']) - 15} more (see aibom.cdx.json)</li>" if len(r["advisories"]) > 15 else ""
-            return f"<b>{h(r['vuln_text'])}</b><details class='more'><summary>advisories</summary><ul>{lis}{rest}</ul></details>"
+            return f"{sev_chip(r['worst'])} <b>{h(r['vuln_text'])}</b><details class='more'><summary>advisories</summary><ul>{lis}{rest}</ul></details>"
 
         def prow(r):
             label, url = package_proof(r, links)
@@ -459,10 +507,16 @@ def build_html(items, app, source="", links=None, meta=None):
                    + (f", and {sm['transitive']} more only in a lockfile" if sm["transitive"] else "")
                    + f". <b>{sm['vulnerable']}</b> have known vulnerabilities ({sm['advisories']} advisories); {sm['not_checked']} could not be checked."
                    + (f" Advisory data from {h(date)}." if date else "") + f"</p><p class='note' style='font-size:13px'>{h(PACKAGE_NOTE)}</p>"
-                   f"<div class='tw'><table>{head}{''.join(prow(r) for r in direct)}</table></div>")
+                   + sev_bar_html(direct) + f"<div class='tw'><table>{head}{''.join(prow(r) for r in direct)}</table></div>")
         if later:
             out.append(f"<details><summary>{len(later)} more AI packages only in a lockfile (transitive)</summary>"
                        f"<div class='tw'><table>{head}{''.join(prow(r) for r in later)}</table></div></details>")
+        plan = fix_plan_rows((meta or {}).get("packages"))
+        if plan:
+            prs = "".join(f"<tr><td><b>{h(p['package'])}</b></td><td>{h(p['version'] or '-')}</td><td>{sev_chip(p['worst'])}</td><td>{h(fix_plan_text(p))}</td></tr>" for p in plan)
+            out.append("<h3>Fix plan</h3><p class='note' style='font-size:13px'>For each package with known vulnerabilities, the lowest version that its advisories say fixes all of them. "
+                       "Each target was checked again against the advisory data. Upgrading can break code: test it.</p>"
+                       f"<div class='tw'><table class='slim'><tr><th>Package</th><th>Now</th><th>Worst</th><th>What to do</th></tr>{prs}</table></div>")
     if gone:
         rws = "".join(f"<tr><td>{h(g['name'])}</td><td>{h(g['why'])}</td><td>{place_link({'file': g['file'], 'line': g['line']})}</td></tr>" for g in gone)
         out.append(f"<h2>Left out, and why</h2><details><summary>{len(gone)} names that look like models but are not used (click to open)</summary>"

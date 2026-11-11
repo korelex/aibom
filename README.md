@@ -132,7 +132,9 @@ On Debian and Ubuntu, if `python3 -m venv` fails, install the venv module first:
 | `aibom explain RUN MODEL` | Show why a model is in the result, every place it appears and how sure aibom is |
 | `aibom packages RUN` | List the AI packages of a finished scan with their evidence level and known vulnerabilities (`--all` adds those only in a lockfile) |
 | `aibom packages RUN PACKAGE` | Look closer at one package: where it is used, and each advisory with the version that fixes it |
+| `aibom vulns RUN` | The known vulnerabilities of a finished scan, worst first, with a fix plan (`--severity high` for high and worse, `--called` for packages your code calls, `--all` adds those only in a lockfile) |
 | `aibom rebuild RUN` | Re-create the reports of a finished scan without scanning again |
+| `aibom --version` | The version, and the dates of the model data and the vulnerability data |
 
 `SOURCE` can be:
 
@@ -185,6 +187,20 @@ The menu opens only when both input and output are a terminal. In a script, a pi
 prints the help and exits with `0`, so nothing can wait for a key press. If the menu does not open in your shell and you
 get the help instead, that shell is not presenting itself as a terminal; use PowerShell, Windows Terminal or cmd on
 Windows, or run the commands directly.
+
+### What you see in a terminal
+
+In a terminal, a scan shows one line per stage as it finishes (with the time it took and what it found), then a summary:
+the models, the AI packages and how many are called by your code, and the known vulnerabilities by severity (critical,
+high, medium, low), worst first. `aibom vulns RUN` lists them all: each with its advisory (a link in terminals that
+support links), the package and version, whether your code **calls** the package, **imports** it or only **declares** it,
+and the version that fixes it. It ends with a **fix plan**: for each package the lowest version that its advisories say fixes
+everything, checked again against the advisory data, with a warning when the upgrade is a major or `0.x` jump that could
+break your code. A vulnerability here means this exact version is in an advisory; it does not mean your app is exploitable.
+
+Colour and boxes are drawn only when the output is a terminal. In a pipe, in CI, with `--plain`, or with `NO_COLOR` set,
+aibom prints the same plain text it always did, so scripts and saved logs never contain escape codes. The HTML and Markdown
+reports use the same severity order and fix plan; the HTML report adds the severity colours (the word is always written too).
 
 **Exit codes:** `0` the scan finished, `2` it could not run (for example a wrong path or link; the message says
 why), `130` stopped with Ctrl-C.

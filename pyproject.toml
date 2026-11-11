@@ -16,7 +16,8 @@ dependencies = [
     "jsonschema>=4",
     "packaging>=22",                        # Python requirement lines and versions, the standard way
     "PyYAML>=6",                            # pnpm-lock.yaml
-    "questionary>=2",                       # the guided menu (`aibom` with no arguments); brings prompt_toolkit
+    "rich>=13",                             # colour, tables and live progress, drawn only when a person is at a terminal
+    "questionary>=2",                     # the guided menu (`aibom` with no arguments); brings prompt_toolkit
     "tomli>=1.1; python_version < '3.11'",  # pyproject.toml and TOML lockfiles on Python 3.9 and 3.10
 ]
 

@@ -14,8 +14,10 @@ import subprocess
 import sys
 import time
 
+from rich.text import Text
+
 from . import __version__
-from . import cli
+from . import cli, ui
 from .display import build_rows
 from .report import package_rows
 from .source import SourceError, parse
@@ -73,19 +75,29 @@ class Prompter:
         question.application.ttimeoutlen = 0.15  # how long to wait before a lone Esc counts as Esc (the default, 0.5 s, feels slow)
         return question.unsafe_ask()  # unlike ask(), Ctrl-C raises KeyboardInterrupt: the caller decides what it means
 
+    @staticmethod
+    def look():
+        """Colours and pointer for the questions, in a real terminal only."""
+        if not ui.pretty():
+            return {}
+        import questionary
+        return {"style": questionary.Style([("qmark", "fg:ansicyan bold"), ("question", "bold"), ("pointer", "fg:ansicyan bold"),
+                                            ("highlighted", "fg:ansicyan bold"), ("answer", "fg:ansicyan bold"), ("instruction", "fg:#808080")]),
+                "qmark": "›"}
+
     def select(self, message, choices, search=False):
         """choices: [(title, value)]. With search=True the person can type to filter a long list."""
         import questionary
         items = [questionary.Choice(title, value=value) for title, value in choices]
         instruction = "(type to filter, arrow keys to move, Enter to choose, Esc to go back)" if search else self.KEYS
         return self._ask(questionary.select(message, choices=items, instruction=instruction, use_search_filter=search,
-                                            use_jk_keys=not search, **self._io))
+                                            use_jk_keys=not search, **self._io, **self.look()))
 
     def text(self, message, default="", validate=None):
         """A line of text. Enter on an empty line means `default`, which is shown in the question, not typed for the person."""
         import questionary
         check = (lambda t: validate(t or default)) if validate else None
-        answer = self._ask(questionary.text(message, validate=check, instruction="(Esc to go back) ", **self._io))
+        answer = self._ask(questionary.text(message, validate=check, instruction="(Esc to go back) ", **self._io, **self.look()))
         if answer is BACK:
             return BACK
         return answer.strip() or default
@@ -161,6 +173,10 @@ class Menu:
                 self.scan_menu(run_dir)
 
     def banner(self):
+        if self.say is print and ui.pretty():
+            ui.console().print(ui.banner(__version__, cli.data_line()))
+            ui.console().print(Text("After every step it shows the command that does the same without this menu.\n", style="dim"))
+            return
         dates = ""
         try:
             from .db import load_db
@@ -222,7 +238,8 @@ class Menu:
             names = sorted({r["name"] for r in package_rows(packages)}) if packages else []
             choices = [("Open the report in my browser", "report"), ("List the AI models", "models")]
             if names:
-                choices.append(("List the AI packages and their vulnerabilities", "packages"))
+                choices.append(("Vulnerabilities, worst first (with a fix plan)", "vulns"))
+                choices.append(("List the AI packages", "packages"))
             if models:
                 choices.append(("Why is a model in the result?", "explain"))
             if names:
@@ -237,6 +254,8 @@ class Menu:
                 self.action(lambda: cli.open_report(run_dir), command_line("report", r))
             elif pick == "models":
                 self.action(lambda: cli.show(run_dir, 20), command_line("show", r))
+            elif pick == "vulns":
+                self.action(lambda: cli.vulns_view(run_dir), command_line("vulns", r))
             elif pick == "packages":
                 self.action(lambda: cli.packages_view(run_dir), command_line("packages", r))
             elif pick == "left":

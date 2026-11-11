@@ -143,10 +143,11 @@ class Outputs(unittest.TestCase):
         self.assertIn("&lt;script&gt;alert(1)&lt;/script&gt;", page)
         self.assertNotIn("x<b>", page)
 
-    def test_html_is_black_and_white_and_needs_no_internet(self):
+    def test_html_is_black_and_white_except_for_severity_colours_and_needs_no_internet(self):
         page = build_html(self.ITEMS, "demo", "", self.LINKS)
         colours = set(re.findall(r"#[0-9a-fA-F]{3,6}\b", page.split("<body>")[0]))
-        self.assertTrue(colours <= {"#000", "#fff"}, colours)
+        severity = {"#7a0019", "#c62828", "#f5b800", "#1769aa", "#999"}  # the only colours: critical, high, medium, low, unknown
+        self.assertTrue(colours <= {"#000", "#fff"} | severity, colours)
         self.assertNotRegex(page, r"<(script|link|img)[^>]+(src|href)=[\"']https?://")
 
     def test_generated_text_has_no_long_dashes(self):
