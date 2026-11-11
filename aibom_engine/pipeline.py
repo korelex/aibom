@@ -90,6 +90,9 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
     ps = found_packages["summary"]
     if ps:
         log(f"  {ps['dependency_files']:,} dependency files, {ps['packages_read']:,} packages, {ps['ai_packages']:,} AI packages ({ps['seconds']:.1f}s)")
+        if ps.get("ai_packages"):
+            log(f"  {ps['advisories']:,} known vulnerabilities in {ps['vulnerable_packages']:,} AI packages; "
+                f"{ps['not_checked']:,} not checked (no exact version). Advisory data from {ps['advisory_data'] or 'an unknown date'}.")
     for p in found_packages["problems"]:
         warnings.append(f"Could not read the dependency file {p['file']}: {p['error']}")
     for note in found_packages.get("notes", []):

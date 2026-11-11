@@ -12,7 +12,7 @@ import json
 import os
 import time
 
-from ..db import load_db, lookup_package
+from ..db import load_db, lookup_package, vulnerability_check
 from ..evidence import REACHABILITY
 from .common import Declaration, left_out_reason, normalize, purl, read_text, vendored_dirs
 from . import javascript, python
@@ -384,7 +384,12 @@ def find(root, files, db=None, deadline=None):
             if any(not h["left_out"] for h in mine):
                 c["evidence_level"] = "called"
     components.sort(key=lambda c: (c["ecosystem"], normalize(c["ecosystem"], c["name"]), c["version"]))
+    # Known vulnerabilities of each exact version (OSV advisories bundled in ai_db.json). A package without one exact
+    # installed version is "not_checked", never "no vulnerabilities".
+    for c in components:
+        c["vulnerabilities"] = vulnerability_check(ECOSYSTEM_LABEL[c["ecosystem"]], c["name"], c["version"], db=db)
     kept = [c for c in components if not c["left_out"]]
+    severities = [a["severity"] for c in kept for a in c["vulnerabilities"]["advisories"]]
     return {
         "packages": components,
         "model_arguments": arguments,  # for the model step: what live code passes into AI calls
@@ -402,6 +407,11 @@ def find(root, files, db=None, deadline=None):
             "ai_called": sum(1 for c in kept if c["evidence_level"] == "called"),
             "ai_imported_not_declared": sum(1 for c in kept if not c["declared"]),
             "has_lockfile": any(d.kind == "lock" for d in decls),
+            "vulnerable_packages": sum(1 for c in kept if c["vulnerabilities"]["advisories"]),
+            "advisories": len(severities),
+            "advisories_by_severity": {s: severities.count(s) for s in ("critical", "high", "medium", "low", "unknown") if s in severities},
+            "not_checked": sum(1 for c in kept if c["vulnerabilities"]["status"] == "not_checked"),
+            "advisory_data": (db.get("meta") or {}).get("vulnerabilities", {}).get("fetched", ""),
             "seconds": round(time.time() - started, 2),
         },
     }

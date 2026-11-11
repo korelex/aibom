@@ -167,7 +167,7 @@ Each scan writes these files to its `RUN` folder:
 | `report.html` | The readable report: a risk summary, every model grouped by maker with links to its lines, the names that were left out and why, and what the scan cannot see. Works offline and prints cleanly. |
 | `report.md` | The same report in Markdown, for a pull request, a ticket or a chat. |
 | `models.csv` | One row per model, for a spreadsheet. |
-| `packages.json` | The AI packages found in dependency files, with the imports and calls that prove their use and an evidence level for each. Not in the reports yet. |
+| `packages.json` | The AI packages found in dependency files, with the imports and calls that prove their use, an evidence level, and the known vulnerabilities of each exact version (OSV advisories, or `not_checked` with the reason). Not in the reports yet. |
 | `merged.json`, `findings.json`, `files.json`, `manifest.json` | Working data behind the reports; `aibom rebuild` uses them. |
 
 For the same code, a scan on the same day writes the same `aibom.cdx.json`, `report.html`, `report.md` and

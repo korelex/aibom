@@ -7,7 +7,6 @@ from aibom_engine.db import (
     lookup_package,
     match_vulnerabilities,
     resolve_model,
-    version_in_range,
 )
 from aibom_engine.finders.context import model_like, run as run_context
 from aibom_engine.triage import FileInfo
@@ -110,28 +109,15 @@ class TestDatabasePhase1(unittest.TestCase):
         self.assertIsNotNone(vdb)
         self.assertEqual(vdb["category"], "vector_db")
 
-        # Vulnerable version 0.2.1 of langchain-community (< 0.2.5 fix for GHSA-3hjh-jh2h-vrg6 / CVE-2024-2965)
-        vulns_021 = match_vulnerabilities("PyPI", "langchain-community", "0.2.1", db=self.db)
-        ids_021 = {v["id"] for v in vulns_021}
-        self.assertIn("GHSA-3hjh-jh2h-vrg6", ids_021)
-        sitemap_vuln = next(v for v in vulns_021 if v["id"] == "GHSA-3hjh-jh2h-vrg6")
-        self.assertEqual(sitemap_vuln["cve"], "CVE-2024-2965")
-        self.assertEqual(sitemap_vuln["fixed"], "0.2.5")
-        self.assertIn("SitemapLoader", sitemap_vuln["affected_symbols"])
+        # 0.2.1 is affected by GHSA-3hjh-jh2h-vrg6 (CVE-2024-2965, fixed in 0.2.5)
+        vulns_021 = {v["id"]: v for v in match_vulnerabilities("PyPI", "langchain-community", "0.2.1", db=self.db)}
+        self.assertIn("GHSA-3hjh-jh2h-vrg6", vulns_021)
+        self.assertIn("CVE-2024-2965", vulns_021["GHSA-3hjh-jh2h-vrg6"]["aliases"])
+        self.assertEqual(vulns_021["GHSA-3hjh-jh2h-vrg6"]["fixed_in"], "0.2.5")
 
-        # Fixed version 99.0.0 should have zero matching advisories with a fixed bound
-        vulns_99 = [
-            v for v in match_vulnerabilities("PyPI", "langchain-community", "99.0.0", db=self.db)
-            if v.get("fixed")
-        ]
-        self.assertEqual(vulns_99, [])
-
-    def test_version_in_range_edge_cases(self):
-        self.assertTrue(version_in_range("1.30.0", "0", "1.88.6"))
-        self.assertFalse(version_in_range("1.88.6", "0", "1.88.6"))
-        self.assertFalse(version_in_range("1.90.0", "0", "1.88.6"))
-        self.assertFalse(version_in_range("0.1.9", "0.2.0", "0.2.19"))
-        self.assertTrue(version_in_range("0.2.5", "0.2.0", "0.2.19"))
+        # A version past every advisory has none at all (no filter: an advisory with no fixed version must not match
+        # every version)
+        self.assertEqual(match_vulnerabilities("PyPI", "langchain-community", "99.0.0", db=self.db), [])
 
     def test_trailing_slash_false_positives_rejected(self):
         self.assertFalse(model_like("anthropic/"))

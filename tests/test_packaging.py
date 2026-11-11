@@ -45,7 +45,9 @@ class BundledKnowledge(unittest.TestCase):
         with open(db.AI_DB_PATH, encoding="utf-8") as fh:
             lines = fh.read().split("\n")
         self.assertGreater(len(lines), 1000, "ai_db.json is not in the one-entry-per-line layout")
-        self.assertLess(max(len(line) for line in lines), 20000)
+        # A whole table on one line would be megabytes; one entry can be long on its own (an OSV advisory that lists
+        # 1,400 affected versions is about 36,000 characters), so the limit is on layout, not on the size of one entry.
+        self.assertLess(max(len(line) for line in lines), 50000)
         with open(db.AI_DB_PATH, encoding="utf-8") as fh:
             json.load(fh)  # still plain, valid JSON
 

@@ -225,6 +225,12 @@ def do_scan(a):
         main = r["rows"]["used"] or r["rows"]["listed"]
         print("\n" + ("The main ones:" if r["rows"]["used"] else "The models found:"))
         print(model_table(main, links, 8))
+    ps = r.get("packages") or {}
+    if ps.get("ai_packages"):
+        print("\n  %-4d AI packages (SDKs, agent frameworks, vector databases, MCP), %d with known vulnerabilities (%d advisories)"
+              % (ps["ai_packages"], ps.get("vulnerable_packages", 0), ps.get("advisories", 0)))
+        if ps.get("not_checked"):
+            print("       %d not checked for vulnerabilities: no exact installed version (a range, or no lockfile)" % ps["not_checked"])
     for note in r["warnings"]:
         print("  Note: " + note)
     print("\nFiles in %s:" % out)
