@@ -134,7 +134,7 @@ class Outputs(unittest.TestCase):
     def test_html_has_the_parts_a_newcomer_needs(self):
         page = build_html(self.ITEMS, "demo", "https://github.com/o/r", self.LINKS)
         for must in ("AI models found in demo", "used directly in the code", "id='q'", "What this scan cannot see", "Left out, and why", "also written as", "Confirmed",
-                     "https://github.com/o/r/blob/deadbeefcafe/src/app.py#L12", "version deadbeefca"):
+                     "https://github.com/o/r/blob/deadbeefcafe/src/app.py#L12", "version deadbeefca", '<table class="wide">', "<nav class='nav'"):
             self.assertIn(must, page)
 
     def test_html_escapes_names_from_the_repository(self):
@@ -143,12 +143,17 @@ class Outputs(unittest.TestCase):
         self.assertIn("&lt;script&gt;alert(1)&lt;/script&gt;", page)
         self.assertNotIn("x<b>", page)
 
-    def test_html_is_black_and_white_except_for_severity_colours_and_needs_no_internet(self):
+    def test_html_follows_the_light_or_dark_setting_prints_cleanly_and_needs_no_internet(self):
         page = build_html(self.ITEMS, "demo", "", self.LINKS)
-        colours = set(re.findall(r"#[0-9a-fA-F]{3,6}\b", page.split("<body>")[0]))
-        severity = {"#7a0019", "#c62828", "#f5b800", "#1769aa", "#999"}  # the only colours: critical, high, medium, low, unknown
-        self.assertTrue(colours <= {"#000", "#fff"} | severity, colours)
+        head = page.split("<body>")[0]
+        self.assertIn("prefers-color-scheme:dark", head)
+        self.assertIn("@media print", head)
+        self.assertIn("<meta name='color-scheme' content='light dark'>", head)
+        body_style = re.search(r"body\{[^}]*\}", head).group(0)
+        self.assertIn("var(--bg)", body_style)  # the page colours come from the theme, not from fixed values on the elements
         self.assertNotRegex(page, r"<(script|link|img)[^>]+(src|href)=[\"']https?://")
+        self.assertNotRegex(head, r"url\(\s*[\"']?https?://")
+        self.assertNotRegex(head, r"@import")
 
     def test_generated_text_has_no_long_dashes(self):
         for text in (build_html(self.ITEMS, "demo", "", self.LINKS), build_markdown(self.ITEMS, "demo", "", self.LINKS), build_csv(self.ITEMS, self.LINKS)):

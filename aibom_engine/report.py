@@ -160,6 +160,9 @@ KIND_TEXT = {"llm_sdk": "AI SDK", "agent_framework": "Agent framework", "vector_
 SEVERITIES = ("critical", "high", "medium", "low", "unknown")
 SEVERITY_RANK = {"critical": 5, "high": 4, "medium": 3, "low": 2, "unknown": 1}
 LEVEL_RANK = {"called": 2, "imported": 1, "declared": 0}
+PACKAGE_EVIDENCE_WHY = {"called": "Called: live code calls this package, so it is in use",
+                        "imported": "Imported: live code imports this package, but no call to it was found",
+                        "declared": "Declared: it is listed in a dependency file, but no live code imports it"}
 PACKAGE_NOTE = ("A known vulnerability means this exact version is listed in an advisory, not that the app reaches the vulnerable "
                 "code: reachability is not verified. Not checked means no exact installed version is known (a version range, or no "
                 "lockfile), which is not the same as no vulnerabilities.")
@@ -194,6 +197,16 @@ def sev_bar_html(rows):
     bar = "".join(f'<i class="sev-{sev}" style="width:{counts[sev] * 100 / total:.2f}%" title="{counts[sev]} {sev}"></i>' for sev in SEVERITIES if counts[sev])
     key = " ".join(f'<span class="sev sev-{sev}">{sev.upper()}</span> {counts[sev]}' for sev in SEVERITIES if counts[sev])
     return f'<div class="sevbar" role="img" aria-label="{total} known vulnerabilities by severity">{bar}</div><p class="sevkey">{key}</p>'
+
+
+def vuln_card(rows):
+    """A summary card for the top of the page: how many known vulnerabilities, by severity, linking to the list."""
+    direct = [r for r in rows if r["direct"] is not False]
+    total = sum(len(r["advisories"]) for r in direct)
+    if not total:
+        return ""
+    return (f"<div class='card vulncard'><b><a href='#vulns'>{total}</a></b><span>known vulnerabilities in AI packages</span>"
+            f"{sev_bar_html(direct)}</div>")
 
 
 def fix_plan_rows(packages):
@@ -376,24 +389,50 @@ def build_markdown(items, app, source="", links=None, meta=None):
 
 
 CSS = """
-*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;margin:0;color:#000;background:#fff;line-height:1.5}
-.wrap{max-width:1100px;margin:0 auto;padding:32px 24px 72px}h1{font-size:32px;margin:0 0 4px}h2{font-size:21px;margin:40px 0 10px;border-bottom:3px solid #000;padding-bottom:4px}
-.sub{font-size:13px;margin:0 0 22px}.lead{font-size:21px;border-left:8px solid #000;padding:8px 0 8px 18px;margin:22px 0}
-.cards{display:flex;gap:16px;flex-wrap:wrap;margin:18px 0}.card{border:3px solid #000;padding:14px 18px;flex:1;min-width:220px}.card b{display:block;font-size:44px;line-height:1.05}.card span{font-size:14px}
-.warn{border:4px double #000;padding:10px 18px;margin:16px 0;font-size:15px}.warn ul{margin:6px 0 0 18px;padding:0}.how{border:1px solid #000;padding:12px 18px;font-size:14px;margin:18px 0}.how ul{margin:6px 0 0 18px;padding:0}
-input#q{width:100%;padding:12px;border:3px solid #000;font-size:16px;margin:14px 0 4px}
-.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:980px;font-size:14px;margin:8px 0 16px}table.slim{min-width:0;table-layout:fixed}th,td{border:1px solid #000;padding:7px 10px;text-align:left;vertical-align:top;overflow-wrap:break-word}td:nth-child(3){min-width:190px;overflow-wrap:anywhere}th{border-bottom:3px solid #000}
-code{font-family:Consolas,Menlo,monospace;font-size:12.5px}a{color:#000;font-weight:bold}.also{font-size:12px;margin-top:2px}
-.badge{display:inline-block;border:2px solid #000;padding:0 8px;font-size:12px;font-weight:bold;white-space:nowrap}.badge.worked{border-style:dashed}
-details{margin:12px 0}summary{cursor:pointer;font-weight:bold}details.grp>summary{font-size:16px;padding:6px 0}details.more{margin:4px 0 0}details.more summary{font-weight:normal;font-size:12px}
-details.more ul{margin:4px 0 0 16px;padding:0;font-size:12px}.limits{border:3px solid #000;padding:6px 20px 12px;margin-top:36px}.limits h2{border:0;margin-top:12px}
-.foot{font-size:12px;margin-top:28px;border-top:1px solid #000;padding-top:10px}#nomatch{display:none;font-weight:bold;margin:12px 0}
-.risks .note{font-size:13px;margin:6px 0 0}.risks{border:3px solid #000;padding:8px 18px 12px;margin:18px 0}.risks h2{border:0;margin:6px 0 8px}.risks ul{margin:0 0 0 18px;padding:0}.risks li{margin:4px 0}
-.sev{display:inline-block;border:2px solid #000;padding:0 7px;font-size:12px;font-weight:bold;white-space:nowrap;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-.sev-critical{background:#7a0019}.sev-high{background:#c62828}.sev-medium{background:#f5b800;color:#000}.sev-low{background:#1769aa}.sev-unknown{background:#fff;color:#000}
-.sevbar{display:flex;height:18px;border:2px solid #000;margin:8px 0 4px;-webkit-print-color-adjust:exact;print-color-adjust:exact}.sevbar i{display:block;height:100%}
-.sevbar .sev-unknown{background:#999}.sevkey{font-size:13px;margin:0 0 10px}.sevkey .sev{margin-right:4px}.warnnote{font-size:12px}
-@media print{input#q{display:none}.wrap{padding:0}}
+:root{--bg:#f6f7f9;--card:#fff;--text:#1b1f27;--muted:#586272;--line:#dde1e7;--zebra:#f4f6f9;--accent:#1f4fd1;--chip:#eef1f6;
+--critical:#7a0019;--high:#c62828;--medium:#f5b800;--low:#1769aa;--unknown:#8a919c;--on-medium:#000;--on-sev:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#10131a;--card:#171b24;--text:#e8ebf0;--muted:#9aa4b2;--line:#2a303c;--zebra:#1b202b;--accent:#8fb0ff;--chip:#222836;
+--critical:#c4153e;--high:#e0453a;--medium:#f2c230;--low:#3d8fd1;--unknown:#6d7683}}
+:root[data-theme=dark]{--bg:#10131a;--card:#171b24;--text:#e8ebf0;--muted:#9aa4b2;--line:#2a303c;--zebra:#1b202b;--accent:#8fb0ff;--chip:#222836;
+--critical:#c4153e;--high:#e0453a;--medium:#f2c230;--low:#3d8fd1;--unknown:#6d7683}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;margin:0;color:var(--text);background:var(--bg);line-height:1.55}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 72px}h1{font-size:30px;margin:0 0 4px;letter-spacing:-.01em}
+h2{font-size:21px;margin:44px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line);scroll-margin-top:64px}h3{font-size:17px;margin:28px 0 8px;scroll-margin-top:64px}
+.sub{font-size:13px;color:var(--muted);margin:0 0 18px}.lead{font-size:19px;margin:18px 0;padding:14px 18px;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:8px}
+a{color:var(--accent);font-weight:600;text-decoration:none}a:hover{text-decoration:underline}code{font-family:ui-monospace,Consolas,Menlo,monospace;font-size:12.5px}
+.nav{position:sticky;top:0;z-index:5;display:flex;gap:4px;flex-wrap:wrap;padding:8px 0;margin:0 0 6px;background:var(--bg);border-bottom:1px solid var(--line)}
+.nav a{padding:5px 12px;border-radius:999px;font-size:13px;font-weight:600;color:var(--muted)}.nav a:hover{background:var(--chip);color:var(--text);text-decoration:none}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:18px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px}.card b{display:block;font-size:38px;line-height:1.1}.card span{font-size:13px;color:var(--muted)}
+.card.vulncard{grid-column:span 2}.card.vulncard .sevkey{margin:6px 0 0}
+.warn{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--medium);border-radius:8px;padding:10px 18px;margin:16px 0;font-size:15px}.warn ul{margin:6px 0 0 18px;padding:0}
+.how{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:4px 18px;font-size:14px;margin:18px 0}.how ul{margin:6px 0 10px 18px;padding:0}
+.risks{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 20px 14px;margin:18px 0}.risks h2{border:0;margin:6px 0 8px;padding:0}.risks ul{margin:0 0 0 18px;padding:0}.risks li{margin:4px 0}.risks .note{font-size:13px;color:var(--muted);margin:6px 0 0}
+input#q{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--text);font-size:16px;margin:14px 0 4px}input#q:focus{outline:2px solid var(--accent);outline-offset:1px}
+.tw{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:10px;margin:8px 0 16px}
+table{border-collapse:collapse;width:100%;font-size:14px}table.wide{min-width:1040px}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;overflow-wrap:break-word;border-bottom:1px solid var(--line)}table.wide td:nth-child(3){overflow-wrap:anywhere;min-width:240px}table.wide td{min-width:84px}.vcell{min-width:170px}table.wide td:first-child{min-width:130px}tr:last-child td{border-bottom:0}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);background:var(--zebra);position:sticky;top:0}tbody tr:nth-child(even) td,table tr:nth-child(even) td{background:var(--zebra)}
+.also{font-size:12px;color:var(--muted);margin-top:2px}
+.badge{display:inline-block;border:1px solid currentColor;border-radius:999px;padding:0 9px;font-size:12px;font-weight:700;white-space:nowrap}.badge.worked{border-style:dashed}
+details{margin:12px 0}summary{cursor:pointer;font-weight:600}details.grp{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:2px 14px}details.grp>summary{font-size:16px;padding:10px 0}details.grp .tw{border:0;border-radius:0;margin:0 -14px 8px}
+details.more{margin:6px 0 0}details.more summary{font-weight:500;font-size:13px;color:var(--accent)}
+.limits{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px 22px 14px;margin-top:40px}.limits h2{border:0;margin-top:12px}
+.foot{font-size:12px;color:var(--muted);margin-top:28px;border-top:1px solid var(--line);padding-top:10px}#nomatch{display:none;font-weight:700;margin:12px 0}
+.sev{display:inline-block;border-radius:5px;padding:1px 8px;font-size:11.5px;font-weight:800;letter-spacing:.03em;white-space:nowrap;color:var(--on-sev);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.sev-critical{background:var(--critical)}.sev-high{background:var(--high)}.sev-medium{background:var(--medium);color:var(--on-medium)}.sev-low{background:var(--low)}.sev-unknown{background:var(--unknown)}
+.sevbar{display:flex;height:14px;border-radius:7px;overflow:hidden;margin:8px 0 4px;-webkit-print-color-adjust:exact;print-color-adjust:exact}.sevbar i{display:block;height:100%}
+.sevkey{font-size:13px;margin:0 0 10px}.sevkey .sev{margin:0 4px 0 10px}.sevkey .sev:first-child{margin-left:0}
+.ev{display:inline-block;border-radius:999px;padding:0 9px;font-size:12px;font-weight:700;white-space:nowrap;background:var(--chip);cursor:help}
+.ev-called{color:#0a7a3d;background:rgba(10,122,61,.12)}.ev-imported{color:#8a6100;background:rgba(245,184,0,.18)}.ev-declared{color:var(--muted)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .ev-called{color:#4fd48a}:root:not([data-theme=light]) .ev-imported{color:#f2c230}}
+.vcard{background:var(--card);border:1px solid var(--line);border-radius:10px;margin:12px 0;overflow:hidden}
+.vhead{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 16px;background:var(--zebra);border-bottom:1px solid var(--line)}.vhead b{font-size:16px}.vhead .grow{flex:1}
+.adv{list-style:none;margin:0;padding:0}.adv li{display:grid;grid-template-columns:86px minmax(150px,230px) 1fr;gap:6px 14px;padding:9px 16px;border-bottom:1px solid var(--line);align-items:start}.adv li:last-child{border-bottom:0}
+.adv .fix{font-size:13px;color:var(--muted)}.adv .fix b{color:#0a7a3d}@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .adv .fix b{color:#4fd48a}}
+.adv .what{grid-column:3;font-size:14px}.vcard details.more{margin:0;padding:8px 16px;border-top:1px solid var(--line)}.vcard details.more .adv{margin:6px -16px 0}
+@media (max-width:720px){.adv li{grid-template-columns:1fr}.adv .what{grid-column:1}.card.vulncard{grid-column:auto}}
+@media print{:root{--bg:#fff;--card:#fff;--text:#000;--muted:#333;--line:#999;--zebra:#fff;--accent:#000}.nav,input#q{display:none}.wrap{padding:0}.tw{overflow:visible}table.wide{min-width:0}th{position:static}.vcard{break-inside:avoid}}
 """
 JS = """
 const q=document.getElementById('q');
@@ -440,14 +479,15 @@ def build_html(items, app, source="", links=None, meta=None):
         out = []
         for i, (maker, rr) in enumerate(by_maker(rs)):
             out.append(f'<details class="grp"{" open" if open_first and i < 3 else ""}><summary>{h(maker)} ({len(rr)})</summary>'
-                       '<div class="tw"><table>'
+                       '<div class="tw"><table class="wide">'
                        '<tr><th>Model</th><th>Type</th><th>Where it is used (click to see the line)</th><th>Confidence</th><th>Status</th><th>Pinned</th><th>Deprecated</th><th>Retires or retired</th><th>Replacement</th><th>License</th></tr>' + "".join(row_html(r) for r in rr) + "</table></div></details>")
         return "".join(out)
 
-    out = [f"<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>AI models in {h(app)}</title><style>{CSS}</style></head><body><div class='wrap'>",
+    out = [f"<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='color-scheme' content='light dark'><title>AI models in {h(app)}</title><style>{CSS}</style></head><body><div class='wrap'>",
            f"<h1>AI models found in {h(app)}</h1>"]
     sub = source_line(source, links, meta)
     out.append(f"<p class='sub'>{('Scanned: ' + h(sub) + '. ') if sub else ''}Scanner version {h(__version__)}.</p>")
+    nav_at = len(out)
     warns = (meta or {}).get("warnings", [])
     if warns:
         out.append("<div class='warn'><b>This scan may be incomplete.</b><ul>" + "".join(f"<li>{h(w)}</li>" for w in warns) + "</ul></div>")
@@ -463,6 +503,7 @@ def build_html(items, app, source="", links=None, meta=None):
     out.append(f"<div class='cards'><div class='card'><b>{len(used)}</b><span>used directly in the code</span></div>"
                f"<div class='card'><b>{len(listed)}</b><span>only listed in long tables or lists</span></div><div class='card'><b>{len(gone)}</b><span>names left out (comments, messages, tests, docs)</span></div>"
                + (f"<div class='card'><b>{len(package_rows((meta or {}).get('packages')))}</b><span>AI packages ({package_summary(package_rows((meta or {}).get('packages')))['vulnerable']} with known vulnerabilities)</span></div>" if package_rows((meta or {}).get("packages")) else "")
+               + (vuln_card(package_rows((meta or {}).get("packages"))) if package_rows((meta or {}).get("packages")) else "")
                + "</div>")
     n_aibom = len([i for i in items if i["tier"] != "rejected"])
     link_tip = "Click a file name to open that exact line on the website where the code is hosted." if links and links.ok else "This scan was of a local folder, so there are no web links; the file and line are shown instead."
@@ -474,9 +515,9 @@ def build_html(items, app, source="", links=None, meta=None):
     if used or listed:
         out.append("<input id='q' type='search' placeholder='Search by model, maker or file name...' autocomplete='off'><div id='nomatch'>Nothing matches that search.</div>")
     if used:
-        out.append("<h2>Used directly in the code</h2>" + groups(used, True))
+        out.append("<span id='models'></span><h2>Used directly in the code</h2>" + groups(used, True))
     if listed:
-        out.append(f"<h2>Only listed in {h(LISTED_NOTE)}</h2><p style='font-size:14px'>These names are written in the code, but only inside big tables or lists, not set or called on their own.</p>" + groups(listed, False))
+        out.append(f"<span id='listed'></span><h2>Only listed in {h(LISTED_NOTE)}</h2><p style='font-size:14px'>These names are written in the code, but only inside big tables or lists, not set or called on their own.</p>" + groups(listed, False))
     if not used and not listed:
         out.append(f"<h2>Nothing found</h2><p>{h(intro(rows, app))}</p>")
     pk = package_rows((meta or {}).get("packages"))
@@ -486,42 +527,70 @@ def build_html(items, app, source="", links=None, meta=None):
         def vuln_cell(r):
             if not r["advisories"]:
                 return h(r["vuln_text"]) + (f"<div class='also'>{h(r['vuln_reason'])}</div>" if r["vuln_status"] != "checked" and r["vuln_reason"] else "")
-            lis = "".join(f"<li>{sev_chip(a['severity'])} <a href=\"{h(a['url'])}\" target=\"_blank\" rel=\"noopener\">{h(a['id'])}</a> {h(a['summary'][:140])} "
-                          f"<i>{('fixed in ' + h(a['fixed_in'])) if a['fixed_in'] else 'no fixed version stated'}</i></li>" for a in sev_order(r["advisories"])[:15])
-            rest = f"<li>and {len(r['advisories']) - 15} more (see aibom.cdx.json)</li>" if len(r["advisories"]) > 15 else ""
-            return f"{sev_chip(r['worst'])} <b>{h(r['vuln_text'])}</b><details class='more'><summary>advisories</summary><ul>{lis}{rest}</ul></details>"
+            return f"<div class='vcell'>{sev_chip(r['worst'])} <b>{h(r['vuln_text'])}</b></div>"
+
+        def adv_item(a):
+            fix = f"fixed in <b>{h(a['fixed_in'])}</b>" if a["fixed_in"] else "no fixed version stated"
+            return (f"<li><span>{sev_chip(a['severity'])}</span><span><a href=\"{h(a['url'])}\" target=\"_blank\" rel=\"noopener\">{h(a['id'])}</a>"
+                    f"<div class='fix'>{fix}</div></span><span class='what'>{h(a['summary'][:200])}</span></li>")
+
+        def vcard(r):
+            """One package with its advisories, worst first: the first five are shown, the rest open on a click."""
+            advs = sev_order(r["advisories"])
+            shown = "".join(adv_item(a) for a in advs[:5])
+            rest = ""
+            if len(advs) > 5:
+                rest = f"<details class='more'><summary>show {len(advs) - 5} more</summary><ul class='adv'>{''.join(adv_item(a) for a in advs[5:])}</ul></details>"
+            return (f"<div class='vcard'><div class='vhead'><b>{h(r['name'])}</b><span>{h(r['version'] or '-')}</span>{ev_chip(r)}<span class='grow'></span>"
+                    f"{sev_chip(r['worst'])}<span>{len(advs)} known</span></div><ul class='adv'>{shown}</ul>{rest}</div>")
+
+        def ev_chip(r):
+            return f"<span class='ev ev-{r['level']}' title=\"{h(PACKAGE_EVIDENCE_WHY[r['level']])}\">{h(package_level_text(r))}</span>"
 
         def prow(r):
             label, url = package_proof(r, links)
             where = (f'<a href="{h(url)}" target="_blank" rel="noopener">{h(label)}</a>' if url else f"<code>{h(label)}</code>") if label else "-"
             text = " ".join([r["name"], r["kind"], r["version"], r["level"], r["vuln_text"], r["vendor"], " ".join(a["id"] for a in r["advisories"])]).lower()
             return (f'<tr data-t="{h(text)}"><td><b>{h(r["name"])}</b></td><td>{h(r["kind"])}</td><td>{h(r["version"] or "-")}</td>'
-                    f'<td>{h(package_level_text(r))}</td><td>{where}</td><td>{vuln_cell(r)}</td></tr>')
+                    f'<td>{ev_chip(r)}</td><td>{where}</td><td>{vuln_cell(r)}</td></tr>')
 
         head = "<tr><th>Package</th><th>Kind</th><th>Version</th><th>Evidence</th><th>Where (click to see the line)</th><th>Known vulnerabilities</th></tr>"
         direct = [r for r in pk if r["direct"] is not False]
         later = [r for r in pk if r["direct"] is False]
         date = advisory_date()
-        out.append("<h2>AI packages</h2>"
+        out.append("<span id='packages'></span><h2>AI packages</h2>"
                    f"<p style='font-size:14px'>{sm['direct']} AI packages found in the project"
                    + (f", and {sm['transitive']} more only in a lockfile" if sm["transitive"] else "")
                    + f". <b>{sm['vulnerable']}</b> have known vulnerabilities ({sm['advisories']} advisories); {sm['not_checked']} could not be checked."
-                   + (f" Advisory data from {h(date)}." if date else "") + f"</p><p class='note' style='font-size:13px'>{h(PACKAGE_NOTE)}</p>"
-                   + sev_bar_html(direct) + f"<div class='tw'><table>{head}{''.join(prow(r) for r in direct)}</table></div>")
+                   + (f" Advisory data from {h(date)}." if date else "") + f"</p><p class='also' style='font-size:13px'>{h(PACKAGE_NOTE)}</p>"
+                   + f"<div class='tw'><table>{head}{''.join(prow(r) for r in direct)}</table></div>")
         if later:
             out.append(f"<details><summary>{len(later)} more AI packages only in a lockfile (transitive)</summary>"
                        f"<div class='tw'><table>{head}{''.join(prow(r) for r in later)}</table></div></details>")
+        cards = [r for r in direct if r["advisories"]]
+        cards_later = [r for r in later if r["advisories"]]
+        if cards or cards_later:
+            out.append("<span id='vulns'></span><h3>Known vulnerabilities, worst first</h3>" + sev_bar_html(direct)
+                       + "<p class='also' style='font-size:13px'>Packages your code calls come first inside each severity. "
+                         "Affected is not the same as exploitable: reachability is not verified.</p>" + "".join(vcard(r) for r in cards))
+            if cards_later:
+                out.append(f"<details><summary>{len(cards_later)} more with vulnerabilities, only in a lockfile</summary>{''.join(vcard(r) for r in cards_later)}</details>")
         plan = fix_plan_rows((meta or {}).get("packages"))
         if plan:
             prs = "".join(f"<tr><td><b>{h(p['package'])}</b></td><td>{h(p['version'] or '-')}</td><td>{sev_chip(p['worst'])}</td><td>{h(fix_plan_text(p))}</td></tr>" for p in plan)
-            out.append("<h3>Fix plan</h3><p class='note' style='font-size:13px'>For each package with known vulnerabilities, the lowest version that its advisories say fixes all of them. "
+            out.append("<span id='fixplan'></span><h3>Fix plan</h3><p class='also' style='font-size:13px'>For each package with known vulnerabilities, the lowest version that its advisories say fixes all of them. "
                        "Each target was checked again against the advisory data. Upgrading can break code: test it.</p>"
-                       f"<div class='tw'><table class='slim'><tr><th>Package</th><th>Now</th><th>Worst</th><th>What to do</th></tr>{prs}</table></div>")
+                       f"<div class='tw'><table><tr><th>Package</th><th>Now</th><th>Worst</th><th>What to do</th></tr>{prs}</table></div>")
     if gone:
         rws = "".join(f"<tr><td>{h(g['name'])}</td><td>{h(g['why'])}</td><td>{place_link({'file': g['file'], 'line': g['line']})}</td></tr>" for g in gone)
-        out.append(f"<h2>Left out, and why</h2><details><summary>{len(gone)} names that look like models but are not used (click to open)</summary>"
+        out.append(f"<span id='leftout'></span><h2>Left out, and why</h2><details><summary>{len(gone)} names that look like models but are not used (click to open)</summary>"
                    f"<div class='tw'><table class='slim'><colgroup><col style='width:32%'><col style='width:36%'><col style='width:32%'></colgroup><tr><th>Name</th><th>Why it was left out</th><th>Example place</th></tr>{rws}</table></div></details>")
-    out.append("<div class='limits'><h2>What this scan cannot see</h2><ul>" + "".join(f"<li>{h(c)}</li>" for c in CANNOT_SEE) + "</ul></div>")
+    out.append("<div class='limits' id='limits'><h2>What this scan cannot see</h2><ul>" + "".join(f"<li>{h(c)}</li>" for c in CANNOT_SEE) + "</ul></div>")
     out.append("<p class='foot'>The standard AI-BOM file (aibom.cdx.json) holds the same facts for other tools, and models.csv opens in a spreadsheet. This page needs no internet connection.</p>")
+    joined = "".join(out)
+    wanted = [("models", "Models"), ("listed", "Listed only"), ("packages", "AI packages"), ("vulns", "Vulnerabilities"), ("fixplan", "Fix plan"),
+              ("leftout", "Left out"), ("limits", "Limits")]
+    links_html = "".join(f"<a href='#{k}'>{label}</a>" for k, label in wanted if f"id='{k}'" in joined)
+    out.insert(nav_at, f"<nav class='nav' aria-label='Sections'>{links_html}</nav>" if links_html else "")
     out.append(f"</div><script>{JS}</script></body></html>")
     return "".join(out)

@@ -346,6 +346,31 @@ class Reports(unittest.TestCase):
         for page in (report.build_html([], "demo", meta=meta), report.build_markdown([], "demo", meta=meta)):
             self.assertLess(page.index("A-1"), page.index("A-3"), "critical before low")
 
+    def test_the_page_has_a_nav_only_for_sections_that_exist(self):
+        nav = re.search(r"<nav class='nav'.*?</nav>", self.html, re.S).group(0)
+        for k in ("packages", "vulns", "fixplan", "limits"):
+            self.assertIn("href='#%s'" % k, nav)
+            self.assertIn("id='%s'" % k, self.html)
+        self.assertNotIn("href='#models'", nav)  # no models in this scan
+        plain = report.build_html([], "demo")
+        self.assertNotIn("#vulns", plain)
+
+    def test_each_vulnerable_package_is_a_card_with_five_advisories_shown_and_the_rest_folded(self):
+        many = package("alpha", "1.0.0", "called", {"A-1", "A-2", "A-3"})
+        extra = dict(many["vulnerabilities"]["advisories"][0])
+        many["vulnerabilities"]["advisories"] += [dict(extra, id="X-%d" % i, severity="low") for i in range(4)]
+        page = report.build_html([], "demo", meta={"packages": [many]})
+        card = page[page.index("<div class='vcard'>"):page.index("<span id='fixplan'>")]
+        self.assertEqual(card.count("<li>"), 7)
+        self.assertIn("show 2 more", card)
+        folded = card.split("<details")[1]
+        self.assertEqual(folded.count("<li>"), 2)
+        self.assertIn("A-1", card.split("<details")[0])  # the worst are in the part that is always visible
+
+    def test_evidence_chips_explain_themselves_and_the_summary_card_links_to_the_list(self):
+        self.assertIn("class='ev ev-called' title=\"Called: live code calls this package", self.html)
+        self.assertIn("class='card vulncard'><b><a href='#vulns'>6</a>", self.html)
+
     def test_a_scan_without_vulnerabilities_has_no_fix_plan(self):
         clean = {"packages": [package("gamma", "9.0.0", "called", set())]}
         self.assertNotIn("Fix plan", report.build_html([], "demo", meta=clean))
