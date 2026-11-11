@@ -24,6 +24,7 @@ import time
 
 import yaml
 
+from ..redact import redact
 from ..triage import read_lines
 from ..verify import in_string, inside, lex
 from .common import left_out_reason
@@ -525,7 +526,7 @@ def find_calls(root, files, import_hits, rules=None, deadline=None, arguments=No
                     continue  # the name was bound by an import the import finder did not accept (a local module)
                 h = max(mods, key=lambda h: len(h["module"]))
                 eco, package, service = h["ecosystem"], h["package"], ""
-            snippet = lines[li - 1].strip() if 0 < li <= len(lines) else ""
+            snippet = redact(lines[li - 1].strip()) if 0 < li <= len(lines) else ""
             out.append({"ecosystem": eco, "package": package, "rule": rule["id"], "what": rule["what"], "call": name,
                         "operation": operation or "", "service": service, "file": fi.path, "line": li,
                         "snippet": snippet[:200], "left_out": reason})

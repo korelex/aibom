@@ -1,6 +1,8 @@
 """One common shape for everything any finder or scanner reports."""
 from dataclasses import dataclass, asdict
 
+from .redact import redact
+
 
 @dataclass
 class Finding:
@@ -13,6 +15,9 @@ class Finding:
     category: str = ""   # file category from triage (code, config, docs, test, ...)
     snippet: str = ""    # the line of code that proves it
     col: int = -1        # where in the line the name starts (-1 = unknown)
+
+    def __post_init__(self):
+        self.snippet = redact(self.snippet)  # a key on the same line as a model name must never reach the AI-BOM
 
     def to_dict(self):
         return asdict(self)

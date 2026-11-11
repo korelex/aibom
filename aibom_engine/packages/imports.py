@@ -15,6 +15,7 @@ import re
 import time
 
 from ..db import load_db, lookup_package
+from ..redact import redact
 from ..triage import read_lines
 from ..verify import inside, lex
 from .common import left_out_reason, normalize
@@ -210,11 +211,11 @@ def find_imports(root, files, declared=frozenset(), db=None, deadline=None, vend
             if parsed is None:  # not valid Python 3 (a template or Python 2): fall back to whole-line imports
                 parsed = [(m.group(1) or m.group(2), text[:m.start()].count("\n") + 1, ())
                           for m in re.finditer(r"^\s*(?:from\s+([\w.]+)\s+import|import\s+([\w.]+))", text, re.M)]
-            found = [(m, li, lines[li - 1].strip() if 0 < li <= len(lines) else "", "pypi", names) for m, li, names in parsed]
+            found = [(m, li, redact(lines[li - 1].strip()) if 0 < li <= len(lines) else "", "pypi", names) for m, li, names in parsed]
         else:
             if "import" not in text and "require" not in text:
                 continue
-            found = [(p, li, lines[li - 1].strip() if 0 < li <= len(lines) else "", "npm", ()) for p, li in _js_imports(text, ext)]
+            found = [(p, li, redact(lines[li - 1].strip()) if 0 < li <= len(lines) else "", "npm", ()) for p, li in _js_imports(text, ext)]
 
         for module, li, snippet, eco, names in found:
             if eco == "pypi":
