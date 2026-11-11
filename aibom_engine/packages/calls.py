@@ -58,6 +58,10 @@ class Rules:
         self.exact = {"python": {}, "javascript": {}}
         self.wild = {"python": [], "javascript": []}
         self.services = []
+        self.providers = {}  # (ecosystem, package) -> the provider service its own client talks to
+        for prov in data.get("providers") or []:
+            for pkg in prov.get("packages") or []:
+                self.providers[(pkg["ecosystem"], pkg["name"].lower())] = prov["service"]
         seen = set()
         for rule in data["rules"] + (data.get("services") or []):
             rid = rule.get("id")

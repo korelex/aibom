@@ -163,11 +163,12 @@ Each scan writes these files to its `RUN` folder:
 
 | File | What it is |
 | --- | --- |
-| `aibom.cdx.json` | The AI-BOM: CycloneDX 1.6, validated against the official schema. Each model is a `machine-learning-model` component with its evidence (file and line), its evidence level, confidence and reachability, and properties for lifecycle, pinning and license. |
-| `report.html` | The readable report: a risk summary, every model grouped by maker with links to its lines, the names that were left out and why, and what the scan cannot see. Works offline and prints cleanly. |
+| `aibom.cdx.json` | The AI-BOM: CycloneDX 1.6, validated against the official schema. Each model is a `machine-learning-model` component with its evidence (file and line), its evidence level, confidence and reachability, and properties for lifecycle, pinning and license. Each AI package is a `library` (or `framework`) component with a purl, the lines that prove its use and its evidence level; known vulnerabilities are listed in `vulnerabilities` and linked to the components they affect; the hosted API a provider's own client talks to is a `service`. |
+| `report.html` | The readable report: a risk summary, every model grouped by maker with links to its lines, the AI packages with their known vulnerabilities, the names that were left out and why, and what the scan cannot see. Works offline and prints cleanly. |
 | `report.md` | The same report in Markdown, for a pull request, a ticket or a chat. |
 | `models.csv` | One row per model, for a spreadsheet. |
-| `packages.json` | The AI packages found in dependency files, with the imports and calls that prove their use, an evidence level, and the known vulnerabilities of each exact version (OSV advisories, or `not_checked` with the reason). Not in the reports yet. |
+| `packages.csv` | One row per AI package: version, evidence level, first proof line, and its known vulnerabilities, for a spreadsheet. |
+| `packages.json` | The AI packages with all their evidence: the imports and calls that prove their use, an evidence level, and the known vulnerabilities of each exact version (OSV advisories, or `not_checked` with the reason). |
 | `merged.json`, `findings.json`, `files.json`, `manifest.json` | Working data behind the reports; `aibom rebuild` uses them. |
 
 For the same code, a scan on the same day writes the same `aibom.cdx.json`, `report.html`, `report.md` and
@@ -190,8 +191,8 @@ How each of these is decided, and where the data comes from, is in [docs/how-it-
 
 ## What it does not do yet
 
-- List AI SDKs, agent frameworks and vector databases in the AI-BOM and the reports. They are found (from
-  dependency files, imports and calls) and written to `packages.json`, but not reported yet.
+- Read Go, Java or C# dependencies, or draw which package needs which: the dependency files are read for what a
+  project depends on, not for the edges between packages.
 - Find MCP servers, datasets or hardcoded API keys.
 - Inspect model weight files, or check Hugging Face revision pinning.
 - Run as a GitHub Action, fail a build on a policy (`--fail-on`), or write SARIF.

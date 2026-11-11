@@ -19,9 +19,13 @@ usage, see the [README](../README.md).
 5. **Look up** each model in the bundled database: maker, canonical id, pinning, lifecycle and license.
 6. **Read the dependency files** (requirements, pyproject, Pipfile, poetry/uv/pnpm/yarn/npm lockfiles, package.json)
    and find the AI packages among them, then the imports and calls of those packages in live code. The call
-   signatures are in [`aibom_engine/rules/calls.yaml`](../aibom_engine/rules/calls.yaml). The packages are written
-   to `packages.json`; the AI-BOM and the reports do not list them yet.
-7. **Write** the CycloneDX AI-BOM and the reports.
+   signatures are in [`aibom_engine/rules/calls.yaml`](../aibom_engine/rules/calls.yaml). Each package is then checked
+   against the bundled vulnerability advisories (see below).
+7. **Write** the CycloneDX AI-BOM and the reports. Packages are `library` or `framework` components with a purl and the
+   lines that prove their use; known vulnerabilities go in the `vulnerabilities` section, linked to the components they
+   affect; and the hosted API that a provider's own client library talks to (OpenAI, Anthropic, Pinecone, and so on) is a
+   `service`, listed only when live code calls that client. `packages.json` keeps the full evidence, and the reports and
+   `packages.csv` list the packages with their vulnerabilities, most severe first.
 
 ## Evidence levels
 

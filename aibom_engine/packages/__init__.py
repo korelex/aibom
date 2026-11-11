@@ -16,7 +16,7 @@ from ..db import load_db, lookup_package, vulnerability_check
 from ..evidence import REACHABILITY
 from .common import Declaration, left_out_reason, normalize, purl, read_text, vendored_dirs
 from . import javascript, python
-from .calls import find_calls
+from .calls import find_calls, load_rules
 from .imports import find_imports
 from .python import tomllib
 
@@ -386,7 +386,9 @@ def find(root, files, db=None, deadline=None):
     components.sort(key=lambda c: (c["ecosystem"], normalize(c["ecosystem"], c["name"]), c["version"]))
     # Known vulnerabilities of each exact version (OSV advisories bundled in ai_db.json). A package without one exact
     # installed version is "not_checked", never "no vulnerabilities".
+    providers = load_rules().providers
     for c in components:
+        c["provider_service"] = providers.get((c["ecosystem"], normalize(c["ecosystem"], c["name"])), "")
         c["vulnerabilities"] = vulnerability_check(ECOSYSTEM_LABEL[c["ecosystem"]], c["name"], c["version"], db=db)
     kept = [c for c in components if not c["left_out"]]
     severities = [a["severity"] for c in kept for a in c["vulnerabilities"]["advisories"]]

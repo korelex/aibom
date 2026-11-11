@@ -136,7 +136,7 @@ def check(ecosystem: str, name: str, version: str, advisories: list[dict]) -> di
         hit, fixed = affected(ecosystem, version, adv)
         if hit:
             found.append({"id": adv["id"], "aliases": adv.get("aliases", []), "severity": adv.get("severity", "unknown"),
-                          "summary": adv.get("summary", ""), "fixed_in": fixed, "url": adv.get("url", "")})
+                          "summary": adv.get("summary", ""), "cvss": adv.get("cvss", ""), "fixed_in": fixed, "url": adv.get("url", "")})
     order = {"critical": 0, "high": 1, "medium": 2, "low": 3, "unknown": 4, "none": 5}
     found.sort(key=lambda a: (order.get(a["severity"], 4), a["id"]))
     return {"status": "checked", "reason": "", "advisories": found}

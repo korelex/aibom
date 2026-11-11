@@ -11,7 +11,7 @@ from .display import build_rows, by_maker
 
 TIER_TEXT = {"declared": "Confirmed", "inferred": "Worked out"}
 TIER_LONG = {"declared": "Confirmed: the name is written in the code", "inferred": "Worked out: the code names it through a constant such as GPT_4O"}
-LEVEL_TEXT = {"called": "Called", "declared": "Declared"}
+LEVEL_TEXT = {"called": "Called", "imported": "Imported", "declared": "Declared"}
 LEVEL_LONG = {"called": "Called: live code passes this name into a call on an AI SDK",
               "declared": "Declared: the name is written in the code or settings, but no call on an AI SDK was proven to receive it "
                           "(it may still be used, for example through a variable, a lookup table or plain HTTP)",
@@ -28,7 +28,8 @@ TESTED = ("In a blind test on five open-source apps, this scanner found about 79
           "99% of what it reported was correct (benchmark/README.md in the aibom repository).")
 CANNOT_SEE = ["A model that the app chooses when it runs: an environment variable, a settings page, a database or a remote setting. A scan reads code; it does not run the app.",
               "Anything outside this one repository, such as code in other repositories or in private packages.",
-              "AI parts other than models: agents, tools, vector databases and frameworks are not covered yet.",
+              "AI packages are read from Python and JavaScript/TypeScript dependency files only (not Go, Java or C#), and the files do not say which package needs which, so no dependency tree between packages is drawn.",
+              "AI parts other than models and packages: MCP servers, datasets, secrets and weight files are not covered yet.",
               "Some names. A name that no dictionary lists and that no rule recognises can be missed. " + TESTED]
 
 
@@ -154,6 +155,86 @@ def source_line(source, links, meta):
     return s
 
 
+KIND_TEXT = {"llm_sdk": "AI SDK", "agent_framework": "Agent framework", "vector_db": "Vector database", "mcp": "MCP",
+             "model_runtime": "Model runtime", "guardrail": "Guardrail", "dataset_loader": "Dataset loader"}
+SEVERITIES = ("critical", "high", "medium", "low", "unknown")
+SEVERITY_RANK = {"critical": 5, "high": 4, "medium": 3, "low": 2, "unknown": 1}
+LEVEL_RANK = {"called": 2, "imported": 1, "declared": 0}
+PACKAGE_NOTE = ("A known vulnerability means this exact version is listed in an advisory, not that the app reaches the vulnerable "
+                "code: reachability is not verified. Not checked means no exact installed version is known (a version range, or no "
+                "lockfile), which is not the same as no vulnerabilities.")
+
+
+def advisory_date():
+    """When the bundled advisories were fetched from OSV."""
+    try:
+        from .db import load_db
+        return ((load_db().get("meta") or {}).get("vulnerabilities") or {}).get("fetched", "")
+    except Exception:
+        return ""
+
+
+def package_rows(packages):
+    """Display rows for the AI packages the scan counts (left-out ones are dropped), most urgent first: known
+    vulnerabilities by severity, then the strongest proof of use, then the name."""
+    rows = []
+    for c in packages or []:
+        if c.get("left_out"):
+            continue
+        vuln = c.get("vulnerabilities") or {"status": "not_checked", "advisories": []}
+        advisories = vuln.get("advisories", [])
+        counts = {sev: sum(1 for a in advisories if a["severity"] == sev) for sev in SEVERITIES}
+        worst = max((a["severity"] for a in advisories), key=lambda sev: SEVERITY_RANK.get(sev, 1), default="")
+        if vuln.get("status") != "checked":
+            vtext = "Not checked"
+        elif not advisories:
+            vtext = "None known"
+        else:
+            vtext = f"{len(advisories)} known (" + ", ".join(f"{n} {sev}" for sev, n in counts.items() if n) + ")"
+        live = lambda items: [i for i in items if not i.get("left_out") and i.get("line", 0) > 0]  # noqa: E731
+        proof = (live(c.get("calls", [])) or live(c.get("imports", [])) or live(c.get("evidence", [])) or [None])[0]
+        rows.append({"name": c["name"], "version": c.get("version") or "", "kind": KIND_TEXT.get(c.get("category"), "AI package"),
+                     "direct": c.get("direct"), "level": c["evidence_level"], "declared": c.get("declared", True), "proof": proof,
+                     "vuln_status": vuln.get("status", "not_checked"), "vuln_reason": vuln.get("reason", ""), "vuln_text": vtext,
+                     "advisories": advisories, "worst": worst, "purl": c.get("purl", ""), "vendor": c.get("vendor", "")})
+    rows.sort(key=lambda r: (-SEVERITY_RANK.get(r["worst"], 0), -LEVEL_RANK[r["level"]], r["name"].lower(), r["version"]))
+    return rows
+
+
+def package_summary(rows):
+    direct = [r for r in rows if r["direct"] is not False]
+    advisories = sum(len(r["advisories"]) for r in rows)
+    return {"all": len(rows), "direct": len(direct), "transitive": len(rows) - len(direct),
+            "vulnerable": sum(1 for r in rows if r["advisories"]), "advisories": advisories,
+            "not_checked": sum(1 for r in rows if r["vuln_status"] != "checked")}
+
+
+def package_proof(r, links):
+    """(label, url) of the first proof line of a package, or ("", "")."""
+    p = r["proof"]
+    if not p:
+        return "", ""
+    label = f"{p['file']}:{p['line']}"
+    return label, (links.url_for(p["file"], p["line"]) if links else "")
+
+
+def package_level_text(r):
+    return LEVEL_TEXT[r["level"]] + ("" if r["declared"] else " (not in a dependency file)")
+
+
+def build_packages_csv(packages, links=None):
+    buf = io.StringIO()
+    w = csv.writer(buf, lineterminator="\r\n")
+    w.writerow(["package", "version", "kind", "direct", "evidence_level", "reachability", "where_first_proof", "link", "vulnerability_check",
+                "known_advisories", "worst_severity", "advisory_ids", "fixed_in", "purl"])
+    for r in package_rows(packages):
+        label, url = package_proof(r, links)
+        w.writerow([r["name"], r["version"], r["kind"], {True: "yes", False: "no"}.get(r["direct"], "unknown"), r["level"], "not_verified",
+                    label, url, r["vuln_status"], len(r["advisories"]), r["worst"], "; ".join(a["id"] for a in r["advisories"]),
+                    "; ".join(sorted({a["fixed_in"] for a in r["advisories"] if a["fixed_in"]})), r["purl"]])
+    return buf.getvalue()
+
+
 def build_csv(items, links=None):
     rows = build_rows(items)
     buf = io.StringIO()
@@ -215,6 +296,35 @@ def build_markdown(items, app, source="", links=None, meta=None):
             url = links.url_for(g["file"], g["line"]) if links else ""
             label = "%s:%s" % (g["file"], g["line"])
             out.append("| %s | %s | %s |" % (g["name"], g["why"], "[%s](%s)" % (label, url) if url else label))
+    pk = package_rows((meta or {}).get("packages"))
+    if pk:
+        sm = package_summary(pk)
+        out += ["", "## AI packages", "",
+                f"{sm['direct']} AI packages found in the project" + (f", and {sm['transitive']} more only in a lockfile" if sm["transitive"] else "")
+                + f". {sm['vulnerable']} have known vulnerabilities ({sm['advisories']} advisories), {sm['not_checked']} could not be checked."
+                + (f" Advisory data from {advisory_date()}." if advisory_date() else ""), "", f"_{PACKAGE_NOTE}_", ""]
+
+        def ptable(rs):
+            t = ["| Package | Kind | Version | Evidence | Where | Known vulnerabilities |", "|---|---|---|---|---|---|"]
+            for r in rs:
+                label, url = package_proof(r, links)
+                cell = (f"[{label}]({url})" if url else label) or "-"
+                t.append(f"| {r['name']} | {r['kind']} | {r['version'] or '-'} | {package_level_text(r)} | {cell} | {r['vuln_text']} |")
+            return t
+
+        direct = [r for r in pk if r["direct"] is not False]
+        out += ptable(direct)
+        for r in pk:
+            if r["advisories"]:
+                out += ["", f"**{r['name']} {r['version']}**", ""]
+                for a in r["advisories"][:15]:
+                    fix = f", fixed in {a['fixed_in']}" if a["fixed_in"] else ", no fixed version stated"
+                    out.append(f"- {a['severity']}: [{a['id']}]({a['url']}) {a['summary'][:140]}{fix}")
+                if len(r["advisories"]) > 15:
+                    out.append(f"- and {len(r['advisories']) - 15} more (see aibom.cdx.json)")
+        later = [r for r in pk if r["direct"] is False]
+        if later:
+            out += ["", f"### Also in the lockfile (transitive, {len(later)})", ""] + ptable(later)
     out += ["", "## What this scan cannot see", ""] + [f"- {c}" for c in CANNOT_SEE]
     out += ["", "How to read this: every row links a model name to a line of code. Confirmed means the name is written in the code; Worked out means the code spells it through a constant. "
                 "The standard AI-BOM file (aibom.cdx.json) holds the same facts for other tools; models.csv opens in a spreadsheet."]
@@ -303,7 +413,9 @@ def build_html(items, app, source="", links=None, meta=None):
     out.append("<div class='risks'><h2>Risks</h2><ul>" + "".join(risk_item(label, found) for label, found in risk_lines(risk)) + "</ul>"
                + "".join(f"<p class='note'>{h(note)}</p>" for note in lifecycle_notes(risk)) + "</div>")
     out.append(f"<div class='cards'><div class='card'><b>{len(used)}</b><span>used directly in the code</span></div>"
-               f"<div class='card'><b>{len(listed)}</b><span>only listed in long tables or lists</span></div><div class='card'><b>{len(gone)}</b><span>names left out (comments, messages, tests, docs)</span></div></div>")
+               f"<div class='card'><b>{len(listed)}</b><span>only listed in long tables or lists</span></div><div class='card'><b>{len(gone)}</b><span>names left out (comments, messages, tests, docs)</span></div>"
+               + (f"<div class='card'><b>{len(package_rows((meta or {}).get('packages')))}</b><span>AI packages ({package_summary(package_rows((meta or {}).get('packages')))['vulnerable']} with known vulnerabilities)</span></div>" if package_rows((meta or {}).get("packages")) else "")
+               + "</div>")
     n_aibom = len([i for i in items if i["tier"] != "rejected"])
     link_tip = "Click a file name to open that exact line on the website where the code is hosted." if links and links.ok else "This scan was of a local folder, so there are no web links; the file and line are shown instead."
     out.append("<div class='how'><b>How to read this page</b><ul>"
@@ -319,6 +431,38 @@ def build_html(items, app, source="", links=None, meta=None):
         out.append(f"<h2>Only listed in {h(LISTED_NOTE)}</h2><p style='font-size:14px'>These names are written in the code, but only inside big tables or lists, not set or called on their own.</p>" + groups(listed, False))
     if not used and not listed:
         out.append(f"<h2>Nothing found</h2><p>{h(intro(rows, app))}</p>")
+    pk = package_rows((meta or {}).get("packages"))
+    if pk:
+        sm = package_summary(pk)
+
+        def vuln_cell(r):
+            if not r["advisories"]:
+                return h(r["vuln_text"]) + (f"<div class='also'>{h(r['vuln_reason'])}</div>" if r["vuln_status"] != "checked" and r["vuln_reason"] else "")
+            lis = "".join(f"<li><b>{h(a['severity'])}</b> <a href=\"{h(a['url'])}\" target=\"_blank\" rel=\"noopener\">{h(a['id'])}</a> {h(a['summary'][:140])} "
+                          f"<i>{('fixed in ' + h(a['fixed_in'])) if a['fixed_in'] else 'no fixed version stated'}</i></li>" for a in r["advisories"][:15])
+            rest = f"<li>and {len(r['advisories']) - 15} more (see aibom.cdx.json)</li>" if len(r["advisories"]) > 15 else ""
+            return f"<b>{h(r['vuln_text'])}</b><details class='more'><summary>advisories</summary><ul>{lis}{rest}</ul></details>"
+
+        def prow(r):
+            label, url = package_proof(r, links)
+            where = (f'<a href="{h(url)}" target="_blank" rel="noopener">{h(label)}</a>' if url else f"<code>{h(label)}</code>") if label else "-"
+            text = " ".join([r["name"], r["kind"], r["version"], r["level"], r["vuln_text"], r["vendor"], " ".join(a["id"] for a in r["advisories"])]).lower()
+            return (f'<tr data-t="{h(text)}"><td><b>{h(r["name"])}</b></td><td>{h(r["kind"])}</td><td>{h(r["version"] or "-")}</td>'
+                    f'<td>{h(package_level_text(r))}</td><td>{where}</td><td>{vuln_cell(r)}</td></tr>')
+
+        head = "<tr><th>Package</th><th>Kind</th><th>Version</th><th>Evidence</th><th>Where (click to see the line)</th><th>Known vulnerabilities</th></tr>"
+        direct = [r for r in pk if r["direct"] is not False]
+        later = [r for r in pk if r["direct"] is False]
+        date = advisory_date()
+        out.append("<h2>AI packages</h2>"
+                   f"<p style='font-size:14px'>{sm['direct']} AI packages found in the project"
+                   + (f", and {sm['transitive']} more only in a lockfile" if sm["transitive"] else "")
+                   + f". <b>{sm['vulnerable']}</b> have known vulnerabilities ({sm['advisories']} advisories); {sm['not_checked']} could not be checked."
+                   + (f" Advisory data from {h(date)}." if date else "") + f"</p><p class='note' style='font-size:13px'>{h(PACKAGE_NOTE)}</p>"
+                   f"<div class='tw'><table>{head}{''.join(prow(r) for r in direct)}</table></div>")
+        if later:
+            out.append(f"<details><summary>{len(later)} more AI packages only in a lockfile (transitive)</summary>"
+                       f"<div class='tw'><table>{head}{''.join(prow(r) for r in later)}</table></div></details>")
     if gone:
         rws = "".join(f"<tr><td>{h(g['name'])}</td><td>{h(g['why'])}</td><td>{place_link({'file': g['file'], 'line': g['line']})}</td></tr>" for g in gone)
         out.append(f"<h2>Left out, and why</h2><details><summary>{len(gone)} names that look like models but are not used (click to open)</summary>"
