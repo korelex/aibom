@@ -67,6 +67,18 @@ def main():
         if done.returncode != 0:
             fail(f"`aibom scan` exited with {done.returncode}")
 
+        # `aibom` with no arguments opens the guided menu in a terminal; here there is none, so it must print the help
+        # and exit cleanly instead of waiting for a key. questionary must have come in as a dependency of the wheel.
+        bare = subprocess.run([aibom], cwd=work, text=True, capture_output=True, stdin=subprocess.DEVNULL, timeout=120)
+        if bare.returncode != 0 or "usage:" not in bare.stdout:
+            fail(f"`aibom` without a terminal should print the help and exit 0 (exit {bare.returncode}): {bare.stdout[:200]} {bare.stderr[:200]}")
+        menu = run([python, "-c", "import questionary, aibom_engine.interactive as i; print(i.Prompter.KEYS)"], capture_output=True, cwd=work)
+        if "Esc" not in menu.stdout:
+            fail("the guided menu could not be imported from the installed wheel")
+        listed = subprocess.run([aibom, "packages", out], cwd=work, text=True, capture_output=True)
+        if listed.returncode != 0 or "openai" not in listed.stdout:
+            fail(f"`aibom packages` did not list the openai package (exit {listed.returncode}): {listed.stdout[:200]} {listed.stderr[:200]}")
+
         # The installed package must contain the database and the dictionary.
         probe = run([python, "-c", "import aibom_engine, os; print(os.path.dirname(aibom_engine.__file__))"],
                     capture_output=True, cwd=work)
