@@ -293,6 +293,19 @@ def open_report(run_dir):
     webbrowser.open("file:///" + path.replace(os.sep, "/").lstrip("/"))
 
 
+def make_pdf(run_dir, output=None):
+    """Write the report of a finished scan as a PDF (with the browser that is installed) and return its path."""
+    from .pdf import print_to_pdf
+    from .report import build_html
+    items = load(run_dir, "merged.json")
+    info = load(run_dir, "manifest.json")
+    app = info.get("app") or os.path.basename(info["scanned_folder"])
+    packages = load(run_dir, "packages.json").get("packages", []) if os.path.exists(os.path.join(run_dir, "packages.json")) else []
+    meta = {"warnings": info.get("warnings", []), "packages": packages}
+    page = build_html(items, app, info.get("source", ""), links_for(info), meta, pdf=True)
+    return print_to_pdf(page, output or os.path.join(run_dir, "report.pdf"))
+
+
 def rebuild(run_dir):
     """Rebuild the report, markdown and spreadsheet of a finished scan from its saved data (no re-scan)."""
     from .pipeline import write_readable
@@ -432,8 +445,10 @@ def main():
     s.add_argument("--open", action="store_true", help="open the report in the browser when done")
     s.add_argument("--quiet", action="store_true", help="no progress lines")
     s.add_argument("--debug", action="store_true", help="show the full error trace")
-    o = sub.add_parser("report", help="open the readable report of a finished scan in the browser")
+    o = sub.add_parser("report", help="open the readable report of a finished scan in the browser, or write it as a PDF (--pdf)")
     o.add_argument("run_dir")
+    o.add_argument("--pdf", action="store_true", help="write report.pdf instead of opening the page (needs Chrome, Edge or Chromium)")
+    o.add_argument("--output", help="where to write the PDF (default: report.pdf in the scan folder)")
     w = sub.add_parser("show", help="print a finished scan as a plain list")
     w.add_argument("run_dir")
     w.add_argument("--limit", type=int, default=20)
@@ -472,7 +487,10 @@ def main():
         if a.cmd == "scan":
             do_scan(a)
         elif a.cmd == "report":
-            open_report(a.run_dir)
+            if a.pdf:
+                print("pdf:", make_pdf(a.run_dir, a.output))
+            else:
+                open_report(a.run_dir)
         elif a.cmd == "show":
             show_item(a.run_dir, a.item) if a.item else show(a.run_dir, a.limit, a.all, a.left_out)
         elif a.cmd == "explain":

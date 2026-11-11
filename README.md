@@ -128,6 +128,7 @@ On Debian and Ubuntu, if `python3 -m venv` fails, install the venv module first:
 | `aibom` | In a terminal: open a guided menu (see below). Anywhere else, print the help |
 | `aibom scan SOURCE` | Scan a folder, or a repository link, and write the results |
 | `aibom report RUN` | Open the HTML report of a finished scan in your browser |
+| `aibom report RUN --pdf` | Write the report as a PDF (`report.pdf` in the scan folder, or `--output FILE`). It uses Chrome, Edge or Chromium if one is installed; if not, open `report.html` and use Print, Save as PDF |
 | `aibom show RUN` | Print the models of a finished scan (`--all` for every model, `--left-out` for names left out) |
 | `aibom explain RUN MODEL` | Show why a model is in the result, every place it appears and how sure aibom is |
 | `aibom packages RUN` | List the AI packages of a finished scan with their evidence level and known vulnerabilities (`--all` adds those only in a lockfile) |

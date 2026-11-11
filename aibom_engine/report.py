@@ -439,7 +439,45 @@ window.addEventListener('beforeprint',()=>document.querySelectorAll('details').f
 """
 
 
-def build_html(items, app, source="", links=None, meta=None):
+PDF_CSS = """
+@page{size:A4 landscape;margin:14mm 12mm 16mm 12mm;@bottom-left{content:"aibom AI-BOM report";font:9px system-ui,sans-serif;color:#555}@bottom-right{content:"Page " counter(page) " of " counter(pages);font:9px system-ui,sans-serif;color:#555}}
+body{font-size:12.5px}.wrap{max-width:none;padding:0}h1{font-size:22px}h2{font-size:17px;margin-top:26px;break-after:avoid}h3{break-after:avoid}
+.cover{min-height:165mm;display:flex;flex-direction:column;justify-content:center;break-after:page;border-left:10px solid var(--accent);padding-left:28px}
+.cover .kicker{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}.cover h1{font-size:44px;line-height:1.1;margin:0 0 8px}
+.cover .what{font-size:18px;margin:0 0 28px;max-width:60ch}.cover dl{display:grid;grid-template-columns:150px 1fr;gap:6px 16px;margin:0;font-size:14px}.cover dt{color:var(--muted)}.cover dd{margin:0;overflow-wrap:anywhere}
+.cover .stamp{margin-top:34px;font-size:12px;color:var(--muted);max-width:75ch}
+tr,.vcard,.card,.risks,.warn{break-inside:avoid}.tw{overflow:visible}table.wide{min-width:0}th{position:static}.card b{font-size:30px}table{font-size:11.5px}th,td{padding:6px 8px}
+.cards{grid-template-columns:repeat(4,1fr)}.card.vulncard{grid-column:span 2}details>summary{list-style:none}.how{display:none}details.more>summary{display:none}
+"""
+
+
+def cover_html(app, source, links, meta, rows, today=None):
+    """The first page of the PDF: what was scanned, with which version of the tool and which data, and when."""
+    import datetime
+    h = html.escape
+    day = today or datetime.date.today().isoformat()
+    src = source_line(source, links, meta)
+    pk = package_rows((meta or {}).get("packages"))
+    direct = [r for r in pk if r["direct"] is not False]
+    advisories = sum(len(r["advisories"]) for r in direct)
+    later = sum(len(r["advisories"]) for r in pk if r["direct"] is False)
+    try:
+        from .db import load_db
+        dbmeta = load_db().get("meta") or {}
+        data = f"models {dbmeta.get('built', '?')}, vulnerabilities {(dbmeta.get('vulnerabilities') or {}).get('fetched', '?')}"
+    except Exception:
+        data = "unknown"
+    facts = [("Scanned", src or app), ("Report date", day), ("Scanner", f"aibom {__version__}"), ("Data", data),
+             ("Found", f"{len(rows['used'])} models used directly in the code; {len(direct)} AI packages the project depends on, with {advisories} known vulnerabilities"
+              + (f" ({later} more in {len(pk) - len(direct)} packages that are only in a lockfile)" if later else ""))]
+    dl = "".join(f"<dt>{h(k)}</dt><dd>{h(v)}</dd>" for k, v in facts)
+    return (f"<section class='cover'><p class='kicker'>AI bill of materials</p><h1>{h(app)}</h1>"
+            "<p class='what'>The AI models and AI packages this code uses, each with the line of code that proves it, and the known vulnerabilities of the AI packages.</p>"
+            f"<dl>{dl}</dl><p class='stamp'>This report lists what aibom reads in the code and dependency files. It does not run the app. "
+            "A known vulnerability means the exact version is named in an advisory; it does not mean the app is exploitable. The full list of places and the standard CycloneDX 1.6 file (aibom.cdx.json) come with the scan.</p></section>")
+
+
+def build_html(items, app, source="", links=None, meta=None, pdf=False, today=None):
     rows = build_rows(items)
     used, listed, gone = rows["used"], rows["listed"], rows["left_out"]
     h = html.escape
@@ -477,7 +515,8 @@ def build_html(items, app, source="", links=None, meta=None):
                        '<tr><th>Model</th><th>Type</th><th>Where it is used (click to see the line)</th><th>Confidence</th><th>Status</th><th>Pinned</th><th>Deprecated</th><th>Retires or retired</th><th>Replacement</th><th>License</th></tr>' + "".join(row_html(r) for r in rr) + "</table></div></details>")
         return "".join(out)
 
-    out = [f"<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='color-scheme' content='light'><title>AI models in {h(app)}</title><style>{CSS}</style></head><body><div class='wrap'>",
+    out = [f"<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='color-scheme' content='light'><title>AI models in {h(app)}</title><style>{CSS}{PDF_CSS if pdf else ''}</style></head><body><div class='wrap'>",
+           cover_html(app, source, links, meta, rows, today) if pdf else "",
            f"<h1>AI models found in {h(app)}</h1>"]
     sub = source_line(source, links, meta)
     out.append(f"<p class='sub'>{('Scanned: ' + h(sub) + '. ') if sub else ''}Scanner version {h(__version__)}.</p>")
@@ -506,14 +545,18 @@ def build_html(items, app, source="", links=None, meta=None):
                "<li><span class='badge'>Confirmed</span> means the name is written in the code. <span class='badge worked'>Worked out</span> means the code spells it through a constant, such as GPT_4O.</li>"
                "<li>Models grouped under their maker. Different spellings of one model are shown as one row (&quot;also written as&quot;)"
                + (f"; the standard AI-BOM file keeps each spelling as its own entry ({n_aibom} entries)." if n_aibom != len(used) + len(listed) else ".") + "</li></ul></div>")
-    if used or listed:
+    if (used or listed) and not pdf:
         out.append("<input id='q' type='search' placeholder='Search by model, maker or file name...' autocomplete='off'><div id='nomatch'>Nothing matches that search.</div>")
+    m_at = len(out)
     if used:
         out.append("<span id='models'></span><h2>Used directly in the code</h2>" + groups(used, True))
-    if listed:
+    if listed and pdf:
+        out.append(f"<span id='listed'></span><h2>Only listed in {h(LISTED_NOTE)}</h2><p>{len(listed)} more model names are written in the code only inside big tables or lists. They are in models.csv and in the HTML report.</p>")
+    elif listed:
         out.append(f"<span id='listed'></span><h2>Only listed in {h(LISTED_NOTE)}</h2><p style='font-size:14px'>These names are written in the code, but only inside big tables or lists, not set or called on their own.</p>" + groups(listed, False))
     if not used and not listed:
         out.append(f"<h2>Nothing found</h2><p>{h(intro(rows, app))}</p>")
+    p_at = len(out)
     pk = package_rows((meta or {}).get("packages"))
     if pk:
         sm = package_summary(pk)
@@ -575,16 +618,23 @@ def build_html(items, app, source="", links=None, meta=None):
             out.append("<span id='fixplan'></span><h3>Fix plan</h3><p class='also' style='font-size:13px'>For each package with known vulnerabilities, the lowest version that its advisories say fixes all of them. "
                        "Each target was checked again against the advisory data. Upgrading can break code: test it.</p>"
                        f"<div class='tw'><table><tr><th>Package</th><th>Now</th><th>Worst</th><th>What to do</th></tr>{prs}</table></div>")
-    if gone:
+    g_at = len(out)
+    if gone and pdf:
+        out.append(f"<span id='leftout'></span><h2>Left out, and why</h2><p>{len(gone)} names that look like models were left out because they appear only in comments, messages, tests or documentation. Each one, with the reason, is in the HTML report.</p>")
+    elif gone:
         rws = "".join(f"<tr><td>{h(g['name'])}</td><td>{h(g['why'])}</td><td>{place_link({'file': g['file'], 'line': g['line']})}</td></tr>" for g in gone)
         out.append(f"<span id='leftout'></span><h2>Left out, and why</h2><details><summary>{len(gone)} names that look like models but are not used (click to open)</summary>"
                    f"<div class='tw'><table class='slim'><colgroup><col style='width:32%'><col style='width:36%'><col style='width:32%'></colgroup><tr><th>Name</th><th>Why it was left out</th><th>Example place</th></tr>{rws}</table></div></details>")
     out.append("<div class='limits' id='limits'><h2>What this scan cannot see</h2><ul>" + "".join(f"<li>{h(c)}</li>" for c in CANNOT_SEE) + "</ul></div>")
     out.append("<p class='foot'>The standard AI-BOM file (aibom.cdx.json) holds the same facts for other tools, and models.csv opens in a spreadsheet. This page needs no internet connection.</p>")
+    if pdf:  # the packages and their vulnerabilities come before the model tables: that is what a security reader opens the report for
+        out[m_at:g_at] = out[p_at:g_at] + out[m_at:p_at]
     joined = "".join(out)
     wanted = [("models", "Models"), ("listed", "Listed only"), ("packages", "AI packages"), ("vulns", "Vulnerabilities"), ("fixplan", "Fix plan"),
               ("leftout", "Left out"), ("limits", "Limits")]
     links_html = "".join(f"<a href='#{k}'>{label}</a>" for k, label in wanted if f"id='{k}'" in joined)
-    out.insert(nav_at, f"<nav class='nav' aria-label='Sections'>{links_html}</nav>" if links_html else "")
+    out.insert(nav_at, f"<nav class='nav' aria-label='Sections'>{links_html}</nav>" if links_html and not pdf else "")
+    if pdf:  # nobody can click in a PDF: every folded part is opened, and nothing needs a script
+        return "".join(out).replace("<details", "<details open").replace(" (click to see the line)", "") + "</div></body></html>"
     out.append(f"</div><script>{JS}</script></body></html>")
     return "".join(out)
