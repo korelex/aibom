@@ -20,10 +20,41 @@ takes several minutes, mostly cloning. Results are written to `runs/benchmark/re
 
 | File | What it is |
 | --- | --- |
-| `repos.json` | The 17 repositories and the exact commit of each |
+| `repos.json` | The 17 repositories: URL, full commit id, licence, and whether the repository is independent |
 | `labels/<repo>.json` | The answer key for each repository |
 | `score.py` | Scores one scan against its answer key |
 | `run.py` | Clones, scans and scores all repositories |
+
+## The repositories
+
+Each is pinned to a full commit id, so a run always scans the same code. The repositories are other people's projects
+under their own licences. This folder stores only model names, file paths, line numbers and short notes about them, not their code.
+If an upstream repository is deleted or its history rewritten, a pinned commit can stop being available; the answer
+keys then no longer have code to be checked against.
+
+"Independent" means the answer key was written before the scanner was first run on that repository, so its score is a
+fair measure. "Development" means the repository was used while building the scanner; its score only shows that the
+scanner still works there.
+
+| Repository | Commit | Licence | Use |
+| --- | --- | --- | --- |
+| langchain-ai/chat-langchain | `b8acf5c320` | MIT | development |
+| mckaywrigley/chatbot-ui | `81328b61d2` | MIT | development |
+| vercel/ai-chatbot | `c2f8235e1f` | Apache-2.0 | development |
+| langchain-ai/open_deep_research | `1b7d2e80db` | MIT | development |
+| langchain4j/langchain4j-examples | `33545d12c0` | Apache-2.0 | development |
+| aws-samples/bedrock-claude-chat | `14e17cc3bd` | MIT-0 | development |
+| Azure-Samples/azure-search-openai-demo | `558ffd397e` | MIT | development |
+| sashabaranov/go-openai | `dd54fd2968` | Apache-2.0 | development |
+| Azure-Samples/azure-search-openai-demo-csharp | `3aaa94555e` | MIT | development |
+| ollama/ollama-js | `c276d078ee` | MIT | development |
+| langchain-ai/open-canvas | `0310cecd51` | MIT | development |
+| zylon-ai/private-gpt | `42ce052278` | Apache-2.0 | development |
+| e2b-dev/fragments | `3b11c7fcd4` | Apache-2.0 | independent |
+| simonw/llm | `aebaca27f9` | Apache-2.0 | independent |
+| MacPaw/OpenAI | `8baf4aaf00` | MIT | independent |
+| anthropics/anthropic-quickstarts | `1a18c340ca` | MIT | independent |
+| browser-use/browser-use | `b49a68e406` | MIT | independent |
 
 ## How the scores are counted
 
