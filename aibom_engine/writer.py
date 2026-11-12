@@ -7,16 +7,13 @@ import uuid
 from . import __version__
 from .evidence import REACHABILITY
 from .flags import as_property
+from .ids import slug  # noqa: F401  (kept importable from here)
 from .mcp import component_purl
 
 COMPONENT_TYPE = {"model": "machine-learning-model", "framework": "framework", "agent": "application", "dataset": "data"}
 NS = "aibom-engine:"
 USE_RANK = {"live": 0, "comment": 2, "message": 2, "text": 2, "output": 2, "test": 3, "docs": 3, "data": 3}  # proof lines: live first
 RANK = {"code": 0, "config": 0, "manifest": 0, "notebook": 0, "test": 1, "docs": 2}
-
-
-def slug(s):
-    return "".join(c if c.isalnum() or c in "-._" else "-" for c in str(s).lower())
 
 
 def item_ref(it):
@@ -140,15 +137,11 @@ def mcp_parts(servers):
     A server started as a local program is an `application` component (with a purl when it is an npm or PyPI package); a
     remote one is a `service` with its endpoint. Environment variables and headers are listed by name only. Servers that
     sit in tests, examples or documentation are not part of the product and are left out."""
-    components, services, taken = [], [], set()
+    components, services = [], []
     for sv in servers:
         if sv.get("left_out"):
             continue
-        ref = f"mcp:{slug(sv['file'])}:{slug(sv['name'])}"
-        n = 2
-        while ref in taken:
-            ref, n = f"mcp:{slug(sv['file'])}:{slug(sv['name'])}-{n}", n + 1
-        taken.add(ref)
+        ref = sv["ref"]
         props = [{"name": NS + "kind", "value": "mcp-server"}, {"name": NS + "client", "value": sv["client"]},
                  {"name": NS + "transport", "value": sv["transport"]}, {"name": NS + "evidence-level", "value": "declared"}]
         if sv["command"]:

@@ -19,11 +19,13 @@ other finding (a value after `--token` or `--api-key=...` is masked too).
 """
 import os
 import re
+import shlex
 import time
 from dataclasses import asdict, dataclass, field
-from urllib.parse import urlsplit
+from urllib.parse import parse_qsl, urlsplit
 
 from . import jsonc
+from .ids import slug
 from .packages.common import left_out_reason, normalize, purl
 from .packages.python import tomllib
 from .redact import PLACEHOLDER, redact
@@ -31,7 +33,7 @@ from .triage import MAX_BYTES, SKIP_DIRS
 
 # A project's own .vscode folder is where VS Code keeps mcp.json, so unlike the other scan steps this one reads it.
 WALK_SKIP = SKIP_DIRS - {".vscode"}
-SECRET_FLAG = re.compile(r"key|secret|token|passw|pwd|auth|credential|bearer", re.I)
+SECRET_FLAG = re.compile(r"key|secret|token|passw|pwd|auth|credential|bearer|cookie|signature", re.I)
 MASK = "*"
 
 # (path suffix, what the client is called, the keys that hold the servers). Matched on the lower-cased path.
@@ -68,6 +70,8 @@ class McpServer:
     pinned: object = None        # True when an exact version or digest is given, False when not, None when no package
     left_out: str = ""           # test, example, docs, vendored: the file is not the product's own
     note: str = ""               # why a field is missing, when it is
+    ref: str = ""                # the bom-ref this server has in aibom.cdx.json, so a flag can name it
+    secrets: list = field(default_factory=list)   # where a credential is written in the file: {in, name, kind, line}; NEVER the value
 
     def to_dict(self):
         return asdict(self)
@@ -79,6 +83,26 @@ def _safe_text(value):
     return redact(str(value))
 
 
+ASSIGNMENT = re.compile(r"^(-{0,2}[A-Za-z_][\w.-]*)(=)(.+)$", re.S)           # --token=abc, API_KEY=abc, apiKey=abc (docker -e NAME=value too)
+HEADER_LINE = re.compile(r"^([A-Za-z][A-Za-z0-9_-]*)(\s*:\s*)(.+)$", re.S)
+BEARER_ALONE = re.compile(r"^(?:bearer|basic|token)\s+\S+", re.I)               # an argument that is only the value of an Authorization header     # Authorization: Bearer abc (mcp-remote --header, curl -H)
+
+
+def _hide(value):
+    """The value as asterisks of the same length, unless it is empty, a placeholder (${TOKEN}) or already masked."""
+    if not value or PLACEHOLDER_VALUE.search(value) or PLACEHOLDER.match(value) or MASK * len(value) == value:
+        return value
+    return MASK * len(value)
+
+
+def _mask_pair(value):
+    """The value of a flag that names a secret: `Bearer abc` keeps its scheme word, anything else is masked whole."""
+    head, space, rest = value.partition(" ")
+    if rest and head.lower() in ("bearer", "basic", "token"):
+        return head + space + _hide(rest.strip())
+    return _hide(value)
+
+
 def scrub_args(args):
     """The arguments as text with secrets masked: pattern-based (a key shape), and the value of a flag whose name says it is one."""
     out, mask_next = [], False
@@ -86,14 +110,19 @@ def scrub_args(args):
         a = _safe_text(raw)
         if mask_next:
             mask_next = False
-            if not a.startswith("-") and a and not PLACEHOLDER.match(a) and MASK * len(a) != a:
-                a = MASK * len(a)
-        elif a.startswith("-") and "=" in a:
-            flag, _, val = a.partition("=")
-            if SECRET_FLAG.search(flag) and val and not PLACEHOLDER.match(val) and MASK * len(val) != val:
-                a = flag + "=" + MASK * len(val)
-        elif a.startswith("-") and SECRET_FLAG.search(a):
-            mask_next = True
+            if not a.startswith("-") and a:
+                a = _mask_pair(a)
+        else:
+            pair = ASSIGNMENT.match(a) or HEADER_LINE.match(a)
+            inner = ASSIGNMENT.match(pair.group(3)) if pair and pair.group(2) == "=" else None  # --env=NAME=value
+            if pair and SECRET_NAME.search(pair.group(1)):
+                a = pair.group(1) + pair.group(2) + _hide(pair.group(3))
+            elif inner and SECRET_NAME.search(inner.group(1)):
+                a = pair.group(1) + "=" + inner.group(1) + "=" + _hide(inner.group(3))
+            elif BEARER_ALONE.match(a):
+                a = _mask_pair(a)
+            elif a.startswith("-") and SECRET_FLAG.search(a):
+                mask_next = True
         out.append(a)
     return out
 
@@ -109,6 +138,94 @@ def safe_url(raw):
         return _safe_text(f"{parts.scheme}://{host}{parts.path}"), bool(parts.query), bool(at)
     except ValueError:
         return _safe_text(text.split("?")[0].split("#")[0]), "?" in text, False
+
+
+# ---- credentials written in the file ----
+# The value is judged here and then dropped: only where it is and what it is called are kept, never the value itself.
+
+SECRET_NAME = SECRET_FLAG  # one list of words, used by the masking and by the detection, so they cannot disagree
+PLACEHOLDER_VALUE = re.compile(r"\$\{|\$[A-Za-z_]|%[A-Za-z_]+%|\{\{|<[^>]*>|your[-_ ]|xxx|\*{4,}|changeme|example|placeholder|dummy", re.I)
+NOT_A_SECRET = re.compile(r"^(?:true|false|yes|no|on|off|null|none|\d+|https?://[^@\s]*|[./~\\].*|[A-Za-z]:[\\/].*)$", re.I)
+ENV_NAME = re.compile(r"^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+$")  # MY_API_KEY: the name of a variable, not a secret
+MAX_SECRETS = 50
+
+
+def _made_of_words(value):
+    """True for values such as sk-dev-local-development-key: three or more lowercase words joined by - or _. A real key is random letters
+    and digits, so a value made only of words is a documented placeholder, not a key, even when its prefix looks like one."""
+    parts = re.split(r"[-_]", value)
+    return len(parts) >= 3 and all(p.isalpha() and p.islower() for p in parts)
+
+
+def _secret_kind(name, value):
+    """What kind of credential a value is, judged from its shape and the name it is given under:
+    "provider-key" (a well-known key format), "literal" (a plain value under a name that says it is a secret), or "" (not a credential,
+    or a placeholder such as ${TOKEN} or YOUR_KEY)."""
+    if not isinstance(value, str):
+        return ""
+    v = value.strip()
+    head, _, rest = v.partition(" ")
+    if head.lower() in ("bearer", "basic", "token") and rest.strip():
+        v = rest.strip()
+    if not v or PLACEHOLDER_VALUE.search(v):
+        return ""
+    if redact(v) != v:
+        return "" if _made_of_words(v) else "provider-key"
+    if SECRET_NAME.search(str(name)) and len(v) >= 8 and " " not in v and not NOT_A_SECRET.match(v) and not ENV_NAME.match(v):
+        return "literal"
+    return ""
+
+
+def find_secrets(entry, args, server_line, raw_url):
+    """Where a server entry writes a credential: [{in, name, kind, line}]. `in` is env, header, url, url-query or arg."""
+    out = []
+
+    def add(where, name, kind, line=0):
+        if kind and len(out) < MAX_SECRETS:
+            out.append({"in": where, "name": _safe_text(name)[:80], "kind": kind, "line": line or server_line})
+
+    for key, where in (("env", "env"), ("headers", "header"), ("http_headers", "header")):
+        group = entry.get(key)
+        if isinstance(group, dict):
+            for k, v in group.items():
+                add(where, k, _secret_kind(str(k), v), group.lines.get(k, 0) if isinstance(group, jsonc.Node) else 0)
+    if raw_url:
+        try:
+            parts = urlsplit(str(raw_url).strip())
+            userinfo, at, _ = parts.netloc.rpartition("@")
+            if at:
+                user, colon, password = userinfo.partition(":")
+                if colon:
+                    if password and not PLACEHOLDER_VALUE.search(password):
+                        add("url", "", "credentials")
+                else:
+                    add("url", "", _secret_kind("token", user))
+            for k, v in parse_qsl(parts.query):
+                add("url-query", k, _secret_kind(k, v))
+        except ValueError:
+            pass
+    items = [str(a) for a in args]
+    done = set()
+    for i, a in enumerate(items):
+        if i in done:
+            continue
+        found = len(out)
+        pair = ASSIGNMENT.match(a) or HEADER_LINE.match(a)  # --token=abc, NAME=abc (docker -e), Authorization: Bearer abc
+        if pair:
+            name, value = pair.group(1), pair.group(3)
+            kind = _secret_kind(name, value)
+            inner = ASSIGNMENT.match(value) if pair.group(2) == "=" else None  # --env=NAME=abc
+            if not kind and inner:
+                name, kind = inner.group(1), _secret_kind(inner.group(1), inner.group(3))
+            add("arg", name, kind)
+        elif a.startswith("-") and SECRET_FLAG.search(a) and i + 1 < len(items) and not items[i + 1].startswith("-"):
+            done.add(i + 1)  # --token abc: the value is the next argument
+            add("arg", a, _secret_kind(a, items[i + 1]))
+        elif BEARER_ALONE.match(a):
+            add("arg", "(argument)", _secret_kind("authorization", a))
+        if len(out) == found:
+            add("arg", "(argument)", _secret_kind("", a))  # a well-known key shape anywhere
+    return out
 
 
 # ---- how a stdio server is started ----
@@ -279,6 +396,30 @@ def _header_names(entry):
     return sorted(names)
 
 
+# Programs whose name, at the start of a `command` field, shows that the whole command line was written there.
+PROGRAMS = {"npx", "pnpx", "bunx", "uvx", "uv", "pipx", "docker", "podman", "node", "nodejs", "python", "python3", "py", "pnpm", "yarn", "npm", "deno", "bun",
+            "java", "dotnet", "go", "ruby", "perl", "php", "sh", "bash", "zsh", "dash", "fish", "ksh", "csh", "tcsh", "pwsh", "powershell", "cmd"}
+
+
+def split_command_line(command, args):
+    """(program, arguments). Some configs write the whole command line in `command` and leave `args` empty ("command": "npx pkg@latest").
+    That is split as a shell would split it (quotes honoured, backslashes kept), but only when the first word is a program known to
+    take arguments, so a program path that contains a space is left alone."""
+    text = str(command).strip()
+    if args or not re.search(r"\s", text):
+        return command, args
+    lex = shlex.shlex(text, posix=True)
+    lex.whitespace_split = True
+    lex.escape = ""
+    try:
+        tokens = list(lex)
+    except ValueError:  # an unclosed quote
+        tokens = text.split()
+    if len(tokens) > 1 and _base(tokens[0]) in PROGRAMS:
+        return tokens[0], tokens[1:]
+    return command, args
+
+
 def server_from_entry(name, entry, client, rel, line):
     """An McpServer from one entry of a config file (a dict), or None when it is not a mapping."""
     if not isinstance(entry, dict):
@@ -286,12 +427,15 @@ def server_from_entry(name, entry, client, rel, line):
     transport = _transport(client, entry)
     command = entry.get("command")
     args = entry.get("args") if isinstance(entry.get("args"), list) else []
+    if isinstance(command, str):
+        command, args = split_command_line(command, args)
     raw_url = entry.get("httpUrl") or entry.get("url") or ""
     url, has_query, has_credentials = safe_url(raw_url) if raw_url else ("", False, False)
     s = McpServer(name=_safe_text(name), client=client, file=rel, line=line, transport=transport,
                   command=_safe_text(command) if isinstance(command, str) else "", args=scrub_args(args), url=url,
                   url_has_query=has_query, url_has_credentials=has_credentials,
                   env_keys=_names(entry.get("env")), header_names=_header_names(entry))
+    s.secrets = find_secrets(entry, args, line, raw_url)
     if entry.get("enabled") is False or entry.get("disabled") is True:
         s.enabled = False
     if transport == "stdio" and isinstance(command, str) and command:
@@ -400,6 +544,13 @@ def find(root, deadline=None):
             files.append({"file": rel, "client": client, "servers": len(got), "left_out": reason})
             servers += got
     servers.sort(key=lambda s: (bool(s.left_out), s.file, s.line, s.name))
+    taken = set()
+    for s in servers:
+        s.ref = f"mcp:{slug(s.file)}:{slug(s.name)}"
+        n = 2
+        while s.ref in taken:
+            s.ref, n = f"mcp:{slug(s.file)}:{slug(s.name)}-{n}", n + 1
+        taken.add(s.ref)
     return {"servers": [s.to_dict() for s in servers], "files": files, "problems": problems, "partial": partial}
 
 

@@ -143,6 +143,42 @@ Curated open-model entries carry the source URL of their license and the date it
 curated gets a license only when its whole family uses one license (Llama, Gemma, Mixtral, Phi); anything else is
 `unknown` rather than a guess.
 
+## Risk flags
+
+A flag says something found in the scan is risky, how risky, where, and what to do. Every flag has a rule id that never
+changes, a severity, the file and line, and a one-line fix. They are saved in `flags.json` (worst first), attached to the
+component they are about in `aibom.cdx.json` (an `aibom-engine:flag` property), and shown in the reports.
+
+A severity says how much a reader should worry, not whether the app can be attacked: `high` is something that breaks or
+exposes the app now, `medium` is act soon, `low` is good practice, `info` is worth knowing.
+
+| Rule | Severity | What it means |
+| --- | --- | --- |
+| `model.retired` | high | The provider has retired the model; calls to it fail. |
+| `model.deprecated` | medium | The model has a retirement date. |
+| `model.floating-alias` | low | A name such as `gpt-4o` can change the model behind it; a dated snapshot exists to pin. |
+| `model.unpinned-hf-repo` | info | A Hugging Face model; this scan does not check for a pinned revision. |
+| `model.license-restricted` | medium | The licence limits commercial use or needs review. |
+| `model.license-unknown` | info | aibom does not know the licence. |
+| `mcp.plaintext-secret` | high / medium | A credential is written in an MCP config file. High when the value has a well-known key format or a URL carries a password; medium for a plain value under a name such as `API_KEY` or `Authorization`. A placeholder such as `${TOKEN}` or `YOUR_KEY` is not a credential. |
+| `mcp.shell-command` | medium / high | The server is started through a shell string or inline code (`bash -c ...`, `python -c ...`). High when that text downloads and runs something. `cmd /c npx ...`, the way Windows runs `npx`, is not flagged. |
+| `mcp.unpinned-package` | medium | An npm, PyPI or container package has no exact version, so a new release changes what runs. |
+| `mcp.package-from-url` | medium | The server runs code fetched from a URL or git address. |
+| `mcp.broad-filesystem-path` | high / medium | The server is given the root of a drive or a system folder (high) or a whole home folder (medium). |
+
+A server that its config switches off is not started, so only its credentials are flagged. Servers in tests, examples,
+documentation or vendored folders get no flags. The value of a credential is judged and then dropped: a flag names where
+it is and what it is called, never what it is.
+
+**What the MCP rules are based on.** They follow OWASP's published MCP guidance, quoted only for what it says: the
+[OWASP MCP Top 10](https://owasp.org/www-project-mcp-top-10/) (MCP01 secret exposure, MCP02 privilege scope creep,
+MCP04 supply chain, MCP05 command execution) and its
+[MCP Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/MCP_Security_Cheat_Sheet.html) (section 3: restrict
+file system access to the required directories; section 5: never pass raw shell commands; section 6: never store tokens in
+plaintext in MCP config files). The cheat sheet does not give version-pinning advice, so the pinning rule cites MCP04 only.
+The Cloud Security Alliance's "MCP Security Baseline" was listed as v0.1 and "coming soon", with no published text, when
+this was checked on 2026-11-12, so nothing here claims to follow it.
+
 ## Where the data comes from
 
 `aibom_engine/knowledge/ai_db.json` is compiled by `scripts/build_db.py` from:

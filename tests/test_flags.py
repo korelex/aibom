@@ -350,13 +350,16 @@ class ThroughThePipeline(unittest.TestCase):
         with tempfile.TemporaryDirectory() as out, mock.patch("aibom_engine.pipeline.flag_rules.model_flags", return_value=[other]):
             result = run(APP, out, app="review-app")
             read = lambda n, enc="utf-8": open(os.path.join(out, n), encoding=enc).read()  # noqa: E731
-            self.assertEqual([f.rule for f in result["flags"]], ["mcp.shell-command"])
-            self.assertEqual(json.loads(read("flags.json"))["counts"], {"high": 1, "medium": 0, "low": 0, "info": 0})
+            # the review app also declares MCP servers of its own (.cursor/mcp.json), which have their own flags
+            self.assertEqual([f.subject for f in result["flags"] if f.subject == "files"], ["files"])
+            saved = json.loads(read("flags.json"))
+            self.assertEqual(saved["counts"], F.counts(result["flags"]))
+            self.assertIn("files", [f["subject"] for f in saved["flags"]])
             self.assertIn("mcp.shell-command", read("aibom.cdx.json"))
             self.assertIn("## Flags", read("report.md"))
             self.assertIn("cfg/mcp.json:4", read("report.md"))
             self.assertIn("id='flags'", read("report.html"))
-            self.assertEqual(json.loads(read("manifest.json"))["flags"]["high"], 1)
+            self.assertEqual(json.loads(read("manifest.json"))["flags"], saved["counts"])
 
 
 class Rebuild(unittest.TestCase):

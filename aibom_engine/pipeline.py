@@ -13,6 +13,7 @@ from .display import build_rows
 from .evidence import assign_levels
 from . import flags as flag_rules
 from . import mcp as mcp_finder
+from .mcp_flags import mcp_flags
 from .report import build_csv, build_html, build_markdown, build_mcp_csv, build_packages_csv
 from .triage import triage
 from .vendors import maker_of, type_of
@@ -136,7 +137,7 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
     items = assign_levels(verify(enrich(merge(findings), names), root), model_arguments)
     included = [i for i in items if i["tier"] != "rejected"]
     used = sum(1 for i in included if i.get("role") == "used")
-    flags = flag_rules.collect(flag_rules.model_flags(included, item_ref))
+    flags = flag_rules.collect(flag_rules.model_flags(included, item_ref), mcp_flags(found_mcp["servers"]))
     log("Writing the AI-BOM and the report ...")
     bom = build_bom(included, app, found_packages["packages"], ps.get("advisory_data", "") if ps else "", flags, found_mcp["servers"])
     problem = validate(bom)
