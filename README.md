@@ -220,6 +220,7 @@ Each scan writes these files to its `RUN` folder:
 | `models.csv` | One row per model, for a spreadsheet. |
 | `packages.csv` | One row per AI package: version, evidence level, first proof line, and its known vulnerabilities, for a spreadsheet. |
 | `packages.json` | The AI packages with all their evidence: the imports and calls that prove their use, an evidence level, and the known vulnerabilities of each exact version (OSV advisories, or `not_checked` with the reason). |
+| `flags.json` | The risk flags of the scan, worst first: each has a rule id, a severity (`high`, `medium`, `low`, `info`), the place it was found and a one-line fix. Today these are the model risks (retired, deprecated, floating alias, licence); the report shows the ones outside the Risks block in a Flags section. In `aibom.cdx.json` each flag is an `aibom-engine:flag` property on the component it is about. |
 | `merged.json`, `findings.json`, `files.json`, `manifest.json` | Working data behind the reports; `aibom rebuild` uses them. |
 
 For the same code, a scan on the same day writes the same `aibom.cdx.json`, `report.html`, `report.md` and

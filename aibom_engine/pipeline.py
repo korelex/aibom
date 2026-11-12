@@ -11,11 +11,12 @@ from .finders import context, dictionary, shapes
 from .merge import merge
 from .display import build_rows
 from .evidence import assign_levels
+from . import flags as flag_rules
 from .report import build_csv, build_html, build_markdown, build_packages_csv
 from .triage import triage
 from .vendors import maker_of, type_of
 from .verify import verify
-from .writer import build_bom, validate
+from .writer import build_bom, item_ref, validate
 
 FINDERS = {"dictionary": dictionary.run, "context": context.run, "shapes": shapes.run}
 LABEL = {"dictionary": "known model names", "context": "names in model settings", "shapes": "names by their shape"}
@@ -57,9 +58,9 @@ def enrich(items, names, online=False):
     return items
 
 
-def write_readable(out, items, app, source="", links=None, warnings=None, packages=None):
+def write_readable(out, items, app, source="", links=None, warnings=None, packages=None, flags=None):
     """The outputs for people: the web page, the markdown summary and the spreadsheets (models, and AI packages)."""
-    meta = {"warnings": warnings or [], "packages": packages or []}
+    meta = {"warnings": warnings or [], "packages": packages or [], "flags": flags or []}
     with open(os.path.join(out, "report.html"), "w", encoding="utf-8") as f:
         f.write(build_html(items, app, source, links, meta))
     with open(os.path.join(out, "report.md"), "w", encoding="utf-8") as f:
@@ -119,15 +120,17 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
     items = assign_levels(verify(enrich(merge(findings), names), root), model_arguments)
     included = [i for i in items if i["tier"] != "rejected"]
     used = sum(1 for i in included if i.get("role") == "used")
+    flags = flag_rules.collect(flag_rules.model_flags(included, item_ref))
     log("Writing the AI-BOM and the report ...")
-    bom = build_bom(included, app, found_packages["packages"], ps.get("advisory_data", "") if ps else "")
+    bom = build_bom(included, app, found_packages["packages"], ps.get("advisory_data", "") if ps else "", flags)
     problem = validate(bom)
     save(os.path.join(out, "files.json"), {"categories": cats, "files": [vars(f) for f in files]})
     save(os.path.join(out, "findings.json"), [f.to_dict() for f in findings])
     save(os.path.join(out, "merged.json"), items)
     save(os.path.join(out, "packages.json"), found_packages)
     save(os.path.join(out, "aibom.cdx.json"), bom)
-    write_readable(out, items, app, source, links, warnings, found_packages["packages"])
+    save(os.path.join(out, "flags.json"), {"flags": [f.to_dict() for f in flags], "counts": flag_rules.counts(flags)})
+    write_readable(out, items, app, source, links, warnings, found_packages["packages"], flags)
     rows = build_rows(items)
     tiers = dict(collections.Counter(i["tier"] for i in items))
     reasons = dict(collections.Counter(i["reason"] for i in items if i["tier"] == "rejected"))
@@ -136,7 +139,7 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
                                               "finders": list(finders), "raw_findings": len(findings), "items_in_aibom": len(included), "models_used": used,
                                               "models_only_listed": len(included) - used, "display_models_used": len(rows["used"]), "display_models_listed": len(rows["listed"]),
                                               "display_left_out": len(rows["left_out"]), "items_by_tier": tiers, "rejected_reasons": reasons, "partial": partial,
-                                              "warnings": warnings, "packages": found_packages["summary"], "cyclonedx_1_6_valid": problem is None, "validation_error": problem, "seconds": seconds,
+                                              "warnings": warnings, "packages": found_packages["summary"], "flags": flag_rules.counts(flags), "cyclonedx_1_6_valid": problem is None, "validation_error": problem, "seconds": seconds,
                                               **(links.to_dict() if links else {})})
     return {"packages": found_packages["summary"], "items": len(included), "used": len(rows["used"]), "listed": len(rows["listed"]), "left_out": len(rows["left_out"]), "rows": rows, "rejected": len(items) - len(included), "valid": problem is None, "error": problem,
-            "seconds": seconds, "tiers": tiers, "partial": partial, "warnings": warnings, "app": app, "files": len(files)}
+            "seconds": seconds, "tiers": tiers, "partial": partial, "warnings": warnings, "app": app, "files": len(files), "flags": flags}

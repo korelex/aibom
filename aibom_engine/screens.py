@@ -7,6 +7,7 @@ from rich.table import Table
 from rich.text import Text
 
 from . import findings as fd
+from . import flags as flag_rules
 from . import ui
 
 SEVERITY_NOTE = ("Affected is not the same as exploitable: a vulnerability counts when this exact version is in an advisory, and "
@@ -209,6 +210,12 @@ def dashboard(r, out, packages, links, cmd, date, version):
         vuln_line = Text.assemble("known vulnerabilities in %d package%s" % (len({(f["package"], f["version"]) for f in found}),
                                   "" if len({(f["package"], f["version"]) for f in found}) == 1 else "s"), "   ", ui.severity_counts(c, skip_zero=True))
     t.add_row(Text(str(len(found)), style="bold bright_red" if found else "bold green"), vuln_line)
+    flags = r.get("flags") or []
+    if flags:
+        count, shown = flag_rules.headline(flags)
+        worst = flags[0].severity  # flags arrive worst first
+        t.add_row(Text(str(count), style="bold bright_red" if worst == "high" else "bold yellow" if worst == "medium" else "bold"),
+                  Text("risk flags (%s); the report shows each one" % shown))
     body = [t]
     if found:
         body += [Text(""), ui.severity_bar(c, 50),
