@@ -197,9 +197,9 @@ class Commands(unittest.TestCase):
         for must in ("Scan finished", "models used directly in the code", "The main ones:", "gpt-4o-mini", "report.html", "models.csv", "explain", "Limits:"):
             self.assertIn(must, self.r.stdout)
         self.assertTrue(all(len(line) <= 140 for line in self.r.stdout.splitlines()))
-        # the limits line must not claim that only models are found: packages are found too, in packages.json
-        self.assertIn("packages.json", self.r.stdout)
+        # the limits line must not claim that only models are found: packages are in the report and the AI-BOM now
         self.assertNotIn("finds AI models only", self.r.stdout)
+        self.assertNotIn("packages.json", self.r.stdout.split("Limits:")[1])
 
     def test_a_run_made_before_evidence_levels_says_not_assessed(self):
         merged = os.path.join(self.out, "merged.json")

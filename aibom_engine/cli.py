@@ -160,7 +160,8 @@ def rebuild(run_dir):
     info = load(run_dir, "manifest.json")
     links = links_for(info)
     app = info.get("app") or os.path.basename(info["scanned_folder"])
-    write_readable(run_dir, items, app, info.get("source", ""), links, info.get("warnings", []))
+    packages = load(run_dir, "packages.json").get("packages", []) if os.path.exists(os.path.join(run_dir, "packages.json")) else []
+    write_readable(run_dir, items, app, info.get("source", ""), links, info.get("warnings", []), packages)
     info.update(links.to_dict() if links.ok else {})
     with open(os.path.join(run_dir, "manifest.json"), "w", encoding="utf-8") as f:
         json.dump(info, f, indent=1, sort_keys=True)
@@ -225,6 +226,12 @@ def do_scan(a):
         main = r["rows"]["used"] or r["rows"]["listed"]
         print("\n" + ("The main ones:" if r["rows"]["used"] else "The models found:"))
         print(model_table(main, links, 8))
+    ps = r.get("packages") or {}
+    if ps.get("ai_packages"):
+        print("\n  %-4d AI packages (SDKs, agent frameworks, vector databases, MCP), %d with known vulnerabilities (%d advisories)"
+              % (ps["ai_packages"], ps.get("vulnerable_packages", 0), ps.get("advisories", 0)))
+        if ps.get("not_checked"):
+            print("       %d not checked for vulnerabilities: no exact installed version (a range, or no lockfile)" % ps["not_checked"])
     for note in r["warnings"]:
         print("  Note: " + note)
     print("\nFiles in %s:" % out)
@@ -233,8 +240,7 @@ def do_scan(a):
     print("  aibom.cdx.json  the standard AI-BOM file (%s CycloneDX 1.6)" % ("valid" if r["valid"] else "NOT VALID"))
     print("\nNext:  %s show %s --all      list every model" % (command(), out))
     print("       %s explain %s MODEL   why is this model here?" % (command(), out))
-    print("Limits: the reports list AI models only; the AI packages found are in packages.json.")
-    print("        It cannot see a model chosen when the app runs.")
+    print("Limits: it cannot see a model chosen when the app runs, and reads Python and JavaScript/TypeScript packages only.")
     if not r["valid"]:
         raise SourceError("The AI-BOM did not pass the format check: " + str(r["error"]))
     if a.open:

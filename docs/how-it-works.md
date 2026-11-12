@@ -19,9 +19,13 @@ usage, see the [README](../README.md).
 5. **Look up** each model in the bundled database: maker, canonical id, pinning, lifecycle and license.
 6. **Read the dependency files** (requirements, pyproject, Pipfile, poetry/uv/pnpm/yarn/npm lockfiles, package.json)
    and find the AI packages among them, then the imports and calls of those packages in live code. The call
-   signatures are in [`aibom_engine/rules/calls.yaml`](../aibom_engine/rules/calls.yaml). The packages are written
-   to `packages.json`; the AI-BOM and the reports do not list them yet.
-7. **Write** the CycloneDX AI-BOM and the reports.
+   signatures are in [`aibom_engine/rules/calls.yaml`](../aibom_engine/rules/calls.yaml). Each package is then checked
+   against the bundled vulnerability advisories (see below).
+7. **Write** the CycloneDX AI-BOM and the reports. Packages are `library` or `framework` components with a purl and the
+   lines that prove their use; known vulnerabilities go in the `vulnerabilities` section, linked to the components they
+   affect; and the hosted API that a provider's own client library talks to (OpenAI, Anthropic, Pinecone, and so on) is a
+   `service`, listed only when live code calls that client. `packages.json` keeps the full evidence, and the reports and
+   `packages.csv` list the packages with their vulnerabilities, most severe first.
 
 ## Evidence levels
 
@@ -51,6 +55,29 @@ confirmed one only declared.
 
 In the AI-BOM these are the properties `aibom-engine:evidence-level`, `aibom-engine:reachability` and
 `aibom-engine:confidence`; each proof line that passes the name into an AI call starts with `called:`.
+
+## Known vulnerabilities
+
+Every AI package with one exact installed version (from a lockfile, or an `==` pin) is checked against the OSV
+advisories bundled in the database. A version is affected when OSV's own rules say so: the advisory lists the version,
+or one of its ranges contains it (`introduced`, `fixed`, `last_affected`, `limit`). Versions are compared the way their
+ecosystem does: PEP 440 for PyPI, Semantic Versioning for npm. Each advisory found gives its id, aliases (CVE),
+severity, summary and the version that fixes it, when one is known.
+
+- **Not checked** is said, never hidden. A range (`^1.2.0`, `>=0.1`) or a manifest without a lockfile does not say
+  which version is installed, so the package is marked `not_checked` with the reason. That is not "no
+  vulnerabilities".
+- **Records of one issue are merged.** GitHub, PyPA and CVE often publish the same problem; the GitHub advisory names
+  it and the others become aliases. When the databases disagree about which versions are affected, a version counts as
+  affected if any of them says so, as OSV itself does.
+- **Severity** is GitHub's rating, or else the rating of the CVSS 3.x base score, computed from the vector by the
+  CVSS 3.1 formula. Without either it is `unknown`, never a guess.
+- **Only AI packages** are checked, and only PyPI and npm. A web framework or a database client in the same project is
+  outside what aibom reports.
+- **Affected is not exploitable.** A match means "this version has a known vulnerability", not that the app reaches the
+  vulnerable code. Every package says `reachability: not_verified`.
+- The advisories are as fresh as the database: `packages.json` says when they were fetched
+  (`summary.advisory_data`). `python scripts/build_db.py --osv-only` refreshes them.
 
 ## Lifecycle status
 
@@ -118,6 +145,6 @@ curated gets a license only when its whole family uses one license (Llama, Gemma
 | `aibom_engine/knowledge/curated.json` | hand-checked lifecycle and license records, each with its source |
 | [LiteLLM](https://github.com/BerriAI/litellm) model catalogue | model names, aliases and context windows |
 | [OpenRouter](https://openrouter.ai) model list | more model ids and their Hugging Face ids |
-| [OSV.dev](https://osv.dev) | known vulnerabilities in AI packages (not reported yet; used by a future release) |
+| [OSV.dev](https://osv.dev) ecosystem dumps (PyPI, npm) | known vulnerabilities of AI packages, with their affected version ranges |
 
 Third-party notices are in [NOTICE](../NOTICE). How to update the data is in [CONTRIBUTING.md](../CONTRIBUTING.md).

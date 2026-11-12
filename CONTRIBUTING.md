@@ -51,6 +51,7 @@ change is a readable diff.
 | --- | --- | --- |
 | `python scripts/build_db.py --apply-curated` | Re-apply `curated.json` to the existing database | no |
 | `python scripts/build_db.py --reformat` | Rewrite both files in their one-entry-per-line layout | no |
+| `python scripts/build_db.py --osv-only` | Refresh only the vulnerability advisories from OSV's ecosystem dumps (about 260 MB, cached in `build/osv/` for 20 hours) | yes |
 | `python scripts/build_db.py` | Rebuild everything from LiteLLM, OpenRouter, OSV and `curated.json` | yes |
 | `python scripts/check_licenses.py` | Check every curated license against its Hugging Face repo | yes |
 

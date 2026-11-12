@@ -11,7 +11,7 @@ from .finders import context, dictionary, shapes
 from .merge import merge
 from .display import build_rows
 from .evidence import assign_levels
-from .report import build_csv, build_html, build_markdown
+from .report import build_csv, build_html, build_markdown, build_packages_csv
 from .triage import triage
 from .vendors import maker_of, type_of
 from .verify import verify
@@ -57,12 +57,15 @@ def enrich(items, names, online=False):
     return items
 
 
-def write_readable(out, items, app, source="", links=None, warnings=None):
-    """The three outputs for people: the web page, the markdown summary and the spreadsheet."""
+def write_readable(out, items, app, source="", links=None, warnings=None, packages=None):
+    """The outputs for people: the web page, the markdown summary and the spreadsheets (models, and AI packages)."""
+    meta = {"warnings": warnings or [], "packages": packages or []}
     with open(os.path.join(out, "report.html"), "w", encoding="utf-8") as f:
-        f.write(build_html(items, app, source, links, {"warnings": warnings or []}))
+        f.write(build_html(items, app, source, links, meta))
     with open(os.path.join(out, "report.md"), "w", encoding="utf-8") as f:
-        f.write(build_markdown(items, app, source, links, {"warnings": warnings or []}))
+        f.write(build_markdown(items, app, source, links, meta))
+    with open(os.path.join(out, "packages.csv"), "w", encoding="utf-8-sig", newline="") as f:
+        f.write(build_packages_csv(packages or [], links))
     with open(os.path.join(out, "models.csv"), "w", encoding="utf-8-sig", newline="") as f:  # the BOM makes Excel read it correctly
         f.write(build_csv(items, links))
 
@@ -90,6 +93,9 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
     ps = found_packages["summary"]
     if ps:
         log(f"  {ps['dependency_files']:,} dependency files, {ps['packages_read']:,} packages, {ps['ai_packages']:,} AI packages ({ps['seconds']:.1f}s)")
+        if ps.get("ai_packages"):
+            log(f"  {ps['advisories']:,} known vulnerabilities in {ps['vulnerable_packages']:,} AI packages; "
+                f"{ps['not_checked']:,} not checked (no exact version). Advisory data from {ps['advisory_data'] or 'an unknown date'}.")
     for p in found_packages["problems"]:
         warnings.append(f"Could not read the dependency file {p['file']}: {p['error']}")
     for note in found_packages.get("notes", []):
@@ -114,14 +120,14 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
     included = [i for i in items if i["tier"] != "rejected"]
     used = sum(1 for i in included if i.get("role") == "used")
     log("Writing the AI-BOM and the report ...")
-    bom = build_bom(included, app)
+    bom = build_bom(included, app, found_packages["packages"], ps.get("advisory_data", "") if ps else "")
     problem = validate(bom)
     save(os.path.join(out, "files.json"), {"categories": cats, "files": [vars(f) for f in files]})
     save(os.path.join(out, "findings.json"), [f.to_dict() for f in findings])
     save(os.path.join(out, "merged.json"), items)
     save(os.path.join(out, "packages.json"), found_packages)
     save(os.path.join(out, "aibom.cdx.json"), bom)
-    write_readable(out, items, app, source, links, warnings)
+    write_readable(out, items, app, source, links, warnings, found_packages["packages"])
     rows = build_rows(items)
     tiers = dict(collections.Counter(i["tier"] for i in items))
     reasons = dict(collections.Counter(i["reason"] for i in items if i["tier"] == "rejected"))

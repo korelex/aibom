@@ -4,13 +4,14 @@ Combines 4 live sources + our curated overlay:
   1. aibom_engine/knowledge/curated.json (licenses, AI package catalog, curated models & deprecations)
   2. LiteLLM model_prices_and_context_window.json (4,700+ models, deprecation_date, regions, limits, costs, capabilities)
   3. OpenRouter /api/v1/models (canonical_slug, hugging_face_id, modalities, cutoff/expiration dates)
-  4. OSV.dev /v1/querybatch + /v1/vulns/{id} (all CVEs/GHSAs for AI packages, fixed versions, and affected symbols)
+  4. OSV.dev ecosystem dumps (every advisory for every AI package and family, with its affected ranges; scripts/osv_data.py)
 
 Usage:
   python scripts/build_db.py              # full live build from all upstream sources
   python scripts/build_db.py --offline    # build from local aibom_engine/knowledge/model_names.json + curated.json only
   python scripts/build_db.py --reformat   # rewrite ai_db.json and curated.json in their one-entry-per-line layout (no network)
   python scripts/build_db.py --apply-curated  # re-apply curated.json on the existing ai_db.json (no network, minimal diff)
+  python scripts/build_db.py --osv-only   # refresh only the advisories from OSV, keep everything else as it is
 """
 from __future__ import annotations
 
@@ -23,6 +24,8 @@ import sys
 import time
 import urllib.request
 
+import osv_data  # noqa: E402  (scripts/osv_data.py)
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, ".."))
 if ROOT not in sys.path:
@@ -32,8 +35,7 @@ from aibom_engine.vendors import maker_of, type_of  # noqa: E402
 
 LITELLM_URL = "https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json"
 OPENROUTER_URL = "https://openrouter.ai/api/v1/models"
-OSV_BATCH_URL = "https://api.osv.dev/v1/querybatch"
-OSV_VULN_URL = "https://api.osv.dev/v1/vulns/"
+OSV_CACHE = os.path.join(ROOT, "build", "osv")  # the ecosystem dumps, reused for 20 hours (build/ is git-ignored)
 
 KNOWLEDGE_DIR = os.path.join(ROOT, "aibom_engine", "knowledge")
 CURATED_PATH = os.path.join(KNOWLEDGE_DIR, "curated.json")
@@ -167,7 +169,12 @@ def dump_db(path: str, db: dict) -> None:
     parts = []
     for key in sorted(db):
         value = db[key]
-        if isinstance(value, dict) and key != "meta" and value:
+        if key == "vulnerabilities" and isinstance(value, dict) and value:
+            # one advisory per line: a package can have more than a hundred
+            rows = [f"  {json.dumps(k, ensure_ascii=False)}:[\n" + ",\n".join(f"   {dumps(a)}" for a in v) + "\n  ]"
+                    for k, v in sorted(value.items())]
+            body = "{\n" + ",\n".join(rows) + "\n }"
+        elif isinstance(value, dict) and key != "meta" and value:
             rows = [f"  {json.dumps(k, ensure_ascii=False)}:{dumps(v)}" for k, v in sorted(value.items())]
             body = "{\n" + ",\n".join(rows) + "\n }"
         else:
@@ -205,136 +212,6 @@ def fetch_json(url: str, data: bytes | None = None, timeout: int = 30):
     req = urllib.request.Request(url, data=data, headers=headers)
     with urllib.request.urlopen(req, timeout=timeout) as resp:
         return json.loads(resp.read().decode("utf-8"))
-
-
-def extract_symbols_from_text(text: str, pkg_name: str) -> list[str]:
-    if not text:
-        return []
-    out = []
-    pkg_clean = pkg_name.lower().replace("-", "_")
-    for m in BACKTICK_SYM_RE.finditer(text):
-        sym = m.group(1).strip(".")
-        low = sym.lower()
-        if low in STOP_SYMBOLS or low == pkg_clean or low == pkg_name.lower():
-            continue
-        if "/" in sym or " " in sym or sym.startswith("--") or sym.endswith((".py", ".js", ".ts", ".json", ".yaml", ".md")):
-            continue
-        # Keep class names (CamelCase), function/method calls, or dotted module paths
-        if any(c.isupper() for c in sym) or "_" in sym or "." in sym:
-            if sym not in out:
-                out.append(sym)
-    return out[:8]
-
-
-def cvss_to_severity(score: float, risk_str: str = "") -> str:
-    r = (risk_str or "").lower()
-    if r in {"critical", "high", "medium", "low"}:
-        return r
-    if score >= 9.0:
-        return "critical"
-    if score >= 7.0:
-        return "high"
-    if score >= 4.0:
-        return "medium"
-    if score > 0:
-        return "low"
-    return "medium"
-
-
-def fetch_osv_for_packages(packages: list[dict]) -> dict[str, list[dict]]:
-    """Query OSV batch API for all curated AI packages, then fetch details in parallel."""
-    queries = [{"package": {"name": p["name"], "ecosystem": p["ecosystem"]}} for p in packages]
-    vuln_ids_by_pkg: dict[str, list[str]] = {}
-    # OSV querybatch accepts up to 1000 queries at once
-    try:
-        payload = json.dumps({"queries": queries}).encode("utf-8")
-        res = fetch_json(OSV_BATCH_URL, data=payload, timeout=45)
-        for pkg, item in zip(packages, res.get("results", [])):
-            key = f"{pkg['ecosystem'].lower()}:{pkg['name'].lower()}"
-            ids = [v["id"] for v in item.get("vulns", []) if v.get("id")]
-            # Keep GHSA / CVE / PYSEC / GO / RUSTSEC advisories (avoid duplicate mirrors)
-            prioritized = [i for i in ids if i.startswith(("GHSA-", "PYSEC-", "GO-", "RUSTSEC-", "CVE-"))]
-            if prioritized:
-                vuln_ids_by_pkg[key] = prioritized[:35]
-    except Exception as exc:
-        print(f"  [warn] OSV batch query failed: {exc}")
-        return {}
-
-    unique_ids = sorted({vid for ids in vuln_ids_by_pkg.values() for vid in ids})
-    print(f"  Fetching OSV details for {len(unique_ids)} unique AI package advisories...")
-    details_map: dict[str, dict] = {}
-
-    def _get_one(vid: str):
-        try:
-            return vid, fetch_json(OSV_VULN_URL + vid, timeout=20)
-        except Exception:
-            return vid, None
-
-    with concurrent.futures.ThreadPoolExecutor(max_workers=16) as pool:
-        for vid, doc in pool.map(_get_one, unique_ids):
-            if doc:
-                details_map[vid] = doc
-
-    out: dict[str, list[dict]] = {}
-    for pkg in packages:
-        key = f"{pkg['ecosystem'].lower()}:{pkg['name'].lower()}"
-        ids = vuln_ids_by_pkg.get(key, [])
-        if not ids:
-            continue
-        seen_cves = set()
-        pkg_vulns = []
-        for vid in ids:
-            doc = details_map.get(vid)
-            if not doc:
-                continue
-            aliases = doc.get("aliases") or []
-            cve = next((a for a in ([vid] + aliases) if a.startswith("CVE-")), "")
-            dedup_key = cve or vid
-            if dedup_key in seen_cves:
-                continue
-            seen_cves.add(dedup_key)
-
-            # Find affected block matching this package
-            introduced, fixed = "0", ""
-            for aff in doc.get("affected", []):
-                apkg = aff.get("package") or {}
-                if apkg.get("name", "").lower() == pkg["name"].lower():
-                    for rng in aff.get("ranges", []):
-                        for ev in rng.get("events", []):
-                            if "introduced" in ev:
-                                introduced = ev["introduced"]
-                            if "fixed" in ev and not fixed:
-                                fixed = ev["fixed"]
-                    break
-
-            db_sev = (doc.get("database_specific") or {}).get("severity", "")
-            severity = cvss_to_severity(0.0, db_sev)
-            summary = (doc.get("summary") or "").strip()
-            details = (doc.get("details") or "").strip()
-            if not summary and details:
-                summary = details.splitlines()[0][:180]
-
-            refs = doc.get("references") or []
-            fix_url = next(
-                (r.get("url") for r in refs if r.get("url") and ("/commit/" in r["url"] or "/pull/" in r["url"])),
-                "",
-            )
-            symbols = extract_symbols_from_text(summary + "\n" + details, pkg["name"])
-            pkg_vulns.append({
-                "id": vid,
-                "cve": cve,
-                "aliases": sorted(set(aliases)),
-                "severity": severity,
-                "summary": summary[:220],
-                "introduced": introduced,
-                "fixed": fixed,
-                "affected_symbols": symbols,
-                "advisory_url": f"https://osv.dev/vulnerability/{vid}",
-                "fix_url": fix_url,
-            })
-        if pkg_vulns:
-            out[key] = sorted(pkg_vulns, key=lambda x: x["id"])
-    return out
 
 
 DOTTED_MAKER_RE = re.compile(
@@ -426,6 +303,7 @@ def build(offline: bool = False, from_existing: bool = False):
     legacy_names: dict[str, dict] = {}
     existing_vulns: dict[str, list] = {}
     existing_built = ""
+    existing_osv_meta: dict = {}
     if from_existing:
         with open(AI_DB_PATH, encoding="utf-8") as fh:
             existing = json.load(fh)
@@ -443,6 +321,7 @@ def build(offline: bool = False, from_existing: bool = False):
                                 "restricted": meta.get("restricted", False), "source_url": "", "checked": ""}
         existing_vulns = existing["vulnerabilities"]
         existing_built = existing.get("meta", {}).get("built", "")
+        existing_osv_meta = existing.get("meta", {}).get("vulnerabilities", {})
 
     def register_model(canonical_id: str, name: str, maker: str, mode: str) -> dict:
         if canonical_id not in models:
@@ -684,11 +563,12 @@ def build(offline: bool = False, from_existing: bool = False):
         packages_table[pkey] = p
 
     vulnerabilities_table = dict(existing_vulns)
+    osv_meta = existing_osv_meta
     if not offline:
-        print("3. Fetching OSV advisories for AI packages...")
-        vulnerabilities_table = fetch_osv_for_packages(packages_list)
+        print("3. Reading OSV advisories for AI packages...")
+        vulnerabilities_table, osv_meta = osv_data.build(packages_list, curated.get("package_families", []), OSV_CACHE)
         total_vulns = sum(len(v) for v in vulnerabilities_table.values())
-        print(f"   Indexed {total_vulns:,} advisories across {len(vulnerabilities_table)} AI packages.")
+        print(f"   {total_vulns:,} advisories across {len(vulnerabilities_table)} AI packages.")
 
     db_body = {
         "models": dict(sorted(models.items())),
@@ -701,8 +581,9 @@ def build(offline: bool = False, from_existing: bool = False):
     digest = hashlib.sha256(json.dumps(db_body, sort_keys=True).encode("utf-8")).hexdigest()
     full_db = {
         "meta": {
-            "schema_version": "1.0.0",
+            "schema_version": "1.1.0",
             "built": existing_built or today,
+            "vulnerabilities": osv_meta,
             "sha256": digest,
             "counts": {
                 "canonical_models": len(models),
@@ -747,6 +628,25 @@ def build(offline: bool = False, from_existing: bool = False):
     print("   Counts:", json.dumps(full_db["meta"]["counts"], indent=2))
 
 
+def refresh_osv():
+    """Replace only the advisories (and their counts and source) in the existing ai_db.json."""
+    with open(CURATED_PATH, encoding="utf-8") as f:
+        curated = json.load(f)
+    with open(AI_DB_PATH, encoding="utf-8") as fh:
+        db = json.load(fh)
+    print("Reading OSV advisories for AI packages...")
+    table, meta = osv_data.build(curated["packages"], curated.get("package_families", []), OSV_CACHE)
+    db["vulnerabilities"] = table
+    db["meta"]["vulnerabilities"] = meta
+    db["meta"]["schema_version"] = "1.1.0"
+    db["meta"]["counts"]["ai_vulnerable_packages"] = len(table)
+    db["meta"]["counts"]["ai_advisories"] = sum(len(v) for v in table.values())
+    body = {k: v for k, v in db.items() if k != "meta"}
+    db["meta"]["sha256"] = hashlib.sha256(json.dumps(body, sort_keys=True).encode("utf-8")).hexdigest()
+    dump_db(AI_DB_PATH, db)
+    print(f"   {db['meta']['counts']['ai_advisories']:,} advisories across {len(table)} AI packages. Wrote {AI_DB_PATH}")
+
+
 if __name__ == "__main__":
     if "--reformat" in sys.argv:
         # Rewrite the existing database in the canonical layout without fetching anything.
@@ -757,5 +657,7 @@ if __name__ == "__main__":
         print("Reformatted", AI_DB_PATH, "and", CURATED_PATH)
     elif "--apply-curated" in sys.argv:
         build(from_existing=True)
+    elif "--osv-only" in sys.argv:
+        refresh_osv()
     else:
         build(offline="--offline" in sys.argv)

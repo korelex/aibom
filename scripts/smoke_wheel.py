@@ -85,8 +85,18 @@ def main():
         if "gpt-4o-2024-08-06" not in names:
             fail(f"the scan did not find the model in the app; components were {names}")
         with open(os.path.join(out, "report.md"), encoding="utf-8") as fh:
-            if "gpt-4o-2024-08-06" not in fh.read():
+            text = fh.read()
+            if "gpt-4o-2024-08-06" not in text:
                 fail("report.md does not mention the model")
+            if "## AI packages" not in text:
+                fail("report.md has no AI packages section")
+        libraries = [c for c in bom.get("components", []) if c.get("type") == "library" and c.get("name") == "openai"]
+        if not libraries or not libraries[0].get("purl", "").startswith("pkg:pypi/openai"):
+            fail("the AI-BOM has no openai library component with a purl")
+        if "OpenAI API" not in [s.get("name") for s in bom.get("services", [])]:
+            fail("the AI-BOM has no OpenAI API service (the providers rules are not packaged?)")
+        if not os.path.exists(os.path.join(out, "packages.csv")):
+            fail("packages.csv was not written")
         print("SMOKE TEST PASSED: wheel installs, `aibom scan` runs, database is packaged.")
 
 

@@ -3,7 +3,7 @@
 Provides fast lookups over aibom_engine/knowledge/ai_db.json:
   - Model resolution (canonical ID, maker, provider, version, pinned status, deprecation, license)
   - AI package classification (llm_sdk, agent_framework, mcp, vector_db, model_runtime, dataset_loader, guardrail)
-  - AI package vulnerability matching (OSV version-range comparator + affected symbols + fix version)
+  - AI package vulnerability matching (OSV ranges, PEP 440 / SemVer; see vulns.py)
   - License risk classification (permissive, conditional-commercial, non-commercial, copyleft, proprietary)
   - Opt-in --online Hugging Face Hub lookup cached in ~/.cache/aibom/online_cache.sqlite (24h TTL)
 """
@@ -141,56 +141,27 @@ def _family_package(ecosystem: str, name: str, db: dict[str, Any]) -> dict[str, 
             "import_names": imports, "family": best["prefix"]}
 
 
-def _version_tuple(v: str) -> tuple:
-    """Parse a version string into a comparable tuple for PEP 440 / SemVer ranges."""
-    v = v.strip().lstrip("vV")
-    if not v:
-        return (0,)
-    base = re.split(r"[-+]", v, maxsplit=1)[0]
-    parts = []
-    for seg in base.split("."):
-        m = re.match(r"^(\d+)", seg)
-        parts.append(int(m.group(1)) if m else 0)
-    # Pre-release (rc, alpha, beta, dev, preview) sorts slightly before the release
-    is_pre = bool(re.search(r"(?:a|alpha|b|beta|rc|dev|preview)", v, re.IGNORECASE))
-    return tuple(parts) + ((0,) if is_pre else (1,))
-
-
-def version_in_range(version: str, introduced: str, fixed: str) -> bool:
-    """Return True when version is >= introduced and < fixed."""
-    if not version or version in ("*", "latest", "unknown"):
-        return False
-    vt = _version_tuple(version)
-    if introduced and introduced != "0":
-        if vt < _version_tuple(introduced):
-            return False
-    if fixed:
-        if vt >= _version_tuple(fixed):
-            return False
-    return True
-
-
 def match_vulnerabilities(
     ecosystem: str,
     name: str,
     version: str,
     db: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
-    """Return all vulnerabilities in ai_db.json that affect (ecosystem, name, version)."""
+    """The advisories in ai_db.json that affect this exact version, by OSV's rules (see vulns.py). [] when the version
+    is not one exact version: use vulnerability_check() to tell "none known" from "not checked"."""
+    return vulnerability_check(ecosystem, name, version, db)["advisories"]
+
+
+def vulnerability_check(ecosystem: str, name: str, version: str, db: dict[str, Any] | None = None) -> dict[str, Any]:
+    """{"status": "checked" | "not_checked", "reason", "advisories"} for one package version."""
+    from . import vulns
     db = db or load_db()
+    eco = "npm" if ecosystem.lower() == "npm" else "pypi"
     pkg = lookup_package(ecosystem, name, db=db)
-    key = f"{pkg['ecosystem'].lower()}:{pkg['name'].lower()}" if pkg else f"{ecosystem.lower()}:{name.lower()}"
-    advisories = db.get("vulnerabilities", {}).get(key, [])
-    if not advisories or not version:
-        return []
-    clean_ver = re.sub(r"^[~^>=<]+", "", version.strip())
-    if not clean_ver or not clean_ver[0].isdigit():
-        return []
-    matched = []
-    for adv in advisories:
-        if version_in_range(clean_ver, adv.get("introduced", "0"), adv.get("fixed", "")):
-            matched.append(adv)
-    return matched
+    key = f"{eco}:{(pkg['name'] if pkg and not pkg.get('family') else name).lower()}"
+    if eco == "pypi":
+        key = f"pypi:{re.sub(r'[-_.]+', '-', key.split(':', 1)[1])}"
+    return vulns.check(eco, name, version, db.get("vulnerabilities", {}).get(key, []))
 
 
 # Whether the license lets you use the model commercially:

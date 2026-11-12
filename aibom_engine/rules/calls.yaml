@@ -476,6 +476,29 @@ rules:
     what: defines a tool for an AI agent (DeepSeek Harness, opencode)
     javascript: ["@deepseek-ai/dsh-tools:defineTool", "@opencode-ai/plugin:tool"]
 
+# Provider services: the hosted API a provider's own client library talks to. The AI-BOM lists the service when live code
+# calls the client (evidence level "called"). It says the code uses the provider's client, not which endpoint it is
+# configured for: an OpenAI client can be pointed at another OpenAI-compatible server. A package whose vendor is not the
+# provider (a gateway, a framework, a community wrapper) is deliberately not listed.
+providers:
+  - {service: OpenAI API, packages: [{ecosystem: pypi, name: openai}, {ecosystem: npm, name: openai}]}
+  - {service: Anthropic API, packages: [{ecosystem: pypi, name: anthropic}, {ecosystem: npm, name: "@anthropic-ai/sdk"}]}
+  - {service: Google Gemini API, packages: [{ecosystem: pypi, name: google-genai}, {ecosystem: pypi, name: google-generativeai},
+                                              {ecosystem: npm, name: "@google/genai"}, {ecosystem: npm, name: "@google/generative-ai"}]}
+  - {service: Google Vertex AI, packages: [{ecosystem: pypi, name: vertexai}, {ecosystem: pypi, name: google-cloud-aiplatform},
+                                             {ecosystem: npm, name: "@google-cloud/aiplatform"}]}
+  - {service: Mistral API, packages: [{ecosystem: pypi, name: mistralai}, {ecosystem: npm, name: "@mistralai/mistralai"}]}
+  - {service: Cohere API, packages: [{ecosystem: pypi, name: cohere}, {ecosystem: npm, name: cohere-ai}]}
+  - {service: Groq API, packages: [{ecosystem: pypi, name: groq}, {ecosystem: npm, name: groq-sdk}]}
+  - {service: Together AI API, packages: [{ecosystem: pypi, name: together}]}
+  - {service: Voyage AI API, packages: [{ecosystem: pypi, name: voyageai}]}
+  - {service: ElevenLabs API, packages: [{ecosystem: pypi, name: elevenlabs}]}
+  - {service: Deepgram API, packages: [{ecosystem: pypi, name: deepgram-sdk}]}
+  - {service: ZeroEntropy API, packages: [{ecosystem: npm, name: zeroentropy}]}
+  - {service: Pinecone, packages: [{ecosystem: pypi, name: pinecone}, {ecosystem: pypi, name: pinecone-client}, {ecosystem: npm, name: "@pinecone-database/pinecone"}]}
+  - {service: Upstash Vector, packages: [{ecosystem: pypi, name: upstash-vector}, {ecosystem: npm, name: "@upstash/vector"}]}
+  - {service: turbopuffer, packages: [{ecosystem: pypi, name: turbopuffer}, {ecosystem: npm, name: "@turbopuffer/turbopuffer"}]}
+
 # AI services reached through a general cloud SDK. The client counts only when it is created for the AI service
 # (the service name is the first argument or service_name=), and calls on that client are recorded too.
 services:
