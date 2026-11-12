@@ -20,6 +20,13 @@ PATTERNS = [(re.compile(p), g) for p, g in (
     (r"xox[baprs]-[A-Za-z0-9\-]{10,}", 0),                # Slack
     (r"AIza[0-9A-Za-z_\-]{35}", 0),                       # Google API key
     (r"hf_[A-Za-z0-9]{30,}", 0),                          # Hugging Face
+    (r"api_org_[A-Za-z]{30,}", 0),                        # Hugging Face organisation token
+    (r"gsk_[A-Za-z0-9]{20,}", 0),                         # Groq
+    (r"xai-[A-Za-z0-9]{20,}", 0),                         # xAI
+    (r"pplx-[A-Za-z0-9]{20,}", 0),                        # Perplexity
+    (r"r8_[A-Za-z0-9]{20,}", 0),                          # Replicate
+    (r"ABSK[A-Za-z0-9+/]{40,}={0,2}", 0),                 # Amazon Bedrock API key
+    (r"ASIA[0-9A-Z]{16}", 0),                             # AWS temporary access key id
     (r"(?<![A-Za-z0-9])eyJ[A-Za-z0-9_\-]{10,}\.eyJ[A-Za-z0-9_\-]{10,}\.[A-Za-z0-9_\-]{10,}", 0),  # a JSON web token
     (r"(?i)(bearer\s+)([A-Za-z0-9._~+/\-]{20,}=*)", 2),   # Authorization: Bearer <token>
     (r"-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?(?:-----END [A-Z ]*PRIVATE KEY-----|$)", 0),

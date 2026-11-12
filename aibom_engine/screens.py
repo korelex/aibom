@@ -210,6 +210,9 @@ def dashboard(r, out, packages, links, cmd, date, version):
         vuln_line = Text.assemble("known vulnerabilities in %d package%s" % (len({(f["package"], f["version"]) for f in found}),
                                   "" if len({(f["package"], f["version"]) for f in found}) == 1 else "s"), "   ", ui.severity_counts(c, skip_zero=True))
     t.add_row(Text(str(len(found)), style="bold bright_red" if found else "bold green"), vuln_line)
+    ks = r.get("secrets") or {}
+    if ks.get("keys"):
+        t.add_row(Text(str(ks["keys"]), style="bold bright_red"), Text("hardcoded API keys in %d files (values are never stored)" % ks["files"]))
     mc = r.get("mcp") or {}
     if mc.get("servers"):
         t.add_row(str(mc["servers"]), Text("MCP servers declared in config files (%d local, %d remote)" % (mc["stdio"], mc["remote"])))

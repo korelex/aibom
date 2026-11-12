@@ -425,6 +425,9 @@ def do_scan(a):
               % (ps["ai_packages"], ps.get("vulnerable_packages", 0), ps.get("advisories", 0)))
         if ps.get("not_checked"):
             print("       %d not checked for vulnerabilities: no exact installed version (a range, or no lockfile)" % ps["not_checked"])
+    ks = r.get("secrets") or {}
+    if ks.get("keys"):
+        print("\n  %-4d hardcoded API keys in %d files (values are never stored; the report lists each file and line)" % (ks["keys"], ks["files"]))
     mc = r.get("mcp") or {}
     if mc.get("servers"):
         print("\n  %-4d MCP servers declared in the config files (%d local, %d remote)" % (mc["servers"], mc["stdio"], mc["remote"]))

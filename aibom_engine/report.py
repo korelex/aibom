@@ -30,7 +30,8 @@ CANNOT_SEE = ["A model that the app chooses when it runs: an environment variabl
               "Anything outside this one repository, such as code in other repositories or in private packages.",
               "AI packages are read from Python and JavaScript/TypeScript dependency files only (not Go, Java or C#), and the files do not say which package needs which, so no dependency tree between packages is drawn.",
               "MCP servers are read as text from the config files of Claude Code, VS Code, Cursor, Gemini CLI, Codex and Claude Desktop that sit in the repository, "
-              "not from a developer's own machine. No server is started, so the tools a server offers are not listed. Datasets, secrets and weight files are not covered yet.",
+              "not from a developer's own machine. No server is started, so the tools a server offers are not listed. Datasets and model weight files are not covered yet.",
+              "Hardcoded API keys are found in the files on disk, by the format of well-known providers' keys or by a provider-named variable with a literal value. Keys in the git history, keys with no distinctive format that are not given a provider-named name, and keys built from pieces are not found.",
               "Some names. A name that no dictionary lists and that no rule recognises can be missed. " + TESTED]
 
 

@@ -160,6 +160,7 @@ exposes the app now, `medium` is act soon, `low` is good practice, `info` is wor
 | `model.unpinned-hf-repo` | info | A Hugging Face model; this scan does not check for a pinned revision. |
 | `model.license-restricted` | medium | The licence limits commercial use or needs review. |
 | `model.license-unknown` | info | aibom does not know the licence. |
+| `secret.api-key` | high / medium / low | A hardcoded AI provider API key in a file (see below). High for a key recognised by its format in the product's own code or settings, medium when recognised only by the variable name it is given, low in a test, example or documentation file (usually a sample, but one that is real is still a leak). |
 | `mcp.plaintext-secret` | high / medium | A credential is written in an MCP config file. High when the value has a well-known key format or a URL carries a password; medium for a plain value under a name such as `API_KEY` or `Authorization`. A placeholder such as `${TOKEN}` or `YOUR_KEY` is not a credential. |
 | `mcp.shell-command` | medium / high | The server is started through a shell string or inline code (`bash -c ...`, `python -c ...`). High when that text downloads and runs something. `cmd /c npx ...`, the way Windows runs `npx`, is not flagged. |
 | `mcp.unpinned-package` | medium | An npm, PyPI or container package has no exact version, so a new release changes what runs. |
@@ -178,6 +179,32 @@ file system access to the required directories; section 5: never pass raw shell 
 plaintext in MCP config files). The cheat sheet does not give version-pinning advice, so the pinning rule cites MCP04 only.
 The Cloud Security Alliance's "MCP Security Baseline" was listed as v0.1 and "coming soon", with no published text, when
 this was checked on 2026-11-12, so nothing here claims to follow it.
+
+## Hardcoded API keys
+
+A key written into code is in the repository, in every clone and, once committed, in the history. aibom reads the text files
+on disk (not the git history) and reports each provider key it finds with the provider, the file, the line and the
+length, and **never keeps the key**: no output, including `credentials.json`, holds any part of the value.
+
+A key is recognised in two ways, both chosen to keep false alarms rare:
+
+1. **By its format**, for providers that issue a distinctive one: Anthropic (`sk-ant-api03-`, `sk-ant-admin01-`), OpenAI
+   (`sk-proj-`, `sk-svcacct-`, `sk-admin-` and the older keys that contain `T3BlbkFJ`), OpenRouter (`sk-or-v1-` and 64
+   hex characters), Hugging Face (`hf_` and 34 letters; `api_org_`), Google (`AIza` and 35 characters), Groq (`gsk_`), xAI
+   (`xai-`), Perplexity (`pplx-` and 48 characters), Replicate (`r8_`, 40 characters in all), AWS access key ids and
+   Amazon Bedrock API keys. The formats were checked against the providers' own documentation where it exists
+   (OpenRouter, Replicate) and otherwise against the published rules of [gitleaks](https://github.com/gitleaks/gitleaks);
+   Groq and xAI are known by their prefix, with a deliberately loose length because neither documents one. A match must
+   also be random enough (a minimum entropy) and must not look like an example: repeated or counting characters, words
+   such as `example` or `your`, an ellipsis.
+2. **By the name it is given**, for keys with no distinctive format (Mistral, Cohere, Azure OpenAI and others): a literal
+   value is reported only when it is assigned to a variable or setting whose name says whose key it is
+   (`MISTRAL_API_KEY = "..."`), is long and random enough, and is not a placeholder, a path, a URL or a lookup such as
+   `${KEY}` or `os.getenv(...)`.
+
+Not found: keys in git history, keys that have no distinctive format and are not given a provider-named name, and keys built
+from pieces. Lock files, minified files and translation files are not read. Pinecone keys are not matched by format because
+the sources checked disagree about their prefix.
 
 ## Where the data comes from
 
