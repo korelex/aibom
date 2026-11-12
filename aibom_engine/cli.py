@@ -350,6 +350,22 @@ def check_tools():
         raise SourceError("Two Python packages are missing. Install aibom with:  python -m pip install .  (from the aibom folder)")
 
 
+GATE_FAILED = 3   # a scan that ran but found flags at or above --fail-on (a scan that could not run exits 2)
+
+
+def gate(a, r):
+    """--fail-on SEVERITY: exit with GATE_FAILED when the scan has a flag that bad or worse, so a build can stop on it."""
+    level = getattr(a, "fail_on", None)
+    if not level:
+        return
+    hits = flag_rules.at_least(r.get("flags") or [], level)
+    if hits:
+        worst = flag_rules.counts(hits)
+        print("\nFailed: %d risk flag%s at %s or worse (%s). The fix for each is in the report and in flags.json."
+              % (len(hits), "" if len(hits) == 1 else "s", level, ", ".join("%d %s" % (n, s) for s, n in worst.items() if n)), file=sys.stderr)
+        sys.exit(GATE_FAILED)
+
+
 def do_scan(a):
     from .pipeline import run
     check_tools()
@@ -404,6 +420,7 @@ def do_scan(a):
             raise SourceError("The AI-BOM did not pass the format check: " + str(r["error"]))
         if a.open:
             open_report(out)
+        gate(a, r)
         return
     w = width()
     print()
@@ -458,6 +475,7 @@ def do_scan(a):
         raise SourceError("The AI-BOM did not pass the format check: " + str(r["error"]))
     if a.open:
         open_report(out)
+    gate(a, r)
 
 
 def main():
@@ -479,6 +497,7 @@ def main():
     s.add_argument("--keep", action="store_true", help="keep the downloaded copy of a repository")
     s.add_argument("--open", action="store_true", help="open the report in the browser when done")
     s.add_argument("--quiet", action="store_true", help="no progress lines")
+    s.add_argument("--fail-on", choices=list(flag_rules.SEVERITIES), help="exit with code 3 when the scan has a risk flag at this severity or worse (a scan that cannot run exits with 2)")
     s.add_argument("--debug", action="store_true", help="show the full error trace")
     o = sub.add_parser("report", help="open the readable report of a finished scan in the browser, or write it as a PDF (--pdf)")
     o.add_argument("run_dir")

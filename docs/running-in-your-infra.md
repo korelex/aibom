@@ -110,8 +110,11 @@ The commands were run; the workflow file itself has not been run on GitHub.
 
 ### Failing the build
 
-aibom does not have a gate yet (`--fail-on` is planned). Until then this script, run after the scan, fails the build on
-critical or high vulnerabilities in AI packages the project depends on directly:
+`aibom scan . --fail-on high` exits with code `3` when the scan has a risk flag (a leaked key, an MCP server started
+through a shell string, a model file that imports dangerous code and the others in the README) at that severity or worse.
+The results are still written, and a scan that cannot run exits with `2`, so a script can tell a failed gate from a
+broken scan. The gate looks at risk flags only, not at vulnerabilities. For those, this script, run after the scan, fails the
+build on critical or high vulnerabilities in AI packages the project depends on directly:
 
 ```python
 # aibom-gate.py: python aibom-gate.py aibom-out [critical,high]
@@ -141,7 +144,7 @@ install a newer wheel. There is no automatic update yet.
 ## Not available yet
 
 - A published Docker image, and a release on PyPI or Homebrew.
-- `--fail-on`, SARIF output and a ready-made GitHub Action.
+- SARIF output and a ready-made GitHub Action.
 - Dependency data without a lockfile: with only a `requirements.txt` or `package.json`, aibom sees the direct dependencies,
   and only exact pins can be checked for vulnerabilities. A lockfile gives the whole tree.
 - Languages other than Python and JavaScript/TypeScript for packages.

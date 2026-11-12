@@ -159,6 +159,7 @@ Useful options for `scan`:
 | `--max-seconds N` | 120 | stop reading files after N seconds; a report that hit the limit says so at the top |
 | `--keep` | off | keep the downloaded copy of a repository |
 | `--quiet` | off | print only the summary, not the progress lines |
+| `--fail-on SEVERITY` | off | exit with code 3 when the scan has a risk flag at `info`, `low`, `medium` or `high` or worse, so a build can stop on it. The results are still written. A scan that cannot run exits with 2, so a script can tell the two apart |
 
 Run `aibom <command> --help` for every option.
 
@@ -255,7 +256,7 @@ How each of these is decided, and where the data comes from, is in [docs/how-it-
 - Check Hugging Face revision pinning, read TensorFlow SavedModel or TFLite files, or look inside a model file that is encrypted,
   too large (a pickle over 1 GB), or compressed in a way not listed. Such files are reported as *not scanned*, which is never
   the same as safe.
-- Run as a GitHub Action, fail a build on a policy (`--fail-on`), or write SARIF.
+- Run as a GitHub Action, or write SARIF. (`--fail-on` stops a build on a severity; it is not yet a per-rule policy.)
 - See a model chosen at run time, from an environment variable, a settings page or a database. aibom reads code; it
   does not run your app.
 - Find every model: about 1 in 5 is missed on unfamiliar code, mostly ids inside long lists and JSON catalogs.
