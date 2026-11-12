@@ -5,6 +5,7 @@ import uuid
 
 from . import __version__
 from .evidence import REACHABILITY
+from .flags import as_property
 
 COMPONENT_TYPE = {"model": "machine-learning-model", "framework": "framework", "agent": "application", "dataset": "data"}
 NS = "aibom-engine:"
@@ -14,6 +15,21 @@ RANK = {"code": 0, "config": 0, "manifest": 0, "notebook": 0, "test": 1, "docs":
 
 def slug(s):
     return "".join(c if c.isalnum() or c in "-._" else "-" for c in str(s).lower())
+
+
+def item_ref(it):
+    """The bom-ref of the component or service made for a found item."""
+    return f"{it['kind']}:{slug(it['name'])}"
+
+
+def attach_flags(bom, flags):
+    """Put each risk flag on the component it is about; a flag about no component, or one that is not in the BOM, goes on the app.
+    Every flag ends up in exactly one place."""
+    parts = {p["bom-ref"]: p for p in bom.get("components", []) + bom.get("services", [])}
+    app = bom["metadata"]["component"]
+    for f in flags:
+        target = parts.get(f.ref) if f.ref else None
+        (target if target is not None else app).setdefault("properties", []).append(as_property(f))
 
 
 MAX_OCCURRENCES = 25  # proof lines per package: a package called in 130 places keeps the first 25 and says how many there are
@@ -113,7 +129,7 @@ def package_parts(packages):
     return components, services, vuln_list, depends
 
 
-def build_bom(items, app_name, packages=None, advisory_data=""):
+def build_bom(items, app_name, packages=None, advisory_data="", flags=None):
     components, services = [], []
     for it in items:
         # evidence-level: how strongly the use is proven (declared / called); confidence: how sure the name itself is
@@ -149,7 +165,7 @@ def build_bom(items, app_name, packages=None, advisory_data=""):
             props.append({"name": NS + "live-places", "value": str(it["places"]["live"])})
         for a in it["aliases"]:
             props.append({"name": NS + "alias", "value": a})
-        ref = f"{it['kind']}:{slug(it['name'])}"
+        ref = item_ref(it)
         occ = [{"location": e["file"] or "(no file)", "line": e["line"], "additionalContext": (("called" if e.get("called") else e.get("use", "")) + ": " if e.get("use") else "") + (e["snippet"] or e["category"])}
                for e in sorted(it["evidence"], key=lambda e: (USE_RANK.get(e.get("use", ""), RANK.get(e["category"], 3)), e["file"], e["line"])) if e["line"] > 0]
         if it["kind"] in COMPONENT_TYPE:
@@ -173,6 +189,7 @@ def build_bom(items, app_name, packages=None, advisory_data=""):
         bom["metadata"]["properties"] = [{"name": NS + "advisory-data-fetched", "value": advisory_data}]
     if services:
         bom["services"] = services
+    attach_flags(bom, flags or [])
     if depends:
         bom["dependencies"] = [{"ref": "app", "dependsOn": depends}]
     if vuln_list:

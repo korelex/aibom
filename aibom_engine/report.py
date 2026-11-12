@@ -148,6 +148,33 @@ def where(row, links):
     return f"{p['file']}:{p['line']}", links.url_for(p["file"], p["line"]) if links else "", max(len(row["places"]) - 1, 0)
 
 
+FLAGS_NOTE = ("A flag is something worth a look, not proof of a problem. The risks of the models themselves (retired, deprecated, floating "
+              "alias, licence) are in the Risks block above.")
+
+
+def other_flags(meta):
+    """The flags that are not about a model's lifecycle or licence (the Risks block covers those), worst first."""
+    return [f for f in (meta or {}).get("flags", []) if f.category != "model"]
+
+
+def flag_place(f):
+    return f"{f.file}:{f.line}" if f.file and f.line else (f.file or "")
+
+
+def flags_markdown(meta):
+    flags = other_flags(meta)
+    if not flags:
+        return []
+
+    def cell(t):
+        return str(t).replace("|", "\\|").replace("\n", " ")
+
+    out = ["## Flags", "", "| Severity | What | About | Where | Fix |", "|---|---|---|---|---|"]
+    for f in flags:
+        out.append(f"| {f.severity.upper()} | {cell(f.title)} | {cell(f.subject)} | {cell(flag_place(f))} | {cell(f.fix)} |")
+    return out + ["", f"_{FLAGS_NOTE}_", ""]
+
+
 def source_line(source, links, meta):
     s = source or ""
     if links and links.ok:
@@ -325,6 +352,7 @@ def build_markdown(items, app, source="", links=None, meta=None):
     out.append("")
     out += [f"_{note}_" for note in lifecycle_notes(risk)]
     out.append("")
+    out += flags_markdown(meta)
 
     def table(rs):
         t = ["| Model | Made by | Type | Where it is used | Confidence | Status | Pinned | Deprecated | Retires or retired | Replacement | License |",
@@ -477,6 +505,25 @@ def cover_html(app, source, links, meta, rows, today=None):
             "A known vulnerability means the exact version is named in an advisory; it does not mean the app is exploitable. The full list of places and the standard CycloneDX 1.6 file (aibom.cdx.json) come with the scan.</p></section>")
 
 
+def flags_html(meta, links=None):
+    flags = other_flags(meta)
+    if not flags:
+        return ""
+    h = html.escape
+
+    def place(f):
+        if not f.file:
+            return ""
+        url = links.url_for(f.file, f.line) if links and f.line else ""
+        text = h(flag_place(f))
+        return f'<a href="{h(url)}" target="_blank" rel="noopener">{text}</a>' if url else f"<code>{text}</code>"
+
+    rows = "".join(f"<tr><td><span class='sev sev-{f.severity if f.severity != 'info' else 'unknown'}'>{f.severity.upper()}</span></td><td>{h(f.title)}</td>"
+                   f"<td>{h(f.subject)}</td><td>{place(f)}</td><td>{h(f.fix)}</td></tr>" for f in flags)
+    return ("<div class='risks' id='flags'><h2>Flags</h2><table><tr><th>Severity</th><th>What</th><th>About</th><th>Where</th><th>Fix</th></tr>"
+            + rows + f"</table><p class='note'>{h(FLAGS_NOTE)}</p></div>")
+
+
 def build_html(items, app, source="", links=None, meta=None, pdf=False, today=None):
     rows = build_rows(items)
     used, listed, gone = rows["used"], rows["listed"], rows["left_out"]
@@ -533,6 +580,7 @@ def build_html(items, app, source="", links=None, meta=None, pdf=False, today=No
 
     out.append("<div class='risks'><h2>Risks</h2><ul>" + "".join(risk_item(label, found) for label, found in risk_lines(risk)) + "</ul>"
                + "".join(f"<p class='note'>{h(note)}</p>" for note in lifecycle_notes(risk)) + "</div>")
+    out.append(flags_html(meta, links))
     out.append(f"<div class='cards'><div class='card'><b>{len(used)}</b><span>used directly in the code</span></div>"
                f"<div class='card'><b>{len(listed)}</b><span>only listed in long tables or lists</span></div><div class='card'><b>{len(gone)}</b><span>names left out (comments, messages, tests, docs)</span></div>"
                + (f"<div class='card'><b>{len(package_rows((meta or {}).get('packages')))}</b><span>AI packages ({package_summary(package_rows((meta or {}).get('packages')))['vulnerable']} with known vulnerabilities)</span></div>" if package_rows((meta or {}).get("packages")) else "")
