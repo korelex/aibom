@@ -14,6 +14,9 @@ requires-python = ">=3.9"
 dependencies = [
     "cyclonedx-python-lib[validation]>=11",
     "jsonschema>=4",
+    "packaging>=22",                        # Python requirement lines and versions, the standard way
+    "PyYAML>=6",                            # pnpm-lock.yaml
+    "tomli>=1.1; python_version < '3.11'",  # pyproject.toml and TOML lockfiles on Python 3.9 and 3.10
 ]
 
 [project.optional-dependencies]
@@ -30,7 +33,7 @@ aibom = "aibom_engine.cli:main"
 include = ["aibom_engine*"]
 
 [tool.setuptools.package-data]
-aibom_engine = ["knowledge/*.json", "knowledge/README.md"]
+aibom_engine = ["knowledge/*.json", "knowledge/README.md", "rules/*.yaml"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

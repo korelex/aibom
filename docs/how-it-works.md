@@ -17,7 +17,40 @@ usage, see the [README](../README.md).
    output or API-spec example. Only names with at least one live place are kept. A name whose live places all sit in
    a long table or list of models is reported as *only listed*, apart from models the code uses directly.
 5. **Look up** each model in the bundled database: maker, canonical id, pinning, lifecycle and license.
-6. **Write** the CycloneDX AI-BOM and the reports.
+6. **Read the dependency files** (requirements, pyproject, Pipfile, poetry/uv/pnpm/yarn/npm lockfiles, package.json)
+   and find the AI packages among them, then the imports and calls of those packages in live code. The call
+   signatures are in [`aibom_engine/rules/calls.yaml`](../aibom_engine/rules/calls.yaml). The packages are written
+   to `packages.json`; the AI-BOM and the reports do not list them yet.
+7. **Write** the CycloneDX AI-BOM and the reports.
+
+## Evidence levels
+
+Every model and package says how strongly its use is proven:
+
+| Level | A package | A model |
+| --- | --- | --- |
+| `declared` | is in a dependency file | is written in the code or settings |
+| `imported` | is imported by live code | (a model name is never imported) |
+| `called` | is called by live code: a client is created, an agent built, a model loaded (`OpenAI()`, `ChatAnthropic(...)`, `Chroma(...)`, `from_pretrained(...)`, a Bedrock client and its `invoke_model`) | is passed into a call on an AI SDK: `create(model="gpt-4o")`, `ChatOpenAI(model=MODEL)` where `MODEL = "gpt-4o"`, `from_pretrained("meta-llama/...")` |
+
+Each component gets the strongest level that is proven. A call counts only when the name being called is bound by
+an import of an AI package in the same file, so a project's own `Agent` or `OpenAI` class never counts, and code in
+tests, documentation and examples never raises a level.
+
+`declared` means *not proven*, not *not used*. A model name that reaches its API through a variable set elsewhere, a
+lookup table, a wrapper function or plain HTTP stays `declared`, because the scanner cannot follow it there. A name
+that is only compared (`if model == "gpt-4o"`), passed to a tokenizer, or written inside a prompt does not count as a
+call.
+
+None of the levels proves that a request from outside reaches the code: that needs a full call graph and data-flow
+trace, which aibom does not do. Every component therefore also says `reachability: not_verified`.
+
+How sure aibom is of a model's *name* is a separate question, written as `confidence`: `confirmed` when the name is
+written out, `worked_out` when it comes from a constant such as `GPT_4O`. A worked-out name can be called, and a
+confirmed one only declared.
+
+In the AI-BOM these are the properties `aibom-engine:evidence-level`, `aibom-engine:reachability` and
+`aibom-engine:confidence`; each proof line that passes the name into an AI call starts with `called:`.
 
 ## Lifecycle status
 

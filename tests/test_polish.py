@@ -5,6 +5,7 @@ import sys
 import tempfile
 import time
 import unittest
+from unittest import mock
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 sys.path.insert(0, ROOT)
@@ -86,6 +87,43 @@ class Download(unittest.TestCase):
         with self.assertRaises(source.SourceError) as cm:
             source.fetch(src)
         self.assertNotIn("Traceback", str(cm.exception))
+
+    def made_folders(self, action):
+        """Run action and return the temporary folders fetch made that still exist afterwards."""
+        made = []
+        real = tempfile.mkdtemp
+
+        def spy(*a, **kw):
+            made.append(real(*a, **kw))
+            return made[-1]
+        with mock.patch.object(source.tempfile, "mkdtemp", spy):
+            action()
+        self.assertTrue(made, "fetch made no temporary folder")
+        return [m for m in made if os.path.exists(m)]
+
+    def test_ctrl_c_during_the_download_leaves_no_temporary_folder(self):
+        src = source.parse("https://github.com/o/r")
+
+        def interrupted():
+            with mock.patch.object(source.subprocess, "run", side_effect=KeyboardInterrupt):
+                with self.assertRaises(KeyboardInterrupt):  # still reaches the CLI, which says "Stopped." and exits 130
+                    source.fetch(src)
+        self.assertEqual(self.made_folders(interrupted), [])
+
+    def test_failed_downloads_leave_no_temporary_folder(self):
+        def missing_folder():
+            with tempfile.TemporaryDirectory() as d:
+                self.make_repo(d)
+                src = source.parse("file://" + d.replace(os.sep, "/"))
+                src["subpath"] = "no/such/folder"
+                with self.assertRaises(source.SourceError):
+                    source.fetch(src)
+
+        def unreachable():
+            with self.assertRaises(source.SourceError):
+                source.fetch(source.parse("file:///definitely/not/here"))
+        self.assertEqual(self.made_folders(missing_folder), [])
+        self.assertEqual(self.made_folders(unreachable), [])
 
 
 class Roles(unittest.TestCase):

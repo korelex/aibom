@@ -4,6 +4,7 @@ import json
 import uuid
 
 from . import __version__
+from .evidence import REACHABILITY
 
 COMPONENT_TYPE = {"model": "machine-learning-model", "framework": "framework", "agent": "application", "dataset": "data"}
 NS = "aibom-engine:"
@@ -18,8 +19,15 @@ def slug(s):
 def build_bom(items, app_name):
     components, services = [], []
     for it in items:
-        props = [{"name": NS + "kind", "value": it["kind"]}, {"name": NS + "tier", "value": it.get("tier", "unverified")},
-                 {"name": NS + "found-by", "value": ",".join(it["found_by"])}]
+        # evidence-level: how strongly the use is proven (declared / called); confidence: how sure the name itself is
+        # (confirmed / worked_out). Kept apart on purpose: they answer different questions.
+        props = [{"name": NS + "kind", "value": it["kind"]}]
+        if it.get("evidence_level"):  # never claimed when it was not worked out
+            props.append({"name": NS + "evidence-level", "value": it["evidence_level"]})
+        props.append({"name": NS + "reachability", "value": it.get("reachability") or REACHABILITY})
+        if it.get("confidence"):
+            props.append({"name": NS + "confidence", "value": it["confidence"]})
+        props.append({"name": NS + "found-by", "value": ",".join(it["found_by"])})
         if it.get("maker"):
             props.append({"name": NS + "made-by", "value": it["maker"]})
         if it.get("mode"):
@@ -45,7 +53,7 @@ def build_bom(items, app_name):
         for a in it["aliases"]:
             props.append({"name": NS + "alias", "value": a})
         ref = f"{it['kind']}:{slug(it['name'])}"
-        occ = [{"location": e["file"] or "(no file)", "line": e["line"], "additionalContext": (e.get("use", "") + ": " if e.get("use") else "") + (e["snippet"] or e["category"])}
+        occ = [{"location": e["file"] or "(no file)", "line": e["line"], "additionalContext": (("called" if e.get("called") else e.get("use", "")) + ": " if e.get("use") else "") + (e["snippet"] or e["category"])}
                for e in sorted(it["evidence"], key=lambda e: (USE_RANK.get(e.get("use", ""), RANK.get(e["category"], 3)), e["file"], e["line"])) if e["line"] > 0]
         if it["kind"] in COMPONENT_TYPE:
             c = {"bom-ref": ref, "type": COMPONENT_TYPE[it["kind"]], "name": it["name"], "properties": props}

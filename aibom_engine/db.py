@@ -113,7 +113,32 @@ def lookup_package(ecosystem: str, name: str, db: dict[str, Any] | None = None) 
             eco, pkg_n = k.split(":", 1)
             _PKG_NORM_INDEX[_norm_pkg_name(eco, pkg_n)] = k
     mapped = _PKG_NORM_INDEX.get(_norm_pkg_name(ecosystem, name))
-    return pkgs.get(mapped) if mapped else None
+    if mapped:
+        return pkgs[mapped]
+    return _family_package(ecosystem, name, db)
+
+
+def _family_package(ecosystem: str, name: str, db: dict[str, Any]) -> dict[str, Any] | None:
+    """A package under a namespace one project owns (npm @ai-sdk/..., PyPI llama-index-...), when no exact entry exists."""
+    eco = ecosystem.strip().lower()
+    norm = _norm_pkg_name(eco, name).split(":", 1)[1]
+    best = None
+    for fam in (db.get("package_families") or {}).values():
+        if fam["ecosystem"].lower() != eco:
+            continue
+        prefix = fam["prefix"].lower()
+        if norm.startswith(prefix) and len(norm) > len(prefix) and (best is None or len(prefix) > len(best["prefix"])):
+            best = fam
+    if best is None:
+        return None
+    if eco == "pypi" and best.get("import_style") == "llama_index":
+        imports = ["llama_index." + norm[len("llama-index-"):].replace("-", ".")]
+    elif eco == "pypi":
+        imports = [norm.replace("-", "_")]
+    else:
+        imports = [name.strip()]
+    return {"ecosystem": best["ecosystem"], "name": name.strip(), "category": best["category"], "vendor": best["vendor"],
+            "import_names": imports, "family": best["prefix"]}
 
 
 def _version_tuple(v: str) -> tuple:

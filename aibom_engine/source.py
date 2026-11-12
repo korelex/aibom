@@ -73,16 +73,25 @@ def fetch(src, timeout=180):
     if shutil.which("git") is None:
         raise SourceError("git is not installed on this computer, so I cannot download the repository. Install git from git-scm.com, or scan a folder you already have.")
     tmp = tempfile.mkdtemp(prefix="aibom-")
+    try:
+        return _clone(src, tmp, timeout), tmp
+    except BaseException:  # any failure, and Ctrl-C during the download: the caller never gets tmp, so delete it here
+        try:
+            cleanup(tmp)
+        except OSError:
+            pass
+        raise
+
+
+def _clone(src, tmp, timeout):
     dest = os.path.join(tmp, src["name"])
     cmd = ["git", "clone", "--quiet", "--depth", "1", "--single-branch"] + (["--branch", src["branch"]] if src["branch"] else []) + [src["url"], dest]
     env = dict(os.environ, GIT_TERMINAL_PROMPT="0", GCM_INTERACTIVE="never", GIT_ASKPASS="echo")  # never wait for a password in a live demo
     try:
         r = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, env=env)
     except subprocess.TimeoutExpired:
-        cleanup(tmp)
         raise SourceError(f"Downloading took longer than {timeout} seconds, so I stopped. The repository may be very large or the connection slow. Try again, or scan a folder you already have.")
     if r.returncode != 0:
-        cleanup(tmp)
         raise SourceError(friendly_git_error(r.stderr, src["url"]))
     try:  # remember exactly which version was scanned, so links point at the same lines
         src["commit"] = subprocess.run(["git", "-C", dest, "rev-parse", "HEAD"], capture_output=True, text=True, timeout=30).stdout.strip()
@@ -90,9 +99,8 @@ def fetch(src, timeout=180):
         src["commit"] = ""
     root = os.path.join(dest, src["subpath"]) if src["subpath"] else dest
     if not os.path.isdir(root):
-        cleanup(tmp)
         raise SourceError(f"The repository downloaded, but it has no folder called '{src['subpath']}'.")
-    return root, tmp
+    return root
 
 
 class Linker:

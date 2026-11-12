@@ -71,9 +71,13 @@ def main():
         probe = run([python, "-c", "import aibom_engine, os; print(os.path.dirname(aibom_engine.__file__))"],
                     capture_output=True, cwd=work)
         pkg = probe.stdout.strip()
-        for name in ("ai_db.json", "model_names.json"):
-            if not os.path.exists(os.path.join(pkg, "knowledge", name)):
+        for name in ("knowledge/ai_db.json", "knowledge/model_names.json", "rules/calls.yaml"):
+            if not os.path.exists(os.path.join(pkg, *name.split("/"))):
                 fail(f"{name} is missing from the installed package")
+        with open(os.path.join(out, "packages.json"), encoding="utf-8") as fh:
+            levels = {c["name"]: c["evidence_level"] for c in json.load(fh).get("packages", [])}
+        if levels.get("openai") != "called":
+            fail(f"the scan did not find the OpenAI() call; package levels were {levels}")
 
         with open(os.path.join(out, "aibom.cdx.json"), encoding="utf-8") as fh:
             bom = json.load(fh)
