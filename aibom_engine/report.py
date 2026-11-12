@@ -29,7 +29,8 @@ TESTED = ("In a blind test on five open-source apps, this scanner found about 79
 CANNOT_SEE = ["A model that the app chooses when it runs: an environment variable, a settings page, a database or a remote setting. A scan reads code; it does not run the app.",
               "Anything outside this one repository, such as code in other repositories or in private packages.",
               "AI packages are read from Python and JavaScript/TypeScript dependency files only (not Go, Java or C#), and the files do not say which package needs which, so no dependency tree between packages is drawn.",
-              "AI parts other than models and packages: MCP servers, datasets, secrets and weight files are not covered yet.",
+              "MCP servers are read as text from the config files of Claude Code, VS Code, Cursor, Gemini CLI, Codex and Claude Desktop that sit in the repository, "
+              "not from a developer's own machine. No server is started, so the tools a server offers are not listed. Datasets, secrets and weight files are not covered yet.",
               "Some names. A name that no dictionary lists and that no rule recognises can be missed. " + TESTED]
 
 
@@ -161,14 +162,124 @@ def flag_place(f):
     return f"{f.file}:{f.line}" if f.file and f.line else (f.file or "")
 
 
+def md_cell(t):
+    """Text safe inside a Markdown table cell."""
+    return str(t).replace("|", "\\|").replace("\n", " ")
+
+
+def mcp_rows(meta):
+    """The MCP servers a reader should see (the product's own), and how many more were left out as tests, examples or docs."""
+    found = (meta or {}).get("mcp") or {"servers": []}
+    live = [s for s in found["servers"] if not s.get("left_out")]
+    return live, len(found["servers"]) - len(live)
+
+
+def mcp_how(s):
+    """How a server is run, in words: the package a launcher fetches, the command, or the URL."""
+    if s["transport"] == "stdio":
+        if s["package"] and s["ecosystem"] in ("npm", "pypi", "docker"):
+            joiner = (":" if not s["version"].startswith("sha256:") else "@") if s["ecosystem"] == "docker" else "@"
+            return f"{s['launcher']} {s['package']}" + (joiner + s["version"] if s["version"] else "")
+        if s["package"]:
+            return f"{s['launcher']} {s['package']}"
+        text = " ".join([s["command"]] + s["args"]).strip()
+        return text if len(text) <= 70 else text[:67] + "..."
+    return s["url"] or "(no URL)"
+
+
+def mcp_notes(s):
+    """What else a reader should know about a server, as short phrases (facts, not judgments)."""
+    notes = []
+    if s["transport"] == "stdio" and s["package"] and s["ecosystem"] in ("npm", "pypi", "docker"):
+        notes.append("version pinned" if s["pinned"] else "version not pinned")
+    elif s["transport"] == "stdio" and s["ecosystem"] == "source":
+        notes.append("runs code from a URL or path")
+    if s["env_keys"]:
+        notes.append("environment: " + ", ".join(s["env_keys"]))
+    if s["header_names"]:
+        notes.append("headers: " + ", ".join(s["header_names"]))
+    if s["url_has_credentials"]:
+        notes.append("the URL has a user name or password")
+    if s["url_has_query"]:
+        notes.append("the URL has a query string")
+    if s["enabled"] is False:
+        notes.append("switched off in the config")
+    if s["note"]:
+        notes.append(s["note"])
+    return notes
+
+
+MCP_KIND = {"stdio": "local program", "http": "remote service (HTTP)", "sse": "remote service (SSE)", "remote": "remote service", "unknown": "unknown"}
+MCP_NOTE = ("These are the servers the project's config files declare. Nothing was started, so what a server can do (its tools) is not "
+            "listed, and a server declared in a developer's own settings outside the repository is not seen. Environment variables and headers "
+            "are shown by name only; their values are never read into the output.")
+
+
+def mcp_place(s, links):
+    url = links.url_for(s["file"], s["line"]) if links and s["line"] else ""
+    return f"{s['file']}:{s['line']}" if s["line"] else s["file"], url
+
+
+def mcp_markdown(meta, links=None):
+    live, hidden = mcp_rows(meta)
+    if not live and not hidden:
+        return []
+    out = ["## MCP servers", ""]
+    if live:
+        out += [f"{len(live)} MCP server{'' if len(live) == 1 else 's'} declared in the project's config files.", "",
+                "| Server | Kind | How it runs | Declared in | Notes |", "|---|---|---|---|---|"]
+        for s in live:
+            label, _ = mcp_place(s, links)
+            out.append(f"| {md_cell(s['name'])} | {MCP_KIND.get(s['transport'], s['transport'])} | {md_cell(mcp_how(s))} | {md_cell(label)} | {md_cell('; '.join(mcp_notes(s)))} |")
+        out += ["", f"_{MCP_NOTE}_"]
+    if hidden:
+        out += ["", f"{hidden} more declared only in tests, examples or documentation, left out."]
+    return out + [""]
+
+
+def mcp_html(meta, links=None):
+    live, hidden = mcp_rows(meta)
+    if not live and not hidden:
+        return ""
+    h = html.escape
+    rows = ""
+    for s in live:
+        label, url = mcp_place(s, links)
+        where = f'<a href="{h(url)}" target="_blank" rel="noopener">{h(label)}</a>' if url else f"<code>{h(label)}</code>"
+        rows += (f"<tr><td><b>{h(s['name'])}</b></td><td>{h(MCP_KIND.get(s['transport'], s['transport']))}</td><td><code>{h(mcp_how(s))}</code></td>"
+                 f"<td>{where}</td><td>{h('; '.join(mcp_notes(s)))}</td></tr>")
+    body = ""
+    if live:
+        body = (f"<p style='font-size:14px'>{len(live)} MCP server{'' if len(live) == 1 else 's'} declared in the project's config files.</p>"
+                f"<div class='tw'><table><tr><th>Server</th><th>Kind</th><th>How it runs</th><th>Declared in</th><th>Notes</th></tr>{rows}</table></div>"
+                f"<p class='also' style='font-size:13px'>{h(MCP_NOTE)}</p>")
+    if hidden:
+        body += f"<p class='note'>{hidden} more declared only in tests, examples or documentation, left out.</p>"
+    return f"<span id='mcp'></span><h2>MCP servers</h2>{body}"
+
+
+MCP_CSV_HEAD = ["server", "client", "kind", "command", "args", "url", "launcher", "package", "ecosystem", "version", "pinned", "environment_names",
+                "header_names", "enabled", "file", "line", "link", "left_out"]
+
+
+def build_mcp_csv(found, links=None):
+    """One row per declared MCP server (the left-out ones too, with the reason), for a spreadsheet."""
+    buf = io.StringIO()
+    w = csv.writer(buf, lineterminator="\n")
+    w.writerow(MCP_CSV_HEAD)
+    for s in (found or {}).get("servers", []):
+        pinned = "" if s["pinned"] is None else ("yes" if s["pinned"] else "no")
+        w.writerow([s["name"], s["client"], MCP_KIND.get(s["transport"], s["transport"]), s["command"], " ".join(s["args"]), s["url"], s["launcher"], s["package"],
+                    s["ecosystem"], s["version"], pinned, ", ".join(s["env_keys"]), ", ".join(s["header_names"]), "no" if s["enabled"] is False else "yes",
+                    s["file"], s["line"], (links.url_for(s["file"], s["line"]) if links and s["line"] else ""), s["left_out"]])
+    return buf.getvalue()
+
+
 def flags_markdown(meta):
     flags = other_flags(meta)
     if not flags:
         return []
-
-    def cell(t):
-        return str(t).replace("|", "\\|").replace("\n", " ")
-
+    cell = md_cell
     out = ["## Flags", "", "| Severity | What | About | Where | Fix |", "|---|---|---|---|---|"]
     for f in flags:
         out.append(f"| {f.severity.upper()} | {cell(f.title)} | {cell(f.subject)} | {cell(flag_place(f))} | {cell(f.fix)} |")
@@ -410,6 +521,9 @@ def build_markdown(items, app, source="", links=None, meta=None):
                     "Each target was checked again against the advisory data. Upgrading can break code: test it.", "",
                     "| Package | Now | Worst | What to do |", "|---|---|---|---|"]
             out += [f"| {p['package']} | {p['version'] or '-'} | {p['worst'].upper()} | {fix_plan_text(p)} |" for p in plan]
+    section = mcp_markdown(meta, links)
+    if section:
+        out += [""] + section
     out += ["", "## What this scan cannot see", ""] + [f"- {c}" for c in CANNOT_SEE]
     out += ["", "How to read this: every row links a model name to a line of code. Confirmed means the name is written in the code; Worked out means the code spells it through a constant. "
                 "The standard AI-BOM file (aibom.cdx.json) holds the same facts for other tools; models.csv opens in a spreadsheet."]
@@ -666,6 +780,7 @@ def build_html(items, app, source="", links=None, meta=None, pdf=False, today=No
             out.append("<span id='fixplan'></span><h3>Fix plan</h3><p class='also' style='font-size:13px'>For each package with known vulnerabilities, the lowest version that its advisories say fixes all of them. "
                        "Each target was checked again against the advisory data. Upgrading can break code: test it.</p>"
                        f"<div class='tw'><table><tr><th>Package</th><th>Now</th><th>Worst</th><th>What to do</th></tr>{prs}</table></div>")
+    out.append(mcp_html(meta, links))
     g_at = len(out)
     if gone and pdf:
         out.append(f"<span id='leftout'></span><h2>Left out, and why</h2><p>{len(gone)} names that look like models were left out because they appear only in comments, messages, tests or documentation. Each one, with the reason, is in the HTML report.</p>")

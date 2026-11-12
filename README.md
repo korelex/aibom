@@ -7,8 +7,9 @@
 that proves it, whether that model has been retired or is about to be, and the license it is offered under. The
 result is an **AI bill of materials (AI-BOM)** in the CycloneDX 1.6 standard, plus a report a person can read.
 
-> **Status: alpha.** This version finds **models**. AI SDKs, agent frameworks, vector databases, MCP servers and
-> secrets are on the roadmap, not in this build. See [What it does not do yet](#what-it-does-not-do-yet).
+> **Status: alpha.** This version finds **models**, **AI packages** (SDKs, agent frameworks, vector databases) with their
+> known vulnerabilities, and the **MCP servers** a project's config files declare. Secrets and model weight files are on
+> the roadmap, not in this build. See [What it does not do yet](#what-it-does-not-do-yet).
 
 ## Why aibom
 
@@ -221,6 +222,7 @@ Each scan writes these files to its `RUN` folder:
 | `packages.csv` | One row per AI package: version, evidence level, first proof line, and its known vulnerabilities, for a spreadsheet. |
 | `packages.json` | The AI packages with all their evidence: the imports and calls that prove their use, an evidence level, and the known vulnerabilities of each exact version (OSV advisories, or `not_checked` with the reason). |
 | `flags.json` | The risk flags of the scan, worst first: each has a rule id, a severity (`high`, `medium`, `low`, `info`), the place it was found and a one-line fix. Today these are the model risks (retired, deprecated, floating alias, licence); the report shows the ones outside the Risks block in a Flags section. In `aibom.cdx.json` each flag is an `aibom-engine:flag` property on the component it is about. |
+| `mcp.json`, `mcp.csv` | The MCP servers the project's config files declare (`.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`, `.gemini/settings.json`, `.codex/config.toml`, `claude_desktop_config.json`): how each is run, the file and line, and the names of its environment variables and headers (never their values). In `aibom.cdx.json` a local server is an `application` component and a remote one a `service`. |
 | `merged.json`, `findings.json`, `files.json`, `manifest.json` | Working data behind the reports; `aibom rebuild` uses them. |
 
 For the same code, a scan on the same day writes the same `aibom.cdx.json`, `report.html`, `report.md` and
@@ -245,7 +247,8 @@ How each of these is decided, and where the data comes from, is in [docs/how-it-
 
 - Read Go, Java or C# dependencies, or draw which package needs which: the dependency files are read for what a
   project depends on, not for the edges between packages.
-- Find MCP servers, datasets or hardcoded API keys.
+- Find datasets or hardcoded API keys.
+- Start an MCP server or list its tools, or see one declared outside the repository (a developer's own settings).
 - Inspect model weight files, or check Hugging Face revision pinning.
 - Run as a GitHub Action, fail a build on a policy (`--fail-on`), or write SARIF.
 - See a model chosen at run time, from an environment variable, a settings page or a database. aibom reads code; it

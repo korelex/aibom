@@ -210,6 +210,9 @@ def dashboard(r, out, packages, links, cmd, date, version):
         vuln_line = Text.assemble("known vulnerabilities in %d package%s" % (len({(f["package"], f["version"]) for f in found}),
                                   "" if len({(f["package"], f["version"]) for f in found}) == 1 else "s"), "   ", ui.severity_counts(c, skip_zero=True))
     t.add_row(Text(str(len(found)), style="bold bright_red" if found else "bold green"), vuln_line)
+    mc = r.get("mcp") or {}
+    if mc.get("servers"):
+        t.add_row(str(mc["servers"]), Text("MCP servers declared in config files (%d local, %d remote)" % (mc["stdio"], mc["remote"])))
     flags = r.get("flags") or []
     if flags:
         count, shown = flag_rules.headline(flags)

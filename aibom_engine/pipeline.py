@@ -12,7 +12,8 @@ from .merge import merge
 from .display import build_rows
 from .evidence import assign_levels
 from . import flags as flag_rules
-from .report import build_csv, build_html, build_markdown, build_packages_csv
+from . import mcp as mcp_finder
+from .report import build_csv, build_html, build_markdown, build_mcp_csv, build_packages_csv
 from .triage import triage
 from .vendors import maker_of, type_of
 from .verify import verify
@@ -58,15 +59,17 @@ def enrich(items, names, online=False):
     return items
 
 
-def write_readable(out, items, app, source="", links=None, warnings=None, packages=None, flags=None):
+def write_readable(out, items, app, source="", links=None, warnings=None, packages=None, flags=None, mcp=None):
     """The outputs for people: the web page, the markdown summary and the spreadsheets (models, and AI packages)."""
-    meta = {"warnings": warnings or [], "packages": packages or [], "flags": flags or []}
+    meta = {"warnings": warnings or [], "packages": packages or [], "flags": flags or [], "mcp": mcp or {"servers": [], "files": [], "problems": []}}
     with open(os.path.join(out, "report.html"), "w", encoding="utf-8") as f:
         f.write(build_html(items, app, source, links, meta))
     with open(os.path.join(out, "report.md"), "w", encoding="utf-8") as f:
         f.write(build_markdown(items, app, source, links, meta))
     with open(os.path.join(out, "packages.csv"), "w", encoding="utf-8-sig", newline="") as f:
         f.write(build_packages_csv(packages or [], links))
+    with open(os.path.join(out, "mcp.csv"), "w", encoding="utf-8-sig", newline="") as f:
+        f.write(build_mcp_csv(mcp, links))
     with open(os.path.join(out, "models.csv"), "w", encoding="utf-8-sig", newline="") as f:  # the BOM makes Excel read it correctly
         f.write(build_csv(items, links))
 
@@ -84,6 +87,19 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
     log(f"  {len(files):,} files: {cats.get('code', 0):,} code, {cats.get('config', 0):,} settings, {cats.get('docs', 0):,} docs, {cats.get('test', 0):,} tests")
     names = dictionary.load_names()
     deadline = t0 + max_seconds
+    log("Reading MCP config files ...")
+    try:
+        found_mcp = mcp_finder.find(root, deadline=deadline)
+    except Exception as e:  # the MCP step must never stop the model scan
+        warnings.append(f"MCP config files could not be read: {type(e).__name__}: {e}")
+        found_mcp = {"servers": [], "files": [], "problems": []}
+    for p in found_mcp["problems"]:
+        warnings.append(f"Could not read the MCP config file {p['file']}: {p['error']}")
+    if found_mcp.get("partial"):
+        warnings.append("The time limit was reached while looking for MCP config files, so some may be missing. Raise it with --max-seconds.")
+    ms = mcp_finder.summary(found_mcp)
+    if ms["servers"]:
+        log(f"  {ms['servers']:,} MCP servers in {ms['config_files']:,} config files")
     log("Reading dependency files ...")
     try:
         found_packages = package_finder.find(root, files, deadline=deadline)
@@ -122,15 +138,16 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
     used = sum(1 for i in included if i.get("role") == "used")
     flags = flag_rules.collect(flag_rules.model_flags(included, item_ref))
     log("Writing the AI-BOM and the report ...")
-    bom = build_bom(included, app, found_packages["packages"], ps.get("advisory_data", "") if ps else "", flags)
+    bom = build_bom(included, app, found_packages["packages"], ps.get("advisory_data", "") if ps else "", flags, found_mcp["servers"])
     problem = validate(bom)
     save(os.path.join(out, "files.json"), {"categories": cats, "files": [vars(f) for f in files]})
     save(os.path.join(out, "findings.json"), [f.to_dict() for f in findings])
     save(os.path.join(out, "merged.json"), items)
     save(os.path.join(out, "packages.json"), found_packages)
+    save(os.path.join(out, "mcp.json"), found_mcp)
     save(os.path.join(out, "aibom.cdx.json"), bom)
     save(os.path.join(out, "flags.json"), {"flags": [f.to_dict() for f in flags], "counts": flag_rules.counts(flags)})
-    write_readable(out, items, app, source, links, warnings, found_packages["packages"], flags)
+    write_readable(out, items, app, source, links, warnings, found_packages["packages"], flags, found_mcp)
     rows = build_rows(items)
     tiers = dict(collections.Counter(i["tier"] for i in items))
     reasons = dict(collections.Counter(i["reason"] for i in items if i["tier"] == "rejected"))
@@ -139,7 +156,7 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
                                               "finders": list(finders), "raw_findings": len(findings), "items_in_aibom": len(included), "models_used": used,
                                               "models_only_listed": len(included) - used, "display_models_used": len(rows["used"]), "display_models_listed": len(rows["listed"]),
                                               "display_left_out": len(rows["left_out"]), "items_by_tier": tiers, "rejected_reasons": reasons, "partial": partial,
-                                              "warnings": warnings, "packages": found_packages["summary"], "flags": flag_rules.counts(flags), "cyclonedx_1_6_valid": problem is None, "validation_error": problem, "seconds": seconds,
+                                              "warnings": warnings, "packages": found_packages["summary"], "flags": flag_rules.counts(flags), "mcp": ms, "cyclonedx_1_6_valid": problem is None, "validation_error": problem, "seconds": seconds,
                                               **(links.to_dict() if links else {})})
     return {"packages": found_packages["summary"], "items": len(included), "used": len(rows["used"]), "listed": len(rows["listed"]), "left_out": len(rows["left_out"]), "rows": rows, "rejected": len(items) - len(included), "valid": problem is None, "error": problem,
-            "seconds": seconds, "tiers": tiers, "partial": partial, "warnings": warnings, "app": app, "files": len(files), "flags": flags}
+            "seconds": seconds, "tiers": tiers, "partial": partial, "warnings": warnings, "app": app, "files": len(files), "flags": flags, "mcp": ms}

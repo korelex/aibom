@@ -21,7 +21,14 @@ usage, see the [README](../README.md).
    and find the AI packages among them, then the imports and calls of those packages in live code. The call
    signatures are in [`aibom_engine/rules/calls.yaml`](../aibom_engine/rules/calls.yaml). Each package is then checked
    against the bundled vulnerability advisories (see below).
-7. **Write** the CycloneDX AI-BOM and the reports. Packages are `library` or `framework` components with a purl and the
+7. **Read the MCP config files** (`.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`, `.gemini/settings.json`,
+   `.codex/config.toml`, `claude_desktop_config.json`, and other JSON files with `mcp` in the name that hold server
+   entries) as text. Each server is recorded with how it runs (the program or package a launcher such as `npx`, `uvx`
+   or `docker run` fetches, or its URL), the file and line, and the names of its environment variables and headers.
+   Values are never read into the output: environment variables and headers are kept by name, a URL loses its user
+   name, password and query string, and a value after a flag such as `--token` is masked. No server is started, so
+   the tools a server offers are not listed. Servers in tests, examples, documentation or vendored folders are left out.
+8. **Write** the CycloneDX AI-BOM and the reports. Packages are `library` or `framework` components with a purl and the
    lines that prove their use; known vulnerabilities go in the `vulnerabilities` section, linked to the components they
    affect; and the hosted API that a provider's own client library talks to (OpenAI, Anthropic, Pinecone, and so on) is a
    `service`, listed only when live code calls that client. `packages.json` keeps the full evidence, and the reports and

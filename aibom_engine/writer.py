@@ -1,11 +1,13 @@
 """Step 5 of the design: write a CycloneDX 1.6 AI-BOM and check it against the official schema."""
 import hashlib
 import json
+import re
 import uuid
 
 from . import __version__
 from .evidence import REACHABILITY
 from .flags import as_property
+from .mcp import component_purl
 
 COMPONENT_TYPE = {"model": "machine-learning-model", "framework": "framework", "agent": "application", "dataset": "data"}
 NS = "aibom-engine:"
@@ -129,7 +131,69 @@ def package_parts(packages):
     return components, services, vuln_list, depends
 
 
-def build_bom(items, app_name, packages=None, advisory_data="", flags=None):
+URI = re.compile(r"^[a-z][a-z0-9+.-]*://[^\s${}]+$", re.I)
+
+
+def mcp_parts(servers):
+    """(components, services) for the MCP servers a project declares, in CycloneDX 1.6 form.
+
+    A server started as a local program is an `application` component (with a purl when it is an npm or PyPI package); a
+    remote one is a `service` with its endpoint. Environment variables and headers are listed by name only. Servers that
+    sit in tests, examples or documentation are not part of the product and are left out."""
+    components, services, taken = [], [], set()
+    for sv in servers:
+        if sv.get("left_out"):
+            continue
+        ref = f"mcp:{slug(sv['file'])}:{slug(sv['name'])}"
+        n = 2
+        while ref in taken:
+            ref, n = f"mcp:{slug(sv['file'])}:{slug(sv['name'])}-{n}", n + 1
+        taken.add(ref)
+        props = [{"name": NS + "kind", "value": "mcp-server"}, {"name": NS + "client", "value": sv["client"]},
+                 {"name": NS + "transport", "value": sv["transport"]}, {"name": NS + "evidence-level", "value": "declared"}]
+        if sv["command"]:
+            props.append({"name": NS + "command", "value": sv["command"]})
+        if sv["args"]:
+            props.append({"name": NS + "args", "value": json.dumps(sv["args"], ensure_ascii=False)})
+        for key in ("launcher", "package", "ecosystem", "version"):
+            if sv[key]:
+                props.append({"name": NS + key, "value": sv[key]})
+        if sv["pinned"] is not None:
+            props.append({"name": NS + "pinned", "value": str(bool(sv["pinned"])).lower()})
+        props += [{"name": NS + "environment-name", "value": k} for k in sv["env_keys"]]
+        props += [{"name": NS + "header-name", "value": k} for k in sv["header_names"]]
+        if sv["enabled"] is False:
+            props.append({"name": NS + "enabled", "value": "false"})
+        if sv["url_has_credentials"]:
+            props.append({"name": NS + "url-has-credentials", "value": "true"})
+        if sv["note"]:
+            props.append({"name": NS + "note", "value": sv["note"]})
+        evidence = {"occurrences": [{"location": sv["file"], "line": sv["line"], "additionalContext": f"declared in a {sv['client']} config"}]} if sv["line"] > 0 else None
+        if sv["transport"] in ("http", "sse", "remote"):
+            part = {"bom-ref": ref, "name": sv["name"], "properties": props}
+            if sv["url"] and URI.match(sv["url"]):
+                part["endpoints"] = [sv["url"]]
+            elif sv["url"]:
+                props.append({"name": NS + "url", "value": sv["url"]})
+            if any(h.lower() in ("authorization", "proxy-authorization") for h in sv["header_names"]):
+                part["authenticated"] = True
+            if sv["line"] > 0:  # a CycloneDX service has no evidence block, so the place is a property
+                props.append({"name": NS + "declared-in", "value": f"{sv['file']}:{sv['line']}"})
+            services.append(part)
+        else:
+            part = {"bom-ref": ref, "type": "application", "name": sv["name"], "properties": props}
+            purl = component_purl(sv)
+            if purl:
+                part["purl"] = purl
+                if sv["pinned"] and sv["version"]:
+                    part["version"] = sv["version"]
+            if evidence:
+                part["evidence"] = evidence
+            components.append(part)
+    return components, services
+
+
+def build_bom(items, app_name, packages=None, advisory_data="", flags=None, mcp_servers=None):
     components, services = [], []
     for it in items:
         # evidence-level: how strongly the use is proven (declared / called); confidence: how sure the name itself is
@@ -181,6 +245,9 @@ def build_bom(items, app_name, packages=None, advisory_data="", flags=None):
     components += pkg_components
     taken = {s["bom-ref"] for s in services}
     services += [s for s in pkg_services if s["bom-ref"] not in taken]
+    mcp_components, mcp_services = mcp_parts(mcp_servers or [])
+    components += mcp_components
+    services += mcp_services
     bom = {"bomFormat": "CycloneDX", "specVersion": "1.6", "version": 1,
            "metadata": {"component": {"bom-ref": "app", "type": "application", "name": app_name},
                         "tools": {"components": [{"type": "application", "name": "aibom-engine", "version": __version__}]}},

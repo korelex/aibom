@@ -294,6 +294,12 @@ def open_report(run_dir):
     webbrowser.open("file:///" + path.replace(os.sep, "/").lstrip("/"))
 
 
+def load_mcp(run_dir):
+    """The MCP servers a scan saved (none for a folder made before MCP servers were read)."""
+    path = os.path.join(run_dir, "mcp.json")
+    return load(run_dir, "mcp.json") if os.path.exists(path) else {"servers": [], "files": [], "problems": []}
+
+
 def load_flags(run_dir):
     """The flags a scan saved (none for a folder made before flags existed)."""
     path = os.path.join(run_dir, "flags.json")
@@ -310,7 +316,7 @@ def make_pdf(run_dir, output=None):
     info = load(run_dir, "manifest.json")
     app = info.get("app") or os.path.basename(info["scanned_folder"])
     packages = load(run_dir, "packages.json").get("packages", []) if os.path.exists(os.path.join(run_dir, "packages.json")) else []
-    meta = {"warnings": info.get("warnings", []), "packages": packages, "flags": load_flags(run_dir)}
+    meta = {"warnings": info.get("warnings", []), "packages": packages, "flags": load_flags(run_dir), "mcp": load_mcp(run_dir)}
     page = build_html(items, app, info.get("source", ""), links_for(info), meta, pdf=True)
     return print_to_pdf(page, output or os.path.join(run_dir, "report.pdf"))
 
@@ -323,7 +329,7 @@ def rebuild(run_dir):
     links = links_for(info)
     app = info.get("app") or os.path.basename(info["scanned_folder"])
     packages = load(run_dir, "packages.json").get("packages", []) if os.path.exists(os.path.join(run_dir, "packages.json")) else []
-    write_readable(run_dir, items, app, info.get("source", ""), links, info.get("warnings", []), packages, load_flags(run_dir))
+    write_readable(run_dir, items, app, info.get("source", ""), links, info.get("warnings", []), packages, load_flags(run_dir), load_mcp(run_dir))
     info.update(links.to_dict() if links.ok else {})
     with open(os.path.join(run_dir, "manifest.json"), "w", encoding="utf-8") as f:
         json.dump(info, f, indent=1, sort_keys=True)
@@ -419,6 +425,9 @@ def do_scan(a):
               % (ps["ai_packages"], ps.get("vulnerable_packages", 0), ps.get("advisories", 0)))
         if ps.get("not_checked"):
             print("       %d not checked for vulnerabilities: no exact installed version (a range, or no lockfile)" % ps["not_checked"])
+    mc = r.get("mcp") or {}
+    if mc.get("servers"):
+        print("\n  %-4d MCP servers declared in the config files (%d local, %d remote)" % (mc["servers"], mc["stdio"], mc["remote"]))
     if r.get("flags"):
         count, text = flag_rules.headline(r["flags"])
         print("\n  %-4d risk flags: %s (the report shows each one; flags.json lists them)" % (count, text))
