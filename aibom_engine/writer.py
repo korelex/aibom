@@ -9,6 +9,7 @@ from .evidence import REACHABILITY
 from .flags import as_property
 from .ids import slug  # noqa: F401  (kept importable from here)
 from .mcp import component_purl
+from .modelfiles import component_ref as model_file_ref
 
 COMPONENT_TYPE = {"model": "machine-learning-model", "framework": "framework", "agent": "application", "dataset": "data"}
 NS = "aibom-engine:"
@@ -186,7 +187,32 @@ def mcp_parts(servers):
     return components, services
 
 
-def build_bom(items, app_name, packages=None, advisory_data="", flags=None, mcp_servers=None):
+def model_file_parts(files):
+    """Components for the model files in the product's own folders: what each is, how big, whether it uses pickle, and what a scan of it found.
+    Files in tests, examples or documentation are left out, as they are for packages and MCP servers."""
+    components = []
+    for r in files:
+        if r["location"]:
+            continue
+        props = [{"name": NS + "kind", "value": "model-file"}, {"name": NS + "format", "value": r["format"]}, {"name": NS + "serialization", "value": r["serialization"] or "unknown"},
+                 {"name": NS + "size-bytes", "value": str(r["size"])}, {"name": NS + "pickle-based", "value": str(bool(r["pickle_based"])).lower()},
+                 {"name": NS + "scan-status", "value": r["status"] or "not-scanned"}]
+        if r["reason"]:
+            props.append({"name": NS + "scan-note", "value": r["reason"]})
+        for d in r["dangerous"]:
+            props.append({"name": NS + "dangerous-import", "value": f"{d['module']}.{d['name']}"})
+        if r["unresolved"]:
+            props.append({"name": NS + "unresolved-imports", "value": str(r["unresolved"])})
+        if r["lambda_layer"]:
+            props.append({"name": NS + "lambda-layer", "value": "true"})
+        if r["mislabelled"]:
+            props.append({"name": NS + "mislabelled", "value": r["mislabelled"]})
+        components.append({"bom-ref": model_file_ref(r), "type": "machine-learning-model", "name": r["file"], "properties": props,
+                           "evidence": {"occurrences": [{"location": r["file"], "additionalContext": "a model file in the project"}]}})
+    return components
+
+
+def build_bom(items, app_name, packages=None, advisory_data="", flags=None, mcp_servers=None, model_files=None):
     components, services = [], []
     for it in items:
         # evidence-level: how strongly the use is proven (declared / called); confidence: how sure the name itself is
@@ -240,6 +266,7 @@ def build_bom(items, app_name, packages=None, advisory_data="", flags=None, mcp_
     services += [s for s in pkg_services if s["bom-ref"] not in taken]
     mcp_components, mcp_services = mcp_parts(mcp_servers or [])
     components += mcp_components
+    components += model_file_parts(model_files or [])
     services += mcp_services
     bom = {"bomFormat": "CycloneDX", "specVersion": "1.6", "version": 1,
            "metadata": {"component": {"bom-ref": "app", "type": "application", "name": app_name},

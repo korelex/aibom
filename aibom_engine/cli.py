@@ -300,6 +300,12 @@ def load_mcp(run_dir):
     return load(run_dir, "mcp.json") if os.path.exists(path) else {"servers": [], "files": [], "problems": []}
 
 
+def load_modelfiles(run_dir):
+    """The model files and trust_remote_code findings a scan saved (none for a folder made before they were read)."""
+    path = os.path.join(run_dir, "modelfiles.json")
+    return load(run_dir, "modelfiles.json") if os.path.exists(path) else {"files": [], "problems": [], "remote_code": {"findings": []}}
+
+
 def load_flags(run_dir):
     """The flags a scan saved (none for a folder made before flags existed)."""
     path = os.path.join(run_dir, "flags.json")
@@ -316,7 +322,7 @@ def make_pdf(run_dir, output=None):
     info = load(run_dir, "manifest.json")
     app = info.get("app") or os.path.basename(info["scanned_folder"])
     packages = load(run_dir, "packages.json").get("packages", []) if os.path.exists(os.path.join(run_dir, "packages.json")) else []
-    meta = {"warnings": info.get("warnings", []), "packages": packages, "flags": load_flags(run_dir), "mcp": load_mcp(run_dir)}
+    meta = {"warnings": info.get("warnings", []), "packages": packages, "flags": load_flags(run_dir), "mcp": load_mcp(run_dir), "model_files": load_modelfiles(run_dir)}
     page = build_html(items, app, info.get("source", ""), links_for(info), meta, pdf=True)
     return print_to_pdf(page, output or os.path.join(run_dir, "report.pdf"))
 
@@ -329,7 +335,7 @@ def rebuild(run_dir):
     links = links_for(info)
     app = info.get("app") or os.path.basename(info["scanned_folder"])
     packages = load(run_dir, "packages.json").get("packages", []) if os.path.exists(os.path.join(run_dir, "packages.json")) else []
-    write_readable(run_dir, items, app, info.get("source", ""), links, info.get("warnings", []), packages, load_flags(run_dir), load_mcp(run_dir))
+    write_readable(run_dir, items, app, info.get("source", ""), links, info.get("warnings", []), packages, load_flags(run_dir), load_mcp(run_dir), load_modelfiles(run_dir))
     info.update(links.to_dict() if links.ok else {})
     with open(os.path.join(run_dir, "manifest.json"), "w", encoding="utf-8") as f:
         json.dump(info, f, indent=1, sort_keys=True)
@@ -425,6 +431,11 @@ def do_scan(a):
               % (ps["ai_packages"], ps.get("vulnerable_packages", 0), ps.get("advisories", 0)))
         if ps.get("not_checked"):
             print("       %d not checked for vulnerabilities: no exact installed version (a range, or no lockfile)" % ps["not_checked"])
+    mf = r.get("model_files") or {}
+    if mf.get("files"):
+        print("\n  %-4d model files (%d use pickle, %d with dangerous imports or a misleading name)" % (mf["files"], mf["pickle"], mf["dangerous"]))
+    if r.get("remote_code"):
+        print("  %-4d places turn trust_remote_code on" % r["remote_code"])
     ks = r.get("secrets") or {}
     if ks.get("keys"):
         print("\n  %-4d hardcoded API keys in %d files (values are never stored; the report lists each file and line)" % (ks["keys"], ks["files"]))

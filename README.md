@@ -8,8 +8,9 @@ that proves it, whether that model has been retired or is about to be, and the l
 result is an **AI bill of materials (AI-BOM)** in the CycloneDX 1.6 standard, plus a report a person can read.
 
 > **Status: alpha.** This version finds **models**, **AI packages** (SDKs, agent frameworks, vector databases) with their
-> known vulnerabilities, the **MCP servers** a project's config files declare, and **hardcoded AI provider API keys**. Model
-> weight files are on the roadmap, not in this build. See [What it does not do yet](#what-it-does-not-do-yet).
+> known vulnerabilities, the **MCP servers** a project's config files declare, **hardcoded AI provider API keys**, and
+> **model weight files that can run code when loaded** (pickle-based files), read without ever loading them. See
+> [What it does not do yet](#what-it-does-not-do-yet).
 
 ## Why aibom
 
@@ -221,8 +222,9 @@ Each scan writes these files to its `RUN` folder:
 | `models.csv` | One row per model, for a spreadsheet. |
 | `packages.csv` | One row per AI package: version, evidence level, first proof line, and its known vulnerabilities, for a spreadsheet. |
 | `packages.json` | The AI packages with all their evidence: the imports and calls that prove their use, an evidence level, and the known vulnerabilities of each exact version (OSV advisories, or `not_checked` with the reason). |
-| `flags.json` | The risk flags of the scan, worst first: each has a rule id, a severity (`high`, `medium`, `low`, `info`), the place it was found and a one-line fix. Model risks (retired, deprecated, floating alias, licence) and MCP risks (a credential in a config file, a shell string, an unpinned package, a very broad file system path); the report shows the MCP ones in a Flags section. In `aibom.cdx.json` each flag is an `aibom-engine:flag` property on the component it is about. Every rule is listed in [docs/how-it-works.md](docs/how-it-works.md#risk-flags). |
+| `flags.json` | The risk flags of the scan, worst first: each has a rule id, a severity (`high`, `medium`, `low`, `info`), the place it was found and a one-line fix. Model risks (retired, deprecated, floating alias, licence) MCP risks (a credential in a config file, a shell string, an unpinned package, a very broad file system path), hardcoded keys, model file risks (a pickle that imports dangerous code, a misleading file name, a Keras Lambda layer, a file that could not be scanned) and `trust_remote_code`; the report shows them in a Flags section. In `aibom.cdx.json` each flag is an `aibom-engine:flag` property on the component it is about. Every rule is listed in [docs/how-it-works.md](docs/how-it-works.md#risk-flags). |
 | `credentials.json` | Where hardcoded AI provider API keys were found: the provider, the rule, the file, the line and the length. Never the key itself, nor any part of it. Each one is also a `secret.api-key` flag. |
+| `modelfiles.json` | The model weight files found in the project (`.pt`, `.pth`, `.pkl`, `.joblib`, `.ckpt`, `.npy`, `.npz`, `.h5`, `.keras`, `.safetensors`, `.gguf`, `.onnx`, and `.bin` files that are really pickles or zips): what each really is (judged by its content, not its name), whether it uses pickle, the dangerous imports found inside, and whether it could be fully scanned. Also the places where `trust_remote_code` is switched on. In `aibom.cdx.json` each live file is a `machine-learning-model` component with its format and scan status. Files are only read, never loaded. |
 | `mcp.json`, `mcp.csv` | The MCP servers the project's config files declare (`.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`, `.gemini/settings.json`, `.codex/config.toml`, `claude_desktop_config.json`): how each is run, the file and line, and the names of its environment variables and headers (never their values). In `aibom.cdx.json` a local server is an `application` component and a remote one a `service`. |
 | `merged.json`, `findings.json`, `files.json`, `manifest.json` | Working data behind the reports; `aibom rebuild` uses them. |
 
@@ -250,7 +252,9 @@ How each of these is decided, and where the data comes from, is in [docs/how-it-
   project depends on, not for the edges between packages.
 - Find datasets, or hardcoded API keys in the git history (only the files on disk are read).
 - Start an MCP server or list its tools, or see one declared outside the repository (a developer's own settings).
-- Inspect model weight files, or check Hugging Face revision pinning.
+- Check Hugging Face revision pinning, read TensorFlow SavedModel or TFLite files, or look inside a model file that is encrypted,
+  too large (a pickle over 1 GB), or compressed in a way not listed. Such files are reported as *not scanned*, which is never
+  the same as safe.
 - Run as a GitHub Action, fail a build on a policy (`--fail-on`), or write SARIF.
 - See a model chosen at run time, from an environment variable, a settings page or a database. aibom reads code; it
   does not run your app.

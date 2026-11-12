@@ -161,6 +161,13 @@ exposes the app now, `medium` is act soon, `low` is good practice, `info` is wor
 | `model.license-restricted` | medium | The licence limits commercial use or needs review. |
 | `model.license-unknown` | info | aibom does not know the licence. |
 | `secret.api-key` | high / medium / low | A hardcoded AI provider API key in a file (see below). High for a key recognised by its format in the product's own code or settings, medium when recognised only by the variable name it is given, low in a test, example or documentation file (usually a sample, but one that is real is still a leak). |
+| `model-file.dangerous-call` | high / medium | A pickle-based model file imports code that runs commands or code, touches files or the network, or loads another pickle (high), or a helper that attacks chain calls with (medium). |
+| `model-file.unresolved-import` | medium | The file imports something that could not be identified, which is unusual: a pickle built to hide what it imports looks like this. |
+| `model-file.mislabelled` | high | The name says the file holds only numbers (`.safetensors`, `.gguf`, `.onnx`) but the content is something else, such as a pickle. |
+| `model-file.pickle-format` | medium | The file uses pickle, so loading it can run code. Said even when no dangerous import was found, because that does not make loading it safe. |
+| `model-file.keras-lambda` | medium | A Keras model has a Lambda layer, which holds Python code. |
+| `model-file.not-scanned` | low / info | The file could not be fully scanned (low when the reason is worrying: encrypted, too large, cut short by a limit; info when there was nothing to read). |
+| `code.trust-remote-code` | medium / low | `trust_remote_code` is switched on, so a model's own repository can supply code that runs on this machine. Low in a test or example. |
 | `mcp.plaintext-secret` | high / medium | A credential is written in an MCP config file. High when the value has a well-known key format or a URL carries a password; medium for a plain value under a name such as `API_KEY` or `Authorization`. A placeholder such as `${TOKEN}` or `YOUR_KEY` is not a credential. |
 | `mcp.shell-command` | medium / high | The server is started through a shell string or inline code (`bash -c ...`, `python -c ...`). High when that text downloads and runs something. `cmd /c npx ...`, the way Windows runs `npx`, is not flagged. |
 | `mcp.unpinned-package` | medium | An npm, PyPI or container package has no exact version, so a new release changes what runs. |
@@ -205,6 +212,38 @@ A key is recognised in two ways, both chosen to keep false alarms rare:
 Not found: keys in git history, keys that have no distinctive format and are not given a provider-named name, and keys built
 from pieces. Lock files, minified files and translation files are not read. Pinecone keys are not matched by format because
 the sources checked disagree about their prefix.
+
+## Model files
+
+Weights are saved in many formats. Some (safetensors, GGUF) hold only numbers. Others use Python's pickle, and a pickle can
+name any function to call when it is loaded, so loading a model file from a source you do not trust can run that source's code.
+aibom finds the model files in the project, works out what each one **really is from its content** (a pickle can be named
+`model.safetensors`), and reads the pickle ones **without ever loading them**: it walks the opcodes with Python's own
+`pickletools.genops`, which only reads, and collects the `module.name` of every global the pickle imports. Each is then looked
+up in a table of imports that run commands, touch files or the network, build code, or help chain such calls. The table is
+written from Python's documentation of how pickle is abused and from published scanner lists used to look for gaps, not
+copied; the whole table is tested name by name.
+
+What is read: pickles (`.pkl`, `.pickle`, `.joblib`, `.dill`, `.ckpt`, `.pt`, `.pth`, and `.bin`/`.dat`/`.data` when the
+content is a pickle or a zip); PyTorch checkpoints, both the zip form (`data.pkl` inside) and the older single-file form;
+joblib files, plain or compressed with zlib, gzip, bzip2, xz or lzma (the raw array bytes joblib writes inside the pickle are
+passed over using the shape and dtype each array declares, so what follows them is still read); NumPy `.npy`/`.npz`, only
+when an array has the object type, because that is a pickle inside; Keras `.keras` and `.h5`, for Lambda layers; and
+safetensors, GGUF and ONNX, which are checked to be what they say.
+
+Some choices that matter:
+
+- **A pickle that cannot be understood is a finding, not a pass.** An import whose name cannot be worked out is counted as
+  unresolved and flagged; a file that is damaged, encrypted, cut short by a limit, or nested in another archive is reported
+  as *not scanned* or *partly scanned* with the reason. "Not scanned" is never "safe", and a scan that found no dangerous
+  import never says the file is safe either.
+- **Hostile files are bounded.** File size, decompressed size, zip entries, compression ratio, opcodes, the length a pickle
+  declares for a blob, and time are all limited, so a file built to exhaust memory or time ends as *not scanned*.
+- **Where the file is matters.** A file in a test, example, docs or vendored folder is flagged one step lower, and only the
+  product's own files are flagged for what could not be scanned.
+
+`trust_remote_code` is a separate risk: it lets a model's repository supply Python that runs on the machine. aibom finds it
+where it is set in code (as an argument or an assignment), in settings files, and as a command-line flag.
 
 ## Where the data comes from
 

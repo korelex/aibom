@@ -30,7 +30,8 @@ CANNOT_SEE = ["A model that the app chooses when it runs: an environment variabl
               "Anything outside this one repository, such as code in other repositories or in private packages.",
               "AI packages are read from Python and JavaScript/TypeScript dependency files only (not Go, Java or C#), and the files do not say which package needs which, so no dependency tree between packages is drawn.",
               "MCP servers are read as text from the config files of Claude Code, VS Code, Cursor, Gemini CLI, Codex and Claude Desktop that sit in the repository, "
-              "not from a developer's own machine. No server is started, so the tools a server offers are not listed. Datasets and model weight files are not covered yet.",
+              "not from a developer's own machine. No server is started, so the tools a server offers are not listed. Datasets are not covered yet.",
+              "Model weight files are found by their extension and read by their content: pickle-based files (PyTorch, joblib, NumPy object arrays and others) are checked for dangerous imports and are never loaded; TensorFlow SavedModel, TFLite and files compressed in other ways are not read; and a file in which no dangerous import was found is not thereby safe to load.",
               "Hardcoded API keys are found in the files on disk, by the format of well-known providers' keys or by a provider-named variable with a literal value. Keys in the git history, keys with no distinctive format that are not given a provider-named name, and keys built from pieces are not found.",
               "Some names. A name that no dictionary lists and that no rule recognises can be missed. " + TESTED]
 
@@ -274,6 +275,82 @@ def build_mcp_csv(found, links=None):
                     s["ecosystem"], s["version"], pinned, ", ".join(s["env_keys"]), ", ".join(s["header_names"]), "no" if s["enabled"] is False else "yes",
                     s["file"], s["line"], (links.url_for(s["file"], s["line"]) if links and s["line"] else ""), s["left_out"]])
     return buf.getvalue()
+
+
+def human_size(n):
+    for unit in ("B", "KB", "MB", "GB"):
+        if n < 1024 or unit == "GB":
+            return f"{n:.0f} {unit}" if unit == "B" else f"{n:.1f} {unit}"
+        n /= 1024.0
+
+
+def model_file_rows(meta):
+    """The model files a reader should see (the product's own), and how many more were left out as tests, examples or docs."""
+    found = (meta or {}).get("model_files") or {"files": []}
+    live = [r for r in found["files"] if not r.get("location")]
+    return live, len(found["files"]) - len(live)
+
+
+def model_file_finding(r):
+    """What the scan found in a model file, in words. It never says a file is safe: only what was and was not found."""
+    if r["status"] == "safe-format":
+        return "A format that holds only numbers" + ("; it is listed, not read" if r["serialization"] == "onnx" else "")
+    parts = []
+    if r["dangerous"]:
+        parts.append("imports " + ", ".join(f"{d['module']}.{d['name']}" for d in r["dangerous"][:3]) + (" and more" if len(r["dangerous"]) > 3 else ""))
+    if r["unresolved"]:
+        parts.append(f"{r['unresolved']} import(s) it could not identify")
+    if r["mislabelled"]:
+        parts.append(r["mislabelled"])
+    if r["lambda_layer"]:
+        parts.append("a Lambda layer, which holds Python code")
+    if not parts and r["status"] == "scanned":
+        parts.append("no dangerous import found; that does not make loading it safe" if r["pickle_based"] else "scanned")
+    if r["status"] in ("not-scanned", "partly-scanned"):
+        parts.append(("not scanned: " if r["status"] == "not-scanned" else "partly scanned: ") + r["reason"])
+    return "; ".join(parts)
+
+
+def model_files_markdown(meta):
+    live, hidden = model_file_rows(meta)
+    rc = [f for f in ((meta or {}).get("model_files") or {}).get("remote_code", {}).get("findings", []) if not f["location"]]
+    if not live and not hidden and not rc:
+        return []
+    out = ["## Model files", ""]
+    if live:
+        out += [f"{len(live)} model file{'' if len(live) == 1 else 's'} in the project.", "", "| File | Format | Size | What the scan found |", "|---|---|---|---|"]
+        for r in live:
+            out.append(f"| {md_cell(r['file'])} | {md_cell(r['format'])} | {human_size(r['size'])} | {md_cell(model_file_finding(r))} |")
+        out += ["", f"_{MODEL_FILES_NOTE}_"]
+    if hidden:
+        out += ["", f"{hidden} more in tests, examples or documentation, left out."]
+    if rc:
+        out += ["", f"trust_remote_code is turned on in {len(rc)} place{'' if len(rc) == 1 else 's'}: " + ", ".join(f"{f['file']}:{f['line']}" for f in rc[:5]) + (" and more" if len(rc) > 5 else "") + "."]
+    return out + [""]
+
+
+def model_files_html(meta, links=None):
+    live, hidden = model_file_rows(meta)
+    rc = [f for f in ((meta or {}).get("model_files") or {}).get("remote_code", {}).get("findings", []) if not f["location"]]
+    if not live and not hidden and not rc:
+        return ""
+    h = html.escape
+    body = ""
+    if live:
+        rows = "".join(f"<tr><td><code>{h(r['file'])}</code></td><td>{h(r['format'])}</td><td>{human_size(r['size'])}</td><td>{h(model_file_finding(r))}</td></tr>" for r in live)
+        body = (f"<p style='font-size:14px'>{len(live)} model file{'' if len(live) == 1 else 's'} in the project.</p>"
+                f"<div class='tw'><table><tr><th>File</th><th>Format</th><th>Size</th><th>What the scan found</th></tr>{rows}</table></div>"
+                f"<p class='also' style='font-size:13px'>{h(MODEL_FILES_NOTE)}</p>")
+    if hidden:
+        body += f"<p class='note'>{hidden} more in tests, examples or documentation, left out.</p>"
+    if rc:
+        body += f"<p class='note'>trust_remote_code is turned on in {len(rc)} place{'' if len(rc) == 1 else 's'}: " + h(", ".join(f"{f['file']}:{f['line']}" for f in rc[:5])) + (" and more" if len(rc) > 5 else "") + ".</p>"
+    return f"<span id='modelfiles'></span><h2>Model files</h2>{body}"
+
+
+MODEL_FILES_NOTE = ("Each model file was read as data and never loaded or run. What kind of file it is comes from its content, not its name. A file in a pickle-based "
+                    "format can run code when it is loaded, whatever the scan found: \"no dangerous import found\" is not the same as safe. TensorFlow SavedModel and "
+                    "TFLite files are not read.")
 
 
 def flags_markdown(meta):
@@ -523,6 +600,9 @@ def build_markdown(items, app, source="", links=None, meta=None):
                     "| Package | Now | Worst | What to do |", "|---|---|---|---|"]
             out += [f"| {p['package']} | {p['version'] or '-'} | {p['worst'].upper()} | {fix_plan_text(p)} |" for p in plan]
     section = mcp_markdown(meta, links)
+    if section:
+        out += [""] + section
+    section = model_files_markdown(meta)
     if section:
         out += [""] + section
     out += ["", "## What this scan cannot see", ""] + [f"- {c}" for c in CANNOT_SEE]
@@ -782,6 +862,7 @@ def build_html(items, app, source="", links=None, meta=None, pdf=False, today=No
                        "Each target was checked again against the advisory data. Upgrading can break code: test it.</p>"
                        f"<div class='tw'><table><tr><th>Package</th><th>Now</th><th>Worst</th><th>What to do</th></tr>{prs}</table></div>")
     out.append(mcp_html(meta, links))
+    out.append(model_files_html(meta, links))
     g_at = len(out)
     if gone and pdf:
         out.append(f"<span id='leftout'></span><h2>Left out, and why</h2><p>{len(gone)} names that look like models were left out because they appear only in comments, messages, tests or documentation. Each one, with the reason, is in the HTML report.</p>")
