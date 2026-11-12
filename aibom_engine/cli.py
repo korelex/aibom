@@ -6,8 +6,13 @@ import shutil
 import sys
 import traceback
 
+from rich.text import Text
+
+from . import screens, ui
+from . import __version__
 from .display import build_rows
-from .report import CANNOT_SEE, LEVEL_LONG, MODE_TEXT, REACHABILITY_TEXT, TIER_LONG
+from .report import (CANNOT_SEE, LEVEL_LONG, MODE_TEXT, PACKAGE_NOTE, REACHABILITY_TEXT, TIER_LONG, advisory_date, package_level_text,
+                     package_rows, package_summary)
 from .source import Linker, SourceError, cleanup, fetch, linker_for_git_folder, parse
 
 
@@ -32,6 +37,16 @@ def width():
 def fit(text, n):
     text = str(text)
     return text if len(text) <= n else "..." + text[-(n - 3):]
+
+
+def clip(text, n):
+    """Cut prose at the end ("six known vulnerabilities..."), unlike fit(), which keeps the end of a file path."""
+    text = str(text)
+    return text if len(text) <= n else text[:n - 3] + "..."
+
+
+KIND_SHORT = {"AI SDK": "SDK", "Agent framework": "framework", "Vector database": "vector db", "Model runtime": "runtime",
+              "MCP": "MCP", "Guardrail": "guardrail", "Dataset loader": "dataset", "AI package": "package"}
 
 
 def load(run_dir, name):
@@ -87,6 +102,131 @@ def show(run_dir, limit, everything=False, left_out=False):
     print(model_table(show_rows, links_for(info), len(show_rows) if everything else limit, role=everything))
     if not everything and listed and used:
         print("\n  Also %d models only listed in long tables. See them with: %s show %s --all" % (len(listed), command(), run_dir))
+
+
+def load_packages(run_dir):
+    """The AI packages of a finished scan (packages.json), or a clear message when the scan has none to show."""
+    path = os.path.join(run_dir, "packages.json")
+    if not os.path.exists(path):
+        load(run_dir, "manifest.json")  # not a scan at all: say so
+        raise SourceError("This scan has no package data: it was made by an older aibom. Scan it again: %s scan <folder or link>" % command())
+    return load(run_dir, "packages.json").get("packages", [])
+
+
+WHY_LEVEL = {"called": "live code calls it", "imported": "live code imports it, but no call to it was found",
+             "declared": "it is listed in a dependency file, but no live code imports it"}
+
+
+def packages_view(run_dir, name=None, everything=False):
+    """Print the AI packages of a finished scan with their known vulnerabilities, or one package in detail."""
+    packages = load_packages(run_dir)
+    info = load(run_dir, "manifest.json")
+    app = info.get("app") or os.path.basename(info["scanned_folder"])
+    links = links_for(info)
+    if name:
+        return package_detail(app, packages, name, links)
+    rows = package_rows(packages)
+    if not rows:
+        print("No AI packages found in %s. It may use none, or declare them in a language aibom does not read yet (Python and JavaScript/TypeScript only)." % app)
+        return
+    sm = package_summary(rows)
+    if not ui.pretty():
+      print("%s: %d AI packages found%s. %d have known vulnerabilities (%d advisories), %d could not be checked.\n"
+          % (app, sm["direct"], ", and %d more only in a lockfile" % sm["transitive"] if sm["transitive"] else "", sm["vulnerable"], sm["advisories"], sm["not_checked"]))
+    shown = rows if everything else [r for r in rows if r["direct"] is not False]
+    if ui.pretty():
+        return screens.packages_pretty(app, rows, sm, shown, len(rows) - len(shown), command(), run_dir, advisory_date())
+    room = max(width() - 2 - 24 - 10 - 9 - 9 - 4, 20)
+    print("  %-24s %-10s %-9s %-9s %s" % ("PACKAGE", "VERSION", "KIND", "EVIDENCE", "KNOWN VULNERABILITIES"))
+    for r in shown:
+        evidence = package_level_text(r).replace(" (not in a dependency file)", " *")
+        print("  %-24s %-10s %-9s %-9s %s" % (r["name"] if len(r["name"]) <= 24 else r["name"][:23] + "~", fit(r["version"] or "-", 10),
+                                              KIND_SHORT.get(r["kind"], r["kind"])[:9], evidence, clip(r["vuln_text"], room)))
+    hidden = len(rows) - len(shown)
+    if hidden:
+        print("\n  ... and %d more only in a lockfile (use --all)" % hidden)
+    if any(not r["declared"] for r in shown):
+        print("  * imported by the code but not listed in a dependency file")
+    print("\nLook closer at one:  %s packages %s PACKAGE" % (command(), run_dir))
+    date = advisory_date()
+    print("A known vulnerability means this exact version is in an advisory, not that the app reaches the vulnerable code.%s" % (" Advisory data from %s." % date if date else ""))
+
+
+def vulns_view(run_dir, severity=None, called=False, everything=False):
+    """Print the known vulnerabilities of a finished scan, worst first, with a verified fix plan."""
+    from .screens import vulns_screen
+    packages = load_packages(run_dir)
+    info = load(run_dir, "manifest.json")
+    app = info.get("app") or os.path.basename(info["scanned_folder"])
+    vulns_screen(app, packages, severity, called, everything, advisory_date(), "%s vulns %s" % (command(), run_dir))
+
+
+def data_line():
+    """`models 2026-11-09 · vulnerabilities 2026-11-11`: how fresh the data behind a scan is."""
+    try:
+        from .db import load_db
+        meta = load_db().get("meta") or {}
+        return "models %s · vulnerabilities %s" % (meta.get("built", "?"), (meta.get("vulnerabilities") or {}).get("fetched", "?"))
+    except Exception:
+        return ""
+
+
+def version_text():
+    """`aibom 0.1.0` and the dates of the data it ships with."""
+    from . import __version__
+    meta = {}
+    try:
+        from .db import load_db
+        meta = load_db().get("meta") or {}
+    except Exception:
+        pass
+    return "aibom %s\n  model data:          %s\n  vulnerability data:  %s" % (
+        __version__, meta.get("built", "unknown"), (meta.get("vulnerabilities") or {}).get("fetched", "unknown"))
+
+
+def package_detail(app, packages, name, links):
+    wanted = name.strip().lower()
+    hits = [c for c in packages if not c.get("left_out") and c["name"].lower() == wanted]
+    if not hits:
+        hits = [c for c in packages if not c.get("left_out") and wanted in c["name"].lower()]
+    if not hits:
+        raise SourceError("I found no AI package called '%s' in %s. List them with: %s packages <scan folder> --all" % (name, app, command()))
+    for c in hits:
+        row = package_rows([c])[0]
+        print("%s %s  (%s%s)" % (c["name"], c.get("version") or "(no exact version)", row["kind"], ", from %s" % c["vendor"] if c.get("vendor") else ""))
+        print("  Evidence:        %s: %s" % (package_level_text(row), WHY_LEVEL[c["evidence_level"]]))
+        print("  Reachable:       %s" % REACHABILITY_TEXT)
+        print("  Needed by:       %s" % {True: "the project itself (declared)", False: "another package (only in a lockfile)", None: "the code (imported, not in a dependency file)"}[c.get("direct")])
+        if c.get("purl"):
+            print("  Package URL:     %s" % c["purl"])
+        for label, key in (("Called", "calls"), ("Imported", "imports"), ("Declared", "evidence")):
+            live = [x for x in c.get(key, []) if not x.get("left_out") and x.get("line", 0) > 0]
+            if not live:
+                continue
+            print("  %s in %d place%s:" % (label, len(live), "" if len(live) == 1 else "s"))
+            for x in live[:5]:
+                print("    %s:%s" % (fit(x["file"], 60), x["line"]))
+                snippet = x.get("snippet")
+                if snippet:
+                    print("        %s" % fit(snippet.strip(), 90))
+                url = links.url_for(x["file"], x["line"]) if links else ""
+                if url:
+                    print("        %s" % url)
+            if len(live) > 5:
+                print("    ... and %d more" % (len(live) - 5))
+        v = c.get("vulnerabilities") or {}
+        if v.get("status") != "checked":
+            print("  Vulnerabilities: not checked: %s" % (v.get("reason") or "no exact installed version is known"))
+        elif not v.get("advisories"):
+            print("  Vulnerabilities: none known for this exact version")
+        else:
+            print("  Vulnerabilities: %d known for this exact version" % len(v["advisories"]))
+            for a in v["advisories"]:
+                fixed = "fixed in %s" % a["fixed_in"] if a.get("fixed_in") else "no fixed version stated"
+                print("    %-8s %-22s %s" % (a["severity"], a["id"], clip(a.get("summary", ""), max(width() - 40, 30))))
+                print("             %s  %s" % (fixed, a.get("url", "")))
+        print()
+    print(PACKAGE_NOTE)
 
 
 def explain(run_dir, name):
@@ -153,6 +293,19 @@ def open_report(run_dir):
     webbrowser.open("file:///" + path.replace(os.sep, "/").lstrip("/"))
 
 
+def make_pdf(run_dir, output=None):
+    """Write the report of a finished scan as a PDF (with the browser that is installed) and return its path."""
+    from .pdf import print_to_pdf
+    from .report import build_html
+    items = load(run_dir, "merged.json")
+    info = load(run_dir, "manifest.json")
+    app = info.get("app") or os.path.basename(info["scanned_folder"])
+    packages = load(run_dir, "packages.json").get("packages", []) if os.path.exists(os.path.join(run_dir, "packages.json")) else []
+    meta = {"warnings": info.get("warnings", []), "packages": packages}
+    page = build_html(items, app, info.get("source", ""), links_for(info), meta, pdf=True)
+    return print_to_pdf(page, output or os.path.join(run_dir, "report.pdf"))
+
+
 def rebuild(run_dir):
     """Rebuild the report, markdown and spreadsheet of a finished scan from its saved data (no re-scan)."""
     from .pipeline import write_readable
@@ -182,8 +335,15 @@ def do_scan(a):
     src = parse(a.source)
     tmp = None
     links = Linker()
-    log = (lambda m: None) if a.quiet else (lambda m: print(m, flush=True))
+    fancy = ui.pretty()  # colour, a live view and a dashboard, only for a person at a terminal
+    stages = screens.StageProgress(6 if src["kind"] == "git" else 5) if fancy and not a.quiet else None
+    log = stages or ((lambda m: None) if a.quiet else (lambda m: print(m, flush=True)))
+    if fancy:
+        ui.console().print(ui.banner(__version__, data_line()))
+        ui.console().print()
     try:
+        if stages:
+            stages.__enter__()
         if src["kind"] == "git":
             log("Downloading %s%s ..." % (src["url"], " (" + src["branch"] + ")" if src["branch"] else ""))
             root, tmp = fetch(src)
@@ -204,8 +364,26 @@ def do_scan(a):
             raise SourceError("Something went wrong while scanning (%s: %s). The details are in %s. If you are in the middle of a demo, scan a local folder or use the saved results."
                               % (type(e).__name__, str(e)[:120], os.path.join(out, "error.txt")))
     finally:
+        if stages:
+            stages.__exit__(*sys.exc_info())
         if tmp and not a.keep:
             cleanup(tmp)
+    if fancy:
+        try:
+            packages = load_packages(out)
+        except SourceError:
+            packages = []
+        if r["items"] == 0 and not packages:
+            print("Scan finished in %ss: no AI model names found in %s." % (r["seconds"], r["app"]))
+        else:
+            screens.dashboard(r, out, packages, links, command(), advisory_date(), __version__)
+        for note in r["warnings"]:
+            ui.console().print(Text("Note: " + note, style="yellow"))
+        if not r["valid"]:
+            raise SourceError("The AI-BOM did not pass the format check: " + str(r["error"]))
+        if a.open:
+            open_report(out)
+        return
     w = width()
     print()
     if r["items"] == 0 and r["partial"]:
@@ -253,8 +431,11 @@ def main():
             s.reconfigure(errors="replace")
         except Exception:
             pass
-    p = argparse.ArgumentParser(prog=command(), description="Find the AI models inside an app and prove each one with a line of code.")
-    sub = p.add_subparsers(dest="cmd", required=True)
+    p = argparse.ArgumentParser(prog=command(), description="Find the AI models and AI packages inside an app and prove each one with a line of code.",
+                                epilog="Run %s with no arguments, in a terminal, for a guided menu that shows the command behind every step." % command())
+    p.add_argument("--version", action="store_true", help="print the version and the dates of the model and vulnerability data")
+    p.add_argument("--plain", action="store_true", help="no colour or boxes, even in a terminal (also: NO_COLOR=1)")
+    sub = p.add_subparsers(dest="cmd")
     s = sub.add_parser("scan", help="scan a folder or a GitHub link and write an AI-BOM")
     s.add_argument("source", help="a folder, or a link such as https://github.com/owner/repo (also owner/repo)")
     s.add_argument("--out", help="where to save the results (default: runs/<app name>)")
@@ -264,8 +445,10 @@ def main():
     s.add_argument("--open", action="store_true", help="open the report in the browser when done")
     s.add_argument("--quiet", action="store_true", help="no progress lines")
     s.add_argument("--debug", action="store_true", help="show the full error trace")
-    o = sub.add_parser("report", help="open the readable report of a finished scan in the browser")
+    o = sub.add_parser("report", help="open the readable report of a finished scan in the browser, or write it as a PDF (--pdf)")
     o.add_argument("run_dir")
+    o.add_argument("--pdf", action="store_true", help="write report.pdf instead of opening the page (needs Chrome, Edge or Chromium)")
+    o.add_argument("--output", help="where to write the PDF (default: report.pdf in the scan folder)")
     w = sub.add_parser("show", help="print a finished scan as a plain list")
     w.add_argument("run_dir")
     w.add_argument("--limit", type=int, default=20)
@@ -275,19 +458,47 @@ def main():
     x = sub.add_parser("explain", help="why is this model in the result, and how sure are we?")
     x.add_argument("run_dir")
     x.add_argument("model")
+    k = sub.add_parser("packages", help="list the AI packages of a finished scan and their known vulnerabilities, or look closer at one")
+    k.add_argument("run_dir")
+    k.add_argument("package", nargs="?", help="a package name, to see where it is used and its advisories")
+    k.add_argument("--all", action="store_true", help="include the packages that are only in a lockfile")
+    v = sub.add_parser("vulns", help="list the known vulnerabilities of a finished scan, worst first, with a fix plan")
+    v.add_argument("run_dir")
+    v.add_argument("--severity", choices=["critical", "high", "medium", "low"], help="show this severity and worse")
+    v.add_argument("--called", action="store_true", help="only packages your code calls")
+    v.add_argument("--all", action="store_true", help="include the packages that are only in a lockfile")
     b = sub.add_parser("rebuild", help="rebuild the report and spreadsheet of a finished scan, or of every scan in a folder (--all)")
     b.add_argument("run_dir")
     b.add_argument("--all", action="store_true", help="treat run_dir as a folder that holds many scans")
     a = p.parse_args()
+    if a.plain:
+        from . import ui
+        ui.set_plain()
     try:
+        if a.version:
+            print(version_text())
+            return
+        if a.cmd is None:
+            from . import interactive
+            if not interactive.is_interactive():  # a script, a pipe or CI: never wait for a key
+                p.print_help()
+                return
+            sys.exit(interactive.run())
         if a.cmd == "scan":
             do_scan(a)
         elif a.cmd == "report":
-            open_report(a.run_dir)
+            if a.pdf:
+                print("pdf:", make_pdf(a.run_dir, a.output))
+            else:
+                open_report(a.run_dir)
         elif a.cmd == "show":
             show_item(a.run_dir, a.item) if a.item else show(a.run_dir, a.limit, a.all, a.left_out)
         elif a.cmd == "explain":
             explain(a.run_dir, a.model)
+        elif a.cmd == "packages":
+            packages_view(a.run_dir, a.package, a.all)
+        elif a.cmd == "vulns":
+            vulns_view(a.run_dir, a.severity, a.called, a.all)
         elif a.cmd == "rebuild":
             dirs = sorted(os.path.join(a.run_dir, d) for d in os.listdir(a.run_dir) if os.path.exists(os.path.join(a.run_dir, d, "merged.json"))) if a.all else [a.run_dir]
             for d in dirs:

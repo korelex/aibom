@@ -67,6 +67,28 @@ def main():
         if done.returncode != 0:
             fail(f"`aibom scan` exited with {done.returncode}")
 
+        # `aibom` with no arguments opens the guided menu in a terminal; here there is none, so it must print the help
+        # and exit cleanly instead of waiting for a key. questionary must have come in as a dependency of the wheel.
+        bare = subprocess.run([aibom], cwd=work, text=True, capture_output=True, stdin=subprocess.DEVNULL, timeout=120)
+        if bare.returncode != 0 or "usage:" not in bare.stdout:
+            fail(f"`aibom` without a terminal should print the help and exit 0 (exit {bare.returncode}): {bare.stdout[:200]} {bare.stderr[:200]}")
+        menu = run([python, "-c", "import questionary, aibom_engine.interactive as i; print(i.Prompter.KEYS)"], capture_output=True, cwd=work)
+        if "Esc" not in menu.stdout:
+            fail("the guided menu could not be imported from the installed wheel")
+        listed = subprocess.run([aibom, "packages", out], cwd=work, text=True, capture_output=True)
+        if listed.returncode != 0 or "openai" not in listed.stdout:
+            fail(f"`aibom packages` did not list the openai package (exit {listed.returncode}): {listed.stdout[:200]} {listed.stderr[:200]}")
+
+        vulns = subprocess.run([aibom, "vulns", out], cwd=work, text=True, capture_output=True, stdin=subprocess.DEVNULL)
+        if vulns.returncode != 0 or "Affected is not the same as exploitable" not in vulns.stdout or "\x1b" in vulns.stdout:
+            fail(f"`aibom vulns` should print plain text and exit 0 (exit {vulns.returncode}): {vulns.stdout[:200]} {vulns.stderr[:200]}")
+        version = subprocess.run([aibom, "--version"], cwd=work, text=True, capture_output=True)
+        if version.returncode != 0 or "vulnerability data:" not in version.stdout:
+            fail(f"`aibom --version` did not print the version and data dates: {version.stdout[:200]} {version.stderr[:200]}")
+        colour = run([python, "-c", "import rich; from aibom_engine import screens, ui; print('rich', ui.pretty())"], capture_output=True, cwd=work)
+        if "rich" not in colour.stdout:
+            fail("the terminal screens could not be imported from the installed wheel (rich missing?)")
+
         # The installed package must contain the database and the dictionary.
         probe = run([python, "-c", "import aibom_engine, os; print(os.path.dirname(aibom_engine.__file__))"],
                     capture_output=True, cwd=work)
