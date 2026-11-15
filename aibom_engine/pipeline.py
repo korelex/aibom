@@ -16,6 +16,7 @@ from . import credentials as credential_finder
 from . import modelfiles as modelfile_finder
 from . import remote_code as remote_code_finder
 from . import mcp as mcp_finder
+from . import sarif
 from .mcp_flags import mcp_flags
 from .report import build_csv, build_html, build_markdown, build_mcp_csv, build_packages_csv
 from .triage import triage
@@ -190,6 +191,7 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
     save(os.path.join(out, "modelfiles.json"), {**found_models, "remote_code": found_remote})
     save(os.path.join(out, "aibom.cdx.json"), bom)
     save(os.path.join(out, "flags.json"), {"flags": [f.to_dict() for f in flags], "counts": flag_rules.counts(flags)})
+    sarif.write(os.path.join(out, "aibom.sarif"), flags)
     write_readable(out, items, app, source, links, warnings, found_packages["packages"], flags, found_mcp, {**found_models, "remote_code": found_remote})
     rows = build_rows(items)
     tiers = dict(collections.Counter(i["tier"] for i in items))

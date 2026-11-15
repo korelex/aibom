@@ -86,27 +86,57 @@ prints plain text with no colour.
 
 ### GitHub Actions
 
+aibom is also a GitHub Action. Add `.github/workflows/aibom.yml`:
+
 ```yaml
 name: aibom
-on: [push, pull_request]
+on: [pull_request, push]
+permissions:
+  contents: read
+  security-events: write     # to show the findings in code scanning
 jobs:
   aibom:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: "3.12" }
-      - run: python -m pip install ./tools/aibom-0.5.0-py3-none-any.whl   # the wheel kept in your repository or fetched from your artifact store
-      - run: aibom scan . --out aibom-out --quiet
-      - run: aibom vulns aibom-out
-      - uses: actions/upload-artifact@v4
-        with: { name: aibom, path: aibom-out }
+      - uses: korelex/aibom@<commit-sha>   # pin a release commit; the Releases page lists them
+        with:
+          fail-on: high
 ```
 
-GitLab CI and Jenkins use the same three commands: install the wheel, `aibom scan . --out aibom-out --quiet`, keep
-`aibom-out` as the build artifact.
+On every pull request it scans the repository, and:
 
-The commands were run; the workflow file itself has not been run on GitHub.
+- fails the check when a risk flag at `fail-on` or worse is found (leave `fail-on` empty to never fail on flags);
+- sends the flags to GitHub code scanning as SARIF, so each one shows on its line in the pull request and in the
+  Security tab, with its fix;
+- writes the report to the job summary and keeps the results (report, AI-BOM, flags, SARIF) as an artifact named `aibom`.
+
+| Input | Default | Meaning |
+| --- | --- | --- |
+| `path` | `.` | the folder to scan, relative to the repository root |
+| `fail-on` | `high` | fail on a flag at `info`, `low`, `medium` or `high` or worse; empty never fails on flags |
+| `upload-sarif` | `true` | send the flags to code scanning (needs `security-events: write`) |
+| `upload-artifact` | `true` | keep the results as an artifact |
+| `artifact-name` | `aibom` | its name, unique within a run |
+| `output` | `aibom-out` | where the results are written on the runner |
+| `max-seconds` | `300` | stop reading files after this many seconds |
+| `python-version` | `3.12` | the Python that runs aibom |
+
+The outputs are `exit-code` (0 passed, 3 a flag at `fail-on` or worse, 2 the scan could not run), `results` and `sarif`.
+Everything runs on the runner: the code is read, never executed, and nothing leaves it except what GitHub's own steps
+upload to your repository. Code scanning is not available on every repository (a private one without GitHub Advanced
+Security, a pull request from a fork); there the upload is skipped with a warning and the rest still works. The action
+pins its own third-party steps to commit ids.
+
+To run aibom without the action (an air-gapped runner, a wheel kept in your own artifact store):
+
+```yaml
+      - run: python -m pip install ./tools/aibom-0.5.0-py3-none-any.whl
+      - run: aibom scan . --out aibom-out --quiet --fail-on high
+```
+
+GitLab CI and Jenkins use the same commands: install the wheel, `aibom scan . --out aibom-out --quiet --fail-on high`,
+keep `aibom-out` as the build artifact. Every scan also writes `aibom-out/aibom.sarif` for tools that read SARIF.
 
 ### Failing the build
 
@@ -144,7 +174,7 @@ install a newer wheel. There is no automatic update yet.
 ## Not available yet
 
 - A published Docker image, and a release on PyPI or Homebrew.
-- SARIF output and a ready-made GitHub Action.
+- A GitLab CI template (the commands above work in any pipeline).
 - Dependency data without a lockfile: with only a `requirements.txt` or `package.json`, aibom sees the direct dependencies,
   and only exact pins can be checked for vulnerabilities. A lockfile gives the whole tree.
 - Languages other than Python and JavaScript/TypeScript for packages.

@@ -335,11 +335,25 @@ def rebuild(run_dir):
     links = links_for(info)
     app = info.get("app") or os.path.basename(info["scanned_folder"])
     packages = load(run_dir, "packages.json").get("packages", []) if os.path.exists(os.path.join(run_dir, "packages.json")) else []
-    write_readable(run_dir, items, app, info.get("source", ""), links, info.get("warnings", []), packages, load_flags(run_dir), load_mcp(run_dir), load_modelfiles(run_dir))
+    flags = load_flags(run_dir)
+    write_readable(run_dir, items, app, info.get("source", ""), links, info.get("warnings", []), packages, flags, load_mcp(run_dir), load_modelfiles(run_dir))
+    from . import sarif
+    sarif.write(os.path.join(run_dir, "aibom.sarif"), flags)
     info.update(links.to_dict() if links.ok else {})
     with open(os.path.join(run_dir, "manifest.json"), "w", encoding="utf-8") as f:
         json.dump(info, f, indent=1, sort_keys=True)
     return app, links.ok
+
+
+def write_sarif(run_dir, prefix="", output=None):
+    """Write aibom.sarif for a finished scan, with file paths under `prefix` (the scanned folder inside the repository)."""
+    from . import sarif
+    if not os.path.exists(os.path.join(run_dir, "manifest.json")):
+        raise SourceError("%s is not a finished scan (no manifest.json). Run aibom scan first." % run_dir)
+    flags = load_flags(run_dir)
+    path = output or os.path.join(run_dir, "aibom.sarif")
+    skipped = sarif.write(path, flags, prefix)
+    print("sarif: %s (%d results%s)" % (path, len(flags) - skipped, ", %d without a file left out" % skipped if skipped else ""))
 
 
 def check_tools():
@@ -521,6 +535,10 @@ def main():
     v.add_argument("--severity", choices=["critical", "high", "medium", "low"], help="show this severity and worse")
     v.add_argument("--called", action="store_true", help="only packages your code calls")
     v.add_argument("--all", action="store_true", help="include the packages that are only in a lockfile")
+    f = sub.add_parser("sarif", help="write the risk flags of a finished scan as SARIF, for GitHub code scanning")
+    f.add_argument("run_dir")
+    f.add_argument("--prefix", default="", help="the folder that was scanned, relative to the repository root, so each file in the SARIF points at the right place (default: the root)")
+    f.add_argument("--output", help="where to write it (default: aibom.sarif in the scan folder)")
     b = sub.add_parser("rebuild", help="rebuild the report and spreadsheet of a finished scan, or of every scan in a folder (--all)")
     b.add_argument("run_dir")
     b.add_argument("--all", action="store_true", help="treat run_dir as a folder that holds many scans")
@@ -553,6 +571,8 @@ def main():
             packages_view(a.run_dir, a.package, a.all)
         elif a.cmd == "vulns":
             vulns_view(a.run_dir, a.severity, a.called, a.all)
+        elif a.cmd == "sarif":
+            write_sarif(a.run_dir, a.prefix, a.output)
         elif a.cmd == "rebuild":
             dirs = sorted(os.path.join(a.run_dir, d) for d in os.listdir(a.run_dir) if os.path.exists(os.path.join(a.run_dir, d, "merged.json"))) if a.all else [a.run_dir]
             for d in dirs:

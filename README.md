@@ -136,6 +136,7 @@ On Debian and Ubuntu, if `python3 -m venv` fails, install the venv module first:
 | `aibom packages RUN` | List the AI packages of a finished scan with their evidence level and known vulnerabilities (`--all` adds those only in a lockfile) |
 | `aibom packages RUN PACKAGE` | Look closer at one package: where it is used, and each advisory with the version that fixes it |
 | `aibom vulns RUN` | The known vulnerabilities of a finished scan, worst first, with a fix plan (`--severity high` for high and worse, `--called` for packages your code calls, `--all` adds those only in a lockfile) |
+| `aibom sarif RUN` | Write the risk flags of a finished scan as SARIF for GitHub code scanning (`--prefix DIR` when the scanned folder is not the repository root) |
 | `aibom rebuild RUN` | Re-create the reports of a finished scan without scanning again |
 | `aibom --version` | The version, and the dates of the model data and the vulnerability data |
 
@@ -162,6 +163,9 @@ Useful options for `scan`:
 | `--fail-on SEVERITY` | off | exit with code 3 when the scan has a risk flag at `info`, `low`, `medium` or `high` or worse, so a build can stop on it. The results are still written. A scan that cannot run exits with 2, so a script can tell the two apart |
 
 Run `aibom <command> --help` for every option.
+
+**In GitHub Actions**, aibom is an action: `uses: korelex/aibom@<commit-sha>` with `fail-on: high` fails a pull request
+on a high risk flag and shows each finding on its line. See [the setup](docs/running-in-your-infra.md#github-actions).
 
 To run aibom on your own servers, in CI, or without internet, see [Running aibom in your own infrastructure](docs/running-in-your-infra.md).
 
@@ -227,6 +231,7 @@ Each scan writes these files to its `RUN` folder:
 | `credentials.json` | Where hardcoded AI provider API keys were found: the provider, the rule, the file, the line and the length. Never the key itself, nor any part of it. Each one is also a `secret.api-key` flag. |
 | `modelfiles.json` | The model weight files found in the project (`.pt`, `.pth`, `.pkl`, `.joblib`, `.ckpt`, `.npy`, `.npz`, `.h5`, `.keras`, `.safetensors`, `.gguf`, `.onnx`, and `.bin` files that are really pickles or zips): what each really is (judged by its content, not its name), whether it uses pickle, the dangerous imports found inside, and whether it could be fully scanned. Also the places where `trust_remote_code` is switched on. In `aibom.cdx.json` each live file is a `machine-learning-model` component with its format and scan status. Files are only read, never loaded. |
 | `mcp.json`, `mcp.csv` | The MCP servers the project's config files declare (`.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`, `.gemini/settings.json`, `.codex/config.toml`, `claude_desktop_config.json`): how each is run, the file and line, and the names of its environment variables and headers (never their values). In `aibom.cdx.json` a local server is an `application` component and a remote one a `service`. |
+| `aibom.sarif` | The risk flags as SARIF 2.1.0, the format GitHub code scanning and most CI security dashboards read: one result per flag, on its file and line. |
 | `merged.json`, `findings.json`, `files.json`, `manifest.json` | Working data behind the reports; `aibom rebuild` uses them. |
 
 For the same code, a scan on the same day writes the same `aibom.cdx.json`, `report.html`, `report.md` and
@@ -256,7 +261,7 @@ How each of these is decided, and where the data comes from, is in [docs/how-it-
 - Check Hugging Face revision pinning, read TensorFlow SavedModel or TFLite files, or look inside a model file that is encrypted,
   too large (a pickle over 1 GB), or compressed in a way not listed. Such files are reported as *not scanned*, which is never
   the same as safe.
-- Run as a GitHub Action, or write SARIF. (`--fail-on` stops a build on a severity; it is not yet a per-rule policy.)
+- Apply a per-rule policy: `--fail-on` stops a build on a severity, not on chosen rules.
 - See a model chosen at run time, from an environment variable, a settings page or a database. aibom reads code; it
   does not run your app.
 - Find every model: about 1 in 5 is missed on unfamiliar code, mostly ids inside long lists and JSON catalogs.
