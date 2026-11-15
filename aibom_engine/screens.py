@@ -189,6 +189,11 @@ class StageProgress:
         self.title = ""
 
 
+def _elsewhere(n):
+    """What a summary row adds for the findings in tests, examples or documentation, which its count leaves out."""
+    return f"; {n} more in tests, examples or documentation" if n else ""
+
+
 def dashboard(r, out, packages, links, cmd, date, version):
     """The result of a scan, drawn for a terminal: three numbers, the worst of what was found, and what to type next."""
     con = ui.console()
@@ -211,14 +216,15 @@ def dashboard(r, out, packages, links, cmd, date, version):
                                   "" if len({(f["package"], f["version"]) for f in found}) == 1 else "s"), "   ", ui.severity_counts(c, skip_zero=True))
     t.add_row(Text(str(len(found)), style="bold bright_red" if found else "bold green"), vuln_line)
     mf = r.get("model_files") or {}
-    if mf.get("files"):
+    if mf.get("files") or mf.get("other"):
         t.add_row(Text(str(mf["files"]), style="bold bright_red" if mf.get("dangerous") else "bold"),
-                  Text("model files (%d use pickle, %d with dangerous imports or a misleading name)" % (mf["pickle"], mf["dangerous"])))
+                  Text("model files (%d use pickle, %d with a dangerous or hidden import, a Lambda layer or a misleading name)%s" % (mf["pickle"], mf["dangerous"], _elsewhere(mf.get("other", 0)))))
     if r.get("remote_code"):
-        t.add_row(Text(str(r["remote_code"]), style="bold yellow"), Text("places turn trust_remote_code on"))
+        t.add_row(Text(str(r["remote_code"]), style="bold yellow"), Text(("place turns" if r["remote_code"] == 1 else "places turn") + " trust_remote_code on"))
     ks = r.get("secrets") or {}
-    if ks.get("keys"):
-        t.add_row(Text(str(ks["keys"]), style="bold bright_red"), Text("hardcoded API keys in %d files (values are never stored)" % ks["files"]))
+    if ks.get("keys") or ks.get("other"):
+        t.add_row(Text(str(ks["keys"]), style="bold bright_red" if ks.get("keys") else "bold"),
+                  Text("hardcoded API keys in %d file%s%s (values are never stored)" % (ks["files"], "" if ks["files"] == 1 else "s", _elsewhere(ks.get("other", 0)))))
     mc = r.get("mcp") or {}
     if mc.get("servers"):
         t.add_row(str(mc["servers"]), Text("MCP servers declared in config files (%d local, %d remote)" % (mc["stdio"], mc["remote"])))

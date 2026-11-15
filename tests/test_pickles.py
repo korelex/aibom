@@ -5,6 +5,7 @@ import base64
 import collections
 import datetime
 import decimal
+import gzip
 import io
 import os
 import pickle
@@ -359,6 +360,48 @@ class HostileLengths(unittest.TestCase):
             peak, result = self.peak_mb(path)
             self.assertLess(peak, 20, declared)
             self.assertTrue(result.trailing)
+
+    def test_a_blob_longer_than_the_read_limit_is_passed_over_and_what_follows_is_still_read(self):
+        # Found in the M3 manual test: 300 MB of padding before os.system ended the reading as "damaged" and the import was missed.
+        tail = s("os") + s("system") + STACK_GLOBAL
+        for opcode, width in ((b"\x8e", 8), (b"B", 4), (b"\x8d", 8), (b"X", 4), (b"\x96", 8)):
+            data = proto4(opcode + (5000).to_bytes(width, "little") + b"\x00" * 5000 + tail)
+            with mock.patch.object(P, "MAX_READ", 1000):
+                for stream in (io.BytesIO(data), gzip.GzipFile(fileobj=io.BytesIO(gzip.compress(data)))):
+                    r = P.scan(stream)
+                    self.assertEqual((names(r), r.stopped, r.trailing, r.pickles), (["os.system"], "", "", 1), (opcode, type(stream).__name__))
+
+    def test_a_real_blob_past_the_read_limit_costs_no_memory_and_hides_nothing(self):
+        n = P.MAX_READ + 2 ** 20
+        d = tempfile.mkdtemp()
+        path = os.path.join(d, "padded.pkl")
+        with open(path, "wb") as fh:
+            fh.write(b"\x80\x04\x8e" + n.to_bytes(8, "little"))
+            fh.seek(n - 1, 1)
+            fh.write(b"\x00" + s("os") + s("system") + STACK_GLOBAL + b".")
+        self.addCleanup(lambda: (os.remove(path), os.rmdir(d)))
+        peak, result = self.peak_mb(path)
+        self.assertLess(peak, 20)
+        self.assertEqual((names(result), result.trailing, result.pickles), (["os.system"], "", 1))
+
+    def test_a_blob_declared_past_the_read_limit_but_not_there_is_cut_short(self):
+        with mock.patch.object(P, "MAX_READ", 1000):
+            for stream in (io.BytesIO(b"\x80\x04\x8e" + (5000).to_bytes(8, "little") + b"x" * 10),
+                           gzip.GzipFile(fileobj=io.BytesIO(gzip.compress(b"\x80\x04\x8e" + (5000).to_bytes(8, "little") + b"x" * 10)))):
+                r = P.scan(stream)
+                self.assertEqual((r.pickles, r.stopped, r.trailing), (0, "", "the pickle is damaged or cut short"), type(stream).__name__)
+
+    def test_time_running_out_while_passing_over_a_blob_is_the_time_limit_not_damage(self):
+        data = gzip.compress(proto4(b"\x8e" + (5000).to_bytes(8, "little") + b"\x00" * 5000 + s("os") + s("system") + STACK_GLOBAL))
+        with mock.patch.object(P, "MAX_READ", 1000):
+            r = P.scan(gzip.GzipFile(fileobj=io.BytesIO(data)), deadline=time.time() - 1)
+            self.assertEqual((r.stopped, r.trailing), ("time limit", ""))
+            r = P.scan(io.BytesIO(gzip.decompress(data)[:3000]), deadline=time.time() - 1)    # a file of known length that is short is damaged
+            self.assertEqual((r.stopped, r.trailing), ("", "the pickle is damaged or cut short"))
+
+    def test_the_stand_in_for_a_passed_over_blob(self):
+        p = P._Passed(10 ** 12)
+        self.assertEqual((len(p), str(p, "utf-8", "surrogatepass"), p.decode("latin-1"), bytes(p), bytearray(p)), (10 ** 12, "", "", b"", bytearray()))
 
     def test_the_text_opcodes_cannot_force_a_huge_read_either(self):
         path = self.write(b"S'" + b"a" * 5_000_000)        # a string with no end: readline must not run on

@@ -164,10 +164,21 @@ class TrustRemoteCode(unittest.TestCase):
         self.assertEqual(self.hits("a(b(c(trust_remote_code=True)))"), [(1, "keyword")])
         self.assertEqual(len(self.hits("f(trust_remote_code=True)\ng(trust_remote_code=True)")), 2)
 
+    def test_python_dicts_of_arguments(self):
+        # Found in the M3 manual test: the model_kwargs form was missed.
+        self.assertEqual(self.hits('kw = {"trust_remote_code": True}'), [(1, "dict")])
+        self.assertEqual(self.hits('pipeline("t", model="x", model_kwargs={"x": 1,\n    "trust_remote_code": True})'), [(2, "dict")])
+        self.assertEqual(self.hits("f(**{'trust_remote_code': True})"), [(1, "dict")])
+        self.assertEqual(self.hits('d = {**base, "trust_remote_code": True}'), [(1, "dict")])
+        for text in ('kw = {"trust_remote_code": False}', 'kw = {"trust_remote_code": flag}', 'kw = {"trust_remote_codes": True}', 'kw = {"x": "trust_remote_code"}', 'kw = {**base}'):
+            self.assertEqual(self.hits(text), [], text)
+        flag = RC.remote_code_flags([{"file": "a.py", "line": 1, "how": "dict", "location": ""}])[0]
+        self.assertIn("set in a dict of arguments", flag.detail)
+
     def test_python_that_is_not_turning_it_on(self):
         for text in ("m = AutoModel.from_pretrained('x', trust_remote_code=False)", "f(trust_remote_code=flag)", "f(trust_remote_code=None)", "f(trust_remote_code=1)",
                      "# f(trust_remote_code=True)", "'''f(trust_remote_code=True)'''", "x = 'trust_remote_code=True'", "def f(trust_remote_code=False): pass", "trust_remote_code = False",
-                     "print('--trust-remote-code')", "f(**{'trust_remote_code': True})", "f(trust_remote_codes=True)"):
+                     "print('--trust-remote-code')", "f(trust_remote_codes=True)"):
             self.assertEqual(self.hits(text), [], text)
 
     def test_python_that_does_not_parse_falls_back_to_the_text_rules_but_skips_comments(self):
@@ -340,8 +351,8 @@ class WholeScan(unittest.TestCase):
                            env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"})
         self.assertEqual(r.returncode, 0, r.stderr)
         lines = [" ".join(l.split()) for l in r.stdout.splitlines()]
-        self.assertIn("6 model files (4 use pickle, 3 with dangerous imports or a misleading name)", lines)
-        self.assertIn("1 places turn trust_remote_code on", lines)
+        self.assertIn("6 model files (4 use pickle, 3 with a dangerous or hidden import, a Lambda layer or a misleading name); 1 more in tests, examples or documentation", lines)
+        self.assertIn("1 place turns trust_remote_code on", lines)
         from aibom_engine import screens, ui
         from test_ui import drawn, recorded
         result = {"app": "demo", "seconds": 1.0, "used": 0, "listed": 0, "left_out": 0, "rows": {"used": [], "listed": []}, "packages": {}, "warnings": [], "items": 0,
@@ -350,8 +361,17 @@ class WholeScan(unittest.TestCase):
             con = recorded()
             screens.dashboard(result, "runs/demo", [], mock.Mock(ok=False), "aibom", "", "9.9")
             text = " ".join(drawn(con).split())
-            self.assertIn("model files (4 use pickle, 2 with dangerous imports or a misleading name)", text)
+            self.assertIn("model files (4 use pickle, 2 with a dangerous or hidden import, a Lambda layer or a misleading name)", text)
             self.assertIn("places turn trust_remote_code on", text)
+            con = recorded()
+            result["model_files"], result["remote_code"] = {"files": 0, "pickle": 0, "dangerous": 0, "other": 2}, 1
+            result["secrets"] = {"keys": 0, "files": 0, "other": 1}
+            screens.dashboard(result, "runs/demo", [], mock.Mock(ok=False), "aibom", "", "9.9")
+            text = " ".join(drawn(con).split())
+            self.assertIn("model files (0 use pickle, 0 with a dangerous or hidden import, a Lambda layer or a misleading name); 2 more in tests, examples or documentation".replace(" ", ""),
+                          text.replace(" ", "").replace("\u2502", ""))            # the panel wraps this long row
+            self.assertIn("1 place turns trust_remote_code on", text)
+            self.assertIn("hardcoded API keys in 0 files; 1 more in tests, examples or documentation", text)
             con = recorded()
             result["model_files"], result["remote_code"] = {"files": 0, "pickle": 0, "dangerous": 0}, 0
             screens.dashboard(result, "runs/demo", [], mock.Mock(ok=False), "aibom", "", "9.9")

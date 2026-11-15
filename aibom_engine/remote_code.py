@@ -32,7 +32,8 @@ MAX_PER_FILE = 25
 
 
 def _python_hits(text):
-    """Lines where Python code passes trust_remote_code=True as an argument or assigns it True, or None when the text is not Python."""
+    """Lines where Python code passes trust_remote_code=True as an argument, puts it in a dict of arguments ({"trust_remote_code": True}, the
+    model_kwargs form), or assigns it True; None when the text is not Python."""
     try:
         tree = ast.parse(text)
     except (SyntaxError, ValueError, RecursionError, MemoryError):
@@ -43,6 +44,10 @@ def _python_hits(text):
             for kw in node.keywords:
                 if kw.arg == "trust_remote_code" and isinstance(kw.value, ast.Constant) and kw.value.value is True:
                     hits.append((getattr(kw, "lineno", node.lineno), "keyword"))
+        elif isinstance(node, ast.Dict):
+            for k, v in zip(node.keys, node.values):
+                if isinstance(k, ast.Constant) and k.value == "trust_remote_code" and isinstance(v, ast.Constant) and v.value is True:
+                    hits.append((k.lineno, "dict"))
         elif isinstance(node, (ast.Assign, ast.AnnAssign)):
             targets = node.targets if isinstance(node, ast.Assign) else [node.target]
             value = node.value
@@ -119,7 +124,7 @@ def remote_code_flags(findings):
     for f in findings:
         live = not f["location"]
         where = "" if live else f" It is in a {f['location']} file."
-        what = {"keyword": "passed as an argument", "assignment": "set in an assignment", "setting": "set in a settings file", "flag": "given as a command-line flag"}[f["how"]]
+        what = {"keyword": "passed as an argument", "dict": "set in a dict of arguments", "assignment": "set in an assignment", "setting": "set in a settings file", "flag": "given as a command-line flag"}[f["how"]]
         flags.append(Flag("code.trust-remote-code", "medium" if live else "low", category="code",
                           title="This code lets a model's own repository run Python on this machine: trust_remote_code is on.", subject="trust_remote_code",
                           fix="Turn it off, or pin the model to a commit you have reviewed (the revision argument).",

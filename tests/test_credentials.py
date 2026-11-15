@@ -256,6 +256,8 @@ class Placement(unittest.TestCase):
                           ("low", "OpenAI", "a.py", "secret.api-key", "secret", ""), ("low", "Mistral", ".env.example", "secret.api-key", "secret", "")])
         self.assertIn("rotate", got[0].fix)
         self.assertIn("80 characters", got[0].detail)
+        covered = C.credential_flags([live_format, {**live_name, "line": 9}], covered={(live_format["file"], live_format["line"])})
+        self.assertEqual([f.subject for f in covered], ["Mistral"])          # a place another flag reports is not flagged again
         self.assertIn("not stored", got[0].detail)
         self.assertIn("may be a sample", got[2].detail)
         self.assertNotIn("may be a sample", got[0].detail)
@@ -368,7 +370,8 @@ class Masking(unittest.TestCase):
 class Everywhere(unittest.TestCase):
     """The whole scan: every output carries the finding and none carries a key."""
 
-    LIVE = {"openai": KEYS["openai-project"][0], "anthropic": KEYS["anthropic"][0], "google": KEYS["google"][0], "mistral": pick(77, 32)}
+    LIVE = {"openai": KEYS["openai-project"][0], "anthropic": KEYS["anthropic"][0], "google": KEYS["google"][0], "mistral": pick(77, 32),
+            "mcp": "sk-proj-" + pick(78, 74, ALNUM + "_-")}
     FILES = {
         "src/client.py": f'from openai import OpenAI\nclient = OpenAI(api_key="{LIVE["openai"]}")\nclient.chat.completions.create(model="gpt-4o-2024-08-06", messages=[])\n',
         ".env": f'ANTHROPIC_API_KEY={LIVE["anthropic"]}\nMISTRAL_API_KEY={LIVE["mistral"]}\nGOOGLE_API_KEY=${{GOOGLE_API_KEY}}\n',
@@ -377,6 +380,7 @@ class Everywhere(unittest.TestCase):
         ".env.example": "OPENAI_API_KEY=sk-proj-your-key-here\nANTHROPIC_API_KEY=\n",
         "src/line.py": f'x = OpenAI(api_key="{KEYS["xai"][0]}", model="gpt-4o-mini")\n',
         "docs/guide.md": "Set OPENAI_API_KEY=sk-proj-... in your shell.\n",
+        ".mcp.json": '{"mcpServers": {"s": {"command": "npx", "args": ["-y", "s-mcp@1.0.0"],\n  "env": {"OPENAI_API_KEY": "' + LIVE["mcp"] + '"}}}}\n',
     }
 
     @classmethod
@@ -408,8 +412,9 @@ class Everywhere(unittest.TestCase):
         saved = json.loads(self.read("credentials.json"))
         got = sorted((f["file"], f["line"], f["provider"], f["how"], f["location"]) for f in saved["findings"])
         self.assertEqual(got, sorted([("src/client.py", 2, "OpenAI", "format", ""), (".env", 1, "Anthropic", "format", ""), (".env", 2, "Mistral", "name", ""),
-                                      ("config/app.yaml", 2, "Google", "format", ""), ("src/line.py", 1, "xAI", "format", ""), ("tests/test_client.py", 1, "Groq", "format", "test")]))
-        summary = {"keys": 5, "files": 4, "other": 1, "scanned": saved["files_scanned"]}
+                                      ("config/app.yaml", 2, "Google", "format", ""), ("src/line.py", 1, "xAI", "format", ""), ("tests/test_client.py", 1, "Groq", "format", "test"),
+                                      (".mcp.json", 2, "OpenAI", "format", "")]))
+        summary = {"keys": 6, "files": 5, "other": 1, "scanned": saved["files_scanned"]}
         self.assertEqual(json.loads(self.read("manifest.json"))["secrets"], summary)
         self.assertEqual(self.result["secrets"], summary)
 
@@ -418,6 +423,9 @@ class Everywhere(unittest.TestCase):
         secret = sorted((f["severity"], f["subject"], f["file"], f["line"]) for f in saved["flags"] if f["category"] == "secret")
         self.assertEqual(secret, sorted([("high", "OpenAI", "src/client.py", 2), ("high", "Anthropic", ".env", 1), ("medium", "Mistral", ".env", 2), ("high", "Google", "config/app.yaml", 2),
                                          ("high", "xAI", "src/line.py", 1), ("low", "Groq", "tests/test_client.py", 1)]))
+        # The key in .mcp.json is counted as a key but flagged once, by the MCP rule, which names the server (found in the M3 manual test).
+        at = [(f["rule"], f["severity"]) for f in saved["flags"] if (f["file"], f["line"]) == (".mcp.json", 2)]
+        self.assertEqual(at, [("mcp.plaintext-secret", "high")])
         bom = json.loads(self.read("aibom.cdx.json"))
         app = [json.loads(p["value"]) for p in bom["metadata"]["component"]["properties"] if p["name"] == F.PROPERTY]
         self.assertEqual(len([a for a in app if a["rule"] == "secret.api-key"]), 6)
@@ -442,7 +450,7 @@ class Everywhere(unittest.TestCase):
                            env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"})
         self.assertEqual(r.returncode, 0, r.stderr)
         line = next(l for l in r.stdout.splitlines() if "hardcoded API keys" in l and "(values" in l)
-        self.assertEqual(" ".join(line.split()), "5 hardcoded API keys in 4 files (values are never stored; the report lists each file and line)")
+        self.assertEqual(" ".join(line.split()), "6 hardcoded API keys in 5 files; 1 more in tests, examples or documentation (values are never stored; the report lists each file and line)")
         for secret in self.secret_values():
             self.assertNotIn(secret, r.stdout + r.stderr)
 
@@ -454,9 +462,13 @@ class Everywhere(unittest.TestCase):
         try:
             con = recorded()
             screens.dashboard(result, "runs/demo", [], mock.Mock(ok=False), "aibom", "", "9.9")
-            self.assertIn("3 hardcoded API keys in 2 files (values are never stored)", " ".join(drawn(con).split()))
+            self.assertIn("3 hardcoded API keys in 2 files; 1 more in tests, examples or documentation (values are never stored)", " ".join(drawn(con).split()))
             con = recorded()
             result["secrets"] = {"keys": 0, "files": 0, "other": 2, "scanned": 9}
+            screens.dashboard(result, "runs/demo", [], mock.Mock(ok=False), "aibom", "", "9.9")
+            self.assertIn("0 hardcoded API keys in 0 files; 2 more in tests, examples or documentation", " ".join(drawn(con).split()))   # samples are still shown
+            con = recorded()
+            result["secrets"] = {"keys": 0, "files": 0, "other": 0, "scanned": 9}
             screens.dashboard(result, "runs/demo", [], mock.Mock(ok=False), "aibom", "", "9.9")
             self.assertNotIn("hardcoded API keys", drawn(con))
         finally:

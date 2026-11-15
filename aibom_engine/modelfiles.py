@@ -360,6 +360,11 @@ def _scan_compressed(rec, path, kind, deadline):
     except (OSError, EOFError, zlib.error, lzma.LZMAError, ValueError) as e:
         rec["status"], rec["reason"] = "not-scanned", f"the {kind} data could not be read ({str(e)[:60]})"
         return rec
+    if result.ops == 0 and not result.stopped:
+        # Its very first byte is not a pickle opcode (no opcode at all was read), so loading it fails before anything can run: it is not called a pickle.
+        rec["format"], rec["pickle_based"] = f"{kind} data that is not a pickle", False
+        rec["status"], rec["reason"] = "not-scanned", "once decompressed it is not a pickle, so loading it fails before anything runs"
+        return rec
     _add_result(rec, result, blocked)
     if capped.hit:
         blocked.insert(0, "it inflates to more than the size limit, so only the start was read")
@@ -494,7 +499,7 @@ def _read_as(rec, path, size, ext, head, kind, deadline):
         if ext not in FIRM_PICKLE_EXT | LOOSE_EXT:
             return None
         out = _scan_compressed(rec, path, kind, deadline)
-        if ext in LOOSE_EXT and out["status"] == "not-scanned" and not out["pickles"] and out["reason"].startswith("not a pickle"):
+        if ext in LOOSE_EXT and out["status"] == "not-scanned" and not out["pickles"] and (not out["pickle_based"] or out["reason"].startswith("not a pickle")):
             return None                                # a .bin, .dat or .data holding some other compressed data: just a file
         return out
     if kind == "zstd":

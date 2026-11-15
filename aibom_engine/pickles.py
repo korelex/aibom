@@ -69,11 +69,16 @@ class _Guard:
 
     A pickle declares the length of each string or blob it holds, and a hostile one can declare gigabytes. Asked for that many bytes, Python may
     set aside the memory before it finds the file is short. With this view the answer is simply the few bytes that are really there, and the
-    reader reports the pickle as cut short."""
+    reader reports the pickle as cut short.
 
-    def __init__(self, stream, size=None):
+    A blob longer than MAX_READ that is really there is passed over instead of read (see `_pass_over`), so a pickle cannot hide an import
+    behind a few hundred megabytes of padding."""
+
+    def __init__(self, stream, size=None, deadline=None):
         self._s = stream
         self._end = size
+        self._deadline = deadline
+        self.timed_out = False   # passing over a long blob ran out of time
         self._pending = b""   # one byte read ahead by peek(), given back by the next read
         # The size is looked up by seeking to the end, which is free for a file or a buffer and, for a compressed stream, would mean inflating
         # all of it just to learn its length. So only those two are probed; any other stream is limited by MAX_READ alone.
@@ -112,6 +117,8 @@ class _Guard:
         return b"".join(parts)
 
     def read(self, n=-1):
+        if n is not None and n > MAX_READ and (self._end is None or self._end - self.tell() >= n):
+            return self._pass_over(n)    # all of it is there (or, on a stream, may be): skip it; a short file is answered as before
         n = self._room(n)
         if n <= 0:
             return b""
@@ -119,6 +126,16 @@ class _Guard:
             head, self._pending = self._pending, b""
             return head + self._take(n - 1) if n > 1 else head
         return self._take(n)
+
+    def _pass_over(self, n):
+        """A declared length beyond MAX_READ. A blob holds data, never an import, so when all n bytes are there they are skipped, not kept, and
+        what follows is still read; the reader is given a stand-in of that length. When fewer are there, the answer is b"" and the pickle is cut short."""
+        got = self.skip(n, self._deadline)
+        if got == n:
+            return _Passed(n)
+        if self._deadline is not None and time.time() > self._deadline:
+            self.timed_out = True    # only a stream gets here short: a file of known length is passed over only when all of it is there
+        return b""
 
     def readline(self, size=-1):
         n = self._room(size)
@@ -153,6 +170,18 @@ class _Guard:
     def seek(self, *args):
         self._pending = b""
         return self._s.seek(*args)
+
+
+class _Passed(bytes):
+    """Stands in for a blob that was passed over: as long as the blob, with nothing in it (it reads as "" or b"")."""
+
+    def __new__(cls, n):
+        obj = super().__new__(cls)
+        obj._n = n
+        return obj
+
+    def __len__(self):
+        return self._n
 
 
 class _Unskippable(Exception):
@@ -407,7 +436,7 @@ def scan(stream, deadline=None, max_ops=None, max_pickles=None, size=None):
     max_ops = MAX_OPS if max_ops is None else max_ops
     max_pickles = MAX_PICKLES if max_pickles is None else max_pickles
     result = PickleResult()
-    stream = _Guard(stream, size)
+    stream = _Guard(stream, size, deadline)
     while result.pickles < max_pickles:
         if not stream.peek():
             break
@@ -416,7 +445,9 @@ def scan(stream, deadline=None, max_ops=None, max_pickles=None, size=None):
             ended = _one_pickle(stream, result, memo, deadline, max_ops)
         except (ValueError, MemoryError, OverflowError, RecursionError, EOFError, KeyError, IndexError) as e:
             ended = False
-            if result.pickles == 0:
+            if stream.timed_out:
+                result.stopped = result.stopped or "time limit"
+            elif result.pickles == 0:
                 result.trailing = "the pickle is damaged or cut short" if result.has_proto else f"not a pickle: {str(e)[:80]}"
             else:
                 result.trailing = "data that is not a pickle follows the last pickle"

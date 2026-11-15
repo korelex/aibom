@@ -168,7 +168,7 @@ exposes the app now, `medium` is act soon, `low` is good practice, `info` is wor
 | `model-file.keras-lambda` | medium | A Keras model has a Lambda layer, which holds Python code. |
 | `model-file.not-scanned` | low / info | The file could not be fully scanned (low when the reason is worrying: encrypted, too large, cut short by a limit; info when there was nothing to read). |
 | `code.trust-remote-code` | medium / low | `trust_remote_code` is switched on, so a model's own repository can supply code that runs on this machine. Low in a test or example. |
-| `mcp.plaintext-secret` | high / medium | A credential is written in an MCP config file. High when the value has a well-known key format or a URL carries a password; medium for a plain value under a name such as `API_KEY` or `Authorization`. A placeholder such as `${TOKEN}` or `YOUR_KEY` is not a credential. |
+| `mcp.plaintext-secret` | high / medium | A credential is written in an MCP config file. High when the value has a well-known key format or a URL carries a password; medium for a plain value under a name such as `API_KEY` or `Authorization`. A placeholder such as `${TOKEN}` or `YOUR_KEY` is not a credential. A provider key found here is flagged by this rule only, not also as `secret.api-key`, though it is still counted as a hardcoded key. |
 | `mcp.shell-command` | medium / high | The server is started through a shell string or inline code (`bash -c ...`, `python -c ...`). High when that text downloads and runs something. `cmd /c npx ...`, the way Windows runs `npx`, is not flagged. |
 | `mcp.unpinned-package` | medium | An npm, PyPI or container package has no exact version, so a new release changes what runs. |
 | `mcp.package-from-url` | medium | The server runs code fetched from a URL or git address. |
@@ -238,12 +238,15 @@ Some choices that matter:
   as *not scanned* or *partly scanned* with the reason. "Not scanned" is never "safe", and a scan that found no dangerous
   import never says the file is safe either.
 - **Hostile files are bounded.** File size, decompressed size, zip entries, compression ratio, opcodes, the length a pickle
-  declares for a blob, and time are all limited, so a file built to exhaust memory or time ends as *not scanned*.
+  declares for a blob, and time are all limited, so a file built to exhaust memory or time ends as *not scanned*. A blob
+  longer than 256 MB that is really in the file is passed over without being kept, and what follows it is still read, so
+  padding cannot hide an import.
 - **Where the file is matters.** A file in a test, example, docs or vendored folder is flagged one step lower, and only the
   product's own files are flagged for what could not be scanned.
 
 `trust_remote_code` is a separate risk: it lets a model's repository supply Python that runs on the machine. aibom finds it
-where it is set in code (as an argument or an assignment), in settings files, and as a command-line flag.
+where it is set in code (as an argument, in a dict of arguments such as `model_kwargs={"trust_remote_code": True}`, or in
+an assignment), in settings files, and as a command-line flag.
 
 ## Where the data comes from
 

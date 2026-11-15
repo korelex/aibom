@@ -367,6 +367,11 @@ def check_tools():
 GATE_FAILED = 3   # a scan that ran but found flags at or above --fail-on (a scan that could not run exits 2)
 
 
+def more_elsewhere(n):
+    """What a summary line adds for the findings in tests, examples or documentation, which its count leaves out."""
+    return f"; {n} more in tests, examples or documentation" if n else ""
+
+
 def gate(a, r):
     """--fail-on SEVERITY: exit with GATE_FAILED when the scan has a flag that bad or worse, so a build can stop on it."""
     level = getattr(a, "fail_on", None)
@@ -463,13 +468,15 @@ def do_scan(a):
         if ps.get("not_checked"):
             print("       %d not checked for vulnerabilities: no exact installed version (a range, or no lockfile)" % ps["not_checked"])
     mf = r.get("model_files") or {}
-    if mf.get("files"):
-        print("\n  %-4d model files (%d use pickle, %d with dangerous imports or a misleading name)" % (mf["files"], mf["pickle"], mf["dangerous"]))
+    if mf.get("files") or mf.get("other"):
+        print("\n  %-4d model files (%d use pickle, %d with a dangerous or hidden import, a Lambda layer or a misleading name)%s" % (mf["files"], mf["pickle"], mf["dangerous"], more_elsewhere(mf.get("other", 0))))
     if r.get("remote_code"):
-        print("  %-4d places turn trust_remote_code on" % r["remote_code"])
+        n = r["remote_code"]
+        print("  %-4d %s trust_remote_code on" % (n, "place turns" if n == 1 else "places turn"))
     ks = r.get("secrets") or {}
-    if ks.get("keys"):
-        print("\n  %-4d hardcoded API keys in %d files (values are never stored; the report lists each file and line)" % (ks["keys"], ks["files"]))
+    if ks.get("keys") or ks.get("other"):
+        print("\n  %-4d hardcoded API keys in %d file%s%s (values are never stored; the report lists each file and line)"
+              % (ks["keys"], ks["files"], "" if ks["files"] == 1 else "s", more_elsewhere(ks.get("other", 0))))
     mc = r.get("mcp") or {}
     if mc.get("servers"):
         print("\n  %-4d MCP servers declared in the config files (%d local, %d remote)" % (mc["servers"], mc["stdio"], mc["remote"]))

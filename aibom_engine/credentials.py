@@ -195,12 +195,16 @@ def summary(found):
     return {"keys": len(live), "files": len({f["file"] for f in live}), "other": len(found["findings"]) - len(live), "scanned": found["files_scanned"]}
 
 
-def credential_flags(findings):
+def credential_flags(findings, covered=()):
     """The risk flags for found keys. A key in the product's own code or settings is high when it has a provider's format, medium when it was
     recognised only by its name; in a test, example or documentation file it is low (such keys are usually samples, but one that is real is
-    still a leak)."""
+    still a leak). `covered` holds the (file, line) places another flag already reports as a written credential (an MCP config file's
+    mcp.plaintext-secret), so one key is not flagged twice; it is still counted and listed as a key."""
+    covered = set(covered)
     out = []
     for f in findings:
+        if (f["file"], f["line"]) in covered:
+            continue
         live = not f["location"]
         severity = ("high" if f["how"] == "format" else "medium") if live else "low"
         where = "" if live else f" It is in a {f['location']} file, so it may be a sample."

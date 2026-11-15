@@ -400,6 +400,21 @@ class Compressed(Case):
             benign = self.rec(name, compress(pickle.dumps({"a": 1})))
             self.assertEqual((benign["status"], benign["dangerous"]), ("scanned", []))
 
+    def test_compressed_data_that_is_not_a_pickle_is_not_called_one(self):
+        # Found in the M3 manual test: it was "uses pickle" (medium) with the reader's raw error as the reason.
+        rec = self.rec("m.joblib", zlib.compress(b"\x00" * 100_000))
+        self.assertEqual((rec["format"], rec["pickle_based"], rec["status"]), ("zlib data that is not a pickle", False, "not-scanned"))
+        self.assertEqual(rec["reason"], "once decompressed it is not a pickle, so loading it fails before anything runs")
+        self.assertEqual([(f.severity, f.rule) for f in MF.model_file_flags([rec])], [("info", "model-file.not-scanned")])
+        for data in (b"c" + b"os\nsystem\n" + b"\x00" * 10, b"\x80\x04" + b"\x00" * 10, b"N" + b"\x00" * 10):     # a pickle that goes bad later is still one
+            rec = self.rec("m.joblib", zlib.compress(data))
+            self.assertTrue(rec["pickle_based"], data)
+        # Time running out while its first blob is passed over is the time limit, not proof that it is no pickle.
+        with mock.patch.object(P, "MAX_READ", 1000):
+            rec = self.rec("m.joblib", zlib.compress(b"\x8e" + (5000).to_bytes(8, "little") + b"\x00" * 5000), deadline=time.time() - 1)
+        self.assertEqual((rec["pickle_based"], rec["status"]), (True, "not-scanned"))
+        self.assertIn("time limit", rec["reason"])
+
     def test_a_joblib_file_with_arrays_is_read_whole_in_every_form_joblib_saves_it(self):
         alone = lambda data: lzma.compress(data, format=lzma.FORMAT_ALONE)
         for name, compress in (("m.joblib", None), ("m.joblib", gzip.compress), ("m.joblib", bz2.compress), ("m.joblib", lzma.compress), ("m.joblib", alone), ("m.joblib", zlib.compress)):

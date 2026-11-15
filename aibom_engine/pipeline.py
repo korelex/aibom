@@ -120,7 +120,7 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
         warnings.append(f"More possible API keys were found than are listed: no more than {credential_finder.MAX_PER_FILE} per file and {credential_finder.MAX_FINDINGS} in all.")
     ks = credential_finder.summary(found_keys)
     if ks["keys"] or ks["other"]:
-        log(f"  {ks['keys']:,} hardcoded API keys in {ks['files']:,} files; {ks['other']:,} more in tests, examples or documentation")
+        log(f"  {ks['keys']:,} hardcoded API keys in {ks['files']:,} file{'' if ks['files'] == 1 else 's'}; {ks['other']:,} more in tests, examples or documentation")
     log("Looking for model files ...")
     try:
         found_models = modelfile_finder.find(root, files, deadline=deadline)
@@ -140,7 +140,9 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
         warnings.append(f"More than {modelfile_finder.MAX_FILES} model files were found; only the first {modelfile_finder.MAX_FILES} are listed.")
     ms2 = modelfile_finder.summary(found_models)
     if ms2["files"] or ms2["other"]:
-        log(f"  {ms2['files']:,} model files, {ms2['dangerous']:,} with dangerous imports or a misleading name; {len(found_remote['findings']):,} uses of trust_remote_code")
+        n = len(found_remote["findings"])
+        log(f"  {ms2['files']:,} model files, {ms2['dangerous']:,} with a dangerous or hidden import, a Lambda layer or a misleading name; {ms2['other']:,} more in tests, examples or documentation; "
+            f"{n:,} {'use' if n == 1 else 'uses'} of trust_remote_code")
     log("Reading dependency files ...")
     try:
         found_packages = package_finder.find(root, files, deadline=deadline)
@@ -177,7 +179,9 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
     items = assign_levels(verify(enrich(merge(findings), names), root), model_arguments)
     included = [i for i in items if i["tier"] != "rejected"]
     used = sum(1 for i in included if i.get("role") == "used")
-    flags = flag_rules.collect(flag_rules.model_flags(included, item_ref), mcp_flags(found_mcp["servers"]), credential_finder.credential_flags(found_keys["findings"]),
+    server_flags = mcp_flags(found_mcp["servers"])
+    written = {(f.file, f.line) for f in server_flags if f.rule == "mcp.plaintext-secret"}
+    flags = flag_rules.collect(flag_rules.model_flags(included, item_ref), server_flags, credential_finder.credential_flags(found_keys["findings"], written),
                                modelfile_finder.model_file_flags(found_models["files"]), remote_code_finder.remote_code_flags(found_remote["findings"]))
     log("Writing the AI-BOM and the report ...")
     bom = build_bom(included, app, found_packages["packages"], ps.get("advisory_data", "") if ps else "", flags, found_mcp["servers"], found_models["files"])
