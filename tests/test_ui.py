@@ -225,7 +225,7 @@ class VulnScreens(unittest.TestCase):
         self.assertIn("\x1b]8;", raw)                          # a link to the advisory
         self.assertIn("https://osv.dev/vulnerability/A-1", raw)
         crit = raw[raw.index("CRITICAL") - 60:raw.index("CRITICAL")]
-        self.assertRegex(crit, r"\x1b\[[0-9;]*48;")            # the critical badge has a solid background
+        self.assertRegex(crit, r"\x1b\[[0-9;]*(48;|4[0-7]m)")  # a solid background: 256 or true colour, or the basic red that rich writes when an earlier test left it a console with basic colours only
 
     def test_a_long_advisory_text_in_a_narrow_terminal_still_shows_the_worst_first(self):
         con = recorded(70)

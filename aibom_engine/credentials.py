@@ -59,7 +59,7 @@ PROVIDER_WORDS = (("openai", "OpenAI"), ("anthropic", "Anthropic"), ("mistral", 
                   ("tavily", "Tavily"), ("pinecone", "Pinecone"), ("xai", "xAI"), ("grok", "xAI"), ("cerebras", "Cerebras"), ("nvidia", "NVIDIA"),
                   ("jina", "Jina"), ("stability", "Stability AI"), ("assemblyai", "AssemblyAI"), ("deepgram", "Deepgram"), ("sambanova", "SambaNova"))
 NAME_ASSIGNMENT = re.compile(
-    r"""(?<![A-Za-z0-9_.-])(?P<name>[A-Za-z][A-Za-z0-9_.-]{0,60}?(?:api[_-]?key|access[_-]?token|auth[_-]?token|secret[_-]?key|apikey|_token|_key|Key|Token))["']?\]?\s*[:=]\s*"""
+    r"""(?<![A-Za-z0-9_.-])(?P<name>[A-Za-z][A-Za-z0-9_.-]{0,60}?(?:api[_-]?key|access[_-]?token|auth[_-]?token|secret[_-]?key|apikey|_token|_key|Key|Token))["']?\]?[ \t]*[:=][ \t]*"""
     r"""(?:["'](?P<quoted>[^"'\s]{20,})["']|(?P<bare>[A-Za-z0-9_+/=-]{20,})(?=\s|$|[,;#)]))""", re.I)
 NAME_HINT = re.compile(r"key|token|secret", re.I)
 

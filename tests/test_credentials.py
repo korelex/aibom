@@ -107,6 +107,14 @@ class Prefilter(unittest.TestCase):
 class NotKeys(unittest.TestCase):
     """What a false alarm would look like: each of these must not be reported."""
 
+    def test_an_empty_value_does_not_borrow_the_next_line(self):
+        # `OPENAI_API_KEY=` with nothing after it, followed by another setting: the next line is not the key (found on a real .env.example).
+        for eol in ("\n", "\r\n"):
+            text = "SERPER_API_KEY=" + eol + "OPENAI_API_KEY=" + eol + "OPENAI_MODEL_NAME=gpt-4o" + eol
+            self.assertEqual(rules(text, rel=".env.example"), [], repr(eol))
+        self.assertEqual(rules("openai_api_key:\n  other_setting_name_1234567890\n", rel="c.yaml"), [])
+        self.assertEqual(rules("api_key =\nOTHER_SETTING=value123456789012345\n"), [])
+
     def test_a_longer_token_that_merely_contains_a_key_shape(self):
         for key in (KEYS["groq"][0], KEYS["huggingface"][0], KEYS["google"][0], KEYS["perplexity"][0]):
             self.assertEqual(rules("a" + key), [], key[:6] + " with a letter before")
