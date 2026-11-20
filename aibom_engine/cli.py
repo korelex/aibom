@@ -322,9 +322,13 @@ def make_pdf(run_dir, output=None):
     info = load(run_dir, "manifest.json")
     app = info.get("app") or os.path.basename(info["scanned_folder"])
     packages = load(run_dir, "packages.json").get("packages", []) if os.path.exists(os.path.join(run_dir, "packages.json")) else []
-    meta = {"warnings": info.get("warnings", []), "packages": packages, "flags": load_flags(run_dir), "mcp": load_mcp(run_dir), "model_files": load_modelfiles(run_dir)}
+    meta = {"warnings": info.get("warnings", []), "packages": packages, "flags": load_flags(run_dir), "mcp": load_mcp(run_dir), "model_files": load_modelfiles(run_dir),
+            "secrets": info.get("secrets") or {}}
     page = build_html(items, app, info.get("source", ""), links_for(info), meta, pdf=True)
-    return print_to_pdf(page, output or os.path.join(run_dir, "report.pdf"))
+    path = print_to_pdf(page, output or os.path.join(run_dir, "report.pdf"))
+    if os.path.abspath(path) == os.path.abspath(os.path.join(run_dir, "report.pdf")):
+        rebuild(run_dir)          # the web report now links to the PDF next to it
+    return path
 
 
 def rebuild(run_dir):
@@ -336,7 +340,8 @@ def rebuild(run_dir):
     app = info.get("app") or os.path.basename(info["scanned_folder"])
     packages = load(run_dir, "packages.json").get("packages", []) if os.path.exists(os.path.join(run_dir, "packages.json")) else []
     flags = load_flags(run_dir)
-    write_readable(run_dir, items, app, info.get("source", ""), links, info.get("warnings", []), packages, flags, load_mcp(run_dir), load_modelfiles(run_dir))
+    write_readable(run_dir, items, app, info.get("source", ""), links, info.get("warnings", []), packages, flags, load_mcp(run_dir), load_modelfiles(run_dir),
+                   info.get("secrets") or {})
     from . import sarif
     sarif.write(os.path.join(run_dir, "aibom.sarif"), flags)
     info.update(links.to_dict() if links.ok else {})

@@ -152,10 +152,18 @@ class ShellFlags(unittest.TestCase):
         self.assertEqual(inline_code("node", ["-e", "run()"]), "run()")
         self.assertEqual(inline_code("deno", ["eval", "1+1"]), "1+1")
         self.assertEqual(inline_code("bash", ["-c"]), "")
+        # more languages that run code given on the command line (julia was missed on a real repository)
+        self.assertEqual(inline_code("julia", ["--project=@srv", "-e", "using Server; Server.serve()"]), "using Server; Server.serve()")
+        self.assertEqual(inline_code("julia", ["--eval", "x()"]), "x()")
+        self.assertEqual(inline_code("Rscript", ["-e", "source('x.R')"]), "source('x.R')")
+        self.assertEqual(inline_code("R.exe", ["-e", "x"]), "x")
+        for command in ("lua", "luajit", "groovy", "elixir", "raku", "perl6", "clojure", "clj", "bb", "osascript"):
+            self.assertEqual(inline_code(command, ["-e", "code"]), "code", command)
 
     def test_things_that_only_look_like_it_are_not_inline_code(self):
         for command, args in (("bash", ["script.sh"]), ("bash", ["-e", "script.sh"]), ("sh", []), ("node", ["server.js"]), ("python", ["-m", "server"]),
-                              ("cmd", ["/c", "npx", "-y", "pkg@1.0.0"]), ("cmd.exe", ["/k", "uvx", "pkg"]), ("npx", ["-y", "pkg"]), ("", []), ("docker", ["run", "img"])):
+                              ("cmd", ["/c", "npx", "-y", "pkg@1.0.0"]), ("cmd.exe", ["/k", "uvx", "pkg"]), ("npx", ["-y", "pkg"]), ("", []), ("docker", ["run", "img"]),
+                              ("julia", ["server.jl"]), ("julia", ["--project=.", "server.jl"]), ("Rscript", ["server.R"]), ("bb", ["server.bb", "8080"]), ("lua", ["s.lua"])):
             self.assertIsNone(inline_code(command, args), (command, args))
 
     def test_a_shell_string_is_medium_and_downloading_to_run_it_is_high(self):

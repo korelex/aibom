@@ -18,7 +18,7 @@ from . import remote_code as remote_code_finder
 from . import mcp as mcp_finder
 from . import sarif
 from .mcp_flags import mcp_flags
-from .report import build_csv, build_html, build_markdown, build_mcp_csv, build_packages_csv
+from .report import DOWNLOADS, build_csv, build_flags_csv, build_html, build_markdown, build_mcp_csv, build_packages_csv
 from .triage import triage
 from .vendors import maker_of, type_of
 from .verify import verify
@@ -64,12 +64,10 @@ def enrich(items, names, online=False):
     return items
 
 
-def write_readable(out, items, app, source="", links=None, warnings=None, packages=None, flags=None, mcp=None, model_files=None):
+def write_readable(out, items, app, source="", links=None, warnings=None, packages=None, flags=None, mcp=None, model_files=None, secrets=None):
     """The outputs for people: the web page, the markdown summary and the spreadsheets (models, and AI packages)."""
     meta = {"warnings": warnings or [], "packages": packages or [], "flags": flags or [], "mcp": mcp or {"servers": [], "files": [], "problems": []},
-            "model_files": model_files or {"files": [], "problems": [], "remote_code": {"findings": []}}}
-    with open(os.path.join(out, "report.html"), "w", encoding="utf-8") as f:
-        f.write(build_html(items, app, source, links, meta))
+            "model_files": model_files or {"files": [], "problems": [], "remote_code": {"findings": []}}, "secrets": secrets or {}}
     with open(os.path.join(out, "report.md"), "w", encoding="utf-8") as f:
         f.write(build_markdown(items, app, source, links, meta))
     with open(os.path.join(out, "packages.csv"), "w", encoding="utf-8-sig", newline="") as f:
@@ -78,6 +76,12 @@ def write_readable(out, items, app, source="", links=None, warnings=None, packag
         f.write(build_mcp_csv(mcp, links))
     with open(os.path.join(out, "models.csv"), "w", encoding="utf-8-sig", newline="") as f:  # the BOM makes Excel read it correctly
         f.write(build_csv(items, links))
+    with open(os.path.join(out, "flags.csv"), "w", encoding="utf-8-sig", newline="") as f:
+        f.write(build_flags_csv(flags or [], links))
+    # Written last, so its Downloads list links only to files that are really there.
+    files = [name for name, _, _ in DOWNLOADS if os.path.exists(os.path.join(out, name))]
+    with open(os.path.join(out, "report.html"), "w", encoding="utf-8") as f:
+        f.write(build_html(items, app, source, links, meta, files=files))
 
 
 def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source="", log=None, max_seconds=120, links=None):
@@ -196,7 +200,7 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
     save(os.path.join(out, "aibom.cdx.json"), bom)
     save(os.path.join(out, "flags.json"), {"flags": [f.to_dict() for f in flags], "counts": flag_rules.counts(flags)})
     sarif.write(os.path.join(out, "aibom.sarif"), flags)
-    write_readable(out, items, app, source, links, warnings, found_packages["packages"], flags, found_mcp, {**found_models, "remote_code": found_remote})
+    write_readable(out, items, app, source, links, warnings, found_packages["packages"], flags, found_mcp, {**found_models, "remote_code": found_remote}, ks)
     rows = build_rows(items)
     tiers = dict(collections.Counter(i["tier"] for i in items))
     reasons = dict(collections.Counter(i["reason"] for i in items if i["tier"] == "rejected"))

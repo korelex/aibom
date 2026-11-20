@@ -369,7 +369,7 @@ class Reports(unittest.TestCase):
 
     def test_evidence_chips_explain_themselves_and_the_summary_card_links_to_the_list(self):
         self.assertIn("class='ev ev-called' title=\"Called: live code calls this package", self.html)
-        self.assertIn("class='card vulncard'><b><a href='#vulns'>6</a>", self.html)
+        self.assertIn("<a class='card vulncard' href='#vulns'><span class='lbl'>Known vulnerabilities</span><b>6</b>", self.html)
 
     def test_severity_labels_stay_readable_inside_the_summary_cards(self):
         # `.card span` greys out text; a label inside a card must keep its own colour or red text lands on a red chip
@@ -380,8 +380,9 @@ class Reports(unittest.TestCase):
     def test_the_packages_table_lets_long_paths_break_so_it_fits_the_page(self):
         # a path has no spaces: without this the table grows wider than the page and its last column is cut off
         head = self.html.split("<body>")[0]
-        self.assertIn("table.pk td:nth-child(5){overflow-wrap:anywhere", head)
-        self.assertIn("<table class='pk'>", self.html)
+        self.assertIn("td{overflow-wrap:break-word}", head)
+        self.assertIn("table.fit{table-layout:fixed}", head)
+        self.assertIn("<table class='pk fit'><colgroup>", self.html)
 
     def test_a_scan_without_vulnerabilities_has_no_fix_plan(self):
         clean = {"packages": [package("gamma", "9.0.0", "called", set())]}

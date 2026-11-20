@@ -10,6 +10,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 from aibom_engine import cli, interactive
 from aibom_engine.interactive import BACK, Menu, Prompter
@@ -140,7 +141,19 @@ class MenuFlows(InTempFolder):
         _, text = self.drive(prompts)
         self.assertIn("Fix plan", text)
         self.assertIn("Same thing without the menu:  %s vulns %s" % (cli.command(), run_dir), text)
-        self.assertEqual(prompts.offered(2)[:3], ["report", "models", "vulns"])
+        self.assertEqual(prompts.offered(2)[:4], ["report", "pdf", "models", "vulns"])
+
+    def test_the_report_can_be_saved_as_a_pdf_from_the_menu(self):
+        run_dir = os.path.join("runs", "first")
+        os.makedirs("runs")
+        import shutil
+        shutil.copytree(self.first, run_dir)
+        prompts = Scripted(("What do you want to do", "open"), ("Which scan", run_dir), ("first", "pdf"), ("first", "back"), ("What do you want to do", "quit"))
+        with mock.patch.object(cli, "make_pdf", return_value=os.path.join(run_dir, "report.pdf")) as made:
+            _, text = self.drive(prompts)
+        made.assert_called_once_with(run_dir)
+        self.assertIn("pdf: %s" % os.path.join(run_dir, "report.pdf"), text)
+        self.assertIn("Same thing without the menu:  %s report %s --pdf" % (cli.command(), run_dir), text)
 
     def test_esc_goes_back_one_step_and_quits_at_the_main_menu(self):
         code, text = self.drive(Scripted(("What do you want to do", "scan"), ("Folder or GitHub link", BACK), ("What do you want to do", BACK)))
@@ -173,7 +186,7 @@ class MenuFlows(InTempFolder):
         prompts = Scripted(("What do you want to do", "open"), ("Which scan", old), ("first", "back"), ("What do you want to do", "quit"))
         self.drive(prompts)
         # asked: 0 = the main menu, 1 = which scan, 2 = what to see in it
-        self.assertEqual(prompts.offered(2), ["report", "models", "explain", "left", "rebuild", "back"])
+        self.assertEqual(prompts.offered(2), ["report", "pdf", "models", "explain", "left", "rebuild", "back"])
 
     def test_an_existing_scan_asks_before_it_is_replaced(self):
         import shutil

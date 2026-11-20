@@ -301,7 +301,14 @@ class Display(unittest.TestCase):
         from aibom_engine.report import build_html, build_markdown
         for meta in (self.meta(), self.meta(flag("model.retired", "high", category="model")), None):
             self.assertNotIn("## Flags", build_markdown([], "demo", meta=meta))
-            self.assertNotIn("id='flags'", build_html([], "demo", meta=meta))
+        # The web page always has its Findings section: it says when there is nothing, and model flags are in its table too.
+        for meta in (self.meta(), None):
+            page = build_html([], "demo", meta=meta)
+            self.assertIn("No risk flags were raised by this scan", page)
+            self.assertNotIn("table class='flags fit'", page)
+        page = build_html([], "demo", meta=self.meta(flag("model.retired", "high", category="model")))
+        self.assertIn("table class='flags fit'", page)
+        self.assertIn("data-cat='model'", page)
 
     def test_the_pdf_page_has_the_section_too(self):
         from aibom_engine.report import build_html
@@ -411,7 +418,7 @@ class Rebuild(unittest.TestCase):
                 page = make_pdf(out)
             self.assertEqual(pdf.call_count, 1)
             self.assertIn("id='flags'", page)
-            self.assertIn("cfg/mcp.json:4", page)
+            self.assertIn("cfg/mcp.json:4", page.replace("<wbr>", ""))
 
 
 if __name__ == "__main__":

@@ -497,6 +497,8 @@ def read_config(rel, text):
         try:
             node = jsonc.loads(text)
         except jsonc.JsoncError:
+            if base in ("mcp.json", ".mcp.json"):
+                raise  # named exactly like an MCP config (.codex/mcp.json, .aider/mcp.json): one that cannot be read is reported, never skipped
             return [], ""  # a JSON file that only has "mcp" in its name is not necessarily one
         return _servers_in_json("an MCP config", ("mcpServers", "servers"), node, rel, only_server_like=True), "an MCP config"
     return [], ""

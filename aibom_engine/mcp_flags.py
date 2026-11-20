@@ -37,7 +37,11 @@ SHELLS = {"sh", "bash", "zsh", "dash", "fish", "ksh", "csh", "tcsh", "pwsh", "po
 INLINE_FLAGS = {"cmd": {"/c", "/k"}, "pwsh": {"-command", "-c", "-encodedcommand", "-e", "-ec"}, "powershell": {"-command", "-c", "-encodedcommand", "-e", "-ec"}}
 SHELL_FLAGS = {"-c", "-lc", "-ic", "-xc"}
 INTERPRETERS = {"python": {"-c"}, "python3": {"-c"}, "py": {"-c"}, "node": {"-e", "--eval", "-p", "--print"}, "nodejs": {"-e", "--eval", "-p", "--print"},
-                "bun": {"-e", "--eval"}, "deno": {"eval"}, "ruby": {"-e"}, "perl": {"-e", "-E"}, "php": {"-r"}}
+                "bun": {"-e", "--eval"}, "deno": {"eval"}, "ruby": {"-e"}, "perl": {"-e", "-E"}, "php": {"-r"},
+                # found on a real repository: a server started with `julia -e "using Server; Server.serve()"` was not flagged
+                "julia": {"-e", "--eval", "-E", "--print"}, "rscript": {"-e"}, "r": {"-e"}, "lua": {"-e"}, "luajit": {"-e"},
+                "groovy": {"-e"}, "elixir": {"-e", "--eval"}, "raku": {"-e"}, "perl6": {"-e"}, "clojure": {"-e", "--eval"},
+                "clj": {"-e", "--eval"}, "bb": {"-e", "--eval"}, "osascript": {"-e"}}
 # `cmd /c npx ...` is the way Windows runs npx: the shell is only a wrapper there, not a command string
 LAUNCHERS = {"npx", "pnpx", "bunx", "uvx", "uv", "pipx", "docker", "podman", "node", "python", "python3", "py", "pnpm", "yarn", "npm", "deno", "bun", "java", "dotnet", "go"}
 DOWNLOAD_RUN = re.compile(r"\b(?:curl|wget)\b[^|]*\|\s*(?:sudo\s+)?(?:ba|z|da)?sh\b|\b(?:curl|wget)\b[^|]*\|\s*(?:python3?|node)\b|\b(?:iwr|irm|invoke-webrequest|invoke-restmethod|curl|wget)\b.*\b(?:iex|invoke-expression)\b", re.I)

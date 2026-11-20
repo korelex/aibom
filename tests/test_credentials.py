@@ -115,6 +115,23 @@ class NotKeys(unittest.TestCase):
         self.assertEqual(rules("openai_api_key:\n  other_setting_name_1234567890\n", rel="c.yaml"), [])
         self.assertEqual(rules("api_key =\nOTHER_SETTING=value123456789012345\n"), [])
 
+    def test_a_value_made_only_of_words_is_a_name_for_a_key(self):
+        # From a setup guide in a real repository: these were reported as OpenRouter keys.
+        self.assertEqual(rules("export OPENROUTER_API_KEY='sk-or-v1-project1-key'\n", rel="docs/setup.md"), [])
+        self.assertEqual(rules("export OPENROUTER_API_KEY='sk-or-v1-project2-key'\n"), [])
+        self.assertEqual(rules('MISTRAL_API_KEY = "my-mistral-production-key"\n'), [])
+        self.assertTrue(C.made_of_words("team-shared-staging-token"))
+        # A real key always has a long random part, so it is still reported.
+        random_part = pick(91, 32)
+        self.assertEqual(rules(f'MISTRAL_API_KEY = "{random_part}"\n'), [("named-key", 1)])
+        self.assertEqual(rules(f'MISTRAL_API_KEY = "prod-{random_part}"\n'), [("named-key", 1)])
+        for value in (random_part, "sk-or-v1-" + pick(92, 64, "0123456789abcdef"), "key-" + random_part, "ab-" + random_part):
+            self.assertFalse(C.made_of_words(value), value)
+        self.assertFalse(C.made_of_words("singleword123"))           # one part alone is left to the other checks
+        lower = pick(93, 24, "abcdefghijklmnopqrstuvwxyz")              # a long random part in lowercase letters only is still a key
+        self.assertFalse(C.made_of_words("prod-" + lower))
+        self.assertEqual(rules(f'GROQ_API_KEY = "prod-{lower}9"\n'), [("named-key", 1)])
+
     def test_a_longer_token_that_merely_contains_a_key_shape(self):
         for key in (KEYS["groq"][0], KEYS["huggingface"][0], KEYS["google"][0], KEYS["perplexity"][0]):
             self.assertEqual(rules("a" + key), [], key[:6] + " with a letter before")
@@ -477,7 +494,7 @@ class Everywhere(unittest.TestCase):
     def test_rebuild_and_the_pdf_page_keep_the_flags(self):
         from aibom_engine.cli import make_pdf
         with mock.patch("aibom_engine.pdf.print_to_pdf", side_effect=lambda page, path: page):
-            self.assertIn("tests/test_client.py:1", make_pdf(self.out.name))
+            self.assertIn("tests/test_client.py:1", make_pdf(self.out.name).replace("<wbr>", ""))
 
     def test_the_run_is_the_same_every_time(self):
         with tempfile.TemporaryDirectory() as again:

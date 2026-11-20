@@ -86,10 +86,22 @@ def entropy(text):
     return -sum(c / n * math.log2(c / n) for c in counts.values())
 
 
+KEY_PREFIX_PARTS = {"sk", "or", "v1", "v2", "proj", "ant", "api03", "admin01", "svcacct", "admin", "gsk", "xai", "pplx", "r8", "hf"}
+
+
+def made_of_words(value):
+    """True when a value is only short word-like parts after a known key prefix, such as sk-or-v1-project1-key or my-prod-token: a name
+    for a key, not a key. A real key always has a long random part. Found on a real repository, where such names in a setup guide were flagged."""
+    parts = [p for p in re.split(r"[-_.:]+", value) if p]
+    rest = [p for p in parts if p.lower() not in KEY_PREFIX_PARTS]
+    return len(rest) >= 2 and all(re.fullmatch(r"[a-z]{2,12}\d{0,3}", p) for p in rest)
+
+
 def looks_fake(value):
-    """True for values that are examples, not keys: repeated or counting characters, few distinct characters, or placeholder words."""
+    """True for values that are examples, not keys: repeated or counting characters, few distinct characters, placeholder words, or a value
+    made only of words."""
     body = re.sub(r"^[A-Za-z]+[-_]", "", value)
-    if PLACEHOLDER_WORDS.search(value):
+    if PLACEHOLDER_WORDS.search(value) or made_of_words(value):
         return True
     if len(set(body)) <= 8 or re.search(r"(.)\1{7,}", body):
         return True

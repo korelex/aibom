@@ -340,6 +340,15 @@ class FindingFiles(unittest.TestCase):
         self.assertEqual(sorted(p["file"] for p in got["problems"]), [".codex/config.toml", ".mcp.json"])
         self.assertTrue(all(p["error"] for p in got["problems"]))
 
+    def test_a_broken_file_named_exactly_like_an_mcp_config_is_a_problem_too(self):
+        # Found on a real repository: .codex/mcp.json and .aider/mcp.json had git conflict markers and were skipped without a word.
+        conflict = '{\n  "mcpServers": {\n<<<<<<< HEAD\n    "a": {"command": "x"}\n=======\n    "a": {"command": "y"}\n>>>>>>> branch\n  }\n}\n'
+        got = servers({".codex/mcp.json": conflict, "tools/.aider/mcp.json": '{"mcpServers": {"srv" {"command" "julia"}}}', "deep/x/.mcp.json": "{",
+                       "mcp-broken.json": "{not json", "notes/mcp-ideas.json": "[1,"})
+        self.assertEqual(sorted(p["file"] for p in got["problems"]), [".codex/mcp.json", "deep/x/.mcp.json", "tools/.aider/mcp.json"])
+        self.assertTrue(all(p["error"] for p in got["problems"]))
+        self.assertEqual(got["servers"], [])
+
     def test_a_huge_file_is_not_read(self):
         got = servers({".mcp.json": '{"mcpServers": {"a": {"command": "x", "pad": "' + "x" * 1_600_000 + '"}}}'})
         self.assertEqual(got["servers"], [])
