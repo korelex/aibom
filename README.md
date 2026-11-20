@@ -222,7 +222,7 @@ Each scan writes these files to its `RUN` folder:
 | File | What it is |
 | --- | --- |
 | `aibom.cdx.json` | The AI-BOM: CycloneDX 1.6, validated against the official schema. Each model is a `machine-learning-model` component with its evidence (file and line), its evidence level, confidence and reachability, and properties for lifecycle, pinning and license. Each AI package is a `library` (or `framework`) component with a purl, the lines that prove its use and its evidence level; known vulnerabilities are listed in `vulnerabilities` and linked to the components they affect; the hosted API a provider's own client talks to is a `service`. |
-| `report.html` | The readable report: a risk summary, every model grouped by maker with links to its lines, the AI packages with their known vulnerabilities, the names that were left out and why, and what the scan cannot see. Works offline and prints cleanly. |
+| `report.html` | The readable report: a summary, every risk flag in one table (filter it by severity and type), the AI packages with their known vulnerabilities and a fix plan, every model grouped by maker with links to its lines, the MCP servers and model files, the names that were left out and why, and what the scan cannot see. Buttons at the top download the PDF, the findings as a spreadsheet and the AI-BOM. Works offline and prints cleanly. |
 | `report.md` | The same report in Markdown, for a pull request, a ticket or a chat. |
 | `models.csv` | One row per model, for a spreadsheet. |
 | `packages.csv` | One row per AI package: version, evidence level, first proof line, and its known vulnerabilities, for a spreadsheet. |
@@ -231,6 +231,7 @@ Each scan writes these files to its `RUN` folder:
 | `credentials.json` | Where hardcoded AI provider API keys were found: the provider, the rule, the file, the line and the length. Never the key itself, nor any part of it. Each one is also a `secret.api-key` flag. |
 | `modelfiles.json` | The model weight files found in the project (`.pt`, `.pth`, `.pkl`, `.joblib`, `.ckpt`, `.npy`, `.npz`, `.h5`, `.keras`, `.safetensors`, `.gguf`, `.onnx`, and `.bin` files that are really pickles or zips): what each really is (judged by its content, not its name), whether it uses pickle, the dangerous imports found inside, and whether it could be fully scanned. Also the places where `trust_remote_code` is switched on. In `aibom.cdx.json` each live file is a `machine-learning-model` component with its format and scan status. Files are only read, never loaded. |
 | `mcp.json`, `mcp.csv` | The MCP servers the project's config files declare (`.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`, `.gemini/settings.json`, `.codex/config.toml`, `claude_desktop_config.json`): how each is run, the file and line, and the names of its environment variables and headers (never their values). In `aibom.cdx.json` a local server is an `application` component and a remote one a `service`. |
+| `flags.csv` | The same risk flags for a spreadsheet: severity, rule, type, finding, file, line, link and fix. |
 | `aibom.sarif` | The risk flags as SARIF 2.1.0, the format GitHub code scanning and most CI security dashboards read: one result per flag, on its file and line. |
 | `merged.json`, `findings.json`, `files.json`, `manifest.json` | Working data behind the reports; `aibom rebuild` uses them. |
 
