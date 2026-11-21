@@ -18,6 +18,7 @@ import os
 import re
 import time
 
+from . import MAX_SECONDS
 from .credentials import location_of
 from .flags import Flag
 from .triage import MAX_BYTES
@@ -86,7 +87,7 @@ def scan_text(text, rel):
 
 def find(root, files, deadline=None):
     """The places the project turns trust_remote_code on: {"findings": [{file, line, how, location}], "files_scanned", "partial", "truncated"}."""
-    deadline = deadline or (time.time() + 120)
+    deadline = deadline or (time.time() + MAX_SECONDS)
     out, scanned, partial, truncated = [], 0, False, False
     for fi in files:
         if fi.category in SKIP_CATEGORIES or fi.size > MAX_BYTES or fi.size == 0:

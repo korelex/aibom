@@ -10,7 +10,7 @@ from rich.text import Text
 
 from . import flags as flag_rules
 from . import screens, ui
-from . import __version__
+from . import MAX_SECONDS, __version__
 from .display import build_rows
 from .report import (CANNOT_SEE, LEVEL_LONG, MODE_TEXT, PACKAGE_NOTE, REACHABILITY_TEXT, TIER_LONG, advisory_date, package_level_text,
                      package_rows, package_summary)
@@ -526,7 +526,7 @@ def main():
     s.add_argument("source", help="a folder, or a link such as https://github.com/owner/repo (also owner/repo)")
     s.add_argument("--out", help="where to save the results (default: runs/<app name>)")
     s.add_argument("--finders", default="dictionary,context,shapes", help="comma list, default: dictionary,context,shapes")
-    s.add_argument("--max-seconds", type=int, default=120, help="stop reading files after this many seconds (default 120)")
+    s.add_argument("--max-seconds", type=int, default=MAX_SECONDS, help="stop reading files after this many seconds (default %d)" % MAX_SECONDS)
     s.add_argument("--keep", action="store_true", help="keep the downloaded copy of a repository")
     s.add_argument("--open", action="store_true", help="open the report in the browser when done")
     s.add_argument("--quiet", action="store_true", help="no progress lines")

@@ -29,6 +29,7 @@ import time
 import zipfile
 import zlib
 
+from . import MAX_SECONDS
 from . import pickles
 from .credentials import location_of
 from .flags import Flag
@@ -521,7 +522,7 @@ def _read_as(rec, path, size, ext, head, kind, deadline):
 
 def find(root, files, deadline=None):
     """Every model file under `root` (`files` is the triage list): {"files", "problems", "partial", "truncated"}."""
-    deadline = deadline or (time.time() + 120)
+    deadline = deadline or (time.time() + MAX_SECONDS)
     out, problems, partial, truncated = [], [], False, False
     for fi in files:
         if os.path.splitext(fi.path.lower())[1] not in EXTENSIONS:

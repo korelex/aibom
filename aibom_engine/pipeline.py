@@ -4,7 +4,7 @@ import json
 import os
 import time
 
-from . import __version__
+from . import MAX_SECONDS, __version__
 from .db import resolve_model
 from . import packages as package_finder
 from .finders import context, dictionary, shapes
@@ -84,7 +84,7 @@ def write_readable(out, items, app, source="", links=None, warnings=None, packag
         f.write(build_html(items, app, source, links, meta, files=files))
 
 
-def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source="", log=None, max_seconds=120, links=None):
+def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source="", log=None, max_seconds=MAX_SECONDS, links=None):
     log = log or (lambda msg: None)
     root = os.path.abspath(root)
     app = app or os.path.basename(root.rstrip("/\\")) or "app"

@@ -29,7 +29,7 @@ inputs:
     default: aibom
   max-seconds:
     description: Stop reading files after this many seconds.
-    default: "300"
+    default: "600"
   python-version:
     description: The Python that runs aibom.
     default: "3.12"

@@ -24,6 +24,7 @@ import time
 from dataclasses import asdict, dataclass, field
 from urllib.parse import parse_qsl, urlsplit
 
+from . import MAX_SECONDS
 from . import jsonc
 from .ids import slug
 from .packages.common import left_out_reason, normalize, purl
@@ -516,7 +517,7 @@ def _candidate(rel):
 
 def find(root, deadline=None):
     """Every MCP server declared under `root`: {"servers": [McpServer dicts], "files": [...], "problems": [...], "partial": True when the time limit stopped the search}."""
-    deadline = deadline or (time.time() + 120)
+    deadline = deadline or (time.time() + MAX_SECONDS)
     servers, files, problems, partial = [], [], [], False
     for base, dirs, names in os.walk(root):
         dirs[:] = sorted(d for d in dirs if d not in WALK_SKIP)

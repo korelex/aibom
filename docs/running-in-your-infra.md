@@ -119,7 +119,7 @@ On every pull request it scans the repository, and:
 | `upload-artifact` | `true` | keep the results as an artifact |
 | `artifact-name` | `aibom` | its name, unique within a run |
 | `output` | `aibom-out` | where the results are written on the runner |
-| `max-seconds` | `300` | stop reading files after this many seconds |
+| `max-seconds` | `600` | stop reading files after this many seconds |
 | `python-version` | `3.12` | the Python that runs aibom |
 
 The outputs are `exit-code` (0 passed, 3 a flag at `fail-on` or worse, 2 the scan could not run), `results` and `sarif`.

@@ -16,7 +16,7 @@ import time
 
 from rich.text import Text
 
-from . import __version__
+from . import MAX_SECONDS, __version__
 from . import cli, ui
 from .display import build_rows
 from .report import package_rows
@@ -203,7 +203,7 @@ class Menu:
                     continue
                 if choice == "open":
                     return out
-            args = argparse.Namespace(source=source, out=out, finders="dictionary,context,shapes", max_seconds=120, keep=False,
+            args = argparse.Namespace(source=source, out=out, finders="dictionary,context,shapes", max_seconds=MAX_SECONDS, keep=False,
                                       open=False, quiet=False, debug=False)
             ok = self.action(lambda: cli.do_scan(args), command_line("scan", source) if out == os.path.join("runs", src["name"]) else command_line("scan", source, "--out", out))
             return out if ok else None

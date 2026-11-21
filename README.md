@@ -157,7 +157,7 @@ Useful options for `scan`:
 | --- | --- | --- |
 | `--out DIR` | `runs/<app>` | where to write the results |
 | `--open` | off | open the report in your browser when the scan is done |
-| `--max-seconds N` | 120 | stop reading files after N seconds; a report that hit the limit says so at the top |
+| `--max-seconds N` | 600 | stop reading files after N seconds; a report that hit the limit says so at the top. Most scans take seconds; a large repository freshly downloaded on Windows can take minutes, because the antivirus checks each new file the first time it is read |
 | `--keep` | off | keep the downloaded copy of a repository |
 | `--quiet` | off | print only the summary, not the progress lines |
 | `--fail-on SEVERITY` | off | exit with code 3 when the scan has a risk flag at `info`, `low`, `medium` or `high` or worse, so a build can stop on it. The results are still written. A scan that cannot run exits with 2, so a script can tell the two apart |

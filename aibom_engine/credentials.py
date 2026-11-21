@@ -25,6 +25,7 @@ import os
 import re
 import time
 
+from . import MAX_SECONDS
 from .flags import Flag
 from .packages.common import left_out_reason
 from .triage import MAX_BYTES
@@ -171,7 +172,7 @@ def _scan_text(text, rel, location):
 
 def find(root, files, deadline=None):
     """The hardcoded provider keys in the files of `root` (`files` is the triage list): {"findings", "files_scanned", "problems", "partial", "truncated"}."""
-    deadline = deadline or (time.time() + 120)
+    deadline = deadline or (time.time() + MAX_SECONDS)
     findings, problems, scanned, partial, truncated = [], [], 0, False, False
     for fi in files:
         if fi.category in SKIP_CATEGORIES or fi.size > MAX_BYTES or fi.size == 0:
