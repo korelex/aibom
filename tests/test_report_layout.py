@@ -125,7 +125,30 @@ class Inventory(unittest.TestCase):
         sec = page[page.index("id='modelfiles'"):page.index("id='scope'")].replace("<wbr>", "")
         self.assertLess(sec.index("m/b.pkl"), sec.index("m/a.pkl"))          # high before medium, whatever the name
         self.assertIn("<h3>trust_remote_code</h3>", sec)
-        self.assertIn("<code>src/a.py:3</code>", sec)
+        self.assertIn('<code title="src/a.py:3">a.py:3</code><div class=\'dir\'>src/</div>', sec)
+
+    def test_trust_remote_code_is_a_table_with_every_place(self):
+        # Found in review: it was one sentence that listed five places and hid the rest as "and 1 more".
+        places = [{"file": f"pkg/eval/run_{i}.py", "line": 10 + i, "how": how, "location": ""}
+                  for i, how in enumerate(("keyword", "keyword", "dict", "assignment", "setting", "flag", "keyword"))]
+        meta = {**META, "model_files": {**META["model_files"], "remote_code": {"findings": places}}}
+        sec = build_html([], "demo", meta=meta)
+        sec = sec[sec.index("<h3>trust_remote_code</h3>"):sec.index("id='scope'")].replace("<wbr>", "")
+        self.assertIn("<th>Severity</th><th>Where (click to see the line)</th><th>How it is turned on</th>", sec)
+        self.assertEqual(sec.count("<tr><td><span class=\"sev sev-medium\">MEDIUM</span></td>"), 7)
+        for i in range(7):
+            self.assertIn(f'title="pkg/eval/run_{i}.py:{10 + i}">run_{i}.py:{10 + i}</code>', sec)
+        for how in ("passed as an argument", "set in a dict of arguments", "set in an assignment", "set in a settings file", "given as a command-line flag"):
+            self.assertIn(f"<td>{how}</td>", sec)
+        self.assertNotIn("and 1 more", sec)
+        self.assertNotIn("and 2 more", sec)
+
+    def test_a_place_shows_its_file_as_the_link_and_its_folder_below(self):
+        from aibom_engine.report import place_html
+        self.assertEqual(place_html("a/b/c.py:4", "https://x/y").replace("<wbr>", ""),
+                         '<a href="https://x/y" target="_blank" rel="noopener" title="a/b/c.py:4">c.py:4</a><div class=\'dir\'>a/b/</div>')
+        self.assertEqual(place_html("setup.py:2"), '<code title="setup.py:2">setup.py<wbr>:2</code>')       # no folder: no second line
+        self.assertNotIn("<script>", place_html("<script>/x.py:1"))                                         # escaped
 
     def test_a_project_with_none_of_its_own_says_so(self):
         meta = {"mcp": {"servers": [server("t", left_out="test")], "files": [], "problems": []},

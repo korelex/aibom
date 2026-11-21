@@ -434,10 +434,17 @@ def do_scan(a):
             packages = load_packages(out)
         except SourceError:
             packages = []
-        if r["items"] == 0 and not packages:
-            print("Scan finished in %ss: no AI model names found in %s." % (r["seconds"], r["app"]))
-        else:
+        # Found on a real scan: a scan cut short by the time limit was shown as "finished: no AI model names found", and a scan with no
+        # model names hid its MCP servers, keys and model files. A stopped scan now says so, and the panel shows whatever was found.
+        found_any = (r["items"] or packages or r.get("flags") or (r.get("mcp") or {}).get("servers") or (r.get("model_files") or {}).get("files")
+                     or (r.get("model_files") or {}).get("other") or (r.get("secrets") or {}).get("keys") or (r.get("secrets") or {}).get("other") or r.get("remote_code"))
+        if r["items"] == 0 and r.get("partial"):
+            ui.console().print(Text("Stopped at the time limit after %ss, before finding any model names in %s. This is not a final answer: "
+                                    "scan again with a higher --max-seconds." % (r["seconds"], r["app"]), style="bold yellow"))
+        if found_any:
             screens.dashboard(r, out, packages, links, command(), advisory_date(), __version__)
+        elif not r.get("partial"):
+            print("Scan finished in %ss: no AI model names found in %s." % (r["seconds"], r["app"]))
         for note in r["warnings"]:
             ui.console().print(Text("Note: " + note, style="yellow"))
         if not r["valid"]:

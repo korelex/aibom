@@ -256,6 +256,20 @@ def wbc(code):
     return re.sub(r"(?<=[a-z])(?=[A-Z])", "<wbr>", out)        # and between the words of a CamelCase name
 
 
+def place_html(label, url=""):
+    """A place in the code inside a table cell: the file name and line (the link), and its folder on a smaller line under it, so a
+    long path never splits a name. The whole path is the link's title (shown on hover), and it is what a search finds."""
+    h = html.escape
+    label = str(label)
+    folder, _, name = label.rpartition("/")
+    head = f'<a href="{h(url)}" target="_blank" rel="noopener" title="{h(label)}">{wb(name)}</a>' if url else f'<code title="{h(label)}">{wb(name)}</code>'
+    return head + (f"<div class='dir'>{wb(folder + '/')}</div>" if folder else "")
+
+
+HOW_ON = {"keyword": "passed as an argument", "dict": "set in a dict of arguments", "assignment": "set in an assignment",
+          "setting": "set in a settings file", "flag": "given as a command-line flag"}
+
+
 def cols(*shares):
     """A table's column widths, as shares of its width. With them the table is laid out at the width of its card, and long text wraps
     inside its column instead of pushing the table past the edge."""
@@ -281,7 +295,7 @@ def mcp_html(meta, links=None):
     rows = ""
     for s in live:
         label, url = mcp_place(s, links)
-        where = f'<a href="{h(url)}" target="_blank" rel="noopener">{wb(label)}</a>' if url else f"<code>{wb(label)}</code>"
+        where = place_html(label, url)
         mine = [f for f in flags if (s.get("ref") and getattr(f, "ref", "") == s["ref"]) or (f.file == s["file"] and f.subject.split(":")[0] == s["name"])]
         rows += (f"<tr><td><b>{h(s['name'])}</b><div class='also'>{h(s.get('client') or '')}</div></td><td>{h(MCP_KIND.get(s['transport'], s['transport']))}</td><td><code>{wbc(mcp_how(s))}</code></td>"
                  f"<td>{worst_flag_chip(mine)}</td><td>{where}</td><td>{h('; '.join(mcp_notes(s)))}</td></tr>")
@@ -390,13 +404,15 @@ def model_files_html(meta, links=None):
     if hidden:
         body += f"<p class='note'>{hidden} more in tests, examples or documentation, left out.</p>"
     if rc:
-        def rc_place(f):
-            url = links.url_for(f["file"], f["line"]) if links else ""
-            txt = wb(f"{f['file']}:{f['line']}")
-            return f'<a href="{h(url)}" target="_blank" rel="noopener">{txt}</a>' if url else f"<code>{txt}</code>"
-        body += (f"<h3>trust_remote_code</h3><p class='note'>trust_remote_code is turned on in {len(rc)} place{'' if len(rc) == 1 else 's'}: "
-                 + ", ".join(rc_place(f) for f in rc[:5]) + (f" and {len(rc) - 5} more" if len(rc) > 5 else "")
-                 + ". A model's own repository can then supply Python that runs when the model is loaded.</p>")
+        def rc_row(f):
+            where = place_html("%s:%s" % (f["file"], f["line"]), links.url_for(f["file"], f["line"]) if links else "")
+            return f"<tr><td>{sev_chip('medium')}</td><td>{where}</td><td>{h(HOW_ON.get(f['how'], f['how']))}</td></tr>"
+        rows = "".join(rc_row(f) for f in rc)
+        body += (f"<h3>trust_remote_code</h3><p class='sec-lead'>Turned on in {len(rc)} place{'' if len(rc) == 1 else 's'} in the project's own files. "
+                 "A model's own repository can then supply Python that runs on this machine when the model is loaded. Turn it off, or pin the model "
+                 "to a commit you have reviewed (the revision argument).</p>"
+                 f"<div class='tw'><table class='fit'>{cols(14, 56, 30)}<thead><tr><th>Severity</th><th>Where (click to see the line)</th><th>How it is turned on</th></tr></thead>"
+                 f"<tbody>{rows}</tbody></table></div>")
     return f"<section class='sec' id='modelfiles'><h2>Model files</h2>{body}</section>"
 
 
@@ -760,7 +776,7 @@ tbody tr:hover td{background:#fafbfd}td.num{font-variant-numeric:tabular-nums}
 td{overflow-wrap:break-word}td .sev,td .ev,td .badge,td .cat{max-width:100%;white-space:normal;vertical-align:top}
 table.flags .d{font-size:12.5px;color:var(--muted);margin-top:3px}
 .cat{display:inline-block;font-size:11.5px;color:var(--muted);background:var(--chip);border-radius:5px;padding:1px 7px;white-space:nowrap}
-.none{color:var(--faint);font-size:12.5px}.cnt{display:block;margin-top:3px;font-size:12px;color:var(--muted);white-space:nowrap}
+.dir{font-size:11.5px;color:var(--faint);margin-top:1px;overflow-wrap:break-word}.none{color:var(--faint);font-size:12.5px}.cnt{display:block;margin-top:3px;font-size:12px;color:var(--muted);white-space:nowrap}
 .badge{display:inline-block;border:1px solid var(--line2);color:var(--muted);border-radius:999px;padding:0 7px;font-size:11.5px;font-weight:650;white-space:nowrap}.badge.worked{border-style:dashed}
 details{margin:10px 0}summary{cursor:pointer;font-weight:600}
 details.grp{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:0 14px;margin:10px 0}details.grp>summary{font-size:14.5px;padding:11px 0}details.grp .tw{border:0;border-top:1px solid var(--line);border-radius:0;margin:0 -14px}
@@ -887,8 +903,7 @@ def flags_html(meta, links=None, pdf=False):
         if not f.file:
             return "<span class='none'>the whole project</span>"
         url = links.url_for(f.file, f.line) if links and f.line else ""
-        text = wb(flag_place(f))
-        return f'<a href="{h(url)}" target="_blank" rel="noopener">{text}</a>' if url else f"<code>{text}</code>"
+        return place_html(flag_place(f), url)
 
     rows = "".join(f"<tr data-sev='{h(f.severity)}' data-cat='{h(f.category)}'><td><span class='sev sev-{f.severity if f.severity != 'info' else 'unknown'}'>{f.severity.upper()}</span></td>"
                    f"<td><b>{h(f.title)}</b>" + (f"<div class='d'>{h(f.subject)}</div>" if f.subject else "") + "</td>"
@@ -998,10 +1013,13 @@ def build_html(items, app, source="", links=None, meta=None, pdf=False, today=No
         txt = wb(f"{p['file']}:{p['line']}")
         return f'<a href="{h(url)}" target="_blank" rel="noopener">{txt}</a>' if url else f"<code>{txt}</code>"
 
+    def place_cell(p):
+        return place_html(f"{p['file']}:{p['line']}", links.url_for(p["file"], p["line"]) if links else "")
+
     def row_html(r):
         first = r["places"][0] if r["places"] else None
         more = r["places"][1:]
-        cell = place_link(first) if first else "-"
+        cell = place_cell(first) if first else "-"
         if more:
             lis = "".join(f"<li>{place_link(p)}<code class='snip'>{wbc(p['snippet'][:90])}</code></li>" for p in more[:14])
             rest = f"<li>and {len(more) - 14} more places</li>" if len(more) > 14 else ""
@@ -1089,7 +1107,7 @@ def build_html(items, app, source="", links=None, meta=None, pdf=False, today=No
 
         def prow(r):
             label, url = package_proof(r, links)
-            where = (f'<a href="{h(url)}" target="_blank" rel="noopener">{wb(label)}</a>' if url else f"<code>{wb(label)}</code>") if label else "-"
+            where = place_html(label, url) if label else "-"
             text = " ".join([r["name"], r["kind"], r["version"], r["level"], r["vuln_text"], r["vendor"], " ".join(a["id"] for a in r["advisories"])]).lower()
             return (f'<tr data-t="{h(text)}"><td><b>{wb(r["name"])}</b></td><td>{h(r["kind"])}</td><td>{h(r["version"] or "-")}</td>'
                     f'<td>{ev_chip(r)}</td><td>{where}</td><td>{vuln_cell(r)}</td></tr>')
@@ -1153,7 +1171,7 @@ def build_html(items, app, source="", links=None, meta=None, pdf=False, today=No
     if gone and pdf:
         scope += f"<span id='leftout'></span><h3>Left out, and why</h3><p>{len(gone)} names that look like models were left out because they appear only in comments, messages, tests or documentation. Each one, with the reason, is in the HTML report.</p>"
     elif gone:
-        rws = "".join(f"<tr><td>{h(g['name'])}</td><td>{h(g['why'])}</td><td>{place_link({'file': g['file'], 'line': g['line']})}</td></tr>" for g in gone)
+        rws = "".join(f"<tr><td>{h(g['name'])}</td><td>{h(g['why'])}</td><td>{place_cell({'file': g['file'], 'line': g['line']})}</td></tr>" for g in gone)
         scope += (f"<span id='leftout'></span><h3>Left out, and why</h3><details><summary>{len(gone)} names that look like models but are not used (click to open)</summary>"
                   f"<div class='tw'><table class='slim fit'><colgroup><col style='width:32%'><col style='width:36%'><col style='width:32%'></colgroup><tr><th>Name</th><th>Why it was left out</th><th>Example place</th></tr>{rws}</table></div></details>")
     scope += "<span id='limits'></span><h3>What this scan cannot see</h3><ul>" + "".join(f"<li>{h(c)}</li>" for c in CANNOT_SEE) + "</ul></section>"

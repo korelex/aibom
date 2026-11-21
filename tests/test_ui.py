@@ -420,6 +420,32 @@ class AtATerminal(unittest.TestCase):
                               cwd=ROOT, capture_output=True, text=True, timeout=300)
         assert done.returncode == 0, done.stderr
 
+    def test_a_scan_with_no_model_names_still_shows_what_it_found(self):
+        # Found on a real scan: with no model names the terminal said only "no AI model names found" and hid the MCP servers.
+        with tempfile.TemporaryDirectory() as d, tempfile.TemporaryDirectory() as out:
+            with open(os.path.join(d, ".mcp.json"), "w", encoding="utf-8") as fh:
+                fh.write('{"mcpServers": {"fs": {"command": "npx", "args": ["-y", "@modelcontextprotocol/server-filesystem", "/"]}}}')
+            text = self.run_main("scan", d, "--out", out)
+        self.assertIn("MCP servers", text)
+        self.assertNotIn("no AI model names found", text)
+
+    def test_a_scan_stopped_by_the_time_limit_never_says_finished(self):
+        # Found on a real scan of a large repository: it stopped at the time limit and was shown as "Scan finished ... no AI model names found".
+        from aibom_engine import pipeline
+        real = pipeline.run
+
+        def stopped(*args, **kw):
+            r = real(*args, **kw)
+            r.update(items=0, partial=True)
+            return r
+        with tempfile.TemporaryDirectory() as d, tempfile.TemporaryDirectory() as out, mock.patch.object(pipeline, "run", side_effect=stopped):
+            with open(os.path.join(d, "a.py"), "w", encoding="utf-8") as fh:
+                fh.write("x = 1\n")
+            text = self.run_main("scan", d, "--out", out)
+        self.assertIn("Stopped at the time limit", text)
+        self.assertIn("This is not a final answer", text)
+        self.assertNotIn("no AI model names found", text)
+
     def test_a_terminal_gets_colour_and_the_plain_option_turns_it_off(self):
         self.assertIn("[", self.run_main("vulns", self.dir))
         self.assertNotIn("", self.run_main("--plain", "vulns", self.dir))
