@@ -7,8 +7,10 @@
 that proves it, whether that model has been retired or is about to be, and the license it is offered under. The
 result is an **AI bill of materials (AI-BOM)** in the CycloneDX 1.6 standard, plus a report a person can read.
 
-> **Status: alpha.** This version finds **models**. AI SDKs, agent frameworks, vector databases, MCP servers and
-> secrets are on the roadmap, not in this build. See [What it does not do yet](#what-it-does-not-do-yet).
+> **Status: alpha.** This version finds **models**, **AI packages** (SDKs, agent frameworks, vector databases) with their
+> known vulnerabilities, the **MCP servers** a project's config files declare, **hardcoded AI provider API keys**, and
+> **model weight files that can run code when loaded** (pickle-based files), read without ever loading them. See
+> [What it does not do yet](#what-it-does-not-do-yet).
 
 ## Why aibom
 
@@ -134,6 +136,7 @@ On Debian and Ubuntu, if `python3 -m venv` fails, install the venv module first:
 | `aibom packages RUN` | List the AI packages of a finished scan with their evidence level and known vulnerabilities (`--all` adds those only in a lockfile) |
 | `aibom packages RUN PACKAGE` | Look closer at one package: where it is used, and each advisory with the version that fixes it |
 | `aibom vulns RUN` | The known vulnerabilities of a finished scan, worst first, with a fix plan (`--severity high` for high and worse, `--called` for packages your code calls, `--all` adds those only in a lockfile) |
+| `aibom sarif RUN` | Write the risk flags of a finished scan as SARIF for GitHub code scanning (`--prefix DIR` when the scanned folder is not the repository root) |
 | `aibom rebuild RUN` | Re-create the reports of a finished scan without scanning again |
 | `aibom --version` | The version, and the dates of the model data and the vulnerability data |
 
@@ -154,11 +157,15 @@ Useful options for `scan`:
 | --- | --- | --- |
 | `--out DIR` | `runs/<app>` | where to write the results |
 | `--open` | off | open the report in your browser when the scan is done |
-| `--max-seconds N` | 120 | stop reading files after N seconds; a report that hit the limit says so at the top |
+| `--max-seconds N` | 600 | stop reading files after N seconds; a report that hit the limit says so at the top. Most scans take seconds; a large repository freshly downloaded on Windows can take minutes, because the antivirus checks each new file the first time it is read |
 | `--keep` | off | keep the downloaded copy of a repository |
 | `--quiet` | off | print only the summary, not the progress lines |
+| `--fail-on SEVERITY` | off | exit with code 3 when the scan has a risk flag at `info`, `low`, `medium` or `high` or worse, so a build can stop on it. The results are still written. With no such flag, a scan that did not finish (time limit, a check that failed) exits with 4. A scan that cannot run exits with 2 |
 
 Run `aibom <command> --help` for every option.
+
+**In GitHub Actions**, aibom is an action: `uses: korelex/aibom@<commit-sha>` with `fail-on: high` fails a pull request
+on a high risk flag and shows each finding on its line. See [the setup](docs/running-in-your-infra.md#github-actions).
 
 To run aibom on your own servers, in CI, or without internet, see [Running aibom in your own infrastructure](docs/running-in-your-infra.md).
 
@@ -215,12 +222,17 @@ Each scan writes these files to its `RUN` folder:
 | File | What it is |
 | --- | --- |
 | `aibom.cdx.json` | The AI-BOM: CycloneDX 1.6, validated against the official schema. Each model is a `machine-learning-model` component with its evidence (file and line), its evidence level, confidence and reachability, and properties for lifecycle, pinning and license. Each AI package is a `library` (or `framework`) component with a purl, the lines that prove its use and its evidence level; known vulnerabilities are listed in `vulnerabilities` and linked to the components they affect; the hosted API a provider's own client talks to is a `service`. |
-| `report.html` | The readable report: a risk summary, every model grouped by maker with links to its lines, the AI packages with their known vulnerabilities, the names that were left out and why, and what the scan cannot see. Works offline and prints cleanly. |
+| `report.html` | The readable report: a summary, every risk flag in one table (filter it by severity and type), the AI packages with their known vulnerabilities and a fix plan, every model grouped by maker with links to its lines, the MCP servers and model files, the names that were left out and why, and what the scan cannot see. Buttons at the top download the PDF, the findings as a spreadsheet and the AI-BOM. Works offline and prints cleanly. |
 | `report.md` | The same report in Markdown, for a pull request, a ticket or a chat. |
 | `models.csv` | One row per model, for a spreadsheet. |
 | `packages.csv` | One row per AI package: version, evidence level, first proof line, and its known vulnerabilities, for a spreadsheet. |
 | `packages.json` | The AI packages with all their evidence: the imports and calls that prove their use, an evidence level, and the known vulnerabilities of each exact version (OSV advisories, or `not_checked` with the reason). |
-| `flags.json` | The risk flags of the scan, worst first: each has a rule id, a severity (`high`, `medium`, `low`, `info`), the place it was found and a one-line fix. Today these are the model risks (retired, deprecated, floating alias, licence); the report shows the ones outside the Risks block in a Flags section. In `aibom.cdx.json` each flag is an `aibom-engine:flag` property on the component it is about. |
+| `flags.json` | The risk flags of the scan, worst first: each has a rule id, a severity (`high`, `medium`, `low`, `info`), the place it was found and a one-line fix. Model risks (retired, deprecated, floating alias, licence) MCP risks (a credential in a config file, a shell string, an unpinned package, a very broad file system path), hardcoded keys, model file risks (a pickle that imports dangerous code, a misleading file name, a Keras Lambda layer, a file that could not be scanned) and `trust_remote_code`; the report shows them in a Flags section. In `aibom.cdx.json` each flag is an `aibom-engine:flag` property on the component it is about. Every rule is listed in [docs/how-it-works.md](docs/how-it-works.md#risk-flags). |
+| `credentials.json` | Where hardcoded AI provider API keys were found: the provider, the rule, the file, the line and the length. Never the key itself, nor any part of it. Each one is also a `secret.api-key` flag. |
+| `modelfiles.json` | The model weight files found in the project (`.pt`, `.pth`, `.pkl`, `.joblib`, `.ckpt`, `.npy`, `.npz`, `.h5`, `.keras`, `.safetensors`, `.gguf`, `.onnx`, and `.bin` files that are really pickles or zips): what each really is (judged by its content, not its name), whether it uses pickle, the dangerous imports found inside, and whether it could be fully scanned. Also the places where `trust_remote_code` is switched on. In `aibom.cdx.json` each live file is a `machine-learning-model` component with its format and scan status. Files are only read, never loaded. |
+| `mcp.json`, `mcp.csv` | The MCP servers the project's config files declare (`.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`, `.gemini/settings.json`, `.codex/config.toml`, `claude_desktop_config.json`): how each is run, the file and line, and the names of its environment variables and headers (never their values). In `aibom.cdx.json` a local server is an `application` component and a remote one a `service`. |
+| `flags.csv` | The same risk flags for a spreadsheet: severity, rule, type, finding, file, line, link and fix. |
+| `aibom.sarif` | The risk flags as SARIF 2.1.0, the format GitHub code scanning and most CI security dashboards read: one result per flag, on its file and line. |
 | `merged.json`, `findings.json`, `files.json`, `manifest.json` | Working data behind the reports; `aibom rebuild` uses them. |
 
 For the same code, a scan on the same day writes the same `aibom.cdx.json`, `report.html`, `report.md` and
@@ -245,9 +257,12 @@ How each of these is decided, and where the data comes from, is in [docs/how-it-
 
 - Read Go, Java or C# dependencies, or draw which package needs which: the dependency files are read for what a
   project depends on, not for the edges between packages.
-- Find MCP servers, datasets or hardcoded API keys.
-- Inspect model weight files, or check Hugging Face revision pinning.
-- Run as a GitHub Action, fail a build on a policy (`--fail-on`), or write SARIF.
+- Find datasets, or hardcoded API keys in the git history (only the files on disk are read).
+- Start an MCP server or list its tools, or see one declared outside the repository (a developer's own settings).
+- Check Hugging Face revision pinning, read TensorFlow SavedModel or TFLite files, or look inside a model file that is encrypted,
+  too large (a pickle over 1 GB), or compressed in a way not listed. Such files are reported as *not scanned*, which is never
+  the same as safe.
+- Apply a per-rule policy: `--fail-on` stops a build on a severity, not on chosen rules.
 - See a model chosen at run time, from an environment variable, a settings page or a database. aibom reads code; it
   does not run your app.
 - Find every model: about 1 in 5 is missed on unfamiliar code, mostly ids inside long lists and JSON catalogs.

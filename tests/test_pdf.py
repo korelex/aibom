@@ -55,8 +55,10 @@ class PrintLayout(unittest.TestCase):
         self.assertIn("details.more>summary{display:none}", self.page)  # an opened fold needs no "show 3 more" label
 
     def test_the_packages_and_vulnerabilities_come_before_the_model_tables(self):
-        self.assertLess(self.page.index("<h2>AI packages</h2>"), self.page.index("Used directly in the code"))
-        self.assertLess(self.normal.index("Used directly in the code"), self.normal.index("<h2>AI packages</h2>"))
+        # One order for the page and the PDF: summary, findings, AI packages and their vulnerabilities, then the models.
+        for page in (self.page, self.normal):
+            self.assertLess(page.index("id='flags'"), page.index("<h2>AI packages</h2>"))
+            self.assertLess(page.index("<h2>AI packages</h2>"), page.index("Used directly in the code"))
 
     def test_the_long_lists_are_counted_and_point_to_the_files_that_hold_them(self):
         self.assertIn("1 more model names are written in the code only inside big tables", self.page)

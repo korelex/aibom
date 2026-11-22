@@ -1,0 +1,147 @@
+name: aibom
+description: Inventory the AI in a repository (models, AI packages, MCP servers, keys, model files) as a CycloneDX AI-BOM, and flag the risks.
+author: Korelex
+branding:
+  icon: shield
+  color: blue
+
+# Runs entirely on the runner: the repository is read, never executed, and nothing is sent anywhere except what GitHub's own
+# steps upload to this repository (the SARIF file to code scanning, the results as a build artifact).
+
+inputs:
+  path:
+    description: The folder to scan, relative to the repository root.
+    default: "."
+  fail-on:
+    description: Fail the job when a risk flag at this severity or worse is found (info, low, medium, high). Empty never fails on flags.
+    default: high
+  output:
+    description: Where to write the results on the runner.
+    default: aibom-out
+  upload-sarif:
+    description: Send the flags to GitHub code scanning, so they show on the lines of a pull request and in the Security tab. Needs the job permission security-events write.
+    default: "true"
+  upload-artifact:
+    description: Keep the results (report, AI-BOM, flags) as a build artifact named aibom.
+    default: "true"
+  artifact-name:
+    description: The name of that artifact (it must be unique within a workflow run).
+    default: aibom
+  max-seconds:
+    description: Stop reading files after this many seconds.
+    default: "600"
+  python-version:
+    description: The Python that runs aibom.
+    default: "3.12"
+
+outputs:
+  exit-code:
+    description: 0 when the scan passed, 3 when a flag at fail-on or worse was found, 4 when the scan did not finish, 2 when it could not run.
+    value: ${{ steps.scan.outputs.exit-code }}
+  results:
+    description: The folder that holds the results.
+    value: ${{ inputs.output }}
+  sarif:
+    description: The SARIF file.
+    value: ${{ steps.scan.outputs.sarif }}
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Install aibom
+      shell: bash
+      env:
+        ACTION_PATH: ${{ github.action_path }}
+      # -I: without it Python would import a pip.py from the checkout, which is the code being scanned.
+      run: python -I -m pip install --disable-pip-version-check --quiet "$ACTION_PATH"
+
+    - name: Scan
+      id: scan
+      shell: bash
+      env:
+        SCAN_PATH: ${{ inputs.path }}
+        FAIL_ON: ${{ inputs.fail-on }}
+        OUT: ${{ inputs.output }}
+        MAX_SECONDS: ${{ inputs.max-seconds }}
+      run: |
+        if ! python -I -c 'import os,sys; root=os.path.realpath(os.getcwd()); sys.exit(not (os.path.realpath(sys.argv[1])+os.sep).startswith(root+os.sep))' "$SCAN_PATH"; then
+          echo "::error title=aibom::The path input must be a folder inside the repository."
+          echo "exit-code=2" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+        set +e
+        args=(--plain scan "$SCAN_PATH" --out "$OUT" --max-seconds "$MAX_SECONDS")
+        if [ -n "$FAIL_ON" ]; then args+=(--fail-on "$FAIL_ON"); fi
+        aibom "${args[@]}"
+        code=$?
+        set -e
+        # Only these exit codes mean aibom wrote the results. Otherwise whatever is in that folder came with the checkout.
+        if [ "$code" = 0 ] || [ "$code" = 3 ] || [ "$code" = 4 ]; then
+          echo "written=true" >> "$GITHUB_OUTPUT"
+          if ! python -I -c 'import json,sys; sys.exit(bool(json.load(open(sys.argv[1], encoding="utf-8"))["incomplete"]))' "$OUT/manifest.json"; then
+            echo "::warning title=aibom::The scan did not finish, so risks may be missing. See the job summary; a higher max-seconds may be needed."
+          fi
+          aibom sarif "$OUT" --prefix "$SCAN_PATH"
+          echo "sarif=$OUT/aibom.sarif" >> "$GITHUB_OUTPUT"
+          if [ -f "$OUT/report.md" ]; then head -c 900000 "$OUT/report.md" >> "$GITHUB_STEP_SUMMARY"; fi
+        fi
+        echo "exit-code=$code" >> "$GITHUB_OUTPUT"
+
+    - name: Upload to code scanning
+      if: ${{ always() && inputs.upload-sarif == 'true' && steps.scan.outputs.sarif != '' }}
+      # Code scanning is not available on every repository (a private one without GitHub Advanced Security, a pull request
+      # from a fork), so a failed upload is a warning, not a failed job. The results are still in the artifact.
+      continue-on-error: true
+      uses: github/codeql-action/upload-sarif@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
+      with:
+        sarif_file: ${{ steps.scan.outputs.sarif }}
+        category: aibom
+
+    - name: Keep the results
+      if: ${{ always() && inputs.upload-artifact == 'true' && steps.scan.outputs.written == 'true' }}
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+      with:
+        name: ${{ inputs.artifact-name }}
+        # By name: the folder may also hold files that came with the checkout, and the upload follows links.
+        path: |
+          ${{ inputs.output }}/aibom.cdx.json
+          ${{ inputs.output }}/aibom.sarif
+          ${{ inputs.output }}/credentials.json
+          ${{ inputs.output }}/files.json
+          ${{ inputs.output }}/findings.json
+          ${{ inputs.output }}/flags.csv
+          ${{ inputs.output }}/flags.json
+          ${{ inputs.output }}/manifest.json
+          ${{ inputs.output }}/mcp.csv
+          ${{ inputs.output }}/mcp.json
+          ${{ inputs.output }}/merged.json
+          ${{ inputs.output }}/modelfiles.json
+          ${{ inputs.output }}/models.csv
+          ${{ inputs.output }}/packages.csv
+          ${{ inputs.output }}/packages.json
+          ${{ inputs.output }}/report.html
+          ${{ inputs.output }}/report.md
+        if-no-files-found: warn
+
+    - name: Result
+      shell: bash
+      env:
+        CODE: ${{ steps.scan.outputs.exit-code }}
+        FAIL_ON: ${{ inputs.fail-on }}
+      run: |
+        CODE="${CODE:-1}"
+        if [ "$CODE" = "3" ]; then
+          echo "::error title=aibom::Failed on risks at $FAIL_ON or worse. Open this run's Summary: the top lists each one with its file, line and fix."
+          exit 3
+        elif [ "$CODE" = "4" ]; then
+          echo "::error title=aibom::The scan did not finish, so it cannot pass. Raise max-seconds, or see the notes in the job summary."
+          exit 4
+        elif [ "$CODE" != "0" ]; then
+          printf '## Could not run\n\nThe scan did not produce a result, so this is not a pass. The log of the Scan step says why (exit code %s).\n' "$CODE" >> "$GITHUB_STEP_SUMMARY"
+          echo "::error title=aibom::The scan could not run (exit code $CODE). See the Scan step above."
+          exit "$CODE"
+        fi

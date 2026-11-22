@@ -16,7 +16,7 @@ import time
 
 from rich.text import Text
 
-from . import __version__
+from . import MAX_SECONDS, __version__
 from . import cli, ui
 from .display import build_rows
 from .report import package_rows
@@ -203,7 +203,7 @@ class Menu:
                     continue
                 if choice == "open":
                     return out
-            args = argparse.Namespace(source=source, out=out, finders="dictionary,context,shapes", max_seconds=120, keep=False,
+            args = argparse.Namespace(source=source, out=out, finders="dictionary,context,shapes", max_seconds=MAX_SECONDS, keep=False,
                                       open=False, quiet=False, debug=False)
             ok = self.action(lambda: cli.do_scan(args), command_line("scan", source) if out == os.path.join("runs", src["name"]) else command_line("scan", source, "--out", out))
             return out if ok else None
@@ -236,7 +236,7 @@ class Menu:
             except SourceError:
                 packages = None  # a scan from before AI packages were read: the package entries are not offered
             names = sorted({r["name"] for r in package_rows(packages)}) if packages else []
-            choices = [("Open the report in my browser", "report"), ("List the AI models", "models")]
+            choices = [("Open the report in my browser", "report"), ("Save the report as a PDF", "pdf"), ("List the AI models", "models")]
             if names:
                 choices.append(("Vulnerabilities, worst first (with a fix plan)", "vulns"))
                 choices.append(("List the AI packages", "packages"))
@@ -252,6 +252,8 @@ class Menu:
             r = short_path(run_dir)
             if pick == "report":
                 self.action(lambda: cli.open_report(run_dir), command_line("report", r))
+            elif pick == "pdf":
+                self.action(lambda: print("pdf:", cli.make_pdf(run_dir)), command_line("report", r, "--pdf"))
             elif pick == "models":
                 self.action(lambda: cli.show(run_dir, 20), command_line("show", r))
             elif pick == "vulns":

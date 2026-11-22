@@ -3,6 +3,8 @@ import os
 import re
 from dataclasses import dataclass
 
+from . import safety
+
 SKIP_DIRS = {".git", "node_modules", ".next", "dist", "build", "__pycache__", ".venv", "venv", ".svelte-kit", "coverage",
              ".mypy_cache", ".pytest_cache", ".idea", ".vscode", "site-packages", "target"}
 CODE = {".py", ".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".go", ".java", ".kt", ".rs", ".cs", ".rb", ".php", ".swift", ".svelte", ".vue", ".sh", ".scala"}
@@ -53,16 +55,25 @@ def classify(rel):
     return "other"
 
 
-def triage(root):
+def triage(root, left=None):
+    """Every file to look at. Links, junctions and special files are never followed: their paths are added to `left`."""
     out = []
+    left = [] if left is None else left
     for base, dirs, files in os.walk(root):
-        dirs[:] = sorted(d for d in dirs if d not in SKIP_DIRS)
+        keep = []
+        for d in sorted(d for d in dirs if d not in SKIP_DIRS):
+            if safety.is_link(os.path.join(base, d)):
+                left.append(os.path.relpath(os.path.join(base, d), root).replace(os.sep, "/"))
+            else:
+                keep.append(d)
+        dirs[:] = keep
         for f in sorted(files):
             p = os.path.join(base, f)
-            try:
-                size = os.path.getsize(p)
-            except OSError:
+            st = safety.plain_file(p)
+            if st is None:
+                left.append(os.path.relpath(p, root).replace(os.sep, "/"))
                 continue
+            size = st.st_size
             rel = os.path.relpath(p, root).replace(os.sep, "/")
             cat = classify(rel)
             if size > MAX_BYTES and cat != "other":

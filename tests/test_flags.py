@@ -301,7 +301,14 @@ class Display(unittest.TestCase):
         from aibom_engine.report import build_html, build_markdown
         for meta in (self.meta(), self.meta(flag("model.retired", "high", category="model")), None):
             self.assertNotIn("## Flags", build_markdown([], "demo", meta=meta))
-            self.assertNotIn("id='flags'", build_html([], "demo", meta=meta))
+        # The web page always has its Findings section: it says when there is nothing, and model flags are in its table too.
+        for meta in (self.meta(), None):
+            page = build_html([], "demo", meta=meta)
+            self.assertIn("No risk flags were raised by this scan", page)
+            self.assertNotIn("table class='flags fit'", page)
+        page = build_html([], "demo", meta=self.meta(flag("model.retired", "high", category="model")))
+        self.assertIn("table class='flags fit'", page)
+        self.assertIn("data-cat='model'", page)
 
     def test_the_pdf_page_has_the_section_too(self):
         from aibom_engine.report import build_html
@@ -350,13 +357,16 @@ class ThroughThePipeline(unittest.TestCase):
         with tempfile.TemporaryDirectory() as out, mock.patch("aibom_engine.pipeline.flag_rules.model_flags", return_value=[other]):
             result = run(APP, out, app="review-app")
             read = lambda n, enc="utf-8": open(os.path.join(out, n), encoding=enc).read()  # noqa: E731
-            self.assertEqual([f.rule for f in result["flags"]], ["mcp.shell-command"])
-            self.assertEqual(json.loads(read("flags.json"))["counts"], {"high": 1, "medium": 0, "low": 0, "info": 0})
+            # the review app also declares MCP servers of its own (.cursor/mcp.json), which have their own flags
+            self.assertEqual([f.subject for f in result["flags"] if f.subject == "files"], ["files"])
+            saved = json.loads(read("flags.json"))
+            self.assertEqual(saved["counts"], F.counts(result["flags"]))
+            self.assertIn("files", [f["subject"] for f in saved["flags"]])
             self.assertIn("mcp.shell-command", read("aibom.cdx.json"))
             self.assertIn("## Flags", read("report.md"))
             self.assertIn("cfg/mcp.json:4", read("report.md"))
             self.assertIn("id='flags'", read("report.html"))
-            self.assertEqual(json.loads(read("manifest.json"))["flags"]["high"], 1)
+            self.assertEqual(json.loads(read("manifest.json"))["flags"], saved["counts"])
 
 
 class Rebuild(unittest.TestCase):
@@ -408,7 +418,7 @@ class Rebuild(unittest.TestCase):
                 page = make_pdf(out)
             self.assertEqual(pdf.call_count, 1)
             self.assertIn("id='flags'", page)
-            self.assertIn("cfg/mcp.json:4", page)
+            self.assertIn("cfg/mcp.json:4", page.replace("<wbr>", ""))
 
 
 if __name__ == "__main__":

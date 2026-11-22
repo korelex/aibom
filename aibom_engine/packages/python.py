@@ -5,6 +5,7 @@ import re
 
 from packaging.requirements import InvalidRequirement, Requirement
 
+from .. import safety
 from .common import Declaration, Parsed, line_of, read_text
 
 try:
@@ -72,7 +73,7 @@ def parse_requirements(root, rel, seen=None):
         if re.match(r"^(-r|--requirement)\b", text):
             target = re.sub(r"^(-r|--requirement)[ =]?", "", text).strip()
             path = os.path.normpath(os.path.join(os.path.dirname(rel), target)).replace(os.sep, "/")
-            if os.path.isfile(os.path.join(root, path)):
+            if safety.inside_file(root, path):
                 sub = parse_requirements(root, path, seen)
                 out += sub
                 out.notes += sub.notes

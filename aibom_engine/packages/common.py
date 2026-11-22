@@ -3,6 +3,8 @@ import os
 import re
 from dataclasses import asdict, dataclass, field
 
+from .. import safety
+
 # Folders whose dependency files are not part of the product itself. Their packages are reported as left out, with the
 # reason, instead of being mixed in with the app's own dependencies.
 LEFT_OUT_DIRS = {
@@ -95,7 +97,9 @@ def left_out_reason(rel_path, vendored=None):
 
 
 def read_text(root, rel):
-    path = os.path.join(root, rel)
+    path = safety.inside_file(root, rel)
+    if not path:
+        raise FileNotFoundError(f"{rel} is not a regular file inside the scanned folder")
     if os.path.getsize(path) > MAX_LOCK_BYTES:
         raise ValueError(f"larger than {MAX_LOCK_BYTES // 1_000_000} MB")
     with open(path, encoding="utf-8", errors="replace") as fh:

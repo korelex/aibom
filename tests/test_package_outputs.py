@@ -194,7 +194,9 @@ class PackagesInTheReports(Scan):
     def test_html_has_the_section_a_card_and_balanced_tags(self):
         page = self.read("report.html")
         self.assertIn("<h2>AI packages</h2>", page)
-        self.assertIn("AI packages (1 with known vulnerabilities)", page)
+        self.assertIn("<span class='lbl'>AI packages</span><b>", page)
+        self.assertIn("1 with known vulnerabilities", page)
+        self.assertEqual(page.count("<section"), page.count("</section>"))
         self.assertIn("GHSA-f2jm-rw3h-6phg", page)
         self.assertEqual(page.count("<table"), page.count("</table>"))
         self.assertEqual(page.count("<details"), page.count("</details>"))

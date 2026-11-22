@@ -5,12 +5,12 @@ That adds no dependency, and the PDF looks exactly like the page. When no browse
 file by hand (open report.html, Print, Save as PDF).
 """
 import os
-import shutil
 import subprocess
 import sys
 import tempfile
 
-from .source import SourceError
+from . import safety
+from .safety import SourceError
 
 WINDOWS = [r"%ProgramFiles%\Google\Chrome\Application\chrome.exe", r"%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe",
            r"%LocalAppData%\Google\Chrome\Application\chrome.exe", r"%ProgramFiles(x86)%\Microsoft\Edge\Application\msedge.exe",
@@ -24,18 +24,18 @@ def find_browser():
     """The path of a Chrome-family browser, or None. AIBOM_BROWSER names one explicitly."""
     chosen = os.environ.get("AIBOM_BROWSER")
     if chosen:
-        return chosen if os.path.isfile(chosen) else shutil.which(chosen)
+        return os.path.abspath(chosen) if os.path.isfile(chosen) else safety.find_program(chosen)
     if os.name == "nt":
         for path in WINDOWS:
             path = os.path.expandvars(path)
-            if os.path.isfile(path):
+            if os.path.isabs(path) and os.path.isfile(path):  # an unset variable would leave a relative path
                 return path
     elif sys.platform == "darwin":
         for path in MACOS:
             if os.path.isfile(path):
                 return path
     for name in LINUX:
-        found = shutil.which(name)
+        found = safety.find_program(name)
         if found:
             return found
     return None
@@ -51,7 +51,7 @@ def print_to_pdf(html_text, pdf_path, browser=None, timeout=180):
         page = os.path.join(tmp, "report.html")
         with open(page, "w", encoding="utf-8") as f:
             f.write(html_text)
-        out = os.path.abspath(pdf_path)
+        out = safety.output_file(pdf_path)
         os.makedirs(os.path.dirname(out), exist_ok=True)
         if os.path.exists(out):
             os.remove(out)
@@ -60,7 +60,7 @@ def print_to_pdf(html_text, pdf_path, browser=None, timeout=180):
         if hasattr(os, "geteuid") and os.geteuid() == 0:  # a container running as root: Chromium refuses to start its sandbox there
             cmd.insert(1, "--no-sandbox")
         try:
-            done = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+            done = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, env=safety.child_env())
         except subprocess.TimeoutExpired:
             raise SourceError("The browser did not finish making the PDF in %d seconds. Try again, or print report.html from a browser." % timeout)
         except OSError as e:

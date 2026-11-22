@@ -4,7 +4,7 @@ import json
 import os
 import time
 
-from . import __version__
+from . import MAX_SECONDS, __version__, safety
 from .db import resolve_model
 from . import packages as package_finder
 from .finders import context, dictionary, shapes
@@ -12,7 +12,13 @@ from .merge import merge
 from .display import build_rows
 from .evidence import assign_levels
 from . import flags as flag_rules
-from .report import build_csv, build_html, build_markdown, build_packages_csv
+from . import credentials as credential_finder
+from . import modelfiles as modelfile_finder
+from . import remote_code as remote_code_finder
+from . import mcp as mcp_finder
+from . import sarif
+from .mcp_flags import mcp_flags
+from .report import DOWNLOADS, build_csv, build_flags_csv, build_html, build_markdown, build_mcp_csv, build_packages_csv
 from .triage import triage
 from .vendors import maker_of, type_of
 from .verify import verify
@@ -23,7 +29,7 @@ LABEL = {"dictionary": "known model names", "context": "names in model settings"
 
 
 def save(path, obj):
-    with open(path, "w", encoding="utf-8") as f:
+    with safety.open_output(path) as f:
         json.dump(obj, f, indent=1, sort_keys=True)
 
 
@@ -58,37 +64,105 @@ def enrich(items, names, online=False):
     return items
 
 
-def write_readable(out, items, app, source="", links=None, warnings=None, packages=None, flags=None):
+def write_readable(out, items, app, source="", links=None, warnings=None, packages=None, flags=None, mcp=None, model_files=None, secrets=None, fail_on=None, incomplete=None):
     """The outputs for people: the web page, the markdown summary and the spreadsheets (models, and AI packages)."""
-    meta = {"warnings": warnings or [], "packages": packages or [], "flags": flags or []}
-    with open(os.path.join(out, "report.html"), "w", encoding="utf-8") as f:
-        f.write(build_html(items, app, source, links, meta))
-    with open(os.path.join(out, "report.md"), "w", encoding="utf-8") as f:
+    meta = {"warnings": warnings or [], "packages": packages or [], "flags": flags or [], "mcp": mcp or {"servers": [], "files": [], "problems": []},
+            "model_files": model_files or {"files": [], "problems": [], "remote_code": {"findings": []}}, "secrets": secrets or {},
+            "fail_on": fail_on, "incomplete": incomplete}
+    with safety.open_output(os.path.join(out, "report.md"), encoding="utf-8") as f:
         f.write(build_markdown(items, app, source, links, meta))
-    with open(os.path.join(out, "packages.csv"), "w", encoding="utf-8-sig", newline="") as f:
+    with safety.open_output(os.path.join(out, "packages.csv"), encoding="utf-8-sig", newline="") as f:
         f.write(build_packages_csv(packages or [], links))
-    with open(os.path.join(out, "models.csv"), "w", encoding="utf-8-sig", newline="") as f:  # the BOM makes Excel read it correctly
+    with safety.open_output(os.path.join(out, "mcp.csv"), encoding="utf-8-sig", newline="") as f:
+        f.write(build_mcp_csv(mcp, links))
+    with safety.open_output(os.path.join(out, "models.csv"), encoding="utf-8-sig", newline="") as f:  # the BOM makes Excel read it correctly
         f.write(build_csv(items, links))
+    with safety.open_output(os.path.join(out, "flags.csv"), encoding="utf-8-sig", newline="") as f:
+        f.write(build_flags_csv(flags or [], links))
+    # Written last, so its Downloads list links only to files that are really there.
+    files = [name for name, _, _ in DOWNLOADS if os.path.exists(os.path.join(out, name))]
+    with safety.open_output(os.path.join(out, "report.html"), encoding="utf-8") as f:
+        f.write(build_html(items, app, source, links, meta, files=files))
 
 
-def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source="", log=None, max_seconds=120, links=None):
+def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source="", log=None, max_seconds=MAX_SECONDS, links=None, fail_on=None):
     log = log or (lambda msg: None)
     root = os.path.abspath(root)
     app = app or os.path.basename(root.rstrip("/\\")) or "app"
+    out = safety.output_path(out, scanned=root)
     os.makedirs(out, exist_ok=True)
     t0 = time.time()
-    warnings = []
+    warnings, incomplete = [], []  # incomplete: why this scan must not be read as a pass
     log("Sorting the files ...")
-    files = triage(root)
+    left = []
+    files = triage(root, left)
+    if left:
+        warnings.append(f"{len(left):,} {'link or special file was' if len(left) == 1 else 'links or special files were'} not followed "
+                        f"({', '.join(repr(p) for p in left[:3])}{' ...' if len(left) > 3 else ''}): aibom reads only real files inside the scanned folder.")
     cats = dict(collections.Counter(f.category for f in files))
     log(f"  {len(files):,} files: {cats.get('code', 0):,} code, {cats.get('config', 0):,} settings, {cats.get('docs', 0):,} docs, {cats.get('test', 0):,} tests")
     names = dictionary.load_names()
     deadline = t0 + max_seconds
+    log("Reading MCP config files ...")
+    try:
+        found_mcp = mcp_finder.find(root, deadline=deadline)
+    except Exception as e:  # the MCP step must never stop the model scan
+        warnings.append(f"MCP config files could not be read: {type(e).__name__}: {e}")
+        incomplete.append("MCP config files could not be read")
+        found_mcp = {"servers": [], "files": [], "problems": []}
+    for p in found_mcp["problems"]:
+        warnings.append(f"Could not read the MCP config file {p['file']}: {p['error']}")
+    if found_mcp.get("partial"):
+        warnings.append("The time limit was reached while looking for MCP config files, so some may be missing. Raise it with --max-seconds.")
+    ms = mcp_finder.summary(found_mcp)
+    if ms["servers"]:
+        log(f"  {ms['servers']:,} MCP servers in {ms['config_files']:,} config files")
+    log("Looking for hardcoded API keys ...")
+    try:
+        found_keys = credential_finder.find(root, files, deadline=deadline)
+    except Exception as e:  # the key search must never stop the model scan
+        warnings.append(f"The search for hardcoded API keys failed and was skipped: {type(e).__name__}: {e}")
+        incomplete.append("the search for API keys failed")
+        found_keys = {"findings": [], "files_scanned": 0, "problems": [], "partial": False, "truncated": False}
+    for p in found_keys["problems"]:
+        warnings.append(f"Could not read {p['file']} while looking for hardcoded API keys: {p['error']}")
+    if found_keys.get("partial"):
+        warnings.append("The time limit was reached while looking for hardcoded API keys, so some files were not read. Raise it with --max-seconds.")
+    if found_keys.get("truncated"):
+        warnings.append(f"More possible API keys were found than are listed: no more than {credential_finder.MAX_PER_FILE} per file and {credential_finder.MAX_FINDINGS} in all.")
+    ks = credential_finder.summary(found_keys)
+    if ks["keys"] or ks["other"]:
+        log(f"  {ks['keys']:,} hardcoded API keys in {ks['files']:,} file{'' if ks['files'] == 1 else 's'}; {ks['other']:,} more in tests, examples or documentation")
+    log("Looking for model files ...")
+    try:
+        found_models = modelfile_finder.find(root, files, deadline=deadline)
+    except Exception as e:  # the model-file search must never stop the model scan
+        warnings.append(f"The search for model files failed and was skipped: {type(e).__name__}: {e}")
+        incomplete.append("the search for model files failed")
+        found_models = {"files": [], "problems": [], "partial": False, "truncated": False}
+    try:
+        found_remote = remote_code_finder.find(root, files, deadline=deadline)
+    except Exception as e:
+        warnings.append(f"The search for trust_remote_code failed and was skipped: {type(e).__name__}: {e}")
+        incomplete.append("the search for trust_remote_code failed")
+        found_remote = {"findings": [], "files_scanned": 0, "partial": False, "truncated": False}
+    for p in found_models["problems"]:
+        warnings.append(f"Could not read the model file {p['file']}: {p['error']}")
+    if found_models.get("partial") or found_remote.get("partial"):
+        warnings.append("The time limit was reached while looking for model files, so some were not read. Raise it with --max-seconds.")
+    if found_models.get("truncated"):
+        warnings.append(f"More than {modelfile_finder.MAX_FILES} model files were found; only the first {modelfile_finder.MAX_FILES} are listed.")
+    ms2 = modelfile_finder.summary(found_models)
+    if ms2["files"] or ms2["other"]:
+        n = len(found_remote["findings"])
+        log(f"  {ms2['files']:,} model files, {ms2['dangerous']:,} with a dangerous or hidden import, a Lambda layer or a misleading name; {ms2['other']:,} more in tests, examples or documentation; "
+            f"{n:,} {'use' if n == 1 else 'uses'} of trust_remote_code")
     log("Reading dependency files ...")
     try:
         found_packages = package_finder.find(root, files, deadline=deadline)
     except Exception as e:  # the package step must never stop the model scan
         warnings.append(f"Dependency files could not be read: {type(e).__name__}: {e}")
+        incomplete.append("dependency files could not be read")
         found_packages = {"packages": [], "files": [], "problems": [], "notes": [], "summary": {}}
     model_arguments = found_packages.pop("model_arguments", [])
     ps = found_packages["summary"]
@@ -109,28 +183,48 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
             got = FINDERS[name](root, files, names=names, deadline=deadline)
         except Exception as e:  # one finder failing must not stop the scan
             warnings.append(f"The finder '{name}' failed and was skipped: {type(e).__name__}: {e}")
+            incomplete.append(f"the finder '{name}' failed")
             got = []
         findings += got
         if time.time() > deadline:
             partial = True
         log(f"  {LABEL.get(name, name)}: {len(got):,} places ({time.time() - t1:.1f}s)")
+    # Every step stops at the same deadline, some without saying so (imports, calls, the file being read at the time), and
+    # none can stop early before it has passed: the clock here is the one answer to "was anything cut short".
+    partial = partial or time.time() > deadline or any(f.get("partial") for f in (found_mcp, found_keys, found_models, found_remote))
+    if partial:
+        incomplete.append("the time limit was reached")
+    if found_keys.get("capped"):
+        incomplete.append("there were too many possible keys to read every file")
+    if found_models.get("truncated"):
+        incomplete.append("there were too many model files to read them all")
+    if found_remote.get("capped"):
+        incomplete.append("there were too many uses of trust_remote_code to read every file")
     if partial:
         warnings.append(f"The time limit of {max_seconds} seconds was reached, so part of the repository was not read. Raise it with --max-seconds.")
     log("Checking every name (live code, comment, message, test, docs) ...")
     items = assign_levels(verify(enrich(merge(findings), names), root), model_arguments)
     included = [i for i in items if i["tier"] != "rejected"]
     used = sum(1 for i in included if i.get("role") == "used")
-    flags = flag_rules.collect(flag_rules.model_flags(included, item_ref))
+    server_flags = mcp_flags(found_mcp["servers"])
+    written = {(f.file, f.line) for f in server_flags if f.rule == "mcp.plaintext-secret"}
+    flags = flag_rules.collect(flag_rules.model_flags(included, item_ref), server_flags, credential_finder.credential_flags(found_keys["findings"], written),
+                               modelfile_finder.model_file_flags(found_models["files"]), remote_code_finder.remote_code_flags(found_remote["findings"]))
     log("Writing the AI-BOM and the report ...")
-    bom = build_bom(included, app, found_packages["packages"], ps.get("advisory_data", "") if ps else "", flags)
+    bom = build_bom(included, app, found_packages["packages"], ps.get("advisory_data", "") if ps else "", flags, found_mcp["servers"], found_models["files"])
     problem = validate(bom)
     save(os.path.join(out, "files.json"), {"categories": cats, "files": [vars(f) for f in files]})
     save(os.path.join(out, "findings.json"), [f.to_dict() for f in findings])
     save(os.path.join(out, "merged.json"), items)
     save(os.path.join(out, "packages.json"), found_packages)
+    save(os.path.join(out, "mcp.json"), found_mcp)
+    save(os.path.join(out, "credentials.json"), found_keys)
+    save(os.path.join(out, "modelfiles.json"), {**found_models, "remote_code": found_remote})
     save(os.path.join(out, "aibom.cdx.json"), bom)
     save(os.path.join(out, "flags.json"), {"flags": [f.to_dict() for f in flags], "counts": flag_rules.counts(flags)})
-    write_readable(out, items, app, source, links, warnings, found_packages["packages"], flags)
+    sarif.write(os.path.join(out, "aibom.sarif"), flags)
+    write_readable(out, items, app, source, links, warnings, found_packages["packages"], flags, found_mcp, {**found_models, "remote_code": found_remote}, ks,
+                   fail_on=fail_on, incomplete=incomplete)
     rows = build_rows(items)
     tiers = dict(collections.Counter(i["tier"] for i in items))
     reasons = dict(collections.Counter(i["reason"] for i in items if i["tier"] == "rejected"))
@@ -138,8 +232,8 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
     save(os.path.join(out, "manifest.json"), {"engine_version": __version__, "scanned_folder": root, "app": app, "source": source or root, "files": len(files), "file_categories": cats,
                                               "finders": list(finders), "raw_findings": len(findings), "items_in_aibom": len(included), "models_used": used,
                                               "models_only_listed": len(included) - used, "display_models_used": len(rows["used"]), "display_models_listed": len(rows["listed"]),
-                                              "display_left_out": len(rows["left_out"]), "items_by_tier": tiers, "rejected_reasons": reasons, "partial": partial,
-                                              "warnings": warnings, "packages": found_packages["summary"], "flags": flag_rules.counts(flags), "cyclonedx_1_6_valid": problem is None, "validation_error": problem, "seconds": seconds,
+                                              "display_left_out": len(rows["left_out"]), "items_by_tier": tiers, "rejected_reasons": reasons, "partial": partial, "incomplete": incomplete, "fail_on": fail_on,
+                                              "warnings": warnings, "packages": found_packages["summary"], "flags": flag_rules.counts(flags), "mcp": ms, "secrets": ks, "model_files": ms2, "remote_code": len(found_remote["findings"]), "cyclonedx_1_6_valid": problem is None, "validation_error": problem, "seconds": seconds,
                                               **(links.to_dict() if links else {})})
     return {"packages": found_packages["summary"], "items": len(included), "used": len(rows["used"]), "listed": len(rows["listed"]), "left_out": len(rows["left_out"]), "rows": rows, "rejected": len(items) - len(included), "valid": problem is None, "error": problem,
-            "seconds": seconds, "tiers": tiers, "partial": partial, "warnings": warnings, "app": app, "files": len(files), "flags": flags}
+            "seconds": seconds, "tiers": tiers, "partial": partial, "incomplete": incomplete, "warnings": warnings, "app": app, "files": len(files), "flags": flags, "mcp": ms, "secrets": ks, "model_files": ms2, "remote_code": len(found_remote["findings"])}

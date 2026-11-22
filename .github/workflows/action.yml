@@ -1,0 +1,76 @@
+name: Action
+
+# Runs the aibom action from this checkout, the way a user's workflow would, and checks what it does: a repository with risk
+# flags fails at fail-on with exit code 3 and still produces its results and SARIF file; a clean one passes.
+# SARIF upload is switched off here, so the test app's findings never appear in this repository's Security tab.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  action:
+    name: Action (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Scan a folder with risk flags
+        id: flagged
+        continue-on-error: true
+        uses: ./
+        with:
+          path: tests/fixtures/review-app
+          fail-on: high
+          output: out-flagged
+          upload-sarif: "false"
+          artifact-name: aibom-flagged-${{ matrix.os }}
+
+      - name: It failed the gate and still wrote its results
+        shell: bash
+        env:
+          OUTCOME: ${{ steps.flagged.outcome }}
+          CODE: ${{ steps.flagged.outputs.exit-code }}
+          SARIF: ${{ steps.flagged.outputs.sarif }}
+        run: |
+          test "$OUTCOME" = failure
+          test "$CODE" = 3
+          test -f out-flagged/aibom.cdx.json
+          test -f out-flagged/flags.json
+          python - "$SARIF" <<'PY'
+          import json, sys
+          doc = json.load(open(sys.argv[1], encoding="utf-8"))
+          results = doc["runs"][0]["results"]
+          assert doc["version"] == "2.1.0" and results, "no results"
+          uris = {r["locations"][0]["physicalLocation"]["artifactLocation"]["uri"] for r in results}
+          assert all(u.startswith("tests/fixtures/review-app/") for u in uris), uris
+          print(len(results), "results")
+          PY
+
+      - name: Make a folder with nothing to flag
+        shell: bash
+        run: mkdir -p clean && printf 'x = 1\n' > clean/app.py
+
+      - name: Scan it
+        id: clean
+        uses: ./
+        with:
+          path: clean
+          fail-on: low
+          output: out-clean
+          upload-sarif: "false"
+          artifact-name: aibom-clean-${{ matrix.os }}
+
+      - name: It passed
+        shell: bash
+        env:
+          CODE: ${{ steps.clean.outputs.exit-code }}
+        run: test "$CODE" = 0

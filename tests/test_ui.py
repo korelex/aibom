@@ -225,7 +225,7 @@ class VulnScreens(unittest.TestCase):
         self.assertIn("\x1b]8;", raw)                          # a link to the advisory
         self.assertIn("https://osv.dev/vulnerability/A-1", raw)
         crit = raw[raw.index("CRITICAL") - 60:raw.index("CRITICAL")]
-        self.assertRegex(crit, r"\x1b\[[0-9;]*48;")            # the critical badge has a solid background
+        self.assertRegex(crit, r"\x1b\[[0-9;]*(48;|4[0-7]m)")  # a solid background: 256 or true colour, or the basic red that rich writes when an earlier test left it a console with basic colours only
 
     def test_a_long_advisory_text_in_a_narrow_terminal_still_shows_the_worst_first(self):
         con = recorded(70)
@@ -369,7 +369,7 @@ class Reports(unittest.TestCase):
 
     def test_evidence_chips_explain_themselves_and_the_summary_card_links_to_the_list(self):
         self.assertIn("class='ev ev-called' title=\"Called: live code calls this package", self.html)
-        self.assertIn("class='card vulncard'><b><a href='#vulns'>6</a>", self.html)
+        self.assertIn("<a class='card vulncard' href='#vulns'><span class='lbl'>Known vulnerabilities</span><b>6</b>", self.html)
 
     def test_severity_labels_stay_readable_inside_the_summary_cards(self):
         # `.card span` greys out text; a label inside a card must keep its own colour or red text lands on a red chip
@@ -380,8 +380,9 @@ class Reports(unittest.TestCase):
     def test_the_packages_table_lets_long_paths_break_so_it_fits_the_page(self):
         # a path has no spaces: without this the table grows wider than the page and its last column is cut off
         head = self.html.split("<body>")[0]
-        self.assertIn("table.pk td:nth-child(5){overflow-wrap:anywhere", head)
-        self.assertIn("<table class='pk'>", self.html)
+        self.assertIn("td{overflow-wrap:break-word}", head)
+        self.assertIn("table.fit{table-layout:fixed}", head)
+        self.assertIn("<table class='pk fit'><colgroup>", self.html)
 
     def test_a_scan_without_vulnerabilities_has_no_fix_plan(self):
         clean = {"packages": [package("gamma", "9.0.0", "called", set())]}
@@ -418,6 +419,32 @@ class AtATerminal(unittest.TestCase):
         done = subprocess.run([sys.executable, "-m", "aibom_engine", "scan", os.path.join(ROOT, "tests", "fixtures", "review-app"), "--out", cls.dir, "--quiet"],
                               cwd=ROOT, capture_output=True, text=True, timeout=300)
         assert done.returncode == 0, done.stderr
+
+    def test_a_scan_with_no_model_names_still_shows_what_it_found(self):
+        # Found on a real scan: with no model names the terminal said only "no AI model names found" and hid the MCP servers.
+        with tempfile.TemporaryDirectory() as d, tempfile.TemporaryDirectory() as out:
+            with open(os.path.join(d, ".mcp.json"), "w", encoding="utf-8") as fh:
+                fh.write('{"mcpServers": {"fs": {"command": "npx", "args": ["-y", "@modelcontextprotocol/server-filesystem", "/"]}}}')
+            text = self.run_main("scan", d, "--out", out)
+        self.assertIn("MCP servers", text)
+        self.assertNotIn("no AI model names found", text)
+
+    def test_a_scan_stopped_by_the_time_limit_never_says_finished(self):
+        # Found on a real scan of a large repository: it stopped at the time limit and was shown as "Scan finished ... no AI model names found".
+        from aibom_engine import pipeline
+        real = pipeline.run
+
+        def stopped(*args, **kw):
+            r = real(*args, **kw)
+            r.update(items=0, partial=True)
+            return r
+        with tempfile.TemporaryDirectory() as d, tempfile.TemporaryDirectory() as out, mock.patch.object(pipeline, "run", side_effect=stopped):
+            with open(os.path.join(d, "a.py"), "w", encoding="utf-8") as fh:
+                fh.write("x = 1\n")
+            text = self.run_main("scan", d, "--out", out)
+        self.assertIn("Stopped at the time limit", text)
+        self.assertIn("This is not a final answer", text)
+        self.assertNotIn("no AI model names found", text)
 
     def test_a_terminal_gets_colour_and_the_plain_option_turns_it_off(self):
         self.assertIn("[", self.run_main("vulns", self.dir))

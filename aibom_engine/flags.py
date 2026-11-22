@@ -91,6 +91,17 @@ def at_least(flags, severity):
     return [f for f in flags if RANK[f.severity] >= RANK[severity]]
 
 
+def decide(flags, level, incomplete=()):
+    """What a scan comes to, for the exit code and for the report alike: (outcome, the flags behind it).
+    The outcome is "failed", "incomplete" or "passed", or "report-only" when no level was given to fail on."""
+    if not level:
+        return "report-only", at_least(flags, "high")
+    hits = at_least(flags, level)
+    if hits:
+        return "failed", hits
+    return ("incomplete" if incomplete else "passed"), []
+
+
 def headline(flags):
     """(how many flags to put in a headline, the text beside it). Info notes are real but too many to be a headline: a scan of a
     large project has hundreds of "licence not known" notes, so they are named apart and the count is the flags that need a look."""

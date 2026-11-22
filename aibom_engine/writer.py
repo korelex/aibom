@@ -1,20 +1,20 @@
 """Step 5 of the design: write a CycloneDX 1.6 AI-BOM and check it against the official schema."""
 import hashlib
 import json
+import re
 import uuid
 
 from . import __version__
 from .evidence import REACHABILITY
 from .flags import as_property
+from .ids import slug  # noqa: F401  (kept importable from here)
+from .mcp import component_purl
+from .modelfiles import component_ref as model_file_ref
 
 COMPONENT_TYPE = {"model": "machine-learning-model", "framework": "framework", "agent": "application", "dataset": "data"}
 NS = "aibom-engine:"
 USE_RANK = {"live": 0, "comment": 2, "message": 2, "text": 2, "output": 2, "test": 3, "docs": 3, "data": 3}  # proof lines: live first
 RANK = {"code": 0, "config": 0, "manifest": 0, "notebook": 0, "test": 1, "docs": 2}
-
-
-def slug(s):
-    return "".join(c if c.isalnum() or c in "-._" else "-" for c in str(s).lower())
 
 
 def item_ref(it):
@@ -129,7 +129,90 @@ def package_parts(packages):
     return components, services, vuln_list, depends
 
 
-def build_bom(items, app_name, packages=None, advisory_data="", flags=None):
+URI = re.compile(r"^[a-z][a-z0-9+.-]*://[^\s${}]+$", re.I)
+
+
+def mcp_parts(servers):
+    """(components, services) for the MCP servers a project declares, in CycloneDX 1.6 form.
+
+    A server started as a local program is an `application` component (with a purl when it is an npm or PyPI package); a
+    remote one is a `service` with its endpoint. Environment variables and headers are listed by name only. Servers that
+    sit in tests, examples or documentation are not part of the product and are left out."""
+    components, services = [], []
+    for sv in servers:
+        if sv.get("left_out"):
+            continue
+        ref = sv["ref"]
+        props = [{"name": NS + "kind", "value": "mcp-server"}, {"name": NS + "client", "value": sv["client"]},
+                 {"name": NS + "transport", "value": sv["transport"]}, {"name": NS + "evidence-level", "value": "declared"}]
+        if sv["command"]:
+            props.append({"name": NS + "command", "value": sv["command"]})
+        if sv["args"]:
+            props.append({"name": NS + "args", "value": json.dumps(sv["args"], ensure_ascii=False)})
+        for key in ("launcher", "package", "ecosystem", "version"):
+            if sv[key]:
+                props.append({"name": NS + key, "value": sv[key]})
+        if sv["pinned"] is not None:
+            props.append({"name": NS + "pinned", "value": str(bool(sv["pinned"])).lower()})
+        props += [{"name": NS + "environment-name", "value": k} for k in sv["env_keys"]]
+        props += [{"name": NS + "header-name", "value": k} for k in sv["header_names"]]
+        if sv["enabled"] is False:
+            props.append({"name": NS + "enabled", "value": "false"})
+        if sv["url_has_credentials"]:
+            props.append({"name": NS + "url-has-credentials", "value": "true"})
+        if sv["note"]:
+            props.append({"name": NS + "note", "value": sv["note"]})
+        evidence = {"occurrences": [{"location": sv["file"], "line": sv["line"], "additionalContext": f"declared in a {sv['client']} config"}]} if sv["line"] > 0 else None
+        if sv["transport"] in ("http", "sse", "remote"):
+            part = {"bom-ref": ref, "name": sv["name"], "properties": props}
+            if sv["url"] and URI.match(sv["url"]):
+                part["endpoints"] = [sv["url"]]
+            elif sv["url"]:
+                props.append({"name": NS + "url", "value": sv["url"]})
+            if any(h.lower() in ("authorization", "proxy-authorization") for h in sv["header_names"]):
+                part["authenticated"] = True
+            if sv["line"] > 0:  # a CycloneDX service has no evidence block, so the place is a property
+                props.append({"name": NS + "declared-in", "value": f"{sv['file']}:{sv['line']}"})
+            services.append(part)
+        else:
+            part = {"bom-ref": ref, "type": "application", "name": sv["name"], "properties": props}
+            purl = component_purl(sv)
+            if purl:
+                part["purl"] = purl
+                if sv["pinned"] and sv["version"]:
+                    part["version"] = sv["version"]
+            if evidence:
+                part["evidence"] = evidence
+            components.append(part)
+    return components, services
+
+
+def model_file_parts(files):
+    """Components for the model files in the product's own folders: what each is, how big, whether it uses pickle, and what a scan of it found.
+    Files in tests, examples or documentation are left out, as they are for packages and MCP servers."""
+    components = []
+    for r in files:
+        if r["location"]:
+            continue
+        props = [{"name": NS + "kind", "value": "model-file"}, {"name": NS + "format", "value": r["format"]}, {"name": NS + "serialization", "value": r["serialization"] or "unknown"},
+                 {"name": NS + "size-bytes", "value": str(r["size"])}, {"name": NS + "pickle-based", "value": str(bool(r["pickle_based"])).lower()},
+                 {"name": NS + "scan-status", "value": r["status"] or "not-scanned"}]
+        if r["reason"]:
+            props.append({"name": NS + "scan-note", "value": r["reason"]})
+        for d in r["dangerous"]:
+            props.append({"name": NS + "dangerous-import", "value": f"{d['module']}.{d['name']}"})
+        if r["unresolved"]:
+            props.append({"name": NS + "unresolved-imports", "value": str(r["unresolved"])})
+        if r["lambda_layer"]:
+            props.append({"name": NS + "lambda-layer", "value": "true"})
+        if r["mislabelled"]:
+            props.append({"name": NS + "mislabelled", "value": r["mislabelled"]})
+        components.append({"bom-ref": model_file_ref(r), "type": "machine-learning-model", "name": r["file"], "properties": props,
+                           "evidence": {"occurrences": [{"location": r["file"], "additionalContext": "a model file in the project"}]}})
+    return components
+
+
+def build_bom(items, app_name, packages=None, advisory_data="", flags=None, mcp_servers=None, model_files=None):
     components, services = [], []
     for it in items:
         # evidence-level: how strongly the use is proven (declared / called); confidence: how sure the name itself is
@@ -181,6 +264,10 @@ def build_bom(items, app_name, packages=None, advisory_data="", flags=None):
     components += pkg_components
     taken = {s["bom-ref"] for s in services}
     services += [s for s in pkg_services if s["bom-ref"] not in taken]
+    mcp_components, mcp_services = mcp_parts(mcp_servers or [])
+    components += mcp_components
+    components += model_file_parts(model_files or [])
+    services += mcp_services
     bom = {"bomFormat": "CycloneDX", "specVersion": "1.6", "version": 1,
            "metadata": {"component": {"bom-ref": "app", "type": "application", "name": app_name},
                         "tools": {"components": [{"type": "application", "name": "aibom-engine", "version": __version__}]}},

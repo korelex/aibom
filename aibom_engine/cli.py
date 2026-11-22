@@ -10,7 +10,7 @@ from rich.text import Text
 
 from . import flags as flag_rules
 from . import screens, ui
-from . import __version__
+from . import MAX_SECONDS, __version__, safety
 from .display import build_rows
 from .report import (CANNOT_SEE, LEVEL_LONG, MODE_TEXT, PACKAGE_NOTE, REACHABILITY_TEXT, TIER_LONG, advisory_date, package_level_text,
                      package_rows, package_summary)
@@ -294,6 +294,18 @@ def open_report(run_dir):
     webbrowser.open("file:///" + path.replace(os.sep, "/").lstrip("/"))
 
 
+def load_mcp(run_dir):
+    """The MCP servers a scan saved (none for a folder made before MCP servers were read)."""
+    path = os.path.join(run_dir, "mcp.json")
+    return load(run_dir, "mcp.json") if os.path.exists(path) else {"servers": [], "files": [], "problems": []}
+
+
+def load_modelfiles(run_dir):
+    """The model files and trust_remote_code findings a scan saved (none for a folder made before they were read)."""
+    path = os.path.join(run_dir, "modelfiles.json")
+    return load(run_dir, "modelfiles.json") if os.path.exists(path) else {"files": [], "problems": [], "remote_code": {"findings": []}}
+
+
 def load_flags(run_dir):
     """The flags a scan saved (none for a folder made before flags existed)."""
     path = os.path.join(run_dir, "flags.json")
@@ -310,9 +322,13 @@ def make_pdf(run_dir, output=None):
     info = load(run_dir, "manifest.json")
     app = info.get("app") or os.path.basename(info["scanned_folder"])
     packages = load(run_dir, "packages.json").get("packages", []) if os.path.exists(os.path.join(run_dir, "packages.json")) else []
-    meta = {"warnings": info.get("warnings", []), "packages": packages, "flags": load_flags(run_dir)}
+    meta = {"warnings": info.get("warnings", []), "packages": packages, "flags": load_flags(run_dir), "mcp": load_mcp(run_dir), "model_files": load_modelfiles(run_dir),
+            "secrets": info.get("secrets") or {}}
     page = build_html(items, app, info.get("source", ""), links_for(info), meta, pdf=True)
-    return print_to_pdf(page, output or os.path.join(run_dir, "report.pdf"))
+    path = print_to_pdf(page, output or os.path.join(run_dir, "report.pdf"))
+    if os.path.abspath(path) == os.path.abspath(os.path.join(run_dir, "report.pdf")):
+        rebuild(run_dir)          # the web report now links to the PDF next to it
+    return path
 
 
 def rebuild(run_dir):
@@ -323,11 +339,26 @@ def rebuild(run_dir):
     links = links_for(info)
     app = info.get("app") or os.path.basename(info["scanned_folder"])
     packages = load(run_dir, "packages.json").get("packages", []) if os.path.exists(os.path.join(run_dir, "packages.json")) else []
-    write_readable(run_dir, items, app, info.get("source", ""), links, info.get("warnings", []), packages, load_flags(run_dir))
+    flags = load_flags(run_dir)
+    write_readable(run_dir, items, app, info.get("source", ""), links, info.get("warnings", []), packages, flags, load_mcp(run_dir), load_modelfiles(run_dir),
+                   info.get("secrets") or {}, fail_on=info.get("fail_on"), incomplete=info.get("incomplete"))
+    from . import sarif
+    sarif.write(os.path.join(run_dir, "aibom.sarif"), flags)
     info.update(links.to_dict() if links.ok else {})
-    with open(os.path.join(run_dir, "manifest.json"), "w", encoding="utf-8") as f:
+    with safety.open_output(os.path.join(run_dir, "manifest.json")) as f:
         json.dump(info, f, indent=1, sort_keys=True)
     return app, links.ok
+
+
+def write_sarif(run_dir, prefix="", output=None):
+    """Write aibom.sarif for a finished scan, with file paths under `prefix` (the scanned folder inside the repository)."""
+    from . import sarif
+    if not os.path.exists(os.path.join(run_dir, "manifest.json")):
+        raise SourceError("%s is not a finished scan (no manifest.json). Run aibom scan first." % run_dir)
+    flags = load_flags(run_dir)
+    path = output or os.path.join(run_dir, "aibom.sarif")
+    skipped = sarif.write(path, flags, prefix)
+    print("sarif: %s (%d results%s)" % (path, len(flags) - skipped, ", %d without a file left out" % skipped if skipped else ""))
 
 
 def check_tools():
@@ -336,6 +367,31 @@ def check_tools():
         import jsonschema  # noqa: F401
     except ImportError:
         raise SourceError("Two Python packages are missing. Install aibom with:  python -m pip install .  (from the aibom folder)")
+
+
+GATE_FAILED = 3   # a scan that ran but found flags at or above --fail-on (a scan that could not run exits 2)
+GATE_INCOMPLETE = 4   # with --fail-on: no such flag, but part of the scan did not finish, so it is not a pass
+
+
+def more_elsewhere(n):
+    """What a summary line adds for the findings in tests, examples or documentation, which its count leaves out."""
+    return f"; {n} more in tests, examples or documentation" if n else ""
+
+
+def gate(a, r):
+    """--fail-on SEVERITY: exit with GATE_FAILED when the scan has a flag that bad or worse, with GATE_INCOMPLETE when it did not finish."""
+    level = getattr(a, "fail_on", None)
+    outcome, hits = flag_rules.decide(r.get("flags") or [], level, r.get("incomplete"))
+    if outcome == "failed":
+        worst = flag_rules.counts(hits)
+        print("\nFailed: %d risk flag%s at %s or worse (%s). The fix for each is in the report and in flags.json."
+              % (len(hits), "" if len(hits) == 1 else "s", level, ", ".join("%d %s" % (n, s) for s, n in worst.items() if n)), file=sys.stderr)
+        sys.exit(GATE_FAILED)
+    if outcome == "incomplete":
+        why = r["incomplete"]
+        print("\nFailed: the scan did not finish (%s), so it cannot pass --fail-on. %s"
+              % ("; ".join(why), "Scan again with a higher --max-seconds." if r.get("partial") else "See the notes above."), file=sys.stderr)
+        sys.exit(GATE_INCOMPLETE)
 
 
 def do_scan(a):
@@ -363,12 +419,14 @@ def do_scan(a):
             links = linker_for_git_folder(root)
         out = a.out or os.path.join("runs", src["name"])
         try:
-            r = run(root, out, tuple(x for x in a.finders.split(",") if x), app=src["name"], source=src["source"], log=log, max_seconds=a.max_seconds, links=links)
+            r = run(root, out, tuple(x for x in a.finders.split(",") if x), app=src["name"], source=src["source"], log=log, max_seconds=a.max_seconds, links=links, fail_on=getattr(a, "fail_on", None))
+        except SourceError:  # already says what to do (and may be about the output folder itself: write nothing there)
+            raise
         except Exception as e:
             if a.debug:
                 raise
-            os.makedirs(out, exist_ok=True)
-            with open(os.path.join(out, "error.txt"), "w", encoding="utf-8") as f:
+            os.makedirs(safety.output_path(out, scanned=root), exist_ok=True)
+            with safety.open_output(os.path.join(out, "error.txt")) as f:
                 f.write(traceback.format_exc())
             raise SourceError("Something went wrong while scanning (%s: %s). The details are in %s. If you are in the middle of a demo, scan a local folder or use the saved results."
                               % (type(e).__name__, str(e)[:120], os.path.join(out, "error.txt")))
@@ -382,16 +440,24 @@ def do_scan(a):
             packages = load_packages(out)
         except SourceError:
             packages = []
-        if r["items"] == 0 and not packages:
-            print("Scan finished in %ss: no AI model names found in %s." % (r["seconds"], r["app"]))
-        else:
+        # Found on a real scan: a scan cut short by the time limit was shown as "finished: no AI model names found", and a scan with no
+        # model names hid its MCP servers, keys and model files. A stopped scan now says so, and the panel shows whatever was found.
+        found_any = (r["items"] or packages or r.get("flags") or (r.get("mcp") or {}).get("servers") or (r.get("model_files") or {}).get("files")
+                     or (r.get("model_files") or {}).get("other") or (r.get("secrets") or {}).get("keys") or (r.get("secrets") or {}).get("other") or r.get("remote_code"))
+        if r["items"] == 0 and r.get("partial"):
+            ui.console().print(Text("Stopped at the time limit after %ss, before finding any model names in %s. This is not a final answer: "
+                                    "scan again with a higher --max-seconds." % (r["seconds"], r["app"]), style="bold yellow"))
+        if found_any:
             screens.dashboard(r, out, packages, links, command(), advisory_date(), __version__)
+        elif not r.get("partial"):
+            print("Scan finished in %ss: no AI model names found in %s." % (r["seconds"], r["app"]))
         for note in r["warnings"]:
             ui.console().print(Text("Note: " + note, style="yellow"))
         if not r["valid"]:
             raise SourceError("The AI-BOM did not pass the format check: " + str(r["error"]))
         if a.open:
             open_report(out)
+        gate(a, r)
         return
     w = width()
     print()
@@ -419,6 +485,19 @@ def do_scan(a):
               % (ps["ai_packages"], ps.get("vulnerable_packages", 0), ps.get("advisories", 0)))
         if ps.get("not_checked"):
             print("       %d not checked for vulnerabilities: no exact installed version (a range, or no lockfile)" % ps["not_checked"])
+    mf = r.get("model_files") or {}
+    if mf.get("files") or mf.get("other"):
+        print("\n  %-4d model files (%d use pickle, %d with a dangerous or hidden import, a Lambda layer or a misleading name)%s" % (mf["files"], mf["pickle"], mf["dangerous"], more_elsewhere(mf.get("other", 0))))
+    if r.get("remote_code"):
+        n = r["remote_code"]
+        print("  %-4d %s trust_remote_code on" % (n, "place turns" if n == 1 else "places turn"))
+    ks = r.get("secrets") or {}
+    if ks.get("keys") or ks.get("other"):
+        print("\n  %-4d hardcoded API keys in %d file%s%s (values are never stored; the report lists each file and line)"
+              % (ks["keys"], ks["files"], "" if ks["files"] == 1 else "s", more_elsewhere(ks.get("other", 0))))
+    mc = r.get("mcp") or {}
+    if mc.get("servers"):
+        print("\n  %-4d MCP servers declared in the config files (%d local, %d remote)" % (mc["servers"], mc["stdio"], mc["remote"]))
     if r.get("flags"):
         count, text = flag_rules.headline(r["flags"])
         print("\n  %-4d risk flags: %s (the report shows each one; flags.json lists them)" % (count, text))
@@ -435,9 +514,11 @@ def do_scan(a):
         raise SourceError("The AI-BOM did not pass the format check: " + str(r["error"]))
     if a.open:
         open_report(out)
+    gate(a, r)
 
 
 def main():
+    os.environ["NoDefaultCurrentDirectoryInExePath"] = "1"  # Windows: start no program from the current folder, here or in a library
     for s in (sys.stdout, sys.stderr):
         try:
             s.reconfigure(errors="replace")
@@ -452,10 +533,11 @@ def main():
     s.add_argument("source", help="a folder, or a link such as https://github.com/owner/repo (also owner/repo)")
     s.add_argument("--out", help="where to save the results (default: runs/<app name>)")
     s.add_argument("--finders", default="dictionary,context,shapes", help="comma list, default: dictionary,context,shapes")
-    s.add_argument("--max-seconds", type=int, default=120, help="stop reading files after this many seconds (default 120)")
+    s.add_argument("--max-seconds", type=int, default=MAX_SECONDS, help="stop reading files after this many seconds (default %d)" % MAX_SECONDS)
     s.add_argument("--keep", action="store_true", help="keep the downloaded copy of a repository")
     s.add_argument("--open", action="store_true", help="open the report in the browser when done")
     s.add_argument("--quiet", action="store_true", help="no progress lines")
+    s.add_argument("--fail-on", choices=list(flag_rules.SEVERITIES), help="exit with code 3 when the scan has a risk flag at this severity or worse (4 when there is none but the scan did not finish; a scan that cannot run exits with 2)")
     s.add_argument("--debug", action="store_true", help="show the full error trace")
     o = sub.add_parser("report", help="open the readable report of a finished scan in the browser, or write it as a PDF (--pdf)")
     o.add_argument("run_dir")
@@ -479,6 +561,10 @@ def main():
     v.add_argument("--severity", choices=["critical", "high", "medium", "low"], help="show this severity and worse")
     v.add_argument("--called", action="store_true", help="only packages your code calls")
     v.add_argument("--all", action="store_true", help="include the packages that are only in a lockfile")
+    f = sub.add_parser("sarif", help="write the risk flags of a finished scan as SARIF, for GitHub code scanning")
+    f.add_argument("run_dir")
+    f.add_argument("--prefix", default="", help="the folder that was scanned, relative to the repository root, so each file in the SARIF points at the right place (default: the root)")
+    f.add_argument("--output", help="where to write it (default: aibom.sarif in the scan folder)")
     b = sub.add_parser("rebuild", help="rebuild the report and spreadsheet of a finished scan, or of every scan in a folder (--all)")
     b.add_argument("run_dir")
     b.add_argument("--all", action="store_true", help="treat run_dir as a folder that holds many scans")
@@ -511,6 +597,8 @@ def main():
             packages_view(a.run_dir, a.package, a.all)
         elif a.cmd == "vulns":
             vulns_view(a.run_dir, a.severity, a.called, a.all)
+        elif a.cmd == "sarif":
+            write_sarif(a.run_dir, a.prefix, a.output)
         elif a.cmd == "rebuild":
             dirs = sorted(os.path.join(a.run_dir, d) for d in os.listdir(a.run_dir) if os.path.exists(os.path.join(a.run_dir, d, "merged.json"))) if a.all else [a.run_dir]
             for d in dirs:

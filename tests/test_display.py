@@ -134,7 +134,7 @@ class Outputs(unittest.TestCase):
     def test_html_has_the_parts_a_newcomer_needs(self):
         page = build_html(self.ITEMS, "demo", "https://github.com/o/r", self.LINKS)
         for must in ("AI models found in demo", "used directly in the code", "id='q'", "What this scan cannot see", "Left out, and why", "also written as", "Confirmed",
-                     "https://github.com/o/r/blob/deadbeefcafe/src/app.py#L12", "version deadbeefca", '<table class="wide">', "<nav class='nav'"):
+                     "https://github.com/o/r/blob/deadbeefcafe/src/app.py#L12", "version deadbeefca", '<table class="wide fit">', "<nav class='nav'"):
             self.assertIn(must, page)
 
     def test_html_escapes_names_from_the_repository(self):
