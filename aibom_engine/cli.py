@@ -10,7 +10,7 @@ from rich.text import Text
 
 from . import flags as flag_rules
 from . import screens, ui
-from . import MAX_SECONDS, __version__
+from . import MAX_SECONDS, __version__, safety
 from .display import build_rows
 from .report import (CANNOT_SEE, LEVEL_LONG, MODE_TEXT, PACKAGE_NOTE, REACHABILITY_TEXT, TIER_LONG, advisory_date, package_level_text,
                      package_rows, package_summary)
@@ -345,7 +345,7 @@ def rebuild(run_dir):
     from . import sarif
     sarif.write(os.path.join(run_dir, "aibom.sarif"), flags)
     info.update(links.to_dict() if links.ok else {})
-    with open(os.path.join(run_dir, "manifest.json"), "w", encoding="utf-8") as f:
+    with safety.open_output(os.path.join(run_dir, "manifest.json")) as f:
         json.dump(info, f, indent=1, sort_keys=True)
     return app, links.ok
 
@@ -370,6 +370,7 @@ def check_tools():
 
 
 GATE_FAILED = 3   # a scan that ran but found flags at or above --fail-on (a scan that could not run exits 2)
+GATE_INCOMPLETE = 4   # with --fail-on: no such flag, but part of the scan did not finish, so it is not a pass
 
 
 def more_elsewhere(n):
@@ -378,7 +379,7 @@ def more_elsewhere(n):
 
 
 def gate(a, r):
-    """--fail-on SEVERITY: exit with GATE_FAILED when the scan has a flag that bad or worse, so a build can stop on it."""
+    """--fail-on SEVERITY: exit with GATE_FAILED when the scan has a flag that bad or worse, with GATE_INCOMPLETE when it did not finish."""
     level = getattr(a, "fail_on", None)
     if not level:
         return
@@ -388,6 +389,11 @@ def gate(a, r):
         print("\nFailed: %d risk flag%s at %s or worse (%s). The fix for each is in the report and in flags.json."
               % (len(hits), "" if len(hits) == 1 else "s", level, ", ".join("%d %s" % (n, s) for s, n in worst.items() if n)), file=sys.stderr)
         sys.exit(GATE_FAILED)
+    why = r.get("incomplete")
+    if why:
+        print("\nFailed: the scan did not finish (%s), so it cannot pass --fail-on. %s"
+              % ("; ".join(why), "Scan again with a higher --max-seconds." if r.get("partial") else "See the notes above."), file=sys.stderr)
+        sys.exit(GATE_INCOMPLETE)
 
 
 def do_scan(a):
@@ -416,11 +422,13 @@ def do_scan(a):
         out = a.out or os.path.join("runs", src["name"])
         try:
             r = run(root, out, tuple(x for x in a.finders.split(",") if x), app=src["name"], source=src["source"], log=log, max_seconds=a.max_seconds, links=links)
+        except SourceError:  # already says what to do (and may be about the output folder itself: write nothing there)
+            raise
         except Exception as e:
             if a.debug:
                 raise
-            os.makedirs(out, exist_ok=True)
-            with open(os.path.join(out, "error.txt"), "w", encoding="utf-8") as f:
+            os.makedirs(safety.output_path(out, scanned=root), exist_ok=True)
+            with safety.open_output(os.path.join(out, "error.txt")) as f:
                 f.write(traceback.format_exc())
             raise SourceError("Something went wrong while scanning (%s: %s). The details are in %s. If you are in the middle of a demo, scan a local folder or use the saved results."
                               % (type(e).__name__, str(e)[:120], os.path.join(out, "error.txt")))
@@ -512,6 +520,7 @@ def do_scan(a):
 
 
 def main():
+    os.environ["NoDefaultCurrentDirectoryInExePath"] = "1"  # Windows: start no program from the current folder, here or in a library
     for s in (sys.stdout, sys.stderr):
         try:
             s.reconfigure(errors="replace")
@@ -530,7 +539,7 @@ def main():
     s.add_argument("--keep", action="store_true", help="keep the downloaded copy of a repository")
     s.add_argument("--open", action="store_true", help="open the report in the browser when done")
     s.add_argument("--quiet", action="store_true", help="no progress lines")
-    s.add_argument("--fail-on", choices=list(flag_rules.SEVERITIES), help="exit with code 3 when the scan has a risk flag at this severity or worse (a scan that cannot run exits with 2)")
+    s.add_argument("--fail-on", choices=list(flag_rules.SEVERITIES), help="exit with code 3 when the scan has a risk flag at this severity or worse (4 when there is none but the scan did not finish; a scan that cannot run exits with 2)")
     s.add_argument("--debug", action="store_true", help="show the full error trace")
     o = sub.add_parser("report", help="open the readable report of a finished scan in the browser, or write it as a PDF (--pdf)")
     o.add_argument("run_dir")

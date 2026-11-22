@@ -10,9 +10,8 @@ import subprocess
 import tempfile
 from urllib.parse import quote
 
-
-class SourceError(Exception):
-    """A problem with the source that the user can fix. The message is written for a person."""
+from . import safety
+from .safety import SourceError
 
 
 SHORT = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
@@ -70,7 +69,7 @@ def cleanup(path):
 
 def fetch(src, timeout=180):
     """Download a git source into a fresh temporary folder. Returns (folder_to_scan, temp_folder_to_delete)."""
-    if shutil.which("git") is None:
+    if safety.find_program("git") is None:
         raise SourceError("git is not installed on this computer, so I cannot download the repository. Install git from git-scm.com, or scan a folder you already have.")
     tmp = tempfile.mkdtemp(prefix="aibom-")
     try:
@@ -85,21 +84,29 @@ def fetch(src, timeout=180):
 
 def _clone(src, tmp, timeout):
     dest = os.path.join(tmp, src["name"])
-    cmd = ["git", "clone", "--quiet", "--depth", "1", "--single-branch"] + (["--branch", src["branch"]] if src["branch"] else []) + [src["url"], dest]
-    env = dict(os.environ, GIT_TERMINAL_PROMPT="0", GCM_INTERACTIVE="never", GIT_ASKPASS="echo")  # never wait for a password in a live demo
+    git = safety.find_program("git")
+    cmd = [git, "clone", "--quiet", "--depth", "1", "--single-branch"] + (["--branch", src["branch"]] if src["branch"] else []) + [src["url"], dest]
+    env = dict(safety.child_env(), GIT_TERMINAL_PROMPT="0", GCM_INTERACTIVE="never", GIT_ASKPASS="echo")  # never wait for a password in a live demo
     try:
-        r = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, env=env)
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, env=env, cwd=tmp)  # not the current folder, whose git config is untrusted
     except subprocess.TimeoutExpired:
         raise SourceError(f"Downloading took longer than {timeout} seconds, so I stopped. The repository may be very large or the connection slow. Try again, or scan a folder you already have.")
     if r.returncode != 0:
         raise SourceError(friendly_git_error(r.stderr, src["url"]))
     try:  # remember exactly which version was scanned, so links point at the same lines
-        src["commit"] = subprocess.run(["git", "-C", dest, "rev-parse", "HEAD"], capture_output=True, text=True, timeout=30).stdout.strip()
+        src["commit"] = subprocess.run([git, "-C", dest, "rev-parse", "HEAD"], capture_output=True, text=True, timeout=30, env=env, cwd=tmp).stdout.strip()
     except Exception:
         src["commit"] = ""
-    root = os.path.join(dest, src["subpath"]) if src["subpath"] else dest
-    if not os.path.isdir(root):
-        raise SourceError(f"The repository downloaded, but it has no folder called '{src['subpath']}'.")
+    return folder_in_clone(dest, src["subpath"])
+
+
+def folder_in_clone(dest, subpath):
+    """The folder to scan in a downloaded repository. A sub-folder must be really there, not a link or a path out of it."""
+    if not subpath:
+        return dest
+    root = safety.inside_path(dest, subpath)
+    if not root or not os.path.isdir(root):
+        raise SourceError(f"The repository downloaded, but it has no folder called '{subpath}'.")
     return root
 
 
@@ -107,7 +114,7 @@ class Linker:
     """Builds a link to the exact line of a file on GitHub, GitLab or Bitbucket for the version that was scanned."""
 
     def __init__(self, url="", commit="", subpath=""):
-        self.url = (url or "").rstrip("/")
+        self.url = re.sub(r"^(https?://)[^/]*@", r"\1", (url or "").rstrip("/"))  # a token in a remote must not reach the results
         if self.url.endswith(".git"):
             self.url = self.url[:-4]
         self.commit = commit or ""
@@ -151,23 +158,83 @@ class Linker:
         return cls()
 
 
-def _git(path, *args):
-    r = subprocess.run(["git", "-C", path] + list(args), capture_output=True, text=True, timeout=30)
-    return r.stdout.strip() if r.returncode == 0 else ""
+GIT_SAFE = ("--no-pager", "-c", "core.fsmonitor=false", "-c", "core.hooksPath=" + os.devnull)
+GIT_REDIRECTS = {"GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_OBJECT_DIRECTORY", "GIT_COMMON_DIR"}
+# The settings that decide whether a file counts as changed. Each takes one of a few words, so none can name a program.
+GIT_PLAIN_SETTINGS = {"core.autocrlf": ("true", "false", "input"), "core.eol": ("lf", "crlf", "native"), "core.filemode": ("true", "false"),
+                      "core.ignorecase": ("true", "false"), "core.symlinks": ("true", "false"), "core.longpaths": ("true", "false"),
+                      "core.precomposeunicode": ("true", "false")}
+
+
+def _git_env(folder):
+    env = {k: v for k, v in safety.child_env(avoid=folder).items() if k.upper() not in GIT_REDIRECTS}
+    env.update(GIT_OPTIONAL_LOCKS="0", GIT_NO_LAZY_FETCH="1", GIT_ALLOW_PROTOCOL="", GIT_TERMINAL_PROMPT="0")  # read only, no network
+    return env
+
+
+def _run_git(git, env, *args):
+    """git's output, or None when it failed."""
+    r = subprocess.run([git, *GIT_SAFE, *args], capture_output=True, encoding="utf-8", errors="replace", timeout=30, env=env, cwd=os.path.dirname(git))
+    return r.stdout.strip() if r.returncode == 0 else None
+
+
+def _unchanged(git, env, path, top, commit):
+    """Is the working folder the same as its commit? `git status` runs whatever the folder's .git/config and hooks name
+    (fsmonitor, filters, hooks), so it runs in an empty git folder that borrows only the index and the objects."""
+    def ask(*args):
+        return _run_git(git, env, "-C", path, *args) or ""
+
+    def where(name):
+        got = ask("rev-parse", "--git-path", name)
+        return os.path.normpath(os.path.join(path, got)) if got else ""
+
+    index, objects, exclude = where("index"), where("objects"), where("info/exclude")
+    if not safety.plain_file(index) or not os.path.isdir(objects):
+        return False
+    with tempfile.TemporaryDirectory(prefix="aibom-git-") as own:
+        for folder in ("objects", "refs", "info"):
+            os.mkdir(os.path.join(own, folder))
+        with open(os.path.join(own, "HEAD"), "w", newline="\n") as f:
+            f.write(commit + "\n")
+        with open(os.path.join(own, "config"), "w", newline="\n") as f:
+            f.write("[core]\n\trepositoryformatversion = 0\n\tbare = false\n")
+            for key, words in GIT_PLAIN_SETTINGS.items():
+                value = ask("config", "--get", key).lower()
+                if value in words:
+                    f.write("\t%s = %s\n" % (key.split(".")[1], value))
+        shutil.copy2(index, os.path.join(own, "index"))  # copy2: git compares times with the index file's own
+        if safety.plain_file(exclude):
+            shutil.copy2(exclude, os.path.join(own, "info", "exclude"))
+        changed = _run_git(git, dict(env, GIT_OBJECT_DIRECTORY=objects), "--git-dir=" + own, "--work-tree=" + top, "-C", top,
+                           "status", "--porcelain", "--untracked-files=normal", "--ignore-submodules=all")
+    return changed == ""  # None (git could not tell) is not "unchanged"
 
 
 def linker_for_git_folder(path):
     """A folder that is a git clone knows its own web address and version, so lines can link to the website.
     No link is made when the folder has uncommitted changes, because the line numbers might not match the website."""
     try:
-        if shutil.which("git") is None or not _git(path, "rev-parse", "--show-toplevel"):
+        path = os.path.abspath(path)
+        git = safety.find_program("git", avoid=path)
+        if not git:
             return Linker()
-        if _git(path, "status", "--porcelain"):
+        env = _git_env(path)
+
+        def ask(*args):
+            return _run_git(git, env, "-C", path, *args) or ""
+
+        top = ask("rev-parse", "--show-toplevel")
+        # core.worktree in the folder's config can point anywhere, so the top must be a real clone around the scanned folder.
+        if not top or not os.path.exists(os.path.join(top, ".git")) or not safety.is_within(os.path.realpath(path), os.path.realpath(top)):
             return Linker()
-        remote = _git(path, "remote", "get-url", "origin")
+        remote = ask("remote", "get-url", "origin")
         m = re.match(r"^git@([^:]+):(.+?)(?:\.git)?/?$", remote)
         if m:
             remote = "https://%s/%s" % (m.group(1), m.group(2))
-        return Linker(remote, _git(path, "rev-parse", "HEAD"), _git(path, "rev-parse", "--show-prefix"))
-    except (OSError, subprocess.SubprocessError):
+        commit = ask("rev-parse", "HEAD")
+        links = Linker(remote, commit, ask("rev-parse", "--show-prefix"))
+        if links.ok and re.fullmatch(r"[0-9a-f]{40}", commit) and _unchanged(git, env, path, top, commit):
+            return links
+        return Linker()
+    except (OSError, ValueError, subprocess.SubprocessError):
         return Linker()

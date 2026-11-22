@@ -24,7 +24,7 @@ import time
 from dataclasses import asdict, dataclass, field
 from urllib.parse import parse_qsl, urlsplit
 
-from . import MAX_SECONDS
+from . import MAX_SECONDS, safety
 from . import jsonc
 from .ids import slug
 from .packages.common import left_out_reason, normalize, purl
@@ -520,14 +520,14 @@ def find(root, deadline=None):
     deadline = deadline or (time.time() + MAX_SECONDS)
     servers, files, problems, partial = [], [], [], False
     for base, dirs, names in os.walk(root):
-        dirs[:] = sorted(d for d in dirs if d not in WALK_SKIP)
+        dirs[:] = sorted(d for d in dirs if d not in WALK_SKIP and not safety.is_link(os.path.join(base, d)))
         if time.time() > deadline:
             partial = True  # the caller says so: a missing server must never be silent
             break
         for name in sorted(names):
             path = os.path.join(base, name)
             rel = os.path.relpath(path, root).replace(os.sep, "/")
-            if not _candidate(rel) or os.path.islink(path):
+            if not _candidate(rel) or os.path.islink(path) or not safety.plain_file(path):
                 continue
             try:
                 if os.path.getsize(path) > MAX_BYTES:

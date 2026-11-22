@@ -122,7 +122,7 @@ On every pull request it scans the repository, and:
 | `max-seconds` | `600` | stop reading files after this many seconds |
 | `python-version` | `3.12` | the Python that runs aibom |
 
-The outputs are `exit-code` (0 passed, 3 a flag at `fail-on` or worse, 2 the scan could not run), `results` and `sarif`.
+The outputs are `exit-code` (0 passed, 3 a flag at `fail-on` or worse, 4 the scan did not finish, 2 the scan could not run), `results` and `sarif`.
 Everything runs on the runner: the code is read, never executed, and nothing leaves it except what GitHub's own steps
 upload to your repository. Code scanning is not available on every repository (a private one without GitHub Advanced
 Security, a pull request from a fork); there the upload is skipped with a warning and the rest still works. The action
@@ -138,12 +138,21 @@ To run aibom without the action (an air-gapped runner, a wheel kept in your own 
 GitLab CI and Jenkins use the same commands: install the wheel, `aibom scan . --out aibom-out --quiet --fail-on high`,
 keep `aibom-out` as the build artifact. Every scan also writes `aibom-out/aibom.sarif` for tools that read SARIF.
 
+### A repository you do not trust
+
+aibom treats what it scans as untrusted. It starts no program from that folder and runs none of the folder's git hooks,
+filters or settings. It reads only real files inside the folder: links, junctions and paths that climb out (such as
+`-r ../../file` in a requirements file) are not followed, and a note says how many links were skipped. It writes no
+result through a link. Run it with the installed `aibom` command: `python -m` lets Python load a package from the current
+folder before aibom's own code starts.
+
 ### Failing the build
 
 `aibom scan . --fail-on high` exits with code `3` when the scan has a risk flag (a leaked key, an MCP server started
 through a shell string, a model file that imports dangerous code and the others in the README) at that severity or worse.
-The results are still written, and a scan that cannot run exits with `2`, so a script can tell a failed gate from a
-broken scan. The gate looks at risk flags only, not at vulnerabilities. For those, this script, run after the scan, fails the
+The results are still written. When there is no such flag but the scan did not finish (the time limit, a check that
+failed), it exits with `4`: an unfinished scan is never a pass. A scan that cannot run exits with `2`, so a script can
+tell a failed gate from a broken scan. The gate looks at risk flags only, not at vulnerabilities. For those, this script, run after the scan, fails the
 build on critical or high vulnerabilities in AI packages the project depends on directly:
 
 ```python

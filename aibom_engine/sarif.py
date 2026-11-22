@@ -17,7 +17,7 @@ import json
 import os
 from urllib.parse import quote
 
-from . import __version__
+from . import __version__, safety
 from . import flags as flag_rules
 
 SCHEMA = "https://json.schemastore.org/sarif-2.1.0.json"
@@ -94,8 +94,9 @@ def build(flags, prefix=""):
 def write(path, flags, prefix=""):
     """Write the SARIF file and return how many flags were left out because they have no file."""
     doc, skipped = build(flags, prefix)
-    os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
-    with open(path, "w", encoding="utf-8", newline="\n") as fh:
+    path = safety.output_file(path)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with safety.open_output(path, newline="\n") as fh:
         json.dump(doc, fh, indent=1, sort_keys=True, ensure_ascii=False)
         fh.write("\n")
     return skipped

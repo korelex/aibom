@@ -173,7 +173,7 @@ def _scan_text(text, rel, location):
 def find(root, files, deadline=None):
     """The hardcoded provider keys in the files of `root` (`files` is the triage list): {"findings", "files_scanned", "problems", "partial", "truncated"}."""
     deadline = deadline or (time.time() + MAX_SECONDS)
-    findings, problems, scanned, partial, truncated = [], [], 0, False, False
+    findings, problems, scanned, partial, truncated, capped = [], [], 0, False, False, False
     for fi in files:
         if fi.category in SKIP_CATEGORIES or fi.size > MAX_BYTES or fi.size == 0:
             continue
@@ -197,10 +197,10 @@ def find(root, files, deadline=None):
             got, truncated = got[:MAX_PER_FILE], True  # one file full of keys must not bury the others
         findings += got
         if len(findings) >= MAX_FINDINGS:
-            truncated = True  # stopped at the cap: there may be more
+            truncated = capped = True  # stopped at the cap: there may be more
             break
     findings.sort(key=lambda f: (bool(f["location"]), f["file"], f["line"], f["rule"]))
-    return {"findings": findings[:MAX_FINDINGS], "files_scanned": scanned, "problems": problems, "partial": partial, "truncated": truncated}
+    return {"findings": findings[:MAX_FINDINGS], "files_scanned": scanned, "problems": problems, "partial": partial, "truncated": truncated, "capped": capped}
 
 
 def summary(found):

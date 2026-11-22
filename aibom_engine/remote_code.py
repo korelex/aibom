@@ -88,7 +88,7 @@ def scan_text(text, rel):
 def find(root, files, deadline=None):
     """The places the project turns trust_remote_code on: {"findings": [{file, line, how, location}], "files_scanned", "partial", "truncated"}."""
     deadline = deadline or (time.time() + MAX_SECONDS)
-    out, scanned, partial, truncated = [], 0, False, False
+    out, scanned, partial, truncated, capped = [], 0, False, False, False
     for fi in files:
         if fi.category in SKIP_CATEGORIES or fi.size > MAX_BYTES or fi.size == 0:
             continue
@@ -113,10 +113,10 @@ def find(root, files, deadline=None):
             hits, truncated = hits[:MAX_PER_FILE], True
         out += [{"file": fi.path, "line": line, "how": how, "location": location} for line, how in hits]
         if len(out) >= MAX_FINDINGS:
-            truncated = True
+            truncated = capped = True
             break
     out.sort(key=lambda f: (bool(f["location"]), f["file"], f["line"]))
-    return {"findings": out[:MAX_FINDINGS], "files_scanned": scanned, "partial": partial, "truncated": truncated}
+    return {"findings": out[:MAX_FINDINGS], "files_scanned": scanned, "partial": partial, "truncated": truncated, "capped": capped}
 
 
 def remote_code_flags(findings):
