@@ -109,7 +109,8 @@ On every pull request it scans the repository, and:
 - fails the check when a risk flag at `fail-on` or worse is found (leave `fail-on` empty to never fail on flags);
 - sends the flags to GitHub code scanning as SARIF, so each one shows on its line in the pull request and in the
   Security tab, with its fix;
-- writes the report to the job summary and keeps the results (report, AI-BOM, flags, SARIF) as an artifact named `aibom`.
+- writes the report to the job summary, starting with the verdict (passed or failed, each blocking risk with its file, line
+  and fix, and what was found that does not block, such as known vulnerabilities), and keeps the results (report, AI-BOM, flags, SARIF) as an artifact named `aibom`.
 
 | Input | Default | Meaning |
 | --- | --- | --- |

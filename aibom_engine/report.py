@@ -5,8 +5,10 @@ import datetime
 import html
 import io
 import re
+import unicodedata
 
 from . import __version__
+from . import flags as flag_rules
 from .db import today_iso
 from .display import build_rows, by_maker
 
@@ -169,6 +171,89 @@ def flag_place(f):
 def md_cell(t):
     """Text safe inside a Markdown table cell."""
     return str(t).replace("|", "\\|").replace("\n", " ")
+
+
+LINE_BREAKS = re.compile(r"[\r\n\v\f\x1c-\x1e\x85\u2028\u2029]+")
+VERDICT_SHOWN = 20
+
+
+def md_text(t):
+    """Text from the scanned repository as plain text in Markdown: no new line, HTML, link, image or hidden direction mark."""
+    text = "".join(ch for ch in LINE_BREAKS.sub(" ", str(t)) if unicodedata.category(ch) not in ("Cc", "Cf"))
+    text = re.sub(r"([\\`*_\[\]!#|~])", r"\\\1", html.escape(text, quote=False))
+    return re.sub(r"(?i)\bwww\.", lambda m: m.group(0)[:3] + "&#46;", text.replace("://", ":&#47;&#47;"))
+
+
+def plural(n, one, many=""):
+    return f"{n} {one if n == 1 else (many or one + 's')}"
+
+
+def verdict_markdown(meta, links=None):
+    """The first block of report.md, shown at the top of a pull request's check: what the gate decided, why, and what does not block."""
+    meta = meta or {}
+    flags, level, unfinished = meta.get("flags") or [], meta.get("fail_on"), meta.get("incomplete") or []
+    outcome, hits = flag_rules.decide(flags, level, unfinished)
+    packages = package_rows(meta.get("packages"))
+    found = [a for p in packages for a in p["advisories"]]
+    grave = {s: sum(1 for a in found if a["severity"] == s) for s in ("critical", "high")}
+    worst = next((s for s in ("critical", "high") if grave[s]), "")
+    risks = "high risks" if level in (None, "high") else f"risks at {level} or worse"
+
+    if outcome == "failed":
+        if level == "high":
+            title = "Failed: " + plural(len(hits), "high risk")
+        else:
+            mix = ", ".join(f"{n} {s}" for s, n in flag_rules.counts(hits).items() if n)
+            title = f"Failed: {plural(len(hits), 'risk')} at {level} or worse ({mix})"
+    elif outcome == "incomplete":
+        title = "Failed: the scan did not finish"
+    elif outcome == "passed":
+        title = f"Passed, but {plural(grave[worst], worst + ' vulnerability', worst + ' vulnerabilities')} to review" if worst else f"Passed: no {risks}"
+    elif hits:
+        title = f"Report only: {plural(len(hits), 'high risk')} found"
+    elif unfinished:
+        title = "Report only: the scan did not finish"
+    else:
+        title = "Report only: no high risks found"
+    out = [f"## {title}", ""]
+    if unfinished:
+        out += [f"**The scan did not finish** ({md_text('; '.join(unfinished))}), so there may be risks it has not seen.", ""]
+
+    if hits:
+        out += ["| Severity | Problem | About | Where | How to fix |", "|---|---|---|---|---|"]
+        for f in hits[:VERDICT_SHOWN]:
+            place = md_text(flag_place(f)) or "the whole project"
+            url = links.url_for(f.file, f.line) if links and f.file and f.line else ""
+            cell = f"[{place}]({url})" if url else place
+            out.append(f"| {f.severity.upper()} | {md_text(f.title)} | {md_text(f.subject) or '-'} | {cell} | {md_text(f.fix)} |")
+        out.append("")
+        if len(hits) > VERDICT_SHOWN:
+            out += [f"And {len(hits) - VERDICT_SHOWN} more, in report.html and flags.json.", ""]
+    if outcome == "failed":
+        out += ["Fix these and push again: the check then runs again. It reads the whole repository, so a risk can be older than this change.", ""]
+    elif outcome == "incomplete":
+        out += ["An unfinished scan is never a pass. If it was the time limit, raise max-seconds and run it again; otherwise the notes below say what failed.", ""]
+    elif outcome == "report-only":
+        out += ["Nothing is blocked: this check only reports. Set fail-on to make it fail.", ""]
+
+    rest = []
+    blocking = {f.key() for f in hits}
+    counted = flag_rules.counts([f for f in flag_rules.at_least(flags, "low") if f.key() not in blocking])
+    if any(counted.values()):
+        total = sum(counted.values())
+        rest.append(f"- {plural(total, 'other risk')} ({', '.join(f'{n} {s}' for s, n in counted.items() if n)}), listed below")
+    if found:
+        by_severity = ", ".join(f"{n} {s}" for s, n in ((s, sum(1 for a in found if a["severity"] == s)) for s in SEVERITIES) if n)
+        bad = [p for p in packages if p["advisories"]]
+        names = ", ".join(md_text(f"{p['name']} {p['version']}") for p in bad[:3]) + (f" and {len(bad) - 3} more" if len(bad) > 3 else "")
+        rest.append(f"- {plural(len(found), 'known vulnerability', 'known vulnerabilities')} ({by_severity}) in {names}: "
+                    "vulnerabilities do not fail this check")
+    unknown = sum(1 for p in packages if p["vuln_status"] != "checked")
+    if unknown:
+        rest.append(f"- {plural(unknown, 'AI package')} could not be checked for vulnerabilities (no exact version)")
+    if rest:
+        out += ["**Also found, not blocking:**", ""] + rest + [""]
+    return out + ["---", ""]
 
 
 def mcp_rows(meta):
@@ -426,7 +511,7 @@ def flags_markdown(meta):
     if not flags:
         return []
     cell = md_cell
-    out = ["## Flags", "", "| Severity | What | About | Where | Fix |", "|---|---|---|---|---|"]
+    out = ["## Flags other than model risks", "", "| Severity | What | About | Where | Fix |", "|---|---|---|---|---|"]
     for f in flags:
         out.append(f"| {f.severity.upper()} | {cell(f.title)} | {cell(f.subject)} | {cell(flag_place(f))} | {cell(f.fix)} |")
     return out + ["", f"_{FLAGS_NOTE}_", ""]
@@ -633,14 +718,17 @@ def build_csv(items, links=None):
 def build_markdown(items, app, source="", links=None, meta=None):
     rows = build_rows(items)
     used, listed, gone = rows["used"], rows["listed"], rows["left_out"]
-    out = [f"# AI models found in {app}", ""]
+    out = verdict_markdown(meta, links) + [f"# AI scan of {app}", ""]
     if source or (links and links.ok):
         out += [f"Scanned: {source_line(source, links, meta)}", ""]
     for w in (meta or {}).get("warnings", []):
-        out += [f"WARNING, this scan may be incomplete: {w}", ""]
+        # Not every note means a check was cut short; only call the scan incomplete when it was, or when an old scan did not record it.
+        unknown = (meta or {}).get("incomplete")
+        label = "Note" if unknown == [] else "WARNING, this scan may be incomplete"
+        out += [f"{label}: {w}", ""]
     out += [f"Summary (you can paste this into a message): {intro(rows, app)}", ""]
     risk = risk_summary(rows)
-    out += ["## Risks", ""]
+    out += ["## Model lifecycle and licences", ""]
     for label, found in risk_lines(risk):
         line = f"- {label}: {len(found)}"
         if found:
@@ -716,7 +804,8 @@ def build_markdown(items, app, source="", links=None, meta=None):
     out += ["", "## What this scan cannot see", ""] + [f"- {c}" for c in CANNOT_SEE]
     out += ["", "How to read this: every row links a model name to a line of code. Confirmed means the name is written in the code; Worked out means the code spells it through a constant. "
                 "The standard AI-BOM file (aibom.cdx.json) holds the same facts for other tools; models.csv opens in a spreadsheet."]
-    return "\n".join(out) + "\n"
+    # Names and paths come from the scanned repository: none may start a line of its own or become HTML in a pull request's check.
+    return "\n".join(LINE_BREAKS.sub(" ", line).replace("<", "&lt;") for line in out) + "\n"
 
 
 CSS = """

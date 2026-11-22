@@ -133,13 +133,15 @@ runs:
         CODE: ${{ steps.scan.outputs.exit-code }}
         FAIL_ON: ${{ inputs.fail-on }}
       run: |
+        CODE="${CODE:-1}"
         if [ "$CODE" = "3" ]; then
-          echo "::error title=aibom::Risk flags at $FAIL_ON or worse were found. Each one is in the job summary, the Security tab and the aibom artifact, with its fix."
+          echo "::error title=aibom::Failed on risks at $FAIL_ON or worse. Open this run's Summary: the top lists each one with its file, line and fix."
           exit 3
         elif [ "$CODE" = "4" ]; then
           echo "::error title=aibom::The scan did not finish, so it cannot pass. Raise max-seconds, or see the notes in the job summary."
           exit 4
         elif [ "$CODE" != "0" ]; then
+          printf '## Could not run\n\nThe scan did not produce a result, so this is not a pass. The log of the Scan step says why (exit code %s).\n' "$CODE" >> "$GITHUB_STEP_SUMMARY"
           echo "::error title=aibom::The scan could not run (exit code $CODE). See the Scan step above."
           exit "$CODE"
         fi

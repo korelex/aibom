@@ -341,7 +341,7 @@ def rebuild(run_dir):
     packages = load(run_dir, "packages.json").get("packages", []) if os.path.exists(os.path.join(run_dir, "packages.json")) else []
     flags = load_flags(run_dir)
     write_readable(run_dir, items, app, info.get("source", ""), links, info.get("warnings", []), packages, flags, load_mcp(run_dir), load_modelfiles(run_dir),
-                   info.get("secrets") or {})
+                   info.get("secrets") or {}, fail_on=info.get("fail_on"), incomplete=info.get("incomplete"))
     from . import sarif
     sarif.write(os.path.join(run_dir, "aibom.sarif"), flags)
     info.update(links.to_dict() if links.ok else {})
@@ -381,16 +381,14 @@ def more_elsewhere(n):
 def gate(a, r):
     """--fail-on SEVERITY: exit with GATE_FAILED when the scan has a flag that bad or worse, with GATE_INCOMPLETE when it did not finish."""
     level = getattr(a, "fail_on", None)
-    if not level:
-        return
-    hits = flag_rules.at_least(r.get("flags") or [], level)
-    if hits:
+    outcome, hits = flag_rules.decide(r.get("flags") or [], level, r.get("incomplete"))
+    if outcome == "failed":
         worst = flag_rules.counts(hits)
         print("\nFailed: %d risk flag%s at %s or worse (%s). The fix for each is in the report and in flags.json."
               % (len(hits), "" if len(hits) == 1 else "s", level, ", ".join("%d %s" % (n, s) for s, n in worst.items() if n)), file=sys.stderr)
         sys.exit(GATE_FAILED)
-    why = r.get("incomplete")
-    if why:
+    if outcome == "incomplete":
+        why = r["incomplete"]
         print("\nFailed: the scan did not finish (%s), so it cannot pass --fail-on. %s"
               % ("; ".join(why), "Scan again with a higher --max-seconds." if r.get("partial") else "See the notes above."), file=sys.stderr)
         sys.exit(GATE_INCOMPLETE)
@@ -421,7 +419,7 @@ def do_scan(a):
             links = linker_for_git_folder(root)
         out = a.out or os.path.join("runs", src["name"])
         try:
-            r = run(root, out, tuple(x for x in a.finders.split(",") if x), app=src["name"], source=src["source"], log=log, max_seconds=a.max_seconds, links=links)
+            r = run(root, out, tuple(x for x in a.finders.split(",") if x), app=src["name"], source=src["source"], log=log, max_seconds=a.max_seconds, links=links, fail_on=getattr(a, "fail_on", None))
         except SourceError:  # already says what to do (and may be about the output folder itself: write nothing there)
             raise
         except Exception as e:

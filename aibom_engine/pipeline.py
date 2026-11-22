@@ -64,10 +64,11 @@ def enrich(items, names, online=False):
     return items
 
 
-def write_readable(out, items, app, source="", links=None, warnings=None, packages=None, flags=None, mcp=None, model_files=None, secrets=None):
+def write_readable(out, items, app, source="", links=None, warnings=None, packages=None, flags=None, mcp=None, model_files=None, secrets=None, fail_on=None, incomplete=None):
     """The outputs for people: the web page, the markdown summary and the spreadsheets (models, and AI packages)."""
     meta = {"warnings": warnings or [], "packages": packages or [], "flags": flags or [], "mcp": mcp or {"servers": [], "files": [], "problems": []},
-            "model_files": model_files or {"files": [], "problems": [], "remote_code": {"findings": []}}, "secrets": secrets or {}}
+            "model_files": model_files or {"files": [], "problems": [], "remote_code": {"findings": []}}, "secrets": secrets or {},
+            "fail_on": fail_on, "incomplete": incomplete}
     with safety.open_output(os.path.join(out, "report.md"), encoding="utf-8") as f:
         f.write(build_markdown(items, app, source, links, meta))
     with safety.open_output(os.path.join(out, "packages.csv"), encoding="utf-8-sig", newline="") as f:
@@ -84,7 +85,7 @@ def write_readable(out, items, app, source="", links=None, warnings=None, packag
         f.write(build_html(items, app, source, links, meta, files=files))
 
 
-def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source="", log=None, max_seconds=MAX_SECONDS, links=None):
+def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source="", log=None, max_seconds=MAX_SECONDS, links=None, fail_on=None):
     log = log or (lambda msg: None)
     root = os.path.abspath(root)
     app = app or os.path.basename(root.rstrip("/\\")) or "app"
@@ -222,7 +223,8 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
     save(os.path.join(out, "aibom.cdx.json"), bom)
     save(os.path.join(out, "flags.json"), {"flags": [f.to_dict() for f in flags], "counts": flag_rules.counts(flags)})
     sarif.write(os.path.join(out, "aibom.sarif"), flags)
-    write_readable(out, items, app, source, links, warnings, found_packages["packages"], flags, found_mcp, {**found_models, "remote_code": found_remote}, ks)
+    write_readable(out, items, app, source, links, warnings, found_packages["packages"], flags, found_mcp, {**found_models, "remote_code": found_remote}, ks,
+                   fail_on=fail_on, incomplete=incomplete)
     rows = build_rows(items)
     tiers = dict(collections.Counter(i["tier"] for i in items))
     reasons = dict(collections.Counter(i["reason"] for i in items if i["tier"] == "rejected"))
@@ -230,7 +232,7 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
     save(os.path.join(out, "manifest.json"), {"engine_version": __version__, "scanned_folder": root, "app": app, "source": source or root, "files": len(files), "file_categories": cats,
                                               "finders": list(finders), "raw_findings": len(findings), "items_in_aibom": len(included), "models_used": used,
                                               "models_only_listed": len(included) - used, "display_models_used": len(rows["used"]), "display_models_listed": len(rows["listed"]),
-                                              "display_left_out": len(rows["left_out"]), "items_by_tier": tiers, "rejected_reasons": reasons, "partial": partial, "incomplete": incomplete,
+                                              "display_left_out": len(rows["left_out"]), "items_by_tier": tiers, "rejected_reasons": reasons, "partial": partial, "incomplete": incomplete, "fail_on": fail_on,
                                               "warnings": warnings, "packages": found_packages["summary"], "flags": flag_rules.counts(flags), "mcp": ms, "secrets": ks, "model_files": ms2, "remote_code": len(found_remote["findings"]), "cyclonedx_1_6_valid": problem is None, "validation_error": problem, "seconds": seconds,
                                               **(links.to_dict() if links else {})})
     return {"packages": found_packages["summary"], "items": len(included), "used": len(rows["used"]), "listed": len(rows["listed"]), "left_out": len(rows["left_out"]), "rows": rows, "rejected": len(items) - len(included), "valid": problem is None, "error": problem,
