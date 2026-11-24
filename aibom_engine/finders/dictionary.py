@@ -13,6 +13,7 @@ import time
 
 from ..finding import Finding
 from ..merge import VENDORS
+from ..redact import quoted_line
 from ..triage import read_lines
 
 SCAN = {"code", "config", "manifest", "notebook", "test", "docs", "data"}
@@ -78,7 +79,7 @@ def run(root, files, names=None, deadline=None):
                 for c in candidates(tok):
                     if c in names and (c, fi.path, ln) not in seen:
                         seen.add((c, fi.path, ln))
-                        found.append(Finding("dictionary", "model", c, fi.path, ln, names[c].get("provider", ""), fi.category, line.strip()[:140], m.start() + max(tok.find(c), 0)))
+                        found.append(Finding("dictionary", "model", c, fi.path, ln, names[c].get("provider", ""), fi.category, quoted_line(line, 140), m.start() + max(tok.find(c), 0)))
             if fi.category in IDENT_SCAN:
                 for m in IDENT.finditer(line):
                     t = m.group(0)
@@ -87,5 +88,5 @@ def run(root, files, names=None, deadline=None):
                     canon = squashed.get(squash(t))
                     if canon and (canon, fi.path, ln) not in seen:
                         seen.add((canon, fi.path, ln))
-                        found.append(Finding("dictionary", "model", canon, fi.path, ln, "identifier:" + t, fi.category, line.strip()[:140], m.start()))
+                        found.append(Finding("dictionary", "model", canon, fi.path, ln, "identifier:" + t, fi.category, quoted_line(line, 140), m.start()))
     return found

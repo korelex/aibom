@@ -84,7 +84,7 @@ class _Reader:
             if self.text.startswith(word, self.i):
                 self.i += len(word)
                 return val
-        self.fail(f"unexpected {c!r}")
+        self.fail(f"unexpected {c!a}")
 
     def string(self):
         try:

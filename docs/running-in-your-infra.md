@@ -147,13 +147,22 @@ filters or settings. It reads only real files inside the folder: links, junction
 result through a link. Run it with the installed `aibom` command: `python -m` lets Python load a package from the current
 folder before aibom's own code starts.
 
+### Key values
+
+A key that aibom recognises is hidden in every output, also when it stands where a model name goes, or in a file, setting
+or package name: it is shown as `hidden-key-1`, `hidden-key-2` and so on, or as asterisks in a quoted line. It recognises
+well-known key formats and values it judged to be credentials. It cannot recognise every secret, so treat the results of a
+private repository as private.
+
 ### Failing the build
 
 `aibom scan . --fail-on high` exits with code `3` when the scan has a risk flag (a leaked key, an MCP server started
 through a shell string, a model file that imports dangerous code and the others in the README) at that severity or worse.
 The results are still written. When there is no such flag but the scan did not finish (the time limit, a check that
-failed), it exits with `4`: an unfinished scan is never a pass. A scan that cannot run exits with `2`, so a script can
-tell a failed gate from a broken scan. The gate looks at risk flags only, not at vulnerabilities. For those, this script, run after the scan, fails the
+failed, or a file it needed that could not be read: an MCP config that is broken, too large, a link or of the wrong
+shape, or a file of the product it could not open while looking for keys or model files), it exits with `4`: an
+unfinished scan is never a pass. Broken samples under tests, examples and docs are only noted. A scan that cannot run
+exits with `2`, so a script can tell a failed gate from a broken scan. The gate looks at risk flags only, not at vulnerabilities. For those, this script, run after the scan, fails the
 build on critical or high vulnerabilities in AI packages the project depends on directly:
 
 ```python

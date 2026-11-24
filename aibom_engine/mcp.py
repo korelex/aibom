@@ -22,7 +22,7 @@ import re
 import shlex
 import time
 from dataclasses import asdict, dataclass, field
-from urllib.parse import parse_qsl, urlsplit
+from urllib.parse import parse_qsl, quote, urlsplit
 
 from . import MAX_SECONDS, safety
 from . import jsonc
@@ -47,6 +47,9 @@ KNOWN = (
 )
 CODEX = ".codex/config.toml"
 LOOKS_LIKE_A_SERVER = ("command", "url", "httpUrl", "type")
+EXACT_NAMES = ("mcp.json", ".mcp.json")                     # named exactly like an MCP config, in any folder
+CLIENT_FOLDERS = (".cursor", ".vscode", ".gemini", ".codex")
+ONLY_BY_NAME = "not an MCP config by its name alone"
 
 
 @dataclass
@@ -128,11 +131,34 @@ def scrub_args(args):
     return out
 
 
+def _is_userinfo(text):
+    """Is this, written before an @, a user name and password? A password often holds / ? or # unencoded, which would end the
+    host part early; a host and port (h.example:8080/p@x) or an @ in a path or query is not one."""
+    user, colon, password = text.partition(":")
+    if not colon or not user or not password or user.startswith("[") or any(c in user for c in "/?#@ \t"):
+        return False
+    return not re.split(r"[/?#]", password)[0].isdigit()
+
+
+def split_url(text):
+    """urlsplit, and the user name and password as written ("" when there are none)."""
+    parts = urlsplit(text)
+    userinfo, at, _ = parts.netloc.rpartition("@")
+    if at:
+        return parts, userinfo
+    scheme, sep, rest = text.partition("://")
+    if sep and parts.scheme:
+        for i, c in enumerate(rest):
+            if c == "@" and _is_userinfo(rest[:i]):
+                return urlsplit(scheme + "://" + quote(rest[:i], safe=":%") + rest[i:]), rest[:i]
+    return parts, ""
+
+
 def safe_url(raw):
     """(url without credentials, query or fragment, had a query, had credentials)."""
     text = str(raw).strip()
     try:
-        parts = urlsplit(text)
+        parts, _ = split_url(text)
         userinfo, at, host = parts.netloc.rpartition("@")  # the host text is kept as written: a ${HOST} placeholder must stay ${HOST}
         if not parts.scheme or not host:
             return _safe_text(text.split("?")[0].split("#")[0]), "?" in text, False
@@ -177,11 +203,14 @@ def _secret_kind(name, value):
     return ""
 
 
-def find_secrets(entry, args, server_line, raw_url):
-    """Where a server entry writes a credential: [{in, name, kind, line}]. `in` is env, header, url, url-query or arg."""
+def find_secrets(entry, args, server_line, raw_url, values=None):
+    """Where a server entry writes a credential: [{in, name, kind, line}]. `in` is env, header, url, url-query or arg.
+    `values`, a set, receives the values themselves, only so that they can be hidden everywhere else."""
     out = []
 
-    def add(where, name, kind, line=0):
+    def add(where, name, kind, line=0, value=""):
+        if kind and values is not None and isinstance(value, str) and value.strip():
+            values.add(value.strip().split()[-1])
         if kind and len(out) < MAX_SECRETS:
             out.append({"in": where, "name": _safe_text(name)[:80], "kind": kind, "line": line or server_line})
 
@@ -189,20 +218,19 @@ def find_secrets(entry, args, server_line, raw_url):
         group = entry.get(key)
         if isinstance(group, dict):
             for k, v in group.items():
-                add(where, k, _secret_kind(str(k), v), group.lines.get(k, 0) if isinstance(group, jsonc.Node) else 0)
+                add(where, k, _secret_kind(str(k), v), group.lines.get(k, 0) if isinstance(group, jsonc.Node) else 0, v)
     if raw_url:
         try:
-            parts = urlsplit(str(raw_url).strip())
-            userinfo, at, _ = parts.netloc.rpartition("@")
-            if at:
+            parts, userinfo = split_url(str(raw_url).strip())
+            if userinfo:
                 user, colon, password = userinfo.partition(":")
                 if colon:
                     if password and not PLACEHOLDER_VALUE.search(password):
-                        add("url", "", "credentials")
+                        add("url", "", "credentials", value=password)
                 else:
-                    add("url", "", _secret_kind("token", user))
+                    add("url", "", _secret_kind("token", user), value=user)
             for k, v in parse_qsl(parts.query):
-                add("url-query", k, _secret_kind(k, v))
+                add("url-query", k, _secret_kind(k, v), value=v)
         except ValueError:
             pass
     items = [str(a) for a in args]
@@ -217,13 +245,13 @@ def find_secrets(entry, args, server_line, raw_url):
             kind = _secret_kind(name, value)
             inner = ASSIGNMENT.match(value) if pair.group(2) == "=" else None  # --env=NAME=abc
             if not kind and inner:
-                name, kind = inner.group(1), _secret_kind(inner.group(1), inner.group(3))
-            add("arg", name, kind)
+                name, kind, value = inner.group(1), _secret_kind(inner.group(1), inner.group(3)), inner.group(3)
+            add("arg", name, kind, value=value)
         elif a.startswith("-") and SECRET_FLAG.search(a) and i + 1 < len(items) and not items[i + 1].startswith("-"):
             done.add(i + 1)  # --token abc: the value is the next argument
-            add("arg", a, _secret_kind(a, items[i + 1]))
+            add("arg", a, _secret_kind(a, items[i + 1]), value=items[i + 1])
         elif BEARER_ALONE.match(a):
-            add("arg", "(argument)", _secret_kind("authorization", a))
+            add("arg", "(argument)", _secret_kind("authorization", a), value=a)
         if len(out) == found:
             add("arg", "(argument)", _secret_kind("", a))  # a well-known key shape anywhere
     return out
@@ -436,7 +464,8 @@ def server_from_entry(name, entry, client, rel, line):
                   command=_safe_text(command) if isinstance(command, str) else "", args=scrub_args(args), url=url,
                   url_has_query=has_query, url_has_credentials=has_credentials,
                   env_keys=_names(entry.get("env")), header_names=_header_names(entry))
-    s.secrets = find_secrets(entry, args, line, raw_url)
+    s.secret_values = set()  # not a field, so never in to_dict() or any file
+    s.secrets = find_secrets(entry, args, line, raw_url, s.secret_values)
     if entry.get("enabled") is False or entry.get("disabled") is True:
         s.enabled = False
     if transport == "stdio" and isinstance(command, str) and command:
@@ -465,9 +494,11 @@ def _servers_in_json(client, keys, node, rel, only_server_like=False):
     return found
 
 
-def _servers_in_toml(text, rel):
+def _servers_in_toml(text, rel, odd=None):
     data = tomllib.loads(text)
     table = data.get("mcp_servers")
+    if odd is not None:
+        odd += _wrong_shape(("mcp_servers",), data)
     if not isinstance(table, dict):
         return []
     lines = text.split("\n")
@@ -484,61 +515,115 @@ def _servers_in_toml(text, rel):
     return found
 
 
-def read_config(rel, text):
+def _wrong_shape(keys, node, check_entries=True):
+    """What in an MCP config cannot be read as servers, and so could hide one. An empty or absent list of servers is fine."""
+    if not isinstance(node, dict):
+        return ["the file is not an object, so its servers cannot be read"]
+    found = []
+    for key in keys:
+        group = node.get(key)
+        if group is None or group == []:
+            continue
+        if not isinstance(group, dict):
+            found.append(f"{key} is not a table of servers")
+        elif check_entries:
+            bad = sum(1 for name, entry in group.items() if not isinstance(entry, dict) and not str(name).startswith(("_", "//", "$")))
+            if bad:
+                found.append(f"{bad} {'entry' if bad == 1 else 'entries'} under {key} cannot be read as a server")
+    return found
+
+
+def read_config(rel, text, odd=None):
     """The servers declared in one file, as (servers, client), or ([], "") when the file is not an MCP config of a known kind.
-    Raises ValueError for a known config name whose text cannot be parsed."""
+    Raises ValueError for a known config name whose text cannot be parsed. `odd`, a list, receives what parsed but could not be
+    read as servers."""
     low = rel.lower()
     if low == CODEX or low.endswith("/" + CODEX):
-        return _servers_in_toml(text, rel), "Codex"
+        return _servers_in_toml(text, rel, odd), "Codex"
     for suffix, client, keys in KNOWN:
         if low == suffix or low.endswith("/" + suffix) or (not suffix.startswith(".") and os.path.basename(low) == suffix):
-            return _servers_in_json(client, keys, jsonc.loads(text), rel), client
+            node = jsonc.loads(text)
+            if odd is not None:
+                odd += _wrong_shape(keys, node)
+            return _servers_in_json(client, keys, node, rel), client
     base = os.path.basename(low)
     if base.endswith(".json") and "mcp" in base:
         try:
             node = jsonc.loads(text)
         except jsonc.JsoncError:
-            if base in ("mcp.json", ".mcp.json"):
+            if base in EXACT_NAMES:
                 raise  # named exactly like an MCP config (.codex/mcp.json, .aider/mcp.json): one that cannot be read is reported, never skipped
             return [], ""  # a JSON file that only has "mcp" in its name is not necessarily one
+        if odd is not None and base in EXACT_NAMES:
+            odd += _wrong_shape(("mcpServers", "servers"), node, check_entries=False)
         return _servers_in_json("an MCP config", ("mcpServers", "servers"), node, rel, only_server_like=True), "an MCP config"
     return [], ""
 
 
-def _candidate(rel):
+def _known(rel):
+    """Is this a name an MCP client really loads? One of those that cannot be read could hide a server."""
     low = rel.lower()
     base = os.path.basename(low)
-    if low == CODEX or low.endswith("/" + CODEX):
+    if base in EXACT_NAMES or low == CODEX or low.endswith("/" + CODEX):
         return True
-    if any(low == s or low.endswith("/" + s) or (not s.startswith(".") and base == s) for s, _, _ in KNOWN):
-        return True
-    return base.endswith(".json") and "mcp" in base
+    return any(low == s or low.endswith("/" + s) or (not s.startswith(".") and base == s) for s, _, _ in KNOWN)
 
 
-def find(root, deadline=None):
-    """Every MCP server declared under `root`: {"servers": [McpServer dicts], "files": [...], "problems": [...], "partial": True when the time limit stopped the search}."""
+def _candidate(rel):
+    base = os.path.basename(rel.lower())
+    return _known(rel) or (base.endswith(".json") and "mcp" in base)
+
+
+def find(root, deadline=None, values=None):
+    """Every MCP server declared under `root`: {"servers": [McpServer dicts], "files": [...], "problems": [...], "partial": True when the time limit stopped the search}.
+
+    A problem with an empty `left_out` is a config that could hide a server, so the scan is not complete. `values`, a set, receives
+    the credential values seen: they are held only to be hidden from the results, and are never saved."""
     deadline = deadline or (time.time() + MAX_SECONDS)
     servers, files, problems, partial = [], [], [], False
+
+    def problem(rel, error):
+        problems.append({"file": rel, "error": error, "left_out": left_out_reason(rel) if _known(rel) else ONLY_BY_NAME})
+
     for base, dirs, names in os.walk(root):
-        dirs[:] = sorted(d for d in dirs if d not in WALK_SKIP and not safety.is_link(os.path.join(base, d)))
+        keep = []
+        for d in sorted(d for d in dirs if d not in WALK_SKIP):
+            path = os.path.join(base, d)
+            if not safety.is_link(path):
+                keep.append(d)
+            elif d.lower() in CLIENT_FOLDERS:
+                rel = os.path.relpath(path, root).replace(os.sep, "/")
+                problems.append({"file": rel, "error": "an MCP client's folder is a link, so it was not read",
+                                 "left_out": left_out_reason(rel + "/mcp.json")})
+        dirs[:] = keep
         if time.time() > deadline:
             partial = True  # the caller says so: a missing server must never be silent
             break
         for name in sorted(names):
             path = os.path.join(base, name)
             rel = os.path.relpath(path, root).replace(os.sep, "/")
-            if not _candidate(rel) or os.path.islink(path) or not safety.plain_file(path):
+            if not _candidate(rel):
+                continue
+            if os.path.islink(path) or not safety.plain_file(path):
+                if _known(rel):
+                    problem(rel, "a link or special file, so it was not read")
                 continue
             try:
                 if os.path.getsize(path) > MAX_BYTES:
-                    problems.append({"file": rel, "error": "larger than 1.5 MB, not read"})
+                    problem(rel, "larger than 1.5 MB, not read")
                     continue
                 with open(path, encoding="utf-8-sig", errors="replace") as fh:
                     text = fh.read()
-                got, client = read_config(rel, text)
+                odd = []
+                got, client = read_config(rel, text, odd)
             except (OSError, ValueError) as e:  # a bad file is reported and the scan goes on (tomllib and jsonc errors are ValueErrors)
-                problems.append({"file": rel, "error": _safe_text(str(e))[:200]})
+                problem(rel, _safe_text(str(e))[:200])
                 continue
+            for what in odd:
+                problem(rel, what)
+            if values is not None:
+                for s in got:
+                    values.update(s.secret_values)
             if not got:
                 continue
             reason = left_out_reason(rel)
