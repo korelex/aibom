@@ -536,7 +536,7 @@ def find(root, files, deadline=None):
         try:
             rec = analyse(path, fi.path, fi.size, location_of(fi.path, fi.category), deadline)
         except Exception as e:  # one odd file must never stop the rest
-            problems.append({"file": fi.path, "error": f"{type(e).__name__}: {str(e)[:120]}"})
+            problems.append({"file": fi.path, "error": f"{type(e).__name__}: {str(e)[:120]}", "left_out": location_of(fi.path, fi.category)})
             continue
         if rec is None:
             continue

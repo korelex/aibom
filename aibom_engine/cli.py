@@ -11,6 +11,7 @@ from rich.text import Text
 from . import flags as flag_rules
 from . import screens, ui
 from . import MAX_SECONDS, __version__, safety
+from .hidden import hide
 from .display import build_rows
 from .report import (CANNOT_SEE, LEVEL_LONG, MODE_TEXT, PACKAGE_NOTE, REACHABILITY_TEXT, TIER_LONG, advisory_date, package_level_text,
                      package_rows, package_summary)
@@ -55,7 +56,7 @@ def load(run_dir, name):
     if not os.path.exists(path):
         raise SourceError("There is no finished scan in '%s'. Run: %s scan <folder or link>" % (run_dir, command()))
     with open(path, encoding="utf-8") as f:
-        return json.load(f)
+        return hide(json.load(f))  # a folder saved by an older version can still hold a key
 
 
 def links_for(info):
@@ -427,9 +428,9 @@ def do_scan(a):
                 raise
             os.makedirs(safety.output_path(out, scanned=root), exist_ok=True)
             with safety.open_output(os.path.join(out, "error.txt")) as f:
-                f.write(traceback.format_exc())
+                f.write(hide(traceback.format_exc()))
             raise SourceError("Something went wrong while scanning (%s: %s). The details are in %s. If you are in the middle of a demo, scan a local folder or use the saved results."
-                              % (type(e).__name__, str(e)[:120], os.path.join(out, "error.txt")))
+                              % (type(e).__name__, hide(str(e))[:120], os.path.join(out, "error.txt")))
     finally:
         if stages:
             stages.__exit__(*sys.exc_info())

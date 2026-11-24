@@ -52,6 +52,11 @@ def _mask(match, group):
     return whole[: start - base] + "*" * len(value) + whole[end - base:]
 
 
+def quoted_line(line, width):
+    """A line of code as a finding quotes it: redacted first, then cut, so that no part of a key survives the cut."""
+    return redact(line.strip()[: width + 400])[:width]
+
+
 def redact(text):
     """The line with credentials replaced by asterisks (same length). Text without any is returned unchanged."""
     if not text or len(text) < 8:

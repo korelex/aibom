@@ -11,6 +11,7 @@ import re
 import time
 
 from ..finding import Finding
+from ..redact import quoted_line
 from ..triage import read_lines
 
 SCAN = {"code", "config", "manifest", "notebook"}
@@ -108,5 +109,5 @@ def run(root, files, names=None, deadline=None):
                 if key in seen:
                     continue
                 seen.add(key)
-                found.append(Finding("context", "model", name, fi.path, hit_ln, (prov + " | " if prov else "") + why, fi.category, lines[hit_ln - 1].strip()[:140], col))
+                found.append(Finding("context", "model", name, fi.path, hit_ln, (prov + " | " if prov else "") + why, fi.category, quoted_line(lines[hit_ln - 1], 140), col))
     return found

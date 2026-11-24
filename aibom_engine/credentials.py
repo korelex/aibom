@@ -140,8 +140,9 @@ def location_of(rel, category):
     return category if category in ("test", "docs", "data") else ""
 
 
-def _scan_text(text, rel, location):
-    """The findings in one file's text: [{provider, rule, how, file, line, length, location}]."""
+def _scan_text(text, rel, location, values=None):
+    """The findings in one file's text: [{provider, rule, how, file, line, length, location}]. `values`, a set, receives the values
+    themselves, only so that they can be hidden from every output."""
     found, starts = [], None
 
     def line_of(pos):
@@ -156,6 +157,8 @@ def _scan_text(text, rel, location):
         provider, min_entropy = RULES[rule]
         if entropy(value) < min_entropy or looks_fake(value):
             continue
+        if values is not None:
+            values.add(value)
         found.append({"provider": provider, "rule": rule, "how": "format", "file": rel, "line": line_of(m.start()), "length": len(value), "location": location})
     if NAME_HINT.search(text):
         for m in NAME_ASSIGNMENT.finditer(text):
@@ -163,6 +166,8 @@ def _scan_text(text, rel, location):
             provider = _provider_of(m.group("name"))
             if not provider or not _literal_key(value):
                 continue
+            if values is not None:
+                values.add(value)
             line = line_of(m.start())
             if any(f["file"] == rel and f["line"] == line for f in found):
                 continue  # the same value was already found by its format
@@ -170,7 +175,7 @@ def _scan_text(text, rel, location):
     return found
 
 
-def find(root, files, deadline=None):
+def find(root, files, deadline=None, values=None):
     """The hardcoded provider keys in the files of `root` (`files` is the triage list): {"findings", "files_scanned", "problems", "partial", "truncated"}."""
     deadline = deadline or (time.time() + MAX_SECONDS)
     findings, problems, scanned, partial, truncated, capped = [], [], 0, False, False, False
@@ -187,12 +192,12 @@ def find(root, files, deadline=None):
             with open(path, "rb") as fh:
                 raw = fh.read(MAX_BYTES + 1)
         except OSError as e:
-            problems.append({"file": fi.path, "error": str(e)[:200]})
+            problems.append({"file": fi.path, "error": str(e)[:200], "left_out": location_of(fi.path, fi.category)})
             continue
         if b"\x00" in raw[:4096]:
             continue
         scanned += 1
-        got = _scan_text(raw.decode("utf-8", errors="replace"), fi.path, location_of(fi.path, fi.category))
+        got = _scan_text(raw.decode("utf-8", errors="replace"), fi.path, location_of(fi.path, fi.category), values)
         if len(got) > MAX_PER_FILE:
             got, truncated = got[:MAX_PER_FILE], True  # one file full of keys must not bury the others
         findings += got

@@ -11,6 +11,7 @@ import time
 from collections import Counter
 
 from ..finding import Finding
+from ..redact import quoted_line
 from ..triage import read_lines
 from .dictionary import load_names
 
@@ -101,7 +102,7 @@ def run(root, files, names=None, deadline=None):
         key = (name.lower(), fi.path, ln)
         if key not in seen:
             seen.add(key)
-            found.append(Finding("shapes", "model", name, fi.path, ln, note, fi.category, line.strip()[:200], col))
+            found.append(Finding("shapes", "model", name, fi.path, ln, note, fi.category, quoted_line(line, 200), col))
 
     for fi in files:
         if fi.category not in SCAN:

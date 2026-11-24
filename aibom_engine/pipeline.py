@@ -10,6 +10,7 @@ from . import packages as package_finder
 from .finders import context, dictionary, shapes
 from .merge import merge
 from .display import build_rows
+from .hidden import Hider
 from .evidence import assign_levels
 from . import flags as flag_rules
 from . import credentials as credential_finder
@@ -17,6 +18,7 @@ from . import modelfiles as modelfile_finder
 from . import remote_code as remote_code_finder
 from . import mcp as mcp_finder
 from . import sarif
+from .source import Linker
 from .mcp_flags import mcp_flags
 from .report import DOWNLOADS, build_csv, build_flags_csv, build_html, build_markdown, build_mcp_csv, build_packages_csv
 from .triage import triage
@@ -85,6 +87,11 @@ def write_readable(out, items, app, source="", links=None, warnings=None, packag
         f.write(build_html(items, app, source, links, meta, files=files))
 
 
+def unread(found):
+    """The files a step could not read that are the product's own, so could hold what the gate looks for."""
+    return {p["file"] for p in found["problems"] if not p.get("left_out")}
+
+
 def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source="", log=None, max_seconds=MAX_SECONDS, links=None, fail_on=None):
     log = log or (lambda msg: None)
     root = os.path.abspath(root)
@@ -103,9 +110,10 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
     log(f"  {len(files):,} files: {cats.get('code', 0):,} code, {cats.get('config', 0):,} settings, {cats.get('docs', 0):,} docs, {cats.get('test', 0):,} tests")
     names = dictionary.load_names()
     deadline = t0 + max_seconds
+    seen_values = set()  # credential values, in memory only, to hide them from every output
     log("Reading MCP config files ...")
     try:
-        found_mcp = mcp_finder.find(root, deadline=deadline)
+        found_mcp = mcp_finder.find(root, deadline=deadline, values=seen_values)
     except Exception as e:  # the MCP step must never stop the model scan
         warnings.append(f"MCP config files could not be read: {type(e).__name__}: {e}")
         incomplete.append("MCP config files could not be read")
@@ -119,7 +127,7 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
         log(f"  {ms['servers']:,} MCP servers in {ms['config_files']:,} config files")
     log("Looking for hardcoded API keys ...")
     try:
-        found_keys = credential_finder.find(root, files, deadline=deadline)
+        found_keys = credential_finder.find(root, files, deadline=deadline, values=seen_values)
     except Exception as e:  # the key search must never stop the model scan
         warnings.append(f"The search for hardcoded API keys failed and was skipped: {type(e).__name__}: {e}")
         incomplete.append("the search for API keys failed")
@@ -200,21 +208,42 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
         incomplete.append("there were too many model files to read them all")
     if found_remote.get("capped"):
         incomplete.append("there were too many uses of trust_remote_code to read every file")
+    for found, what in ((found_mcp, "MCP config file"), (found_keys, "file searched for API keys"), (found_models, "model file")):
+        n = len(unread(found))
+        if n:
+            incomplete.append(f"{n} {what}{'' if n == 1 else 's'} could not be read")
     if partial:
         warnings.append(f"The time limit of {max_seconds} seconds was reached, so part of the repository was not read. Raise it with --max-seconds.")
     log("Checking every name (live code, comment, message, test, docs) ...")
-    items = assign_levels(verify(enrich(merge(findings), names), root), model_arguments)
-    included = [i for i in items if i["tier"] != "rejected"]
-    used = sum(1 for i in included if i.get("role") == "used")
+    hider = Hider(v for v in seen_values if v not in names)  # a model id given to a setting called ..._key is still a model id
+    kept = [f for f in findings if not hider.is_key(f.name)]
+    not_models = len({f.name for f in findings} - {f.name for f in kept})
+    if not_models:
+        warnings.append(f"{not_models} {'value' if not_models == 1 else 'values'} shaped like a key stood where a model name goes: not listed as a model, and not shown.")
+    items = assign_levels(verify(enrich(merge(kept), names), root), model_arguments)
+    # Every decision is taken on what was really found. Hiding comes after, so that a chosen value cannot change a verdict.
     server_flags = mcp_flags(found_mcp["servers"])
     written = {(f.file, f.line) for f in server_flags if f.rule == "mcp.plaintext-secret"}
-    flags = flag_rules.collect(flag_rules.model_flags(included, item_ref), server_flags, credential_finder.credential_flags(found_keys["findings"], written),
-                               modelfile_finder.model_file_flags(found_models["files"]), remote_code_finder.remote_code_flags(found_remote["findings"]))
+    flags = flag_rules.collect(flag_rules.model_flags([i for i in items if i["tier"] != "rejected"], item_ref), server_flags,
+                               credential_finder.credential_flags(found_keys["findings"], written), modelfile_finder.model_file_flags(found_models["files"]),
+                               remote_code_finder.remote_code_flags(found_remote["findings"]))
+    # From here on only cleaned data is used: every file and printed line is built from it. Reading by path is over.
+    clean = hider.clean({"items": items, "flags": [f.to_dict() for f in flags], "findings": [f.to_dict() for f in kept], "files": [vars(f) for f in files], "mcp": found_mcp,
+                         "keys": found_keys, "models": found_models, "remote": found_remote, "packages": found_packages,
+                         "warnings": warnings, "app": app, "source": source, "root": root, "links": links.to_dict() if links else {}})
+    items, found_rows, file_rows, found_mcp, found_keys = clean["items"], clean["findings"], clean["files"], clean["mcp"], clean["keys"]
+    found_models, found_remote, found_packages, warnings = clean["models"], clean["remote"], clean["packages"], clean["warnings"]
+    app, source, shown_root = clean["app"], clean["source"], clean["root"]
+    ps = found_packages["summary"]
+    links = Linker.from_manifest(clean["links"]) if links else links
+    included = [i for i in items if i["tier"] != "rejected"]
+    used = sum(1 for i in included if i.get("role") == "used")
+    flags = [flag_rules.Flag.from_dict(f) for f in clean["flags"]]
     log("Writing the AI-BOM and the report ...")
     bom = build_bom(included, app, found_packages["packages"], ps.get("advisory_data", "") if ps else "", flags, found_mcp["servers"], found_models["files"])
     problem = validate(bom)
-    save(os.path.join(out, "files.json"), {"categories": cats, "files": [vars(f) for f in files]})
-    save(os.path.join(out, "findings.json"), [f.to_dict() for f in findings])
+    save(os.path.join(out, "files.json"), {"categories": cats, "files": file_rows})
+    save(os.path.join(out, "findings.json"), found_rows)
     save(os.path.join(out, "merged.json"), items)
     save(os.path.join(out, "packages.json"), found_packages)
     save(os.path.join(out, "mcp.json"), found_mcp)
@@ -229,8 +258,8 @@ def run(root, out, finders=("dictionary", "context", "shapes"), app=None, source
     tiers = dict(collections.Counter(i["tier"] for i in items))
     reasons = dict(collections.Counter(i["reason"] for i in items if i["tier"] == "rejected"))
     seconds = round(time.time() - t0, 2)
-    save(os.path.join(out, "manifest.json"), {"engine_version": __version__, "scanned_folder": root, "app": app, "source": source or root, "files": len(files), "file_categories": cats,
-                                              "finders": list(finders), "raw_findings": len(findings), "items_in_aibom": len(included), "models_used": used,
+    save(os.path.join(out, "manifest.json"), {"engine_version": __version__, "scanned_folder": shown_root, "app": app, "source": source or shown_root, "files": len(files), "file_categories": cats,
+                                              "finders": list(finders), "raw_findings": len(found_rows), "items_in_aibom": len(included), "models_used": used,
                                               "models_only_listed": len(included) - used, "display_models_used": len(rows["used"]), "display_models_listed": len(rows["listed"]),
                                               "display_left_out": len(rows["left_out"]), "items_by_tier": tiers, "rejected_reasons": reasons, "partial": partial, "incomplete": incomplete, "fail_on": fail_on,
                                               "warnings": warnings, "packages": found_packages["summary"], "flags": flag_rules.counts(flags), "mcp": ms, "secrets": ks, "model_files": ms2, "remote_code": len(found_remote["findings"]), "cyclonedx_1_6_valid": problem is None, "validation_error": problem, "seconds": seconds,

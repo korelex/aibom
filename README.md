@@ -160,7 +160,7 @@ Useful options for `scan`:
 | `--max-seconds N` | 600 | stop reading files after N seconds; a report that hit the limit says so at the top. Most scans take seconds; a large repository freshly downloaded on Windows can take minutes, because the antivirus checks each new file the first time it is read |
 | `--keep` | off | keep the downloaded copy of a repository |
 | `--quiet` | off | print only the summary, not the progress lines |
-| `--fail-on SEVERITY` | off | exit with code 3 when the scan has a risk flag at `info`, `low`, `medium` or `high` or worse, so a build can stop on it. The results are still written. With no such flag, a scan that did not finish (time limit, a check that failed) exits with 4. A scan that cannot run exits with 2 |
+| `--fail-on SEVERITY` | off | exit with code 3 when the scan has a risk flag at `info`, `low`, `medium` or `high` or worse, so a build can stop on it. The results are still written. With no such flag, a scan that did not finish (time limit, a check that failed, an MCP config or other needed file that could not be read) exits with 4. A scan that cannot run exits with 2 |
 
 Run `aibom <command> --help` for every option.
 
